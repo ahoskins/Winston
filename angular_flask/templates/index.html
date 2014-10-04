@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html data-ng-app="demoIndex">
+<head>
+	<link rel="stylesheet" type="text/css" href="../static/css/foundation.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../static/css/style.css"/>
+</head>
+<body>
+	<div data-ng-controller="CourseList">
+		Search By All:
+		<br>
+		<div class="search-box">
+			<input type="text" data-ng-model="query" />
+		</div>
+		<br>
+		<accordion>
+			<accordion-group class="course-accordion" heading="{{ class.name }}" data-ng-repeat="class in classes | filter:query | orderBy:'name'">
+			{{ class. prof }} 
+		</accordion-group>
+	</accordion>
+
+	Search By Prof:
+	<br>
+	<div class="search-box">
+		<input type="text" data-ng-model="search.prof">
+		<br>
+		Search By Course:
+		<br>
+		<input type="text" data-ng-model="search.name">
+		<br>
+	</div>
+
+	<accordion>
+		<accordion-group class="course-accordion" heading="{{ class.name }}" data-ng-repeat="class in classes | filter:search | orderBy:'name'">
+		{{ class. prof }} 
+	</accordion-group>
+</accordion>
+
+</div>
+
+<script type="text/javascript" src="../static/lib/angular.min.js"></script>
+<script type="text/javascript" src="../static/lib/mm-foundation-tpls-0.3.1.min.js"></script>
+<script type="text/javascript" src="../static/js/factory.js"></script>
+<script type="text/javascript" src="../static/js/controller.js"></script>
+
+</body>
+</html>
