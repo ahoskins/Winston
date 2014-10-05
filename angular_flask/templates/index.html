@@ -15,32 +15,32 @@
 		<accordion>
 			<accordion-group class="course-accordion" heading="{{ class.name }}" data-ng-repeat="class in classes | filter:query | orderBy:'name'">
 			{{ class. prof }} 
-		</accordion-group>
-	</accordion>
+			</accordion-group>
+		</accordion>
 
-	Search By Prof:
-	<br>
-	<div class="search-box">
-		<input type="text" data-ng-model="search.prof">
+		Search By Prof:
 		<br>
-		Search By Course:
-		<br>
-		<input type="text" data-ng-model="search.name">
-		<br>
+		<div class="search-box">
+			<input type="text" data-ng-model="search.prof">
+			<br>
+			Search By Course:
+			<br>
+			<input type="text" data-ng-model="search.name">
+			<br>
+		</div>
+
+		<accordion>
+			<accordion-group class="course-accordion" heading="{{ class.name }}" data-ng-repeat="class in classes | filter:search | orderBy:'name'">
+			{{ class. prof }} 
+			</accordion-group>
+		</accordion>
+
 	</div>
 
-	<accordion>
-		<accordion-group class="course-accordion" heading="{{ class.name }}" data-ng-repeat="class in classes | filter:search | orderBy:'name'">
-		{{ class. prof }} 
-	</accordion-group>
-</accordion>
+	<script type="text/javascript" src="../static/lib/angular.min.js"></script>
+	<script type="text/javascript" src="../static/lib/mm-foundation-tpls-0.3.1.min.js"></script>
+	<script type="text/javascript" src="../static/js/factory.js"></script>
+	<script type="text/javascript" src="../static/js/controller.js"></script>
 
-</div>
-
-<script type="text/javascript" src="../static/lib/angular.min.js"></script>
-<script type="text/javascript" src="../static/lib/mm-foundation-tpls-0.3.1.min.js"></script>
-<script type="text/javascript" src="../static/js/factory.js"></script>
-<script type="text/javascript" src="../static/js/controller.js"></script>
-
-</body>
+	</body>
 </html>

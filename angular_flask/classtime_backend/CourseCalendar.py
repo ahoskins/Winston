@@ -19,6 +19,7 @@ class CourseCalendar(object):
         self.server = server
         self.basedn = basedn
 
+        self.all_terms = []
         self.terms_dict = None
         self.term = None
 
@@ -89,8 +90,9 @@ class CourseCalendar(object):
             for c in courses:
                 retmsg += c['asString'] + '\n'
             return None, retmsg
-        self.my_courses.append(courses[0])
-        return True, str(courses[0]['asString'] + ' successfully added')
+        course = self._populateSectionsForCourse(courses[0])
+        self.my_courses.append(course)
+        return True, str(course['asString'] + ' successfully added')
 
     def _search(self, search_flt, attrs, scope=ldap.SCOPE_ONELEVEL, limit=None, basedn=None):
         """
@@ -143,13 +145,18 @@ class CourseCalendar(object):
         """
         Populates self.terms_dict with a dict mapping semantic term names to
         LDAP term number
+
+        Also, populates self.all_terms with a list of all terms
         """
         self.terms_dict = dict()
 
         terms_flt = '(&(term=*)(!(course=*)))'
-        attrs = ['term', 'termTitle']
-        terms = self._search(terms_flt, attrs);
-        for term in terms:
+        attrs = ['term',
+                 'termTitle',
+                 'startDate',
+                 'endDate']
+        self.all_terms = self._search(terms_flt, attrs);
+        for term in self.all_terms:
             self.terms_dict[term['termTitle']] = term['term']
 
     def _populateCourses(self):
@@ -163,43 +170,71 @@ class CourseCalendar(object):
         if self.term == None:
             raise Exception('Must select a term before looking for courses!')
         courses_flt = '(course=*)'
-        attrs = ['course', 'subject', 'subjectTitle', 'catalog', \
-                 'courseTitle', 'courseDescription', 'asString']
+        attrs = ['term',
+                 'course',
+                 'subject',
+                 'subjectTitle',
+                 'catalog',
+                 'courseTitle',
+                 'courseDescription',
+                 'facultyCode',
+                 'faculty',
+                 'departmentCode',
+                 'department',
+                 'career',
+                 'units',
+                 'asString']
         termdn = 'term={},{}'.format(self.term, self.basedn)
         self.all_courses = self._search(courses_flt, attrs,
                                     basedn=termdn)
 
+    def _populateSectionsForCourse(self, course):
+        class_flt = '(class=*)'
+        coursedn = 'course={},term={},{}'.format(course['course'],
+                                                 self.term,
+                                                 self.basedn)
+        attrs = ['term',
+                 'course',
+                 'class',
+                 'section',
+                 'component',
+                 'classType',
+                 'classStatus',
+                 'enrollStatus',
+                 'capacity',
+                 'session',
+                 'campus',
+                 'classNotes',
+                 'instructorUid'
+                 'asString']
+        sections = self._search(class_flt, attrs,
+                              basedn=coursedn)
+        for section in sections:
+            # class is reserved keyword in python
+            section['class_'] = section['class']
+            section.pop('class', None)
+
+            section_flt = '(classtime=*)'
+            sectiondn = 'class={},{}'.format(section['class_'],
+                                              coursedn)
+            attrs = ['day', 'startTime', 'endTime', 'location']
+            classtimes = self._search(section_flt, attrs,
+                                     basedn=sectiondn)
+            if len(classtimes) > 1:
+                print 'Shit, didn\'t handle this case.'
+                print 'Multiple classtime objects for section'
+                print section['asString']
+                # sys.microwaveKernel()
+                sys.exit()
+            classtime = classtimes[0]
+            section['day'] = classtime['day']
+            section['location'] = classtime['location']
+            section['startTime'] = classtime['startTime']
+            section['endTime'] = classtime['endTime']
+
+        course['sections'] = sections
+        return course
+
     def _populateSections(self):
-        """
-
-        """
         for course in self.my_courses:
-            class_flt = '(class=*)'
-            coursedn = 'course={},term={},{}'.format(course['course'],
-                                                     self.term,
-                                                     self.basedn)
-            attrs = ['term', 'course', 'class',
-                     'section', 'component', 'enrollStatus',
-                     'asString']
-            sections = self._search(class_flt, attrs,
-                                  basedn=coursedn)
-            for section in sections:
-                section_flt = '(classtime=*)'
-                sectiondn = 'class={},{}'.format(section['class'],
-                                                  coursedn)
-                attrs = ['term', 'course', 'class', 'classtime',
-                         'day', 'startTime', 'endTime', 'location']
-                classtimes = self._search(section_flt, attrs,
-                                         basedn=sectiondn)
-                if len(classtimes) > 1:
-                    print 'Shit, didn\'t handle this case.'
-                    print 'Multiple classtime objects for section'
-                    print section['asString']
-                    # sys.microwaveKernel()
-                    sys.exit()
-                classtime = classtimes[0]
-                section['day'] = classtime['day']
-                section['startTime'] = classtime['startTime']
-                section['endTime'] = classtime['endTime']
-
-            course['sections'] = sections
+            course = self._populateSectionsForCourse(course)

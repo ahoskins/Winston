@@ -1,4 +1,6 @@
 import sys
+import json
+import argparse
 from CourseCalendar import CourseCalendar
 
 # Reference all parts of this tutorial!
@@ -36,6 +38,31 @@ def stableExample():
             print msg
         query = raw_input(prompt)
 
+def create_db_items_json(destfile, limit):
+    print 'Connecting to calendar...'
+    cal = CourseCalendar()
+    print '..done'
+    term = 'Fall Term 2014'
+    print 'Finding all courses in [{}]...'.format(term)
+    cal.pickTerm(term)
+    print '...done'
+
+    print 'Adding courses...'
+    for course, i in zip(cal.all_courses, range(int(limit))):
+        print '#{}: {}'.format(i, course['asString'])
+        cal.addCourse(course['asString'])
+        if i > limit and limit != 0:
+            break
+    print '...done'
+
+    print 'Writing file...'
+    jsoncourses = dict()
+    jsoncourses['course'] = cal.my_courses
+    f = open(destfile, 'w')
+    f.write(json.dumps(jsoncourses))
+    f.close()
+    print '...done'
+
 def experiment():
     cal = CourseCalendar()
 
@@ -64,5 +91,22 @@ def prettyDict(d, indent=0):
          print '\t' * (indent+1) + str(value)
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Run various functions on the classtime backend')
+    parser.add_argument('command', help='the name of the command you want to run')
+    parser.add_argument('--dest', help='the destination file to write the json data to')
+    parser.add_argument('--limit', help='the max number of courses to fetch. 0 => no limit')
+    args = parser.parse_args()
+
+    if args.command == 'create_json' and args.dest and args.limit:
+        try:
+            f = open(args.dest)
+        except:
+            raise Exception('File does not exist')
+        finally:
+            f.close()
+        create_db_items_json(args.dest, args.limit)
+    else:
+        raise Exception('Invalid command')
     # stableExample()
-    experiment()
+    # experiment()
+    
