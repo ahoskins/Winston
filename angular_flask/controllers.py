@@ -6,6 +6,7 @@ from flask import send_file, make_response, abort
 
 from angular_flask import app
 
+# Initializes the Flask-Restless API
 import angular_flask.api
 
 # flask-sqlalchemy database
