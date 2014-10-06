@@ -15,7 +15,7 @@ from angular_flask.core import db
 @app.route('/')
 @app.route('/index')
 def basic_pages(**kwargs):
-    return make_response(open('angular_flask/views/index.html').read())
+    return make_response(open('angular_flask/static/views/index.html').read())
 
 # routing for CRUD-style endpoints
 # passes routing onto the angular frontend if the requested resource exists
@@ -39,11 +39,11 @@ crud_url_models = app.config['CRUD_URL_MODELS']
 #     abort(404)
 
 # special file handlers and error handlers
-@app.route('/favicon.ico')
-def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'img/favicon.ico')
+# @app.route('/favicon.ico')
+# def favicon():
+#     return send_from_directory(os.path.join(app.root_path, 'static'),
+#                                'img/favicon.ico')
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return make_response(open('angular_flask/views/index.html').read()), 404
+    return make_response(open('angular_flask/static/views/index.html').read()), 404
