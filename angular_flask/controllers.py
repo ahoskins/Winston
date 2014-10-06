@@ -16,7 +16,7 @@ from angular_flask.core import db
 @app.route('/')
 @app.route('/index')
 def basic_pages(**kwargs):
-    return make_response(open('angular_flask/static/views/index.html').read())
+    return make_response(open('angular_flask/templates/index.html').read())
 
 # routing for CRUD-style endpoints
 # passes routing onto the angular frontend if the requested resource exists
