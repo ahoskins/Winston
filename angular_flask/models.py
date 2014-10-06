@@ -2,7 +2,6 @@ from datetime import datetime
 
 from angular_flask.core import db
 from angular_flask import app
-from angular_flask.utils import initializer
 
 class Term(db.Model):
     term = db.Column(db.Integer, primary_key=True, unique=True)
