@@ -1,7 +1,7 @@
 // Controllers
 //
 var controllers = {};
-controllers.CourseList = function($scope, courseFactory) {
+controllers.CourseList = function ($scope, courseFactory) {
 	$scope.classes = [];
 
 	function init() {
