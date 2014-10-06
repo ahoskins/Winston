@@ -30,12 +30,13 @@ def main():
         with open(args.seedfile, 'r') as f:
             seed_data = json.loads(f.read())
         
-        for item_class in seed_data:
-            items = seed_data[item_class]
-            for item in items:
-                # print item
-                db.session.add(Course(item))
-            db.session.commit()
+        courses = seed_data['course']
+        for course in courses:
+            # print item
+            course_model = Course(course)
+            if not Course.query.filter_by(course=course_model.course):
+                db.session.add(course_model)
+        db.session.commit()
 
         print "\nSample data added to database!"
     else:
