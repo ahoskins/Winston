@@ -30,6 +30,10 @@ class Course(db.Model):
 
     sections = db.relationship('Section')
 
+    def __init__(self, jsonobj):
+        for key, value in jsonobj.items():
+            self.__setattr__(key, value)
+
 class Section(db.Model):
     term = db.Column(db.Integer)
     course = db.Column(db.Integer, db.ForeignKey('course.course'))

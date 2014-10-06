@@ -10,12 +10,12 @@ from angular_flask import app
 from angular_flask.core import api_manager
 from angular_flask.models import *
 
-# access to UAlberta LDAP data
-from classtime_backend.CourseCalendar import CourseCalendar
-cal = CourseCalendar()
-
 # flask-sqlalchemy database
 from angular_flask.core import db
+
+# LDAP server calendar data
+from classtime_backend.CourseCalendar import CourseCalendar
+cal = CourseCalendar()
 
 # --------------------------------
 # API Routing
@@ -38,10 +38,6 @@ def pre_terms_populate(search_params=None, **kw):
     else:
         print 'Not populating. "Term" table is already populated'
 
-def pre_terms_pick_term(instance_id=None, **kw):
-    if instance_id is not None:
-        cal.term = instance_id
-
 def post_terms_remove_courses(result=None, search_params=None, **kw):
     """Accepts two arguments, `result`, which is the dictionary
     representation of the JSON response which will be returned to the
@@ -59,31 +55,28 @@ def post_term_remove_course_sections(result=None, **kw):
         for course in term:
             course.pop('sections', None)
 
-# accessible at http://localhost:5000/api/term
+# accessible at http://localhost:5000/api/terms
 api_manager.create_api(Term,
-                       methods=['GET', 'POST'],
-                       preprocessors={'GET_MANY': [pre_terms_populate],
-                                      'PUT_SINGLE': [pre_terms_pick_term]},
+                       methods=['GET'],
+                       preprocessors={'GET_MANY': [pre_terms_populate]},
                        postprocessors={'GET_MANY': [post_terms_remove_courses],
                                        'GET_SINGLE': [post_term_remove_course_sections]},
                        collection_name='terms')
 
 def pre_courses_populate(search_params=None, **kw):
     print 'at courses pre populate'
-    if cal.term is not None:
-        cal.pickTerm(cal.term)
+    try:
+        cal
+    except NameError:
+        print 'cal not defined'
+    else:
+        if cal.term is not None:
+            cal.pickTerm(cal.term)
 
-# accessible at http://localhost:5000/api/course
+# accessible at http://localhost:5000/api/courses
 api_manager.create_api(Course,
-                       methods=['GET', 'POST'],
-                       preprocessors={'GET_MANY': [pre_courses_populate]},
+                       methods=['POST'],
                        collection_name='courses')
-
-# accessible at http://localhost:5000/api/course
-api_manager.create_api(Section,
-                       methods=['GET', 'POST'],
-                       collection_name='sections')
-                               
 
 session = api_manager.session
 

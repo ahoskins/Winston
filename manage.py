@@ -4,12 +4,7 @@ import argparse
 import requests
 
 from angular_flask.core import db
-
-def create_sample_db_entry(api_endpoint, payload):
-    url = 'http://localhost:5000/' + api_endpoint
-    print 'posting to "{}"'.format(url)
-    r = requests.post(url, data=json.dumps(payload), headers={'Content-Type': 'application/json'})
-    print r.text
+from angular_flask.models import *
 
 def create_db():
     db.create_all()
@@ -37,10 +32,10 @@ def main():
         
         for item_class in seed_data:
             items = seed_data[item_class]
-            print items
             for item in items:
-                print item
-                create_sample_db_entry('api/' + item_class, item)
+                # print item
+                db.session.add(Course(item))
+            db.session.commit()
 
         print "\nSample data added to database!"
     else:

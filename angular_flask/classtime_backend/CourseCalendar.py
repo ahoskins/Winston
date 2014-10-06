@@ -211,26 +211,28 @@ class CourseCalendar(object):
                               basedn=coursedn)
         for section in sections:
             # class is reserved keyword in python
-            section['class_'] = section['class']
+            section['class_'] = section.get('class')
             section.pop('class', None)
 
             section_flt = '(classtime=*)'
-            sectiondn = 'class={},{}'.format(section['class_'],
+            sectiondn = 'class={},{}'.format(section.get('class_'),
                                               coursedn)
             attrs = ['day', 'startTime', 'endTime', 'location']
             classtimes = self._search(section_flt, attrs,
                                      basedn=sectiondn)
-            if len(classtimes) > 1:
+            if len(classtimes) != 1:
                 print 'Shit, didn\'t handle this case.'
-                print 'Multiple classtime objects for section'
-                print section['asString']
+                print '{} classtime objects for section'.format(len(classtimes))
+                classtime = dict()
+                # print section['asString']
                 # sys.microwaveKernel()
-                sys.exit()
-            classtime = classtimes[0]
-            section['day'] = classtime['day']
-            section['location'] = classtime['location']
-            section['startTime'] = classtime['startTime']
-            section['endTime'] = classtime['endTime']
+                # sys.exit()
+            else:
+                classtime = classtimes[0]
+            section['day'] = classtime.get('day')
+            section['location'] = classtime.get('location')
+            section['startTime'] = classtime.get('startTime')
+            section['endTime'] = classtime.get('endTime')
 
         course['sections'] = sections
         return course

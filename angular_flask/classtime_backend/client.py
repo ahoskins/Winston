@@ -47,48 +47,28 @@ def create_db_items_json(destfile, limit):
     cal.pickTerm(term)
     print '...done'
 
-    print 'Adding courses...'
-    for course, i in zip(cal.all_courses, range(int(limit))):
-        print '#{}: {}'.format(i, course['asString'])
-        cal.addCourse(course['asString'])
-        if i > limit and limit != 0:
-            break
-    print '...done'
-
-    print 'Writing file...'
+    print 'Creating local JSON file of all courses in Fall Term 2014...'
     jsoncourses = dict()
-    jsoncourses['course'] = cal.my_courses
+    jsoncourses['course'] = cal.all_courses
     f = open(destfile, 'w')
     f.write(json.dumps(jsoncourses))
     f.close()
     print '...done'
 
-def experiment():
-    cal = CourseCalendar()
+# def experiment():
+#     cal = CourseCalendar()
 
-    term = 'Fall Term 2014'
-    print 'Generating courselist for [{}]'.format(term)
-    cal.pickTerm(term)
-    print '{} courses available'.format(len(cal.all_courses))
+#     term = 'Fall Term 2014'
+#     print 'Generating courselist for [{}]'.format(term)
+#     cal.pickTerm(term)
+#     print '{} courses available'.format(len(cal.all_courses))
 
-    print 'Adding...'
-    courselist = ['ece321', 'ece311', 'soc301',
-                  'mate201', 'ece325', 'stat235']
-    for course in courselist:
-        success, msg = cal.addCourse(course)
-        print msg
-
-    cal._populateSections()
-
-    print prettyDict(cal.my_courses[0])
-
-def prettyDict(d, indent=0):
-   for key, value in d.iteritems():
-      print '\t' * indent + str(key)
-      if isinstance(value, dict):
-         prettyDict(value, indent+1)
-      else:
-         print '\t' * (indent+1) + str(value)
+#     print 'Adding...'
+#     courselist = ['ece321', 'ece311', 'soc301',
+#                   'mate201', 'ece325', 'stat235']
+#     for course in courselist:
+#         success, msg = cal.addCourse(course)
+#         print msg
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run various functions on the classtime backend')
@@ -106,7 +86,4 @@ if __name__ == '__main__':
             f.close()
         create_db_items_json(args.dest, args.limit)
     else:
-        raise Exception('Invalid command')
-    # stableExample()
-    # experiment()
-    
+        raise Exception('Invalid command')    
