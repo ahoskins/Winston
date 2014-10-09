@@ -6,34 +6,38 @@
 </head>
 <body>
 	<div data-ng-controller="CourseList">
+
+<!-- 		<input type="text" ng-model="greeting" />
+		<button ng-click="doGreeting(greeting)">alert</button>
+		<br> -->
 		Search By All:
 		<br>
 		<div class="search-box">
-			<input type="text" data-ng-model="query" />
+			<input type="text" data-ng-model="search.$" />
 		</div>
 		<br>
 		<accordion>
-			<accordion-group class="course-accordion" heading="{{ class.name }}" data-ng-repeat="class in classes | filter:query | orderBy:'name'">
-			{{ class. prof }} 
+			<accordion-group class="course-accordion" heading="{{ class.asString }} : {{ class.courseTitle }}" data-ng-repeat="class in classes | filter:search | orderBy:'asString'">
+			Credits: {{ class.units }} <br><br> {{ class.courseDescription}} 
 			</accordion-group>
 		</accordion>
 
-		Search By Prof:
+<!-- 		Search By Prof:
 		<br>
 		<div class="search-box">
 			<input type="text" data-ng-model="search.prof">
 			<br>
 			Search By Course:
 			<br>
-			<input type="text" data-ng-model="search.name">
+			<input type="text" data-ng-model="search.asString">
 			<br>
 		</div>
 
 		<accordion>
-			<accordion-group class="course-accordion" heading="{{ class.name }}" data-ng-repeat="class in classes | filter:search | orderBy:'name'">
+			<accordion-group class="course-accordion" heading="{{ class.asString }}" data-ng-repeat="class in classes | filter:search | orderBy:'asString'">
 			{{ class. prof }} 
 			</accordion-group>
-		</accordion>
+		</accordion> -->
 
 	</div>
 
