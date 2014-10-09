@@ -14,23 +14,9 @@ def create_db():
 def drop_db():
     db.drop_all()
 
-def create_json(dest, limit):
-    term = 'Fall Term 2014'
-    print 'Finding all courses in [{}]...'.format(term)
-    cal.select_current_term_by_query(term)
-    print '...done'
-
-    print 'Creating local JSON file of all courses in Fall Term 2014...'
-    jsoncourses = dict()
-    jsoncourses['course'] = cal.get_courses_for_current_term()
-    f = open(dest, 'w')
-    f.write(json.dumps(jsoncourses))
-    f.close()
-
 def main():
     parser = argparse.ArgumentParser(description='Manage this Flask application.')
     parser.add_argument('command', help='the name of the command you want to run')
-    parser.add_argument('--seedfile', help='the file with data for seeding the database')
     parser.add_argument('--seedterm', help='the semantic name for the term to fill the db with')
     args = parser.parse_args()
 
@@ -58,11 +44,7 @@ def main():
             print 'All terms successfully added'
 
         # Get the course list
-        if args.seedfile:
-            with open(args.seedfile, 'r') as f:
-                seed_data = json.loads(f.read())
-            courses = seed_data['course']
-        elif args.seedterm:
+        if args.seedterm:
             if not cal.select_current_term_by_query(args.seedterm):
                 raise Exception('Invalid term argument!')
             courses = cal.get_courses_for_current_term()
