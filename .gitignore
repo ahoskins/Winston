@@ -4,3 +4,6 @@ venv
 .DS_Store
 ignore
 *.json
+*.swp
+ScheduleAlgorithm.docx
+
