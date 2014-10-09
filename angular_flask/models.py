@@ -11,6 +11,10 @@ class Term(db.Model):
 
     courses = db.relationship('Course')
 
+    def __init__(self, jsonobj):
+        for key, value in jsonobj.items():
+            self.__setattr__(key, value)
+
 class Course(db.Model):
     term = db.Column(db.Integer, db.ForeignKey('term.term'))
     course = db.Column(db.Integer, primary_key=True, unique=True)
