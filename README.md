@@ -3,7 +3,8 @@ classtime
 
 Magic university schedule builder based on public class data.  
 
-## dependencies
+## Dependencies  
+
 python-ldap  	
 `sudo apt-get install python-ldap`
 
@@ -17,7 +18,24 @@ python-ldap
 
 3. create and seed the db (the server must still be running, so open a new terminal window first)
 > python manage.py create_db  
-> python manage.py seed_db --seedfile 'data/db_items.json'
+> python manage.py seed_db
+
+Optionally, you can seed it with a certain term (default is Fall Term 2014) with > python manage.py seed_db --seedterm "Fall Term 2014"  
 
 4. view
 > http://localhost:5000/
+
+### API
+
+All API responses are sent as JSON.  
+
+Requests:  
+
+GET localhost:5000/api/terms/
+- Gets a (paginated) list of all terms
+- To get the next page, specify /terms?page=#
+
+GET localhost:5000/api/terms/1490/courses
+- Gets a (paginated) list of all courses in the specified term
+- To get the next page, specify /terms/1490/courses?page=#
+
