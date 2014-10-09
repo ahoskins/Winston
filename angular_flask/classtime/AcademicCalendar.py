@@ -4,9 +4,9 @@ import re
 import ldap
 from ldap.controls import SimplePagedResultsControl
 
-class CourseCalendar(object):
+class AcademicCalendar(object):
     """
-    Gives access to course calendar data contained in
+    Gives access to academic calendar data contained in
     an LDAP server
     """
     def __init__(self, server='directory.srv.ualberta.ca', basedn='ou=calendar,dc=ualberta,dc=ca'):
@@ -23,8 +23,8 @@ class CourseCalendar(object):
         self.terms_dict = None
         self.term = None
 
-        self.all_courses = None
-        self.my_courses = []
+        self._all_courses = None
+        self._my_courses = []
 
         try:
             self.client.start_tls_s()
@@ -36,7 +36,15 @@ class CourseCalendar(object):
                 print e
             sys.exit()
 
-    def pickTerm(self, term):
+        self._populate_term_list()
+
+    def select_current_term_by_id(self, termid):
+        if termid not in self.terms_dict.values():
+            raise Exception('Term #{} does not exist!'.format(termid))
+        self.term = termid
+        self._populate_courses_for_current_term()
+
+    def select_current_term_by_query(self, term):
         """
         Set the term that this course should be used for
 
@@ -45,58 +53,44 @@ class CourseCalendar(object):
             eg 'Winter Term 2014', 'Continuing Ed Summer Term 2011'
         """
         if self.terms_dict == None:
-            self._populateTerms()
+            self._populate_term_list()
         term_m = re.compile('(Continuing Ed )?((Winter)|(Spring)|(Summer)|(Fall)) Term \d{4}')
         if not term_m.match(term):
-            print 'Invalid term "' + term + '" supplied'
-            print 'Must be of form "[Continuing Ed ]<Season> Term <Year>"'
-            print 'Where <Season> is (Winter|Spring|Summer|Fall), case sensitive'
-            return False
+            raise Exception('Invalid term "' + term + '" supplied')
         self.term = self.terms_dict[term]
-        self._populateCourses()
-        return True
-    
-    def findCoursesBySubject(self, subject):
+        self._populate_courses_for_current_term()
+
+    def get_term_list(self):
+        return self.all_terms
+
+    def get_courses_for_current_term(self):
+        return self._all_courses
+
+    def add_course_by_query(self, query):
         """
         Prerequisite:
-          Must have picked a term, ie self.term not None
+          Must have selected a term ie self.select_current_term_by_query(term)
 
-        Finds all courses matching or partially matching subject
-          ie subject='ECE' matches ECE courses
-             subject='ENG' matches ENGL and ENG M courses (and maybe others)
-        """
-        m = re.compile(subject.replace(' ', '') + '.*', re.IGNORECASE)
-        return [course for course in self.all_courses \
-                if m.match(course['asString'].replace(' ', ''))]
-
-    def findCoursesByDesc(self, desc):
-        pass
-
-    def addCourse(self, query):
-        """
-        Prerequisite:
-          Must have selected a term ie self.pickTerm(term)
-
-        Adds course to the 'shopping cart' ie self.my_courses
+        Adds course to the 'shopping cart' ie self._my_courses
 
         Returns None, errormsg if query is not specific enough (ie it returns more than one possible
             course)
         Returns True, successmsg on success
         """
-        courses = self.findCoursesBySubject(query)
+        courses = self.find_courses_by_subject(query)
         if len(courses) > 1:
             retmsg = 'Not specific enough, no course added.\n'
             retmsg += 'Did you mean:\n'
             for c in courses:
                 retmsg += c['asString'] + '\n'
             return None, retmsg
-        course = self._populateSectionsForCourse(courses[0])
-        self.my_courses.append(course)
+        course = self._populate_sections_for_course(courses[0])
+        self._my_courses.append(course)
         return True, str(course['asString'] + ' successfully added')
 
     def _search(self, search_flt, attrs, scope=ldap.SCOPE_ONELEVEL, limit=None, basedn=None):
         """
-        Query the course calendar for records matching the search filter.
+        Query the academic calendar for records matching the search filter.
         Only looks one level deep in the tree by default to improve
           performance, so be sure to pass the basedn above where you want
           to search.
@@ -138,15 +132,15 @@ class CourseCalendar(object):
             dictlist = [i[1] for i in data]
             # Each key's value is a single-element list.
             # This pulls the value out of the list.
-            results += [{k:v[0] for k,v in d.items()} for d in dictlist]
+            results += [{k:v[0].decode('utf-8') for k,v in d.items()} for d in dictlist]
         return results
 
-    def _populateTerms(self):
+    def _populate_term_list(self):
         """
-        Populates self.terms_dict with a dict mapping semantic term names to
-        LDAP term number
+        Populates self.all_terms with a list of all terms
 
-        Also, populates self.all_terms with a list of all terms
+        Also populates self.terms_dict with a dict mapping semantic term names to
+        LDAP term number
         """
         self.terms_dict = dict()
 
@@ -159,10 +153,10 @@ class CourseCalendar(object):
         for term in self.all_terms:
             self.terms_dict[term['termTitle']] = term['term']
 
-    def _populateCourses(self):
+    def _populate_courses_for_current_term(self):
         """
         Prerequisite:
-          Must have set the current term with pickTerm()
+          Must have set the current term with select_current_term_by_**()
 
         Populates the courses dictionary with all courses available in
         the currently selected term
@@ -185,10 +179,10 @@ class CourseCalendar(object):
                  'units',
                  'asString']
         termdn = 'term={},{}'.format(self.term, self.basedn)
-        self.all_courses = self._search(courses_flt, attrs,
+        self._all_courses = self._search(courses_flt, attrs,
                                     basedn=termdn)
 
-    def _populateSectionsForCourse(self, course):
+    def _populate_sections_for_course(self, course):
         class_flt = '(class=*)'
         coursedn = 'course={},term={},{}'.format(course['course'],
                                                  self.term,
@@ -236,7 +230,3 @@ class CourseCalendar(object):
 
         course['sections'] = sections
         return course
-
-    def _populateSections(self):
-        for course in self.my_courses:
-            course = self._populateSectionsForCourse(course)
