@@ -18,9 +18,7 @@ python-ldap
 
 3. create and seed the db (the server must still be running, so open a new terminal window first)
 > python manage.py create_db  
-> python manage.py seed_db
-
-Optionally, you can seed it with a certain term (default is Fall Term 2014) with > python manage.py seed_db --seedterm "Fall Term 2014"  
+> python manage.py seed_db [--seedterm "Winter Term 2015"]
 
 4. view
 > http://localhost:5000/
