@@ -37,3 +37,6 @@ GET localhost:5000/api/terms/1490/courses
 - Gets a (paginated) list of all courses in the specified term
 - To get the next page, specify /terms/1490/courses?page=#
 
+### Contributing
+
+Commit message standards are as written in the [Angular.js commit message style guide](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit?pli=1#)
