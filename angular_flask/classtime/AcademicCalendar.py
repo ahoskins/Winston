@@ -15,20 +15,19 @@ class AcademicCalendar(object):
         as the base distinguished name to search from (the root
         of the tree you want to access).
         """
-        self.client = ldap.initialize('ldap://{}'.format(server))
-        self.server = server
-        self.basedn = basedn
+        self._client = ldap.initialize('ldap://{}'.format(server))
+        self._basedn = basedn
 
-        self.all_terms = []
-        self.terms_dict = None
-        self.term = None
+        self._all_terms = []
+        self._terms_dict = None
+        self._term = None
 
         self._all_courses = None
         self._my_courses = []
 
         try:
-            self.client.start_tls_s()
-            self.client.simple_bind_s()
+            self._client.start_tls_s()
+            self._client.simple_bind_s()
         except ldap.LDAPError, e:
             if type(e.message) == dict and e.message.has_key('desc'):
                 print e.message['desc']
@@ -39,9 +38,9 @@ class AcademicCalendar(object):
         self._populate_term_list()
 
     def select_current_term_by_id(self, termid):
-        if termid not in self.terms_dict.values():
+        if termid not in self._terms_dict.values():
             raise Exception('Term #{} does not exist!'.format(termid))
-        self.term = termid
+        self._term = termid
         self._populate_courses_for_current_term()
 
     def select_current_term_by_query(self, term):
@@ -52,16 +51,16 @@ class AcademicCalendar(object):
             '[Continuing Ed ]<Season> Term <Year>'
             eg 'Winter Term 2014', 'Continuing Ed Summer Term 2011'
         """
-        if self.terms_dict == None:
+        if self._terms_dict == None:
             self._populate_term_list()
         term_m = re.compile('(Continuing Ed )?((Winter)|(Spring)|(Summer)|(Fall)) Term \d{4}')
         if not term_m.match(term):
             raise Exception('Invalid term "' + term + '" supplied')
-        self.term = self.terms_dict[term]
+        self._term = self._terms_dict[term]
         self._populate_courses_for_current_term()
 
     def get_term_list(self):
-        return self.all_terms
+        return self._all_terms
 
     def get_courses_for_current_term(self):
         return self._all_courses
@@ -104,7 +103,7 @@ class AcademicCalendar(object):
         if limit == None:
             limit = float('inf')
         if basedn == None:
-            basedn = self.basedn
+            basedn = self._basedn
 
         PAGE_SIZE = 300
         page_control = SimplePagedResultsControl(
@@ -118,14 +117,14 @@ class AcademicCalendar(object):
               or first_pass:
             first_pass = False
             try:
-                msgid = self.client.search_ext(basedn, scope,
+                msgid = self._client.search_ext(basedn, scope,
                                                search_flt, attrlist=attrs,
                                                serverctrls=[page_control])
             except:
                 print 'ERROR: \n{}'.format(str(sys.exc_info()[0]))
                 sys.exit(1)
             pages_retrieved += 1
-            result_type, data, msgid, serverctrls = self.client.result3(msgid)
+            result_type, data, msgid, serverctrls = self._client.result3(msgid)
             page_control.cookie = serverctrls[0].cookie
             # LDAP returns a list of 2-element lists. The 1st element
             # is the dn, 2nd element is the attribute dict
@@ -137,21 +136,21 @@ class AcademicCalendar(object):
 
     def _populate_term_list(self):
         """
-        Populates self.all_terms with a list of all terms
+        Populates self._all_terms with a list of all terms
 
-        Also populates self.terms_dict with a dict mapping semantic term names to
+        Also populates self._terms_dict with a dict mapping semantic term names to
         LDAP term number
         """
-        self.terms_dict = dict()
+        self._terms_dict = dict()
 
         terms_flt = '(&(term=*)(!(course=*)))'
         attrs = ['term',
                  'termTitle',
                  'startDate',
                  'endDate']
-        self.all_terms = self._search(terms_flt, attrs);
-        for term in self.all_terms:
-            self.terms_dict[term['termTitle']] = term['term']
+        self._all_terms = self._search(terms_flt, attrs);
+        for term in self._all_terms:
+            self._terms_dict[term['termTitle']] = term['term']
 
     def _populate_courses_for_current_term(self):
         """
@@ -161,7 +160,7 @@ class AcademicCalendar(object):
         Populates the courses dictionary with all courses available in
         the currently selected term
         """
-        if self.term == None:
+        if self._term == None:
             raise Exception('Must select a term before looking for courses!')
         courses_flt = '(course=*)'
         attrs = ['term',
@@ -178,15 +177,15 @@ class AcademicCalendar(object):
                  'career',
                  'units',
                  'asString']
-        termdn = 'term={},{}'.format(self.term, self.basedn)
+        termdn = 'term={},{}'.format(self._term, self._basedn)
         self._all_courses = self._search(courses_flt, attrs,
                                     basedn=termdn)
 
     def _populate_sections_for_course(self, course):
         class_flt = '(class=*)'
         coursedn = 'course={},term={},{}'.format(course['course'],
-                                                 self.term,
-                                                 self.basedn)
+                                                 self._term,
+                                                 self._basedn)
         attrs = ['term',
                  'course',
                  'class',
