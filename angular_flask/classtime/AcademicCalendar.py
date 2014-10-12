@@ -65,28 +65,6 @@ class AcademicCalendar(object):
     def get_courses_for_current_term(self):
         return self._all_courses
 
-    def add_course_by_query(self, query):
-        """
-        Prerequisite:
-          Must have selected a term ie self.select_current_term_by_query(term)
-
-        Adds course to the 'shopping cart' ie self._my_courses
-
-        Returns None, errormsg if query is not specific enough (ie it returns more than one possible
-            course)
-        Returns True, successmsg on success
-        """
-        courses = self.find_courses_by_subject(query)
-        if len(courses) > 1:
-            retmsg = 'Not specific enough, no course added.\n'
-            retmsg += 'Did you mean:\n'
-            for c in courses:
-                retmsg += c['asString'] + '\n'
-            return None, retmsg
-        course = self._populate_sections_for_course(courses[0])
-        self._my_courses.append(course)
-        return True, str(course['asString'] + ' successfully added')
-
     def _search(self, search_flt, attrs, scope=ldap.SCOPE_ONELEVEL, limit=None, basedn=None):
         """
         Query the academic calendar for records matching the search filter.
