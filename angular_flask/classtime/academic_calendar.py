@@ -26,26 +26,10 @@ class AcademicCalendar(object):
 
         self._all_courses = None
 
-    def select_current_term_by_id(self, termid):
+    def select_current_term(self, termid):
         if termid not in self._terms_dict.values():
             raise Exception('Term #{} does not exist!'.format(termid))
         self._term = termid
-        self._populate_courses_for_current_term()
-
-    def select_current_term_by_query(self, term):
-        """
-        Set the term that this course should be used for
-
-        term -- semantic term name of the form:
-            '[Continuing Ed ]<Season> Term <Year>'
-            eg 'Winter Term 2014', 'Continuing Ed Summer Term 2011'
-        """
-        if self._terms_dict == None:
-            self._populate_term_list()
-        term_m = re.compile('(Continuing Ed )?((Winter)|(Spring)|(Summer)|(Fall)) Term \d{4}')
-        if not term_m.match(term):
-            raise Exception('Invalid term "' + term + '" supplied')
-        self._term = self._terms_dict[term]
         self._populate_courses_for_current_term()
 
     def get_term_list(self):
@@ -57,7 +41,7 @@ class AcademicCalendar(object):
     def _populate_courses_for_current_term(self):
         """
         Prerequisite:
-          Must have set the current term with select_current_term_by_**()
+          Must have set the current term with select_current_term()
 
         Populates the courses dictionary with all courses available in
         the currently selected term

@@ -1,3 +1,4 @@
+import sys
 import os
 import json
 import argparse
@@ -17,7 +18,7 @@ def drop_db():
 def main():
     parser = argparse.ArgumentParser(description='Manage this Flask application.')
     parser.add_argument('command', help='the name of the command you want to run')
-    parser.add_argument('--seedterm', help='the semantic name for the term to fill the db with')
+    parser.add_argument('--seedterm', help='the id of the ualberta term to fill the db with (eg 1490)')
     args = parser.parse_args()
 
     if args.command == 'create_db':
@@ -45,27 +46,29 @@ def main():
 
         # Get the course list
         if args.seedterm:
-            if not cal.select_current_term_by_query(args.seedterm):
+            if not cal.select_current_term(args.seedterm):
                 raise Exception('Invalid term argument!')
             courses = cal.get_courses_for_current_term()
         else:
-            cal.select_current_term_by_query('Fall Term 2014')
+            cal.select_current_term('1490')
             courses = cal.get_courses_for_current_term()
 
         # Feed the course list into the database
+        sys.stdout.write('Course 0/{}'.format(len(courses)))
+        sys.stdout.flush()
         for course, i in zip(courses, range(len(courses))):
             if not i % 100:
-                print "Course {}/{} added".format(i, len(courses))
+                sys.stdout.write('\rCourse {}/{} added'.format(i, len(courses)))
+                sys.stdout.flush()
             course_model = Course(course)
             if not Course.query.get(course_model.course):
                 db.session.add(course_model)
-        print "{}/{}".format(len(courses), len(courses))
         try:
             db.session.commit()
         except:
-            print 'Courses failed to add to database'
+            print '\nCourses failed to add to database'
         else:
-            print "All courses successfully added"
+            print '\nAll courses successfully added'
 
     else:
         raise Exception('Invalid command')
