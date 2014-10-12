@@ -6,7 +6,7 @@ import requests
 from angular_flask.core import db
 from angular_flask.models import *
 
-from angular_flask.classtime import *
+from angular_flask.classtime import cal
 
 def create_db():
     db.create_all()
