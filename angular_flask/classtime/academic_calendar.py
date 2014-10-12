@@ -20,15 +20,13 @@ class AcademicCalendar(object):
             raise
 
         self._all_terms = self._course_db.search('terms')
-        self._terms_dict = {term.get('termTitle'): term.get('term')
-                            for term in self._all_terms}
         self._term = None
 
         self._all_courses = None
 
     def select_current_term(self, termid):
-        if termid not in self._terms_dict.values():
-            raise Exception('Term #{} does not exist!'.format(termid))
+        if termid not in [term.get('term') for term in self._all_terms]:
+            raise Exception('Term #{} not found'.format(termid))
         self._term = termid
         self._populate_courses_for_current_term()
 

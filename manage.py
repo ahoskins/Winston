@@ -46,8 +46,7 @@ def main():
 
         # Get the course list
         if args.seedterm:
-            if not cal.select_current_term(args.seedterm):
-                raise Exception('Invalid term argument!')
+            cal.select_current_term(args.seedterm)
             courses = cal.get_courses_for_current_term()
         else:
             cal.select_current_term('1490')
