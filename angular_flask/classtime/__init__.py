@@ -1,4 +1,3 @@
-import json
-from AcademicCalendar import AcademicCalendar
+import academic_calendar
 
-cal = AcademicCalendar()
+cal = academic_calendar.AcademicCalendar('ualberta')
