@@ -63,8 +63,8 @@ class LDAPDatabase(abstract_academicdb.AcademicDatabase):
         search_flt -- LDAP-style search filter
         attrs -- attributes to be retrieved
         limit -- max number of records to return
-        dn -- additional LDAP dn to be prepended to this object's basedn
-              ie the LDAP directory to search inside
+        path -- extra LDAP dn: is prepended to this object's basedn
+              ie the LDAP directory to look from relative to the root
         """
         if limit == None:
             limit = float('inf')
@@ -94,8 +94,8 @@ class LDAPDatabase(abstract_academicdb.AcademicDatabase):
             pages_retrieved += 1
             _, data, msgid, serverctrls = self._client.result3(msgid)
             page_control.cookie = serverctrls[0].cookie
-            # LDAP returns a list of 2-element lists. The 1st element
-            # is the dn, 2nd element is the attribute dict
+            # LDAP returns a list of 2-element lists. The 0th element
+            # is the dn, 1st element is the attribute dict
             dictlist = [i[1] for i in data]
             # Each key's value is a single-element list.
             # This pulls the value out of the list.
