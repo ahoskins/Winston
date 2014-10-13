@@ -5,13 +5,19 @@ from academic_databases.abstract_academicdb import AcademicDatabase
 
 class AcademicCalendar(object):
     """
-    Gives access to academic calendar data contained in
-    an LDAP server
+    Manages academic calendar information, including
+    terms, courses and sections.
+
+    Connects to an institution's course database using any 
+    implementation of the AcademicDatabase abstract base class.
     """
     def __init__(self, institution_name):
         """
         Initialize the Calendar with a database connection
-        to a specific institution, defined as a JSON config file
+        to a specific institution whose configuration is defined
+        by a JSON file in academic_databases/institutions.
+
+        See 'institutions/ualberta.json' for an example.
         """
         try:
             self._course_db = AcademicDatabase.build(institution_name)
