@@ -19,7 +19,7 @@ class Course(db.Model):
     term = db.Column(db.Integer, db.ForeignKey('term.term'))
     course = db.Column(db.Integer, primary_key=True, unique=True)
     subject = db.Column(db.String(10))
-    subjectTitle = db.Column
+    subjectTitle = db.Column(db.String(30))
     catalog = db.Column(db.Integer)
     courseTitle = db.Column(db.String(30))
     courseDescription = db.Column(db.String(500))
@@ -65,17 +65,7 @@ class Section(db.Model):
     # examLocation
     asString = db.String(db.String(80))
 
-    # Populated by the classtime ldap object
     day = db.Column(db.String(10))
     startTime = db.Column(db.String(30))
     endTime = db.Column(db.String(30))
     location = db.Column(db.String(30))
-
-# # models for which we want to create API endpoints
-# registered in controllers.py
-
-# # models for which we want to create CRUD-style URL endpoints,
-# # and pass the routing onto our AngularJS application
-app.config['CRUD_URL_MODELS'] = { 'term' : Term,
-                                  'course' : Course,
-                                  'section' : Section }
