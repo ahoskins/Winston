@@ -15,6 +15,11 @@ class Term(db.Model):
         for key, value in jsonobj.items():
             self.__setattr__(key, value)
 
+    def __repr__(self):
+        return '<Term: #{num} ({name})>'.format(
+                num=self.term,
+                name=self.termTitle)
+
 class Course(db.Model):
     term = db.Column(db.Integer, db.ForeignKey('term.term'))
     course = db.Column(db.Integer, primary_key=True, unique=True)
@@ -36,6 +41,11 @@ class Course(db.Model):
     def __init__(self, jsonobj):
         for key, value in jsonobj.items():
             self.__setattr__(key, value)
+
+    def __repr__(self):
+        return '<Course: #{num} ({name})'.format(
+                num=self.course,
+                name=self.asString)
 
 class Section(db.Model):
     term = db.Column(db.Integer)
@@ -69,3 +79,8 @@ class Section(db.Model):
     startTime = db.Column(db.String(30))
     endTime = db.Column(db.String(30))
     location = db.Column(db.String(30))
+
+    def __repr__(self):
+        return '<Section: #{num} ({name})'.format(
+                num=self.class_,
+                name=self.asString())
