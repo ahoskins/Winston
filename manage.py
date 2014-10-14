@@ -1,21 +1,12 @@
 import sys
-import os
-import json
 import argparse
-import requests
 
 from angular_flask.core import db
-from angular_flask.models import *
+from angular_flask.models import Term, Course
 
 from angular_flask.classtime import cal
 
-def create_db():
-    db.create_all()
-
-def drop_db():
-    db.drop_all()
-
-def seed_db():
+def seed_db(args, db):
     # Get the term list
     terms = cal.get_term_list()
     # Feed the term list into the database
@@ -60,15 +51,15 @@ def main():
     args = parser.parse_args()
 
     if args.command == 'create_db':
-        create_db()
+        db.create_all()
         print 'DB created!'
 
     elif args.command == 'delete_db':
-        drop_db()
+        db.drop_all()
         print 'DB deleted!'
 
     elif args.command == 'seed_db':
-        seed_db()
+        seed_db(args, db)
         print 'DB seeded!'
 
     else:
