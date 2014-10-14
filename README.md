@@ -5,21 +5,23 @@ Magic university schedule builder based on public class data.
 
 ### How to Get Started
 
-1. Install all the necessary packages (best done inside of a virtual environment)  
-> $ pip install -r requirements.txt
+**Install all the necessary packages** (best done inside of a [virtual environment](http://virtualenv.readthedocs.org/en/latest/virtualenv.html))  
+> $ sudo pip install -r requirements.txt
 
-If this doesn't work, you might also need to install python-ldap's dependencies manually [(check this StackOverflow answer)](stackoverflow.com/questions/4768446/python-cant-install-python-ldap). On ubuntu, do:  
+If this fails, you might also need to [install python-ldap's dependencies manually](stackoverflow.com/questions/4768446/python-cant-install-python-ldap).  
+On ubuntu, do:  
 > $ sudo apt-get install python-dev libldap2-dev libsasl2-dev libssl-dev
 > $ sudo pip install python-ldap
 
-2. run the app
-> python runserver.py
+**Run the app**
+> $ python runserver.py
 
-3. Create and seed the db (the server must still be running, so open a new terminal window first)
+**Create and seed the db**  
+Note: the server must be running, so do this in a second terminal
 > python manage.py create_db  
-> python manage.py seed_db [--seedterm "Winter Term 2015"]
+> python manage.py seed_db [--seedterm 1490]
 
-4. View
+**View**
 > http://localhost:5000/
 
 ### API
@@ -38,4 +40,4 @@ GET localhost:5000/api/terms/1490/courses
 
 ### Contributing
 
-Commit message standards are as written in the [Angular.js commit message style guide](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit?pli=1#)
+Commit messages follow the [Angular.js commit message style guide](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit?pli=1#)
