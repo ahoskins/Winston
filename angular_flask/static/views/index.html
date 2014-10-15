@@ -9,12 +9,14 @@
 		Search By All:
 		<br>
 		<div class="search-box">
-			<input type="text" data-ng-model="search.$" />
+			<input type="text" data-ng-model="search" />
 		</div>
 		<br>
 		<accordion>
-			<accordion-group class="course-accordion" heading="{{ class.asString }} : {{ class.courseTitle }}" data-ng-repeat="class in classes | filter:search | orderBy:'asString'">
-			Credits: {{ class.units }} <br><br> {{ class.courseDescription}} 
+			<accordion-group class="course-accordion" heading="{{ subject }}" data-ng-repeat="(subject, subjectObject) in subjectBin">
+				<accordion-group class="course-accordion2" heading=" {{ singleSubjectObject.asString }}" data-ng-repeat="singleSubjectObject in subjectObject">
+<!-- 					{{ singleSubjectObject.courseDescription }} -->
+				</accordion-group>
 			</accordion-group>
 		</accordion>
 
