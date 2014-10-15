@@ -26,18 +26,29 @@ Note: the server must be running, so do this in a second terminal
 
 ### API
 
-All API responses are JSON, and support pagination through the `page` and `total_pages` attributes.  
-For paginated requests, append `?page=<n>` (or `?q=...&page=<n>` if you are using a search query) to get the `n`th page.  
-- `GET localhost:5000/api/terms/`
-  - gets a list of all available terms
-  - the `term` attribute of each term is its ID number, which is used to filter courses with  
-- `GET localhost:5000/api/courses-min`
-  - **gets a list of all courses, retrieving only these attributes: `subject, subjectTitle, course, asString`**
-  - get only courses in a given term by appending `?q={"filters":[{"name":"term","op":"equals","val":<termnum>}]}` to the request
-    - `termnum` is the `term` attribute found from a /api/terms call
-      - eg for Fall Term 2014, `termnum` is 1490
-    - more information on [search queries can be found here](http://flask-restless.readthedocs.org/en/latest/searchformat.html#quick-examples)  
-- ~~GET localhost:5000/api/terms/1490/courses~~ (DEPRECATED)
+All API responses are valid [JSON](http://json.org/), and support pagination through the `page` and `total_pages` attributes.  
+For paginated requests, append `?page=<n>` (or `?q=...&page=<n>` if you are using a search query) to get the `n`th page.
+
+`GET localhost:5000/api/terms/`  
+Gets a list of all available terms.  
+The `term` attribute of each term is its ID number, which is used to with /courses-min/ to only retrieve courses in a certain term.
+
+`GET localhost:5000/api/courses-min`  
+Gets a list of courses, retrieving only a few attributes: `subject, subjectTitle, course, asString`  
+These attributes are exactly specified in [api.py](angular_flask/api.py)  
+*Where:* In the `api_manager.create_api` call with `collection_name='courses-min'`, the `include_columns` list  
+Can restrict the request to a specific term using a [search query](http://flask-restless.readthedocs.org/en/latest/searchformat.html#quick-examples)  
+*Example:* `GET localhost:5000/api/courses-min?q={"filters":[{"name":"term","op":"equals","val":1490}]}`  
+Returns a list of courses in term 1490 (filters: term equals 1490)
+
+`GET localhost:5000/api/courses/<course>`
+Gets all available details regarding a certain course.  
+Where `<course>` is the value of a course's `course` attribute (which can be found from /api/courses-min)
+*Example:* `GET localhost:5000/api/courses/1`  
+Returns all attributes for course 1
+
+~~`GET localhost:5000/api/terms/1490/courses`~~ *deprecated*
+
 
 ### Tests
 
