@@ -31,5 +31,5 @@ api_manager.create_api(Term,
 
 # accessible at http://localhost:5000/api/courses
 api_manager.create_api(Course,
-                       methods=['POST'],
+                       methods=['GET'],
                        collection_name='courses')
