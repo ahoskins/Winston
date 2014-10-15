@@ -41,7 +41,7 @@ Can restrict the request to a specific term using a [search query](http://flask-
 *Example:* `GET localhost:5000/api/courses-min?q={"filters":[{"name":"term","op":"equals","val":1490}]}`  
 Returns a list of courses in term 1490 (filters: term equals 1490)
 
-`GET localhost:5000/api/courses/<course>`
+`GET localhost:5000/api/courses/<course>`  
 Gets all available details regarding a certain course.  
 Where `<course>` is the value of a course's `course` attribute (which can be found from /api/courses-min)
 *Example:* `GET localhost:5000/api/courses/1`  
