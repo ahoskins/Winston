@@ -73,12 +73,12 @@ class Scheduler(object):
         """
         for course in courses:
             for section in course.get('sections'):
-                section['schedule'] = Schedule(sections)
+                section['schedule'] = Schedule(section)
 
 import re
 import sys
 class Schedule(object):
-    NUM_BLOCKS = (21-8)*2
+    NUM_BLOCKS = 24*2
     SCHOOL_DAYS = 5
 
     BUSY = 1
@@ -86,8 +86,12 @@ class Schedule(object):
 
     DAYS = 'MTWRF'
 
-    def __init__(self, sections=None):
-        self.schedule = [ [None]*Schedule.NUM_BLOCKS for i in range(Schedule.SCHOOL_DAYS)]
+    def __init__(self, sections=[]):
+        self.schedule = [[None]*Schedule.NUM_BLOCKS
+                         for _ in range(Schedule.SCHOOL_DAYS)]
+        # sections needs to be a list
+        if not isinstance(sections, list):
+            sections = [sections]
         if sections is not None:
             for section in sections:
                 self._add(section)
@@ -106,8 +110,19 @@ class Schedule(object):
 
     def conflicts(self, other):
         """
-        Returns true if there is a conflict between the two schedules
+        Returns true if there is a conflict between:
+        1) this schedule (self), and
+        2) other, which is a section dict containing at LEAST
+           the properties 'day', 'startTime', and 'endTime'
         """
+        other = Schedule(other)
+        print self
+        print other
+        for ourday, theirday in zip(self.schedule, other.schedule):
+            for ourblock, theirblock in zip(ourday, theirday):
+                if ourblock == Schedule.BUSY and theirblock == Schedule.BUSY:
+                    return True
+        return False
 
     def _add(self, section):
         """
@@ -128,8 +143,8 @@ class Schedule(object):
             self._add_to_schedule(day, start, end)
 
     def _add_to_schedule(self, day, start, end):
+        daynum = Schedule._daystr_to_daynum(day)
         for i in range(end-start+1):
-            daynum = Schedule._daystr_to_daynum(day)
             self.schedule[daynum][start + i] = Schedule.BUSY
 
     @staticmethod
@@ -138,12 +153,12 @@ class Schedule(object):
             raise ValueError('time must be string object')
         m = re.search('(\d\d):(\d\d) (\w\w)', time)
         if m is None:
-            raise ValueError('time must match "\d\d:\d\d [AP]M\nGiven: "{}"'.format(time))
+            raise ValueError(r'time must match "\d\d:\d\d [AP]M\nGiven: "{}"'.format(time))
         hour = int(m.group(1))
         minute = int(m.group(2))
         ampm_offset = (12 if m.group(3) == 'PM' else 0)
 
-        block = (hour+ampm_offset)*2 + minute/30 - 16
+        block = (hour+ampm_offset)*2 + minute/30
         return block
 
     @staticmethod
