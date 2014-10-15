@@ -18,8 +18,8 @@ On ubuntu, do:
 
 **Create and seed the db**  
 Note: the server must be running, so do this in a second terminal
-> python manage.py create_db  
-> python manage.py seed_db [--seedterm 1490]
+> $ python manage.py create_db  
+> $ python manage.py seed_db [--seedterm 1490]
 
 **View**
 > http://localhost:5000/
