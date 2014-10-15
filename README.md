@@ -43,7 +43,7 @@ GET localhost:5000/api/terms/1490/courses
 In the project root, run:  
 > $ nosetests (to run all tests,)  
 > $ nosetests -v (to run all tests with verbose output, and)  
-> $ nosetests <path/to/file> (to only run tests in a certain file)
+> $ nosetests \<path/to/file\> (to only run tests in a certain file)
 
 ### Contributing
 
