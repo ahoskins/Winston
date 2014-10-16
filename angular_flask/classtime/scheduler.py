@@ -1,21 +1,15 @@
-class Scheduler(object):
+
+class ScheduleGenerator(object):
     """
-    Helper class which builds optimal schedules out of 
+    Helper class which builds optimal schedules out of
     class listings.
 
     Use static methods only - do not create instances of
     the class.
     """
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def generate_schedule(courses):
+    def __init__(self, course_list):
         """
-        Generates one good schedule based on the courses
-        provided.
-
-        courses should be a list of course dictionaries,
+        course_list should be a list of course dictionaries,
         each containing a list 'sections' of sections.
 
         Like so:
@@ -114,8 +108,8 @@ class Schedule(object):
 
     DAYS = 'MTWRF'
 
-    def __init__(self, sections=[]):
-        self.schedule = [[None]*Schedule.NUM_BLOCKS
+    def __init__(self, sections=None):
+        self.schedule = [[Schedule.OPEN]*Schedule.NUM_BLOCKS
                          for _ in range(Schedule.SCHOOL_DAYS)]
         # sections needs to be a list
         if sections is None:
@@ -137,6 +131,9 @@ class Schedule(object):
                     retstr += '-'
             retstr += '\n'
         return retstr[:-1] # strip last newline
+
+    def __eq__(self, other):
+        pass
 
     def conflicts(self, other):
         """
