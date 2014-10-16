@@ -7,7 +7,8 @@ def check_add_section(section, numblocks_expected):
     - fills the expected number of schedule blocks, and
     - fills the correct schedule blocks
     """
-    timetable = Schedule(section)
+    timetable = Schedule()
+    timetable.add_section(section)
     numblocks = 0
     for day in timetable.schedule:
         for block in day:
@@ -73,7 +74,7 @@ def check_conflict(sections, has_conflict):
             assert has_conflict == True
             return
         else:
-            timetable._add(section)
+            timetable.add_section(section)
     assert has_conflict == False
 
 def test_conflicts():

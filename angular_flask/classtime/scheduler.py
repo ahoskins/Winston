@@ -55,34 +55,62 @@ class Scheduler(object):
         <time> is a time of format 'HH:MM XM'
           - eg '08:00 AM'
         """
-        courses = Scheduler.normalize_schedules(courses)
-        courses = sorted(courses, key=lambda course: len(course['sections']))
-        schedule = Schedule()
-        for course in courses:
-            for section in course.get('sections'):
-                pass
+        self.course_list = sorted(course_list,
+                                  key=lambda course: len(course.get('sections')))
+        self.generated_schedules = []
 
-    @staticmethod
-    def normalize_schedules(courses):
+    def get_schedules(self, num_schedules=1):
+        """Returns `num_schedules` schedule objects generated from
+        the course_list passed upon initialization
         """
-        Takes a list of courses, as described in generate_schedule.
+        for _ in range(num_schedules):
+            self._generate_schedule()
+        return self.generated_schedules
 
-        Returns a list of course objects more suitable for analysis,
-        ie using the `day`, `startTime`, and `endTime` to produce a
-        **NEW FIELD**: 'schedule', which is an object of class Schedule
+    def _generate_schedule(self):
         """
-        for course in courses:
-            for section in course.get('sections'):
-                section['schedule'] = Schedule(section)
+        Generates one good schedule based on the course list
+        provided on initialization.
+
+        The schedule generated returned will *not* be one
+        of the schedules already in self.generated_schedules
+
+        DEV NOTE: There are two solid ways to solve this:
+        1) Backtracking - just do a depth-first search of the
+            courses
+            - If a section conflicts, try the next section
+            - If all of a course's sections conflict,
+            backtrack and pick a new section for the previously
+            processed course
+            - Dumb, easy
+            - Difficult to extend to arbitrary cost functions
+        2) Dijkstra - a breadth-first search of the state-space
+            - Node := schedule
+            - Adjacent nodes := all sections in the next course to be explored
+            - Destination nodes := schedules containing all input courses
+            - Find the least-cost-path to destination nodes
+            - Path is defined as all sections in a schedule
+            - Cost is calculated based on:
+                - Conflict => infinity
+                - No Conflict => zero
+                - Alternative cost functions
+                    - eg sleep-in, compactness, done early, with friends
+            - Maintain a priority queue of nodes to explore
+                - Priority is measured as the cost to reach a node
+        """
+        pass
 
 import re
-import sys
 class Schedule(object):
+    """
+    Represents a 5-day week of 24-hour days, split into
+    30-minute blocks.
+    """
     NUM_BLOCKS = 24*2
     SCHOOL_DAYS = 5
 
-    BUSY = 1
     OPEN = None
+    BUSY = 1
 
     DAYS = 'MTWRF'
 
@@ -90,11 +118,13 @@ class Schedule(object):
         self.schedule = [[None]*Schedule.NUM_BLOCKS
                          for _ in range(Schedule.SCHOOL_DAYS)]
         # sections needs to be a list
-        if not isinstance(sections, list):
+        if sections is None:
+            sections = []
+        elif not isinstance(sections, list):
             sections = [sections]
-        if sections is not None:
-            for section in sections:
-                self._add(section)
+
+        for section in sections:
+            self.add_section(section)
 
     def __repr__(self):
         retstr = ''
@@ -104,9 +134,9 @@ class Schedule(object):
                 if block == Schedule.BUSY:
                     retstr += '*'
                 else:
-                    retstr += 'O'
+                    retstr += '-'
             retstr += '\n'
-        return retstr
+        return retstr[:-1] # strip last newline
 
     def conflicts(self, other):
         """
@@ -124,7 +154,7 @@ class Schedule(object):
                     return True
         return False
 
-    def _add(self, section):
+    def add_section(self, section):
         """
         Takes a section which MUST contain at the bare minimum
         the keys: ['day', 'startTime', 'endTime']
@@ -135,14 +165,14 @@ class Schedule(object):
         start = section.get('startTime')
         end = section.get('endTime')
         if days is None or start is None or end is None:
-            raise ValueError('invalid section passed to Schedule::add()')
+            raise ValueError('invalid section passed to Schedule::add_section()')
 
         start = Schedule._timestr_to_blocknum(start)
         end = Schedule._timestr_to_blocknum(end)
         for day in days:
-            self._add_to_schedule(day, start, end)
+            self._add_by_block(day, start, end)
 
-    def _add_to_schedule(self, day, start, end):
+    def _add_by_block(self, day, start, end):
         daynum = Schedule._daystr_to_daynum(day)
         for i in range(end-start+1):
             self.schedule[daynum][start + i] = Schedule.BUSY
