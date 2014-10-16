@@ -13,9 +13,8 @@
 		</div>
 		<br>
 		<accordion>
-			<accordion-group class="course-accordion" heading="{{ subject }}" data-ng-repeat="(subject, subjectObject) in subjectBin">
-				<accordion-group class="course-accordion2" heading=" {{ singleSubjectObject.asString }}" data-ng-repeat="singleSubjectObject in subjectObject">
-<!-- 					{{ singleSubjectObject.courseDescription }} -->
+			<accordion-group class="course-accordion" heading="{{ subjectName }}" data-ng-repeat="(subjectName, subjectObject) in subjectBin">
+				<accordion-group class="course-accordion" heading=" {{ singleCourse.asString }}" data-ng-repeat="singleCourse in subjectObject">
 				</accordion-group>
 			</accordion-group>
 		</accordion>
