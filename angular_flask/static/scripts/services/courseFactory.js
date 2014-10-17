@@ -1,4 +1,3 @@
-// Factory
 coreModule.factory('courseFactory', function ($window, $http, $q) {
 	
 	var factory = {};

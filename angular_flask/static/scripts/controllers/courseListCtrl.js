@@ -1,6 +1,6 @@
 // Classes Controller
 //
-coreModule.controller('CourseListCtrl', ['$scope', '$window', 'courseFactory', function($scope, $window, courseFactory) {
+coreModule.controller('courseListCtrl', ['$scope', '$window', 'courseFactory', function($scope, $window, courseFactory) {
 	// New, organized course object
 	$scope.subjectBin = {};
 	var subjectBin = {};
@@ -39,7 +39,7 @@ coreModule.controller('CourseListCtrl', ['$scope', '$window', 'courseFactory', f
 				})
 			}).
 			error(function () {
-				$window.alert("Sorry, something when wrong.");
+				$window.alert("Sorry, something went wrong.");
 			});	
 
 			// Increment to next page	
