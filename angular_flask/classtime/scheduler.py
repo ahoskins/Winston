@@ -1,3 +1,6 @@
+import heapq
+import copy
+import re
 
 class ScheduleGenerator(object):
     """
@@ -51,6 +54,9 @@ class ScheduleGenerator(object):
         """
         self.course_list = sorted(course_list,
                                   key=lambda course: len(course.get('sections')))
+        
+        self._group_sections()
+
         self.generated_schedules = []
 
     def get_schedules(self, num_schedules=1):
@@ -60,6 +66,16 @@ class ScheduleGenerator(object):
         for _ in range(num_schedules):
             self._generate_schedule()
         return self.generated_schedules
+
+    def _group_sections(self):
+        for course in self.course_list:
+            for component in ['LEC', 'LAB', 'SEM']:
+                course[component] = []
+            sections = course.get('sections')
+            for section in sections:
+                component = section.get('component')
+                if component is not None:
+                    course[component].append(section)
 
     def _generate_schedule(self):
         """
@@ -92,9 +108,50 @@ class ScheduleGenerator(object):
             - Maintain a priority queue of nodes to explore
                 - Priority is measured as the cost to reach a node
         """
-        pass
+        return self._generate_schedule_dijkstra()
 
-import re
+    def _generate_schedule_dijkstra(self):
+        """
+        Generates one good schedule based on the course list
+        provided on initialization.
+
+        The schedule generated returned will *not* be one
+        of the schedules already in self.generated_schedules
+
+        Dijkstra - a breadth-first search of the state-space
+        - Node := schedule
+        - Adjacent nodes := all sections in the next course to be explored
+        - Destination nodes := schedules containing all input courses
+        - Find the least-cost-path to destination nodes
+        - Path is defined as all sections in a schedule
+        - Cost is calculated based on:
+            - Conflict => infinity
+            - No Conflict => zero
+            - Alternative cost functions
+                - eg sleep-in, compactness, done early, with friends
+        - Maintain a priority queue of nodes to explore
+            - Priority is measured as the cost to reach a node
+        """
+        heap = [Schedule()]
+        component_types = ['LEC', 'LAB', 'SEM']
+        for course in self.course_list:
+            print 'Course #{}'.format(course['course'])
+            for component in [course[c_type] for c_type in component_types]:
+                if len(component):
+                    print 'Component {}'.format(component[0]['component'])
+                    half_done_schedules = [heapq.heappop(heap) for _ in range(len(heap))]
+                    for section in component:
+                        for sched in half_done_schedules:
+                            if not sched.conflicts(section):
+                                heapq.heappush(heap, sched.add_section_and_deepcopy(section))
+                    print heap
+
+        print 'Candidates'
+        candidates = [heapq.heappop(heap) for _ in range(len(heap))]
+        for candidate in candidates:
+            print candidate
+            import pprint; pprint.pprint(candidate.sections)
+
 class Schedule(object):
     """
     Represents a 5-day week of 24-hour days, split into
@@ -117,11 +174,12 @@ class Schedule(object):
         elif not isinstance(sections, list):
             sections = [sections]
 
+        self.sections = []
         for section in sections:
             self.add_section(section)
 
     def __repr__(self):
-        retstr = ''
+        retstr = '\n'
         for day, daynum in zip(self.schedule, range(len(self.schedule))):
             retstr += '{}: '.format(Schedule.DAYS[daynum])
             for block in day:
@@ -132,19 +190,20 @@ class Schedule(object):
             retstr += '\n'
         return retstr[:-1] # strip last newline
 
-    def __eq__(self, other):
-        pass
+    def __lt__(self, other):
+        """
+        This is where all cost functions will be evaluated
+        """
+        return len(self.sections) < len(other.sections)
 
-    def conflicts(self, other):
+    def conflicts(self, section):
         """
         Returns true if there is a conflict between:
         1) this schedule (self), and
         2) other, which is a section dict containing at LEAST
-           the properties 'day', 'startTime', and 'endTime'
+           the properties 'component', day', 'startTime', and 'endTime'
         """
-        other = Schedule(other)
-        print self
-        print other
+        other = Schedule(section)
         for ourday, theirday in zip(self.schedule, other.schedule):
             for ourblock, theirblock in zip(ourday, theirday):
                 if ourblock == Schedule.BUSY and theirblock == Schedule.BUSY:
@@ -154,10 +213,11 @@ class Schedule(object):
     def add_section(self, section):
         """
         Takes a section which MUST contain at the bare minimum
-        the keys: ['day', 'startTime', 'endTime']
+        the keys: ['component', 'day', 'startTime', 'endTime']
 
         Adds the section to the schedule
         """
+        self.sections.append(section)
         days = section.get('day')
         start = section.get('startTime')
         end = section.get('endTime')
@@ -168,6 +228,11 @@ class Schedule(object):
         end = Schedule._timestr_to_blocknum(end)
         for day in days:
             self._add_by_block(day, start, end)
+
+    def add_section_and_deepcopy(self, section):
+        ret = copy.deepcopy(self)
+        ret.add_section(section)
+        return ret
 
     def _add_by_block(self, day, start, end):
         daynum = Schedule._daystr_to_daynum(day)
