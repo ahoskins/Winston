@@ -40,6 +40,11 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 	// Gather new object
 	$scope.subjectBin = subjectBin;
 
+ 	$scope.items = {
+                 'A2F0C7':{'secId':'12345', 'pos':'a20'},
+                 'C8B3D1':{'pos':'b10'}
+               };
+
 }]);
 
 
