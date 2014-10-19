@@ -5,22 +5,6 @@
 	<link rel="stylesheet" type="text/css" href="/static/styles/style.css"/>
 </head>
 <body>
-<!-- 	<div data-ng-controller="courseListCtrl">
-		Search By All:
-		<br>
-		<div class="search-box">
-			<input type="text" data-ng-model="search" />
-		</div>
-		<br>
-		legacy
-		<accordion>
-			<accordion-group class="course-accordion" heading="{{ subjectName }}" data-ng-repeat="(subjectName, subjectObject) in subjectBin">
-				<accordion-group class="course-accordion" heading=" {{ singleCourse.asString }}" data-ng-repeat="singleCourse in subjectObject">
-				</accordion-group>
-			</accordion-group>
-		</accordion>
-	</div> -->
-
 
 	<div data-ng-controller="fastCourseListCtrl">
 		Search By All:
@@ -29,10 +13,13 @@
 			<input type="text" data-ng-model="search" />
 		</div>
 		<br>
+
 		<accordion>
-			<accordion-group class="course-accordion" heading="{{ subjectName }}" data-ng-repeat="(subjectName, subjectObject) in subjectBin">
-				<accordion-group class="course-accordion" heading=" {{ singleCourse.asString }}" data-ng-repeat="singleCourse in subjectObject">
+			<accordion-group class="course-accordion" heading="{{ subjectName }}" data-ng-repeat="(subjectName, subjectObject) in subjectBin | courseFilter:search">
+			<accordion>
+				<accordion-group class="course-accordion" heading="{{ singleCourse.asString }} {{ singleCourse.subjectTitle }}" data-ng-repeat="singleCourse in subjectObject | filter:search">
 				</accordion-group>
+			</accordion>
 			</accordion-group>
 		</accordion>
 	</div>
@@ -44,10 +31,9 @@
 
 	<!-- Angular Core -->
 	<script type="text/javascript" src="/static/scripts/app.js"></script>
-<!-- 	// <script type="text/javascript" src="/static/scripts/services/courseFactory.js"></script>
-	// <script type="text/javascript" src="/static/scripts/controllers/courseListCtrl.js"></script> -->
 	<script type="text/javascript" src="/static/scripts/services/fastCourseFactory.js"></script>
 	<script type="text/javascript" src="/static/scripts/controllers/fastCourseListCtrl.js"></script>
+	<script type="text/javascript" src="/static/scripts/services/filter.js"></script>
 
 	</body>
 </html>
