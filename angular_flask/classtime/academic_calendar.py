@@ -1,7 +1,5 @@
-import sys
-import re
 
-from academic_databases.abstract_academicdb import AcademicDatabase
+from remote_db.remotedb_factory import RemoteDatabaseFactory
 
 class AcademicCalendar(object):
     """
@@ -20,12 +18,12 @@ class AcademicCalendar(object):
         See 'institutions/ualberta.json' for an example.
         """
         try:
-            self._course_db = AcademicDatabase.build(institution_name)
-            self._course_db.connect()
+            self._remote_db = RemoteDatabaseFactory.build(institution_name)
+            self._remote_db.connect()
         except:
             raise
 
-        self._all_terms = self._course_db.search('terms')
+        self._all_terms = self._remote_db.search('terms')
         self._term = None
 
         self._all_courses = None
@@ -54,13 +52,13 @@ class AcademicCalendar(object):
             raise Exception('Must select a term before looking for courses!')
         
         current_term = 'term={}'.format(self._term)
-        self._all_courses = self._course_db.search('courses',
+        self._all_courses = self._remote_db.search('courses',
                                                    path=current_term)
 
     def _populate_sections_for_course(self, course):
         current_course = 'course={},term={}'.format(course['course'],
                                                     self._term)
-        sections = self._course_db.search('sections',
+        sections = self._remote_db.search('sections',
                                           path=current_course)
         for section in sections:
             # class_ is a field in the Section sqlalchemy model
@@ -70,7 +68,7 @@ class AcademicCalendar(object):
 
             current_section = 'class={},{}'.format(section.get('class_'),
                                                    current_course)
-            classtimes = self._course_db.search('classtimes',
+            classtimes = self._remote_db.search('classtimes',
                                                 path=current_section)
             if len(classtimes) == 1:
                 classtime = classtimes[0]

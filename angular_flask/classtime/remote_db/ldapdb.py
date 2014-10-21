@@ -1,13 +1,12 @@
-import sys
 
 import ldap
 from ldap.controls import SimplePagedResultsControl
 
-import abstract_academicdb
+import abstract_remotedb
 
-class LDAPDatabase(abstract_academicdb.AcademicDatabase):
+class LDAPDatabase(abstract_remotedb.AbstractRemoteDatabase):
     """
-    Implements the AcademicDatabase abstract base class
+    Implements the AbstractRemoteDatabase base class
 
     Connects to an LDAP server
     """
