@@ -1,5 +1,5 @@
 
-from angular_flask.classtime.scheduler import Schedule
+from angular_flask.classtime.schedule import Schedule
 
 def check_add_section(section, numblocks_expected):
     """
@@ -12,7 +12,7 @@ def check_add_section(section, numblocks_expected):
     numblocks = 0
     for day in timetable.schedule:
         for block in day:
-            if block == Schedule.BUSY:
+            if block is not Schedule.OPEN:
                 numblocks += 1
     assert numblocks == numblocks_expected
 

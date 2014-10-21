@@ -1,6 +1,12 @@
 
+from angular_flask.logging import logging
+
 from angular_flask.core import api_manager
-from angular_flask.models import Term, Course
+from angular_flask.models import Term, Course, Schedule
+from angular_flask.classtime import cal
+from angular_flask.classtime.schedule_generator import ScheduleGenerator
+
+from angular_flask.core import db
 
 # --------------------------------
 # API Routing
