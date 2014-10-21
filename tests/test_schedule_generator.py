@@ -1,4 +1,5 @@
-from angular_flask.classtime.scheduler import *
+
+from angular_flask.classtime.schedule_generator import ScheduleGenerator
 
 def test_generate_schedule():
     course_list = [
@@ -44,4 +45,4 @@ def test_generate_schedule():
         }
     ]
     sg = ScheduleGenerator(course_list)
-    sg._generate_schedule_dijkstra()
+    sg.get_schedules()
