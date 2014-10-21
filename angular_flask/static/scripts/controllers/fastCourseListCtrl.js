@@ -8,7 +8,7 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 	// temp used in transfer to new course object
 	var pageListing;
 
-	for (var i = 1; i <= 8; i++) {
+	for (var i = 1; i <= 5; i++) {
 
 		// Purpose of first call is purely to scrape total_pages
 		fastCourseFactory.getCoursesPage(i).
@@ -36,14 +36,8 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 
 	}
 
-
 	// Gather new object
 	$scope.subjectBin = subjectBin;
-
- 	$scope.items = {
-                 'A2F0C7':{'secId':'12345', 'pos':'a20'},
-                 'C8B3D1':{'pos':'b10'}
-               };
 
 }]);
 

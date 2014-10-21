@@ -7,17 +7,18 @@
 <body>
 
 	<div data-ng-controller="fastCourseListCtrl">
+
 		Search By All:
 		<br>
 		<div class="search-box">
-			<input type="text" data-ng-model="search" />
+			<input type="text" id="search-box" data-ng-model="search" />
 		</div>
 		<br>
 
 		<accordion>
 			<accordion-group class="course-accordion" heading="{{ subjectName }}" data-ng-repeat="(subjectName, subjectObject) in subjectBin | courseFilter:search">
 			<accordion>
-				<accordion-group class="course-accordion" heading="{{ singleCourse.asString }} {{ singleCourse.subjectTitle }}" data-ng-repeat="singleCourse in subjectObject | filter:search">
+				<accordion-group class="course-accordion" heading="{{ singleCourse.asString }} {{ singleCourse.subjectTitle }}" data-ng-repeat="singleCourse in subjectObject">
 				</accordion-group>
 			</accordion>
 			</accordion-group>
@@ -34,6 +35,7 @@
 	<script type="text/javascript" src="/static/scripts/services/fastCourseFactory.js"></script>
 	<script type="text/javascript" src="/static/scripts/controllers/fastCourseListCtrl.js"></script>
 	<script type="text/javascript" src="/static/scripts/services/filter.js"></script>
+	<script type="text/javascript" src="/static/scripts/controllers/misc.js"></script>
 
 	</body>
 </html>
