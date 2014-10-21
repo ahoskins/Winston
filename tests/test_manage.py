@@ -7,7 +7,7 @@ def test_manage_seed_db():
     from manage import seed_db
     class Arguments: pass
     args = Arguments()
-    args.seedterm = None
+    args.term = None
     db.create_all()
     seed_db(args, db)
 

@@ -1,10 +1,20 @@
 import sys
 import argparse
 
+from angular_flask.logging import logging
+
 from angular_flask.core import db
-from angular_flask.models import Term, Course
+from angular_flask.models import Term, Course, Section
 
 from angular_flask.classtime import cal
+
+def create_db():
+    db.create_all()
+    print 'DB created!'
+
+def delete_db():
+    db.drop_all()
+    print 'DB deleted!'
 
 def seed_db(args, db):
     # Get the term list
@@ -17,17 +27,16 @@ def seed_db(args, db):
     try:
         db.session.commit()
     except:
-        print 'Terms failed to add to database'
+        logging.warning('Terms failed to add to database')
     else:
-        print 'All terms successfully added'
+        logging.info('All terms successfully added')
 
     # Get the course list
-    if args.seedterm:
-        cal.select_current_term(args.seedterm)
-        courses = cal.get_courses_for_current_term()
+    if args.term:
+        cal.select_current_term(args.term)
     else:
         cal.select_current_term('1490')
-        courses = cal.get_courses_for_current_term()
+    courses = cal.get_courses_for_current_term()
 
     # Feed the course list into the database
     sys.stdout.write('Course 0/{}'.format(len(courses)))
@@ -36,33 +45,39 @@ def seed_db(args, db):
         if not i % 100:
             sys.stdout.write('\rCourse {}/{} added'.format(i, len(courses)))
             sys.stdout.flush()
+        logging.debug('course.term: {}'.format(course.get('term')))
         course_model = Course(course)
         if not Course.query.get(course_model.course):
             db.session.add(course_model)
     try:
         db.session.commit()
     except:
-        print '\nCourses failed to add to database'
+        logging.warning('Courses failed to add to database')
+    else:
+        logging.info('DB seeded!')
+
+def refresh_db(args, db):
+    delete_db()
+    create_db()
+    seed_db(args, db)
 
 def main():
-    parser = argparse.ArgumentParser(description='Manage this Flask application.')
-    parser.add_argument('command', help='the name of the command you want to run')
-    parser.add_argument('--seedterm', help='the id of the ualberta term to fill the db with (eg 1490)')
+    parser = argparse.ArgumentParser(description='Manage the academic database')
+    parser.add_argument('command', help='create_db, fill_courses, fill_sections, delete_db, refresh_db')
+    parser.add_argument('--term', help='the id of the term to fill the db with (eg 1490)')
+    parser.add_argument('--startfrom', help='the course id to begin filling at')
     args = parser.parse_args()
 
     if args.command == 'create_db':
-        db.create_all()
-        print 'DB created!'
-
+        create_db()
     elif args.command == 'delete_db':
-        db.drop_all()
-        print 'DB deleted!'
-
-    elif args.command == 'seed_db':
+        delete_db()
+    elif args.command == 'seed_db' or args.command == 'fill_courses':
         seed_db(args, db)
-        print 'DB seeded!'
-
+    elif args.command == 'refresh_db':
+        refresh_db(args, db)
     else:
+        parser.print_usage()
         raise Exception('Invalid command')
 
 if __name__ == '__main__':

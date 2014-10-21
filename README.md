@@ -19,7 +19,7 @@ On ubuntu, do:
 **Create and seed the db**  
 Note: the server must be running, so do this in a second terminal
 > $ python manage.py create_db  
-> $ python manage.py seed_db [--seedterm 1490]  
+> $ python manage.py fill_courses [--term 1490]  
 > > Note: for debugging or cleanup purposes, the database can be deleted with  
 > > $ python manage.py delete_db
 
