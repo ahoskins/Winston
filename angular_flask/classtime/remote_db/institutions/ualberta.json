@@ -1,0 +1,55 @@
+{
+    "type" : "ldap",
+    "server" : "directory.srv.ualberta.ca",
+    "basedn" : "ou=calendar,dc=ualberta,dc=ca",
+    "saved_searches" : {
+        "terms" : {
+            "search_flt" : "(&(term=*)(!(course=*)))",
+            "attrs" : ["term",
+                       "termTitle",
+                       "startDate",
+                       "endDate"]
+        },
+        "courses" : {
+            "search_flt" : "(course=*)",
+            "attrs" : ["term",
+                       "course",
+                       "subject",
+                       "subjectTitle",
+                       "catalog",
+                       "courseTitle",
+                       "courseDescription",
+                       "facultyCode",
+                       "faculty",
+                       "departmentCode",
+                       "department",
+                       "career",
+                       "units",
+                       "asString"]
+        },
+        "sections" : {
+            "search_flt" : "(class=*)",
+            "attrs" : ["term",
+                       "course",
+                       "class",
+                       "section",
+                       "component",
+                       "classType",
+                       "classStatus",
+                       "enrollStatus",
+                       "capacity",
+                       "session",
+                       "campus",
+                       "classNotes",
+                       "instructorUid",
+                       "asString"]
+        },
+        "classtimes" : {
+            "search_flt" : "(classtime=*)",
+            "attrs" : ["day",
+                       "startTime",
+                       "endTime",
+                       "location"]
+        }
+    }
+}
