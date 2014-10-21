@@ -45,7 +45,6 @@ def seed_db(args, db):
         if not i % 100:
             sys.stdout.write('\rCourse {}/{} added'.format(i, len(courses)))
             sys.stdout.flush()
-        logging.debug('course.term: {}'.format(course.get('term')))
         course_model = Course(course)
         if not Course.query.get(course_model.course):
             db.session.add(course_model)
