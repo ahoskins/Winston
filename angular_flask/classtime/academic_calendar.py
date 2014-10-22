@@ -106,14 +106,16 @@ class AcademicCalendar(object):
             return
 
         logging.info('Populating courses for term {}'.format(self._term))
+        logging.debug('Fetching from remote server...')
         current_term = 'term={}'.format(self._term)
         all_courses = self._remote_db.search('courses',
                                              path=current_term)
-        logging.debug('Adding course')
-        for i, course in zip(range(len(all_courses)), all_courses):
+        logging.debug('...fetched')
+        num_courses = len(all_courses)
+        for i, course in zip(range(1, num_courses+1), all_courses):
             if not Course.query.get(course.get('course')):
-                if i % 500 == 0:
-                    logging.debug('{}/{}'.format(i, len(all_courses)))
+                if i % 500 == 0 or i == num_courses:
+                    logging.debug('{}%\t({}/{})'.format(i*100/num_courses, i, num_courses))
                 self._local_db.session.add(Course(course))
         try:
             self._local_db.session.commit()

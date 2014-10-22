@@ -8,7 +8,7 @@ from angular_flask.classtime import cal
 
 def create_db():
     db.create_all()
-    logging.info('DB created! seed_db creates the DB anyway though, so this is basically a no-op')
+    logging.info('DB created!')
 
 def delete_db():
     db.drop_all()
@@ -23,6 +23,7 @@ def seed_db(args, db):
 
 def refresh_db(args, db):
     delete_db()
+    create_db()
     seed_db(args, db)
 
 def main():
