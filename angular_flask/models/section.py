@@ -34,7 +34,16 @@ class Section(db.Model):
     endTime = db.Column(db.String(30))
     location = db.Column(db.String(30))
 
+    def __init__(self, jsonobj):
+        for key, value in jsonobj.items():
+            if key == 'class':
+                key = 'class_'
+            self.__setattr__(key, value)
+
     def __repr__(self):
         return '<Section: #{num} ({name})'.format(
                 num=self.class_,
-                name=self.asString())
+                name=self.asString)
+
+    def to_dict(self):
+        return dict((col, getattr(self, col)) for col in self.__table__.columns.keys())

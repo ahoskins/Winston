@@ -1,59 +1,25 @@
-import sys
+
 import argparse
 
 from angular_flask.logging import logging
 
 from angular_flask.core import db
-from angular_flask.models import Term, Course, Section
-
 from angular_flask.classtime import cal
 
 def create_db():
     db.create_all()
-    print 'DB created!'
+    logging.info('DB created!')
 
 def delete_db():
     db.drop_all()
-    print 'DB deleted!'
+    logging.info('DB deleted!')
 
 def seed_db(args, db):
-    # Get the term list
-    terms = cal.get_term_list()
-    # Feed the term list into the database
-    for term in terms:
-        term_model = Term(term)
-        if not Term.query.get(term_model.term):
-            db.session.add(term_model)
-    try:
-        db.session.commit()
-    except:
-        logging.warning('Terms failed to add to database')
-    else:
-        logging.info('All terms successfully added')
-
-    # Get the course list
+    term = 1490
     if args.term:
-        cal.select_current_term(args.term)
-    else:
-        cal.select_current_term('1490')
-    courses = cal.get_courses_for_current_term()
-
-    # Feed the course list into the database
-    sys.stdout.write('Course 0/{}'.format(len(courses)))
-    sys.stdout.flush()
-    for course, i in zip(courses, range(len(courses))):
-        if not i % 100:
-            sys.stdout.write('\rCourse {}/{} added'.format(i, len(courses)))
-            sys.stdout.flush()
-        course_model = Course(course)
-        if not Course.query.get(course_model.course):
-            db.session.add(course_model)
-    try:
-        db.session.commit()
-    except:
-        logging.warning('Courses failed to add to database')
-    else:
-        logging.info('DB seeded!')
+        term = int(args.term)
+    cal.select_current_term(term)
+    logging.info('DB seeded with term {}'.format(term))
 
 def refresh_db(args, db):
     delete_db()
