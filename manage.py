@@ -17,7 +17,7 @@ def delete_db():
 def seed_db(args, db):
     term = 1490
     if args.term:
-        term = int(args.term)
+        term = args.term
     cal.select_current_term(term)
     logging.info('DB seeded with term {}'.format(term))
 

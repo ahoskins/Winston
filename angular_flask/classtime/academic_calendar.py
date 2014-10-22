@@ -46,7 +46,6 @@ class AcademicCalendar(object):
         if Term.query.first() is None:
             self._populate_terms()
 
-        termid = int(termid)
         if Term.query.get(termid) is None:
             logging.warning('Invalid termid {} selected'.format(termid))
             return
