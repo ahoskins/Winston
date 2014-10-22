@@ -2,99 +2,35 @@
 import heapq
 
 from angular_flask.logging import logging
-from angular_flask.models import Section
-from schedule import Schedule
+from angular_flask.classtime.schedule import Schedule
 
 class ScheduleGenerator(object):
     """
-    Helper class which builds optimal schedules out of
-    class listings.
-
-    Use static methods only - do not create instances of
-    the class.
+    Class which builds optimal schedules out of
+    course listings.
     """
-    def __init__(self, course_list):
+    def __init__(self, cal, term, course_ids):
         """
-        course_list should be a list of course dictionaries,
-        each containing a list 'sections' of sections.
-
-        Like so:
-        [
-            {
-                'course_name' : 'course_asString',
-                'course_attr_a' : 'someattr',
-                ...
-                'sections' : [
-                                {
-                                    'section_asString' : 'LEC A1',
-                                    'component' : '<component>',
-                                    'day' : '<daystring>',
-                                    'startTime' : '<time>',
-                                    'endTime' : '<time>'
-                                },
-                                ...
-                                {
-                                    ...
-                                }
-                            ]
-            },
-            ...
-            { 
-                ...
-            }
-        ]
-        Where:
-
-        <component> is one of LEC, LAB or SEM
-
-        <daystring> is a string containing the days the
-          class is scheduled on:
-          - UMTWRFS is Sunday...Saturday
-          - eg 'MWF' or 'TR'
-
-        <time> is a time of format 'HH:MM XM'
-          - eg '08:00 AM'
+        course_ids should be a list of integers representing the
+        courses which should be in the schedule
         """
-        course_ids = [int(course.get('course')) for course in course_list]
-        logging.info('Creating ScheduleGenerator with course ids "{}"'.format(course_ids))
-        for course_id, course in zip(course_ids, course_list):
-            sections = []
-            for section in Section.query.filter_by(course=course_id).all():
-                sections.append(section.to_dict())
-            
-            course['sections'] = sections
+        logging.info('Creating ScheduleGenerator with course ids {}'.format(course_ids))
+        self._course_ids = self._normalize_course_ids(course_ids)
+        self._schedules = None
 
-            msg_num_sections = 'found {} sections for course "{}"' \
-                               .format(len(sections), course_id)
-            if len(sections) < 1:
-                logging.warning(msg_num_sections)
-            else:
-                logging.debug(msg_num_sections)
-        self.course_list = sorted(course_list,
-                                  key=lambda course: len(course.get('sections')))
-        self._group_sections()
-        self.generated_schedules = []
+        self._cal = cal
+        self._cal.select_current_term(term)
 
     def get_schedules(self):
         """Returns schedule objects generated from
-        the course_list passed upon initialization
+        the courses passed upon initialization
         """
-        self._generate_schedule()
-        return self.generated_schedules
+        self._generate_schedules()
+        return self._schedules
 
-    def _group_sections(self):
-        for course in self.course_list:
-            for component in ['LEC', 'LAB', 'SEM']:
-                course[component] = []
-            sections = course.get('sections')
-            for section in sections:
-                component = section.get('component')
-                if component is not None:
-                    course[component].append(section)
-
-    def _generate_schedule(self):
+    def _generate_schedules(self):
         """
-        Generates one good schedule based on the course list
+        Generates good schedules based on the course list
         provided on initialization.
 
         The schedule generated returned will *not* be one
@@ -106,25 +42,38 @@ class ScheduleGenerator(object):
           order governed by their "score" regarding to
           whatever cost functions we define
         """
-        heap = [Schedule()]
-        logging.info('Generating schedule')
-        component_types = ['LEC', 'LAB', 'SEM']
-        for course in self.course_list:
-            logging.debug('Scheduling course "{}"'.format(course['course']))
-            for component in [course[c_type] for c_type in component_types]:
-                if len(component):
-                    logging.debug('Scheduling component "{}"'.format(component[0]['component']))
-                    half_done_schedules = [heapq.heappop(heap) for _ in range(len(heap))]
-                    for section, i in zip(component, range(len(component))):
-                        logging.debug('\t{}/{}'.format(i, len(component)))
-                        for sched in half_done_schedules:
-                            if not sched.conflicts(section):
-                                heapq.heappush(heap, sched.add_section_and_deepcopy(section))
+        logging.info('Generating schedules for course ids {}'.format(self._course_ids))
+        components = self._cal.get_components_for_course_ids(self._course_ids)
+        logging.debug('Components to schedule: {}'.format(len(components)))
 
-        logging.info('Candidates')
-        candidates = [heapq.heappop(heap) for _ in range(len(heap))]
-        for candidate in candidates:
-            logging.info(candidate)
+        HEAP_SIZE = 50
 
-        for candidate in candidates[:5]:
-            self.generated_schedules.append(candidate.sections)       
+        components = sorted(components, key=lambda component: len(component))
+        candidates = [Schedule()]
+        for i, component in zip(range(len(components)), components):
+            logging.debug('Scheduling Course {}:{} ({}/{})'.format(
+                          component[0].get('course'), component[0].get('component'),
+                          i+1, len(components)))
+            for sched in candidates[:]:
+                for section in component:
+                    if sched.conflicts(section):
+                        continue
+                    new_candidate = sched.add_section_and_deepcopy(section)
+                    if len(candidates) > HEAP_SIZE:
+                        heapq.heapreplace(candidates, new_candidate)
+                    else:
+                        heapq.heappush(candidates, new_candidate)
+            logging.debug('# Candidates: {}'.format(len(candidates)))
+
+        if len(candidates) > 0:
+            self._schedules = [heapq.heappop(candidates) for _ in range(5)]
+        else:
+            self._schedules = None
+
+    def _normalize_course_ids(self, course_ids):
+        course_ids = [str(int(course_id)) for course_id in course_ids]
+        for i, course_id in zip(range(len(course_ids)), course_ids):
+            while len(course_id) < 6:
+                course_id = '0' + course_id
+            course_ids[i] = course_id
+        return course_ids

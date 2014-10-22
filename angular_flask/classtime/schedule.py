@@ -15,6 +15,7 @@ class Schedule(object):
     DAYS = 'MTWRF'
 
     OPEN = 0
+    SYMBOLS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     def __init__(self, sections=None):
         self.schedule = [[Schedule.OPEN]*Schedule.NUM_BLOCKS
@@ -37,22 +38,28 @@ class Schedule(object):
                 if block == Schedule.OPEN:
                     retstr += '-'
                 else:
-                    retstr += str(block)
+                    retstr += Schedule.SYMBOLS[block]
             retstr += '\n'
         return retstr[:-1] # strip last newline
 
     def __lt__(self, other):
         """
-        This is where all cost functions will be evaluated
+        This is where all cost functions will be performed
+
+
         """
-        return True
+        if len(self.sections) < len(other.sections):
+            return True
+        if len(self.sections) > len(other.sections):
+            return False
+        return False # more cost functions go here
 
     def conflicts(self, section):
         """
         Returns true if there is a conflict between:
         1) this schedule (self), and
         2) other, which is a section dict containing at LEAST
-           the properties 'component', day', 'startTime', and 'endTime'
+           the properties 'day', 'startTime', and 'endTime'
         """
         other = Schedule(section)
         for ourday, theirday in zip(self.schedule, other.schedule):
@@ -64,7 +71,7 @@ class Schedule(object):
     def add_section(self, section):
         """
         Takes a section which MUST contain at the bare minimum
-        the keys: ['component', 'day', 'startTime', 'endTime']
+        the keys: ['day', 'startTime', 'endTime']
 
         Adds the section to the schedule
         """
@@ -73,7 +80,6 @@ class Schedule(object):
         start = section.get('startTime')
         end = section.get('endTime')
         if days is None or start is None or end is None:
-            logging.warning('not enough information in this section to add its times to the schedule')
             return
 
         start = Schedule._timestr_to_blocknum(start)
