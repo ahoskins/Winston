@@ -22,7 +22,7 @@ The server must be running, so do this in a second terminal
 
 ## Managing the database
 
-The database needs to be seeded initially. All database management is done through `manage.py`.
+All database management is done using `$ python manage.py <command>`
 
 manage.py commands:
 -`$ python manage.py seed_db [--term TERM]`: seeds the database with the specified term and its courses. TERM is a 4-digit term id. If no TERM is specified, defaults to 1490 (Fall Term 2014).
