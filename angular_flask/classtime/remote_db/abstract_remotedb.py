@@ -35,14 +35,14 @@ class AbstractRemoteDatabase(object):
 
         These should be:
         1) Defined in a config file,
-        2) Loaded into the database object at runtime        
+        2) Loaded into the database object at runtime
         """
         raise NotImplementedError()
 
     def search(self, name, **kwargs):
         """
-        Search the database by a saved search name. This will look different for different
-        institutions and database types, so use kwargs to define
+        Search the database by a saved search name. This will look different for
+        different institutions and database types, so use kwargs to define
         parameters to the search
 
         Can also take kwargs as a method of passing search-time variable
