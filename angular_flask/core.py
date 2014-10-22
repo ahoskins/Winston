@@ -1,3 +1,4 @@
+
 from angular_flask import app
 
 from flask.ext.sqlalchemy import SQLAlchemy
