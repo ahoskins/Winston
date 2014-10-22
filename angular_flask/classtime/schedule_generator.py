@@ -14,7 +14,6 @@ class ScheduleGenerator(object):
         course_ids should be a list of integers representing the
         courses which should be in the schedule
         """
-        logging.info('Creating ScheduleGenerator with course ids {}'.format(course_ids))
         self._course_ids = course_ids
         self._schedules = None
 
@@ -44,14 +43,14 @@ class ScheduleGenerator(object):
         """
         logging.info('Generating schedules for course ids {}'.format(self._course_ids))
         components = self._cal.get_components_for_course_ids(self._course_ids)
-        logging.debug('Components to schedule: {}'.format(len(components)))
+        logging.debug('There are {} components to schedule'.format(len(components)))
 
         HEAP_SIZE = 50
 
         components = sorted(components, key=lambda component: len(component))
         candidates = [Schedule()]
         for i, component in zip(range(len(components)), components):
-            logging.debug('Scheduling Course {}:{} ({}/{})'.format(
+            logging.debug('Scheduling Course {}:{}\t({}/{})'.format(
                           component[0].get('course'), component[0].get('component'),
                           i+1, len(components)))
             for sched in candidates[:]:
@@ -59,11 +58,11 @@ class ScheduleGenerator(object):
                     if sched.conflicts(section):
                         continue
                     new_candidate = sched.add_section_and_deepcopy(section)
-                    if len(candidates) > HEAP_SIZE:
+                    if len(candidates) >= HEAP_SIZE:
                         heapq.heapreplace(candidates, new_candidate)
                     else:
                         heapq.heappush(candidates, new_candidate)
-            logging.debug('# Candidates: {}'.format(len(candidates)))
+            logging.debug('{} Candidates'.format(len(candidates)))
 
         if len(candidates) > 0:
             self._schedules = [heapq.heappop(candidates) for _ in range(5)]
