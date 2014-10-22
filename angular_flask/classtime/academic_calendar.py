@@ -67,9 +67,15 @@ class AcademicCalendar(object):
             self._populate_sections_for_course_id(course_id)
             course_query = Section.query.filter_by(course=course_id)
             for component in ['LEC', 'LAB', 'SEM']:
-                section_models = course_query.filter_by(component=component).all()
+                section_models = course_query \
+                                 .filter_by(component=component) \
+                                 .order_by(Section.day.desc()) \
+                                 .order_by(Section.startTime.desc()) \
+                                 .order_by(Section.endTime.desc()) \
+                                 .all()
                 sections = [section_model.to_dict()
                             for section_model in section_models]
+                sections = self._condense_similar_sections(sections)
                 if len(sections) > 0:
                     components.append(sections)
         return components
@@ -159,3 +165,40 @@ class AcademicCalendar(object):
             logging.warning('Failure')
         else:
             logging.info('Success')
+
+    def _condense_similar_sections(self, sections):
+        """
+        Returns a list of sections where each element has the
+        'similarSections' field.
+
+        similarSections is a list of other sections which are:
+        1. The same component (ie CHEM 103 LAB)
+        2. On the same day
+        2. At the same time (same startTime and endTime)
+
+        PRECONDITIONS: sections **MUST** be sorted by:
+        1. day
+        2. startTime
+        3. endTime
+        """
+        if len(sections) <= 1:
+            return sections
+        logging.debug('Condensing Course {}:{}'.format(sections[0].get('course'), sections[0].get('component')))
+        lag, lead, num_sections = 0, 1, len(sections)
+        while lead < num_sections:
+            section, lead_section = sections[lag], sections[lead]
+            if  section.get('day') == lead_section.get('day') \
+            and section.get('startTime') == lead_section.get('startTime') \
+            and section.get('endTime') == lead_section.get('endTime'):
+                if 'similarSections' not in section:
+                    section['similarSections'] = []
+                section['similarSections'].append(lead_section)
+                lead += 1
+            else:
+                lag = lead
+                lead += 1
+        condensed = [section for section in sections if 'similarSections' in section]
+        if len(condensed) > 0:
+            return condensed
+        else:
+            return sections

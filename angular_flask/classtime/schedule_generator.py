@@ -46,6 +46,7 @@ class ScheduleGenerator(object):
         logging.debug('There are {} components to schedule'.format(len(components)))
 
         HEAP_SIZE = 50
+        SCHEDULES_TO_RETURN = 5
 
         components = sorted(components, key=lambda component: len(component))
         candidates = [Schedule()]
@@ -64,7 +65,7 @@ class ScheduleGenerator(object):
                         heapq.heappush(candidates, new_candidate)
             logging.debug('{} Candidates'.format(len(candidates)))
 
-        if len(candidates) > 0:
-            self._schedules = [heapq.heappop(candidates) for _ in range(5)]
+        if len(candidates) >= SCHEDULES_TO_RETURN:
+            self._schedules = [heapq.heappop(candidates) for _ in range(min(5, len(candidates)))]
         else:
             self._schedules = None
