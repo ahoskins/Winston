@@ -19,6 +19,7 @@ class Schedule(object):
     def __init__(self, sections=None):
         self.schedule = [[Schedule.OPEN]*Schedule.NUM_BLOCKS
                          for _ in range(Schedule.NUM_DAYS)]
+        self._schedule_bitmap = [0 for _ in range(Schedule.NUM_DAYS)]
         # sections needs to be a list
         if sections is None:
             sections = []
@@ -26,6 +27,7 @@ class Schedule(object):
             sections = [sections]
 
         self.sections = []
+
         for section in sections:
             self.add_section(section)
 
@@ -55,10 +57,9 @@ class Schedule(object):
            the properties 'component', day', 'startTime', and 'endTime'
         """
         other = Schedule(section)
-        for ourday, theirday in zip(self.schedule, other.schedule):
-            for ourblock, theirblock in zip(ourday, theirday):
-                if ourblock is not Schedule.OPEN and theirblock is not Schedule.OPEN:
-                    return True
+        for day in range(Schedule.NUM_DAYS):
+            if other._schedule_bitmap[day] & self._schedule_bitmap[day] != 0:
+                return True
         return False
 
     def add_section(self, section):
@@ -89,6 +90,7 @@ class Schedule(object):
     def _add_by_block(self, day, start, end, section_num):
         daynum = Schedule._daystr_to_daynum(day)
         for i in range(end-start+1):
+            self._schedule_bitmap[daynum] += (1 << start + i)
             self.schedule[daynum][start + i] = section_num+1
 
     @staticmethod
