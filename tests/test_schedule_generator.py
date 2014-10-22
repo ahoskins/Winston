@@ -13,4 +13,3 @@ def test_generate_schedule():
     course_list = [1343, 4093, 4096, 6768, 9019]
     generator = ScheduleGenerator(cal, term, course_list)
     schedules = generator.get_schedules()
-    import pdb; pdb.set_trace()

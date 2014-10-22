@@ -8,7 +8,6 @@ def test_manage_seed_db():
     class Arguments: pass
     args = Arguments()
     args.term = None
-    db.create_all()
     seed_db(args, db)
 
     def check_term(term_model):
