@@ -2,8 +2,8 @@
 from angular_flask.core import db
 
 class Course(db.Model):
-    term = db.Column(db.Integer, db.ForeignKey('term.term'))
-    course = db.Column(db.Integer, primary_key=True, unique=True)
+    term = db.Column(db.String(4), db.ForeignKey('term.term'))
+    course = db.Column(db.String(6), primary_key=True, unique=True)
     subject = db.Column(db.String(10))
     subjectTitle = db.Column(db.String(30))
     catalog = db.Column(db.Integer)

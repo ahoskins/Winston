@@ -2,9 +2,9 @@
 from angular_flask.core import db
 
 class Section(db.Model):
-    term = db.Column(db.Integer)
-    course = db.Column(db.Integer, db.ForeignKey('course.course'))
-    class_ = db.Column(db.Integer, primary_key=True, unique=True)
+    term = db.Column(db.String(4))
+    course = db.Column(db.String(6), db.ForeignKey('course.course'))
+    class_ = db.Column(db.String(5), primary_key=True, unique=True)
     section = db.Column(db.String(10))
     component = db.Column(db.String(10))
     classType = db.Column(db.String(1))

@@ -2,7 +2,7 @@
 from angular_flask.core import db
 
 class Term(db.Model):
-    term = db.Column(db.Integer, primary_key=True, unique=True)
+    term = db.Column(db.String(4), primary_key=True, unique=True)
     termTitle = db.Column(db.String(30))
     startDate = db.Column(db.String(30))
     endDate = db.Column(db.String(30))

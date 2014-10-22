@@ -15,7 +15,7 @@ class ScheduleGenerator(object):
         courses which should be in the schedule
         """
         logging.info('Creating ScheduleGenerator with course ids {}'.format(course_ids))
-        self._course_ids = self._normalize_course_ids(course_ids)
+        self._course_ids = course_ids
         self._schedules = None
 
         self._cal = cal
@@ -69,11 +69,3 @@ class ScheduleGenerator(object):
             self._schedules = [heapq.heappop(candidates) for _ in range(5)]
         else:
             self._schedules = None
-
-    def _normalize_course_ids(self, course_ids):
-        course_ids = [str(int(course_id)) for course_id in course_ids]
-        for i, course_id in zip(range(len(course_ids)), course_ids):
-            while len(course_id) < 6:
-                course_id = '0' + course_id
-            course_ids[i] = course_id
-        return course_ids
