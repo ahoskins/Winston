@@ -8,7 +8,7 @@ from angular_flask.classtime import cal
 
 def create_db():
     db.create_all()
-    logging.info('DB created!')
+    logging.info('DB created! seed_db creates the DB anyway though, so this is basically a no-op')
 
 def delete_db():
     db.drop_all()
@@ -23,21 +23,20 @@ def seed_db(args, db):
 
 def refresh_db(args, db):
     delete_db()
-    create_db()
     seed_db(args, db)
 
 def main():
     parser = argparse.ArgumentParser(description='Manage the academic database')
-    parser.add_argument('command', help='create_db, fill_courses, fill_sections, delete_db, refresh_db')
+    parser.add_argument('command', help='seed_db, refresh_db, create_db, delete_db')
     parser.add_argument('--term', help='the id of the term to fill the db with (eg 1490)')
     parser.add_argument('--startfrom', help='the course id to begin filling at')
     args = parser.parse_args()
 
     if args.command == 'create_db':
-        create_db()
+        raise
     elif args.command == 'delete_db':
         delete_db()
-    elif args.command == 'seed_db' or args.command == 'fill_courses':
+    elif args.command == 'seed_db':
         seed_db(args, db)
     elif args.command == 'refresh_db':
         refresh_db(args, db)

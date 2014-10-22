@@ -3,28 +3,31 @@ classtime
 
 Magic university schedule builder based on public class data.  
 
-## How to Get Started
+## Get Started
 
 **Install all the necessary packages** (best done inside of a [virtual environment](http://virtualenv.readthedocs.org/en/latest/virtualenv.html))  
 > $ sudo pip install -r requirements.txt
 
-If this fails, you might also need to [install python-ldap's dependencies manually](stackoverflow.com/questions/4768446/python-cant-install-python-ldap).  
-On ubuntu, do:  
-> $ sudo apt-get install python-dev libldap2-dev libsasl2-dev libssl-dev
-> $ sudo pip install python-ldap
+If this fails, you might also need to [install python-ldap's dependencies manually](stackoverflow.com/questions/4768446/python-cant-install-python-ldap)
 
 **Run the app**
 > $ python runserver.py
 
-**Create and seed the db**  
-Note: the server must be running, so do this in a second terminal
-> $ python manage.py create_db  
-> $ python manage.py fill_courses [--term 1490]  
-> > Note: for debugging or cleanup purposes, the database can be deleted with  
-> > $ python manage.py delete_db
+**Seed the db**  
+The server must be running, so do this in a second terminal
+> $ python manage.py seed_db
 
 **View**
 > http://localhost:5000/
+
+## Managing the database
+
+The database needs to be seeded initially. All database management is done through `manage.py`.
+
+manage.py commands:
+-`$ python manage.py seed_db [--term TERM]`: seeds the database with the specified term and its courses. TERM is a 4-digit term id. If no TERM is specified, defaults to 1490 (Fall Term 2014).
+-`$ python manage.py delete_db`: deletes the database completely
+-`$ python manage.py refresh_db [--term TERM]`: calls delete\_db, then seed\_db
 
 ## API
 
@@ -60,9 +63,11 @@ Returns all attributes for course 1
 ## Tests
 
 In the project root, run:  
-> $ nosetests (to run all tests,)  
-> $ nosetests -v (to run all tests with verbose output, and)  
-> $ nosetests \<path/to/file\> (to only run tests in a certain file)
+> $ nosetests [\<path/to/test_file\>] [options]
+
+Useful options:
+- `--nocapture --pdb`: drop into pdb on error or exception
+- `--nologcapture`: output all logging during test execution
 
 ## Contributing
 
