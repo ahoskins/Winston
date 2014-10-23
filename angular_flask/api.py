@@ -21,6 +21,7 @@ api_manager.create_api(Course,
                        exclude_columns=['sections'],
                        collection_name='courses')
 
+COURSES_PER_PAGE = 500
 api_manager.create_api(Course,
                        methods=['GET'],
                        include_columns=['asString',
@@ -28,6 +29,6 @@ api_manager.create_api(Course,
                                         'subject',
                                         'subjectTitle',
                                         'course'],
-                       results_per_page=500,
-                       max_results_per_page=500,
+                       results_per_page=COURSES_PER_PAGE,
+                       max_results_per_page=COURSES_PER_PAGE,
                        collection_name='courses-min')
