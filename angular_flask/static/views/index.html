@@ -11,12 +11,12 @@
 		Search By All:
 		<br>
 		<div class="search-box">
-			<input type="text" id="search-box" data-ng-model="search" />
+			<input type="search" id="searchBox" data-ng-model="searchBox" />
 		</div>
 		<br>
 
 		<accordion>
-			<accordion-group class="course-accordion" heading="{{ subjectName }}" data-ng-repeat="(subjectName, subjectObject) in subjectBin | courseFilter:search">
+			<accordion-group class="course-accordion" heading="{{ subjectName }}" data-ng-repeat="(subjectName, subjectObject) in subjectBin | courseFilter:filterText">
 			<accordion>
 				<accordion-group class="course-accordion" heading="{{ singleCourse.asString }} {{ singleCourse.subjectTitle }}" data-ng-repeat="singleCourse in subjectObject">
 				</accordion-group>
@@ -25,17 +25,16 @@
 		</accordion>
 	</div>
 
-
 	<!-- Vendor -->
 	<script type="text/javascript" src="/static/scripts/vendor/angular.min.js"></script>
 	<script type="text/javascript" src="/static/scripts/vendor/mm-foundation-tpls-0.3.1.min.js"></script>
+	<script type="text/javascript" src="/static/scripts/vendor/jquery-1.11.1.min.js"></script>
 
 	<!-- Angular Core -->
 	<script type="text/javascript" src="/static/scripts/app.js"></script>
 	<script type="text/javascript" src="/static/scripts/services/fastCourseFactory.js"></script>
 	<script type="text/javascript" src="/static/scripts/controllers/fastCourseListCtrl.js"></script>
 	<script type="text/javascript" src="/static/scripts/services/filter.js"></script>
-	<script type="text/javascript" src="/static/scripts/controllers/misc.js"></script>
 
 	</body>
 </html>

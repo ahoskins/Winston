@@ -1,6 +1,7 @@
 // Classes Controller
 //
-coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFactory', function($scope, $window, fastCourseFactory) {
+coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFactory', '$timeout', function($scope, $window, fastCourseFactory, $timeout) {
+
 	// New, organized course object
 	$scope.subjectBin = {};
 	var subjectBin = {};
@@ -8,9 +9,8 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 	// temp used in transfer to new course object
 	var pageListing;
 
-	for (var i = 1; i <= 5; i++) {
+	for (var i = 1; i <= 8; i++) {
 
-		// Purpose of first call is purely to scrape total_pages
 		fastCourseFactory.getCoursesPage(i).
 		success(function (data, status, headers, config) {
 			// Deserialize JSON data
@@ -38,6 +38,24 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 
 	// Gather new object
 	$scope.subjectBin = subjectBin;
+
+
+    // Filter watcher
+    //
+    // This watches the ng-model called "searchBox" and changes the $scope filter, filterText, every 1 second
+    // It is affecting the regular $digest cycle, which is normally on every ".keyup" on that input box
+	var tempFilterText = '';
+	var filterTextTimeout;
+	$scope.$watch('searchBox', function(val) {
+		if (filterTextTimeout) {
+			$timeout.cancel(filterTextTimeout);
+		}
+		tempFilterText = val;
+		filterTextTimeout = $timeout(function() {
+			$scope.filterText = tempFilterText;
+		}, 1000);
+
+	});
 
 }]);
 
