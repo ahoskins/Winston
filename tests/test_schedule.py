@@ -1,5 +1,5 @@
 
-from angular_flask.classtime.scheduler import Schedule
+from angular_flask.classtime.schedule import Schedule
 
 def check_add_section(section, numblocks_expected):
     """
@@ -7,11 +7,12 @@ def check_add_section(section, numblocks_expected):
     - fills the expected number of schedule blocks, and
     - fills the correct schedule blocks
     """
-    timetable = Schedule(section)
+    timetable = Schedule()
+    timetable.add_section(section)
     numblocks = 0
     for day in timetable.schedule:
         for block in day:
-            if block == Schedule.BUSY:
+            if block is not Schedule.OPEN:
                 numblocks += 1
     assert numblocks == numblocks_expected
 
@@ -73,7 +74,7 @@ def check_conflict(sections, has_conflict):
             assert has_conflict == True
             return
         else:
-            timetable._add(section)
+            timetable.add_section(section)
     assert has_conflict == False
 
 def test_conflicts():

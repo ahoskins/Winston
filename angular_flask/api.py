@@ -1,6 +1,6 @@
 
 from angular_flask.core import api_manager
-from angular_flask.models import Term, Course
+from angular_flask.models import Term, Course, Schedule
 
 # --------------------------------
 # API Routing
