@@ -4,13 +4,6 @@
 // Filter the "subjectBin" object against the "subjectTitle" and "asString"
 // fields of each course.  It also filters against the "key"(s) in "subjectBin"
 // All filtering is CASE IN-SENSITIVE
-// var delay = (function(){
-//   var timer = 0;
-//   return function(callback, ms){
-//     clearTimeout (timer);
-//     timer = setTimeout(callback, ms);
-//   };
-// })();
 
 coreModule.filter('courseFilter', function() {
   return function(subjectBin, field) {
@@ -48,6 +41,12 @@ coreModule.filter('courseFilter', function() {
     };
 });
 
+
+// EXPERIMENT
+// Using a different kind of loop
+// This was experimental to see if it went faster
+// It does not seem to run any fast than the above
+//
 // coreModule.filter('courseFilter', function() {
 //     return function(subjectBin,field) {
 
