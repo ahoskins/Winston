@@ -1,6 +1,9 @@
 
 from angular_flask.core import api_manager
-from angular_flask.models import Term, Course, Schedule
+
+# Removed Schedule from this import
+#
+from angular_flask.models import Term, Course
 
 # --------------------------------
 # API Routing
