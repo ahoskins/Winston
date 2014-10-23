@@ -1,8 +1,5 @@
 
 from angular_flask.core import api_manager
-
-# Removed Schedule from this import
-#
 from angular_flask.models import Term, Course
 
 # --------------------------------
