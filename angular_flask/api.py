@@ -6,13 +6,11 @@ from angular_flask.models import Term, Course
 # API Routing
 # --------------------------------
 
-# accessible at http://localhost:5000/api/terms
 api_manager.create_api(Term,
                        collection_name='terms',
                        methods=['GET'],
                        exclude_columns=['courses', 'courses.sections'])
 
-# accessible at http://localhost:5000/api/courses
 api_manager.create_api(Course,
                        collection_name='courses',
                        methods=['GET'],
