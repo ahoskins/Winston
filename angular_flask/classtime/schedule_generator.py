@@ -20,14 +20,14 @@ class ScheduleGenerator(object):
         self._cal = cal
         self._cal.select_current_term(term)
 
-    def get_schedules(self):
+    def get_schedules(self, num_schedules):
         """Returns schedule objects generated from
         the courses passed upon initialization
         """
-        self._generate_schedules()
+        self._generate_schedules(num_schedules)
         return self._schedules
 
-    def _generate_schedules(self):
+    def _generate_schedules(self, num_schedules):
         """
         Generates good schedules based on the course list
         provided on initialization.
@@ -46,7 +46,6 @@ class ScheduleGenerator(object):
         logging.debug('There are {} components to schedule'.format(len(components)))
 
         HEAP_SIZE = 50
-        SCHEDULES_TO_RETURN = 5
 
         components = sorted(components, key=lambda component: len(component))
         candidates = [Schedule()]
@@ -64,8 +63,6 @@ class ScheduleGenerator(object):
                     else:
                         heapq.heappush(candidates, new_candidate)
             logging.debug('{} Candidates'.format(len(candidates)))
-
-        if len(candidates) >= SCHEDULES_TO_RETURN:
-            self._schedules = [heapq.heappop(candidates) for _ in range(min(5, len(candidates)))]
-        else:
-            self._schedules = None
+        
+        self._schedules = [heapq.heappop(candidates)
+                           for _ in range(min(num_schedules, len(candidates)))]
