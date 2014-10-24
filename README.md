@@ -48,12 +48,19 @@ The `term` attribute of each term is its ID number, which is used to with /cours
 
 #### api/courses-min
 `GET localhost:5000/api/courses-min`  
-Gets a list of courses, retrieving only a few attributes: `subject, subjectTitle, course, asString`  
+Gets a list of courses, retrieving a limited number of attributes:  
+```
+asString
+faculty
+subject
+subjectTitle
+course
+```
 These attributes are exactly specified in [api.py](angular_flask/api.py)  
 *Where:* In the `api_manager.create_api` call with `collection_name='courses-min'`, the `include_columns` list  
 Can restrict the request to a specific term using a [search query](http://flask-restless.readthedocs.org/en/latest/searchformat.html#quick-examples)  
-*Example:* `GET localhost:5000/api/courses-min?q={"filters":[{"name":"term","op":"equals","val":1490}]}`  
-Returns a list of courses in term 1490 (filters: term equals 1490)
+*Example (all courses in term 1490):*  
+`GET localhost:5000/api/courses-min?q={"filters":[{"name":"term","op":"equals","val":1490}]}`  
 
 #### api/courses/\<course\>
 `GET localhost:5000/api/courses/<course>`  
