@@ -13,17 +13,18 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
     var page  = 1;
     var total_pages;
 
-
+    // Purpose of first call to getCoursesPage is to get total_pages
     fastCourseFactory.getCoursesPage(1).
     success(function (data, status, headers, config) {
-            // Deserialize JSON data
+            // De-serialize JSON data
             pageListing = angular.fromJson(data);
             total_pages = pageListing.total_pages;
 
+            // In these calls, actually get and arrange the data
             while (page < (total_pages + 1)) {
                 fastCourseFactory.getCoursesPage(page).
                     success(function (data, status, headers, config) {
-                        // Deserialize JSON data
+                        // De-serialize JSON data
                         pageListing = angular.fromJson(data);
 
                         // For each course on page of results...
@@ -49,18 +50,18 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
     }).
     error(function () {
             $window.alert("Sorry, something went wrong.");
-        })
+    });
 
 
 	// Gather new object received from the above
-    //
 	$scope.subjectBin = subjectBin;
 
 
     // Filter watcher
     //
-    // This watches the ng-model called "searchBox" and changes the $scope filter, filterText, every 1 second
-    // It is affecting the regular $digest cycle, which is normally on every ".keyup" on that input box
+    // This watches the ng-model called "searchBox" and changes the $scope filter, filterText, every 0.5 second
+    // It is affecting the regular $digest cycle, which is normally on every state change of the input (new text)
+    $scope.filterText = '';
 	var tempFilterText = '';
 	var filterTextTimeout;
 	$scope.$watch('searchBox', function(val) {
@@ -70,7 +71,7 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 		tempFilterText = val;
 		filterTextTimeout = $timeout(function() {
 			$scope.filterText = tempFilterText;
-		}, 1000);
+		}, 500);
 	});
 
 }]);

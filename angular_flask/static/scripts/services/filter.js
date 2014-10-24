@@ -6,8 +6,11 @@
 // All filtering is CASE IN-SENSITIVE
 
 coreModule.filter('courseFilter', function() {
-  return function(subjectBin, field) {
-
+    // $scope.subjectBin is passed in as parameter subjectBin
+    // $scope.filterText is passed in as parameter field
+    //
+    // returns an Object congruent with user search
+   return function(subjectBin, field) {
         // entire filter
         var result = {};
 
@@ -38,7 +41,7 @@ coreModule.filter('courseFilter', function() {
 
         return result;
 
-    };
+   };
 });
 
 
