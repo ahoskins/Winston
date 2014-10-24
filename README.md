@@ -41,26 +41,59 @@ Is an alias for `$ python manage.py delete_db && python manage.py seed_db [--ter
 All API responses are valid [JSON](http://json.org/), and support pagination through the `page` and `total_pages` attributes.  
 For paginated requests, append `?page=<n>` (or `?q=...&page=<n>` if you are using a search query) to get the `n`th page.
 
-#### api/terms
+#### terms
 `GET localhost:5000/api/terms/`  
 Gets a list of all available terms.  
 The `term` attribute of each term is its ID number, which is used to with /courses-min/ to only retrieve courses in a certain term.
 
-#### api/courses-min
+#### courses-min
 `GET localhost:5000/api/courses-min`  
-Gets a list of courses, retrieving only a few attributes: `subject, subjectTitle, course, asString`  
+Gets a list of courses, retrieving a limited number of attributes:  
+```
+asString
+faculty
+subject
+subjectTitle
+course
+```
 These attributes are exactly specified in [api.py](angular_flask/api.py)  
 *Where:* In the `api_manager.create_api` call with `collection_name='courses-min'`, the `include_columns` list  
 Can restrict the request to a specific term using a [search query](http://flask-restless.readthedocs.org/en/latest/searchformat.html#quick-examples)  
-*Example:* `GET localhost:5000/api/courses-min?q={"filters":[{"name":"term","op":"equals","val":1490}]}`  
-Returns a list of courses in term 1490 (filters: term equals 1490)
+*Example (all courses in term 1490):*  
+`GET localhost:5000/api/courses-min?q={"filters":[{"name":"term","op":"equals","val":1490}]}`  
 
-#### api/courses/\<course\>
+#### courses/\<course\>
 `GET localhost:5000/api/courses/<course>`  
 Gets all available details regarding a certain course.  
 Where `<course>` is the value of a course's `course` attribute (which can be found from /api/courses-min)  
 *Example:* `GET localhost:5000/api/courses/1`  
 Returns all attributes for course 1
+
+#### generate-schedules
+`GET localhost:5000/api/generate-schedules?q={"term":term,"courses":[course_id_1, course_id_2, .., course_id_n]}`  
+Generates schedules for the given course ids in the given term.  
+Search query `q` must be of the form:  
+```
+q={
+    "term":term,
+    "courses":[course_id_1, course_id_2, .., course_id_n]
+}
+```
+Where:  
+`term` is a term id (found from /api/terms), and  
+`courses` is a list of course ids (found from /api/courses-min or /api/courses)
+
+Returns a list of schedules. Each schedule is a list of sections in the schedule.  Each section is a dictionary with descriptive attributes, including at a minimum:
+```
+class_ := a unique string which identifies this section
+course := a unique string which identifies the course this section is part of
+day := a string where each char represents a day this section is held on
+       days are, from Sunday to Saturday, 'UMTWRFS'
+startTime := a string of form '##:## XM'
+             where #'s are digits, and 
+             X is either A or P
+endTime := a string of the same form as startTime
+```
 
 #### Deprecated api endpoints
 ~~`GET localhost:5000/api/terms/1490/courses`~~  

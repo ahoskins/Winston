@@ -1,32 +1,86 @@
 
+from angular_flask.logging import logging
+
 from angular_flask.core import api_manager
+from angular_flask.models import Term, Course, Section
 
-# Removed Schedule from this import
-#
-from angular_flask.models import Term, Course
+from angular_flask.classtime import ScheduleGenerator
+from angular_flask.classtime import cal
 
 # --------------------------------
-# API Routing
+# General API calls
+# -> collection_name specifies the path used to access the API
+# -> eg, collection_name='terms' specifies that it can be called
+#        at /api/terms/
 # --------------------------------
 
-# accessible at http://localhost:5000/api/terms
 api_manager.create_api(Term,
+                       collection_name='terms',
                        methods=['GET'],
-                       exclude_columns=['courses', 'courses.sections'],
-                       collection_name='terms')
-
-# accessible at http://localhost:5000/api/courses
-api_manager.create_api(Course,
-                       methods=['GET'],
-                       exclude_columns=['sections'],
-                       collection_name='courses')
+                       exclude_columns=['courses', 'courses.sections'])
 
 api_manager.create_api(Course,
+                       collection_name='courses',
                        methods=['GET'],
-                       include_columns=['subject',
+                       exclude_columns=['sections'])
+
+COURSES_PER_PAGE = 500
+api_manager.create_api(Course,
+                       collection_name='courses-min',
+                       methods=['GET'],
+                       include_columns=['asString',
+                                        'faculty',
+                                        'subject',
                                         'subjectTitle',
-                                        'course',
-                                        'asString'],
-                       results_per_page=500,
-                       max_results_per_page=500,
-                       collection_name='courses-min')
+                                        'course'],
+                       results_per_page=COURSES_PER_PAGE,
+                       max_results_per_page=COURSES_PER_PAGE)
+
+# --------------------------------
+# Schedule Generation
+# --------------------------------
+
+def generate_schedules(result=None, search_params=None, **kw):
+    """
+    Expects a search query where 'q' is dictionary of the form:
+    {
+        "term" : term_id,
+        "courses" : [course_id_1, course_id_2, .., course_id_n]
+    }
+    eg:
+    /api/generate-schedules?q={"term":"1490","courses":["001343", "009019"]}
+    """
+    if result is None:
+        result = dict()
+    courses = search_params.get('courses')
+    term = search_params.get('term')
+    if courses is None or term is None:
+        culprit = ''
+        if courses is None:
+            culprit = 'courses'
+        if term is None:
+            culprit = 'term'
+        errormsg = "field '{}' not present in /api/generate-schedules search query".format(culprit)
+        logging.warning(errormsg)
+        result['num_results'] = 1
+        result['objects'] = [{"error": errormsg}]
+        result['page'] = 1
+        result['total_pages'] = 1
+        return
+
+    generator = ScheduleGenerator(cal, term, courses)
+    schedules = generator.get_schedules(10)
+    result['num_results'] = len(schedules)
+    result['objects'] = [schedule.sections for schedule in schedules]
+    result['page'] = 1
+    result['total_pages'] = 1
+    return
+
+
+api_manager.create_api(Section,
+                       collection_name='generate-schedules',
+                       include_columns=[],
+                       methods=['GET'],
+                       postprocessors={
+                           'GET_MANY': [generate_schedules]
+                       })
