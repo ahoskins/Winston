@@ -27,3 +27,7 @@ class Course(db.Model):
         return '<Course: #{num} ({name})'.format(
                 num=self.course,
                 name=self.asString)
+
+    def to_dict(self):
+        return dict((col, getattr(self, col)) for col in self.__table__.columns.keys())
+        

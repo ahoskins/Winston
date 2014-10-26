@@ -15,7 +15,7 @@ class Schedule(object):
     DAYS = 'MTWRF'
 
     OPEN = 0
-    SYMBOLS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    SYMBOLS = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     def __init__(self, sections=None):
         self.schedule = [[Schedule.OPEN]*Schedule.NUM_BLOCKS

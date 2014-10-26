@@ -65,6 +65,7 @@ class AcademicCalendar(object):
         components = []
         for course_id in course_ids:
             self._populate_sections_for_course_id(course_id)
+            base_section_info = Course.query.get(course_id).to_dict()
             course_query = Section.query.filter_by(course=course_id)
             for component in ['LEC', 'LAB', 'SEM']:
                 section_models = course_query \
@@ -73,6 +74,11 @@ class AcademicCalendar(object):
                                  .order_by(Section.startTime.desc()) \
                                  .order_by(Section.endTime.desc()) \
                                  .all()
+                # sections = []
+                # for section_model in section_models:
+                #     section = base_section_info
+                #     section.update(section_model.to_dict())
+                #     sections.append(section)
                 sections = [section_model.to_dict()
                             for section_model in section_models]
                 sections = self._condense_similar_sections(sections)
