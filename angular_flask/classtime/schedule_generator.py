@@ -25,8 +25,9 @@ class ScheduleGenerator(object):
         the courses passed upon initialization
         """
         self._schedules_heapq = self._generate_schedules(num_schedules)
-        return [heapq.heappop(self._schedules_heapq)
-                for _ in range(len(self._schedules_heapq))]
+        schedules_worst_to_best = [heapq.heappop(self._schedules_heapq)
+                                        for _ in range(len(self._schedules_heapq))]
+        return schedules_worst_to_best[::-1] # Reversed
 
     def _generate_schedules(self, num_schedules):
         """
