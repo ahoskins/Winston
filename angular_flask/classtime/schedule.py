@@ -62,6 +62,12 @@ class Schedule(object):
         self_score += self.score_classes_in_a_row()
         other_score += other.score_classes_in_a_row()
 
+        self_score += self.score_ideal_busy_range()
+        other_score += other.score_ideal_busy_range()
+
+        self_score += self.score_start_earlier()
+        other_score += other.score_start_earlier()
+
         if self_score < other_score:
             return Schedule.SELF_IS_WORSE
         else:
@@ -139,8 +145,7 @@ class Schedule(object):
     # -------------------------------
     # Schedule Evaluation Functions
     #   used for sorting
-    # All score_* methods should return a value in the range [-1,1]
-    # Where -1 is worst, and 1 is best
+    # All score_* methods should ideally return a value in the range [0,10]
     # -------------------------------
     def score_classes_in_a_row(self):
         """
@@ -151,11 +156,8 @@ class Schedule(object):
         """
         MAX_CONSECUTIVE_BLOCKS = 3*2 # 3 hours x 2 blocks/hour
         score = 0
-        # Only look at (1) MWF, and (1) TR day to speed up the scoring
-        # This will not give PERFECT scores necessarily
-        # But it will improve perf by 2.5x
         schedule_bitmap = list(self._schedule_bitmap)
-        for day in range(len('MT')):
+        for day in range(Schedule.NUM_DAYS):
             consecutive_blocks = 0
             day_bitmap = schedule_bitmap[day]
             while day_bitmap:
@@ -173,4 +175,23 @@ class Schedule(object):
         for day in range(Schedule.NUM_DAYS):
             in_bad_zone = self._schedule_bitmap[day] & BAD_ZONE
             num_outside = bin(in_bad_zone).count('1')
-        return -1 * num_outside / 10.0
+        return -1*num_outside / 10.0
+
+    def score_start_earlier(self):
+        score = 0
+
+        IDEAL_START_BLOCK = 8*2 # 8am
+        ideal_start_bitmap = (1 << IDEAL_START_BLOCK)
+        schedule_bitmap = list(self._schedule_bitmap)
+        for day in range(Schedule.NUM_DAYS):
+            # Because a 1 further to the left (earlier in the day)
+            # will always make a larger number
+            if schedule_bitmap[day] == 0:
+                continue
+            if schedule_bitmap[day] > ideal_start_bitmap:
+                score += 2
+                continue
+            while schedule_bitmap[day] < ideal_start_bitmap:
+                schedule_bitmap[day] = schedule_bitmap[day] << 1
+                score -= 1
+        return score
