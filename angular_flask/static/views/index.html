@@ -15,7 +15,7 @@
 		</div>
 		<br>
         <accordion>
-            <accordion-group class="course-accordion" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin">
+            <accordion-group class="course-accordion" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText">
                 <accordion>
                     <accordion-group class="course-accordion" heading="{{ subjectName }}" data-ng-repeat="(subjectName, subjectObject) in facultyObject">
                         <accordion>

@@ -12,32 +12,41 @@ coreModule.filter('courseFilter', function() {
     // returns an Object congruent with user search
    return function(subjectBin, field) {
         // entire filter
-        var result = {};
+        var result = {},
+            faculty,
+            subject;
 
         // For each key-value pair in SubjectBin
         // Example--> ECE: [{course obj 1}, {course obj 2}]
         angular.forEach(subjectBin, function (value, key) {
-
-            // For each course
-            // Example--> {course obj 1}
-            value.forEach(function (course) {
-
-                // If the string entered in the HTML input box matches any of the following
-                // Note: toUpperCase() is a word-around to allow case in-sensitive comparison
-                if (course.subjectTitle.toUpperCase().indexOf(field.toUpperCase()) > -1 ||
-                    key.toUpperCase().indexOf(field.toUpperCase()) > -1 ||
-                    course.asString.toUpperCase().indexOf(field.toUpperCase()) > -1) { 
-                    // If the "result" object already has the property, just add it on  
-                    if (result.hasOwnProperty(key)) {
-                        result[key].push(course);
+            // key is "Engineering"
+            //
+            faculty = key;
+            angular.forEach(value, function (value, key) {
+                // key is "ECE"
+                subject = key;
+                value.forEach(function (asString) {
+                    if (asString.toUpperCase().indexOf(field.toUpperCase()) > -1 ||
+                        faculty.toUpperCase().indexOf(field.toUpperCase()) > -1  ||
+                        subject.toUpperCase().indexOf(field.toUpperCase()) > -1 ) {
+                        if (result.hasOwnProperty(faculty)) {
+                            if (result[faculty].hasOwnProperty(subject)) {
+                                result[faculty][subject].push(asString);
+                            }
+                            else {
+                                result[faculty][subject] = [asString];
+                            }
+                        }
+                        else {
+                            result[faculty] = {};
+                            result[faculty][subject] = {};
+                            result[faculty][subject] = [asString];
+                        }
                     }
-                    // Otherwise, create a new property on the "result" object and initiate its array
-                    else {
-                        result[key] = [course];
-                    }
-                }
-            })
+                });
+            });
         });
+
 
         return result;
 

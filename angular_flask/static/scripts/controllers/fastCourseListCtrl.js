@@ -11,8 +11,8 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 	var pageListing;
 
     // Counters
-    var page  = 1;
-    var total_pages;
+    var page  = 1,
+        total_pages;
 
     // Purpose of first call to getCoursesPage is to get total_pages
     fastCourseFactory.getCoursesPage(1).
