@@ -74,14 +74,13 @@ class AcademicCalendar(object):
                                  .order_by(Section.startTime.desc()) \
                                  .order_by(Section.endTime.desc()) \
                                  .all()
-                # sections = []
-                # for section_model in section_models:
-                #     section = base_section_info
-                #     section.update(section_model.to_dict())
-                #     sections.append(section)
-                sections = [section_model.to_dict()
-                            for section_model in section_models]
+                sections = []
+                for section_model in section_models:
+                    section = dict(base_section_info)
+                    section.update(section_model.to_dict())
+                    sections.append(section)
                 sections = self._condense_similar_sections(sections)
+
                 if len(sections) > 0:
                     components.append(sections)
         return components

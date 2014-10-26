@@ -1,4 +1,6 @@
 
+from angular_flask.logging import logging
+
 from angular_flask.classtime.schedule_generator import ScheduleGenerator
 from angular_flask.classtime import cal
 
@@ -9,6 +11,7 @@ def test_generate_schedule():
     num_schedules = 10
     generator = ScheduleGenerator(cal, term, course_list)
     schedules = generator.get_schedules(num_schedules)
+    logging.debug('Schedules:\n{}'.format(schedules))
 
     # First Year Engineering
     term = '1490'
@@ -16,6 +19,7 @@ def test_generate_schedule():
     num_schedules = 10
     generator = ScheduleGenerator(cal, term, course_list)
     schedules = generator.get_schedules(num_schedules)
+    logging.debug('Schedules:\n{}'.format(schedules))
 
     # Ross Anderson's 3rd Year Fall Term 2014 Course List
     term = '1490'
@@ -23,4 +27,4 @@ def test_generate_schedule():
     num_schedules = 10
     generator = ScheduleGenerator(cal, term, course_list)
     schedules = generator.get_schedules(num_schedules)
-    import pdb; pdb.set_trace()
+    logging.debug('Schedules:\n{}'.format(schedules))

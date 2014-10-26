@@ -17,6 +17,10 @@ class Schedule(object):
     OPEN = 0
     SYMBOLS = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
+    # Semantic sorting constants
+    SELF_IS_WORSE = True
+    SELF_IS_BETTER = False
+
     def __init__(self, sections=None):
         self.schedule = [[Schedule.OPEN]*Schedule.NUM_BLOCKS
                          for _ in range(Schedule.NUM_DAYS)]
@@ -47,14 +51,22 @@ class Schedule(object):
     def __lt__(self, other):
         """
         This is where all cost functions will be performed
-
-
         """
-        if len(self.sections) < len(other.sections):
-            return True
         if len(self.sections) > len(other.sections):
-            return False
-        return False # more cost functions go here
+            return Schedule.SELF_IS_BETTER
+        elif len(self.sections) < len(other.sections):
+            return Schedule.SELF_IS_WORSE
+
+        self_score, other_score = 0, 0
+
+        self_score += self.score_classes_in_a_row()
+        other_score += other.score_classes_in_a_row()
+
+        if self_score < other_score:
+            return Schedule.SELF_IS_WORSE
+        else:
+            return Schedule.SELF_IS_BETTER
+
 
     def conflicts(self, section):
         """
@@ -123,3 +135,42 @@ class Schedule(object):
         if daystr not in Schedule.DAYS:
             raise ValueError('daystr must be in "{}"'.format(Schedule.DAYS))
         return Schedule.DAYS.index(daystr)
+
+    # -------------------------------
+    # Schedule Evaluation Functions
+    #   used for sorting
+    # All score_* methods should return a value in the range [-1,1]
+    # Where -1 is worst, and 1 is best
+    # -------------------------------
+    def score_classes_in_a_row(self):
+        """
+        A schedule is better if it has a more even distribution
+        of breaks throughout the day, and also if it squishes sections
+        together so as to not waste time. Constantly alternating between
+        class and break is bad. Having more than 3 hours in a row is bad.
+        """
+        MAX_CONSECUTIVE_BLOCKS = 3*2 # 3 hours x 2 blocks/hour
+        score = 0
+        # Only look at (1) MWF, and (1) TR day to speed up the scoring
+        # This will not give PERFECT scores necessarily
+        # But it will improve perf by 2.5x
+        schedule_bitmap = list(self._schedule_bitmap)
+        for day in range(len('MT')):
+            consecutive_blocks = 0
+            day_bitmap = schedule_bitmap[day]
+            while day_bitmap:
+                day_bitmap &= (day_bitmap << 1)
+                consecutive_blocks += 1
+            num_blocks_too_many = consecutive_blocks - MAX_CONSECUTIVE_BLOCKS
+            if num_blocks_too_many > 0:
+                score -= num_blocks_too_many
+        return score / 10.0
+
+    def score_ideal_busy_range(self):
+        #               0 1 2 3 4 5 6 7 8 9 1011121 2 3 4 5 6 7 8 9 101112
+        BAD_ZONE = int('11111111111111111100000000000000001111111111111111',2)
+
+        for day in range(Schedule.NUM_DAYS):
+            in_bad_zone = self._schedule_bitmap[day] & BAD_ZONE
+            num_outside = bin(in_bad_zone).count('1')
+        return -1 * num_outside / 10.0
