@@ -1,5 +1,6 @@
 // Classes Controller
 //
+
 coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFactory', '$timeout', function($scope, $window, fastCourseFactory, $timeout) {
 
 	// New, organized course object
@@ -29,17 +30,21 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 
                         // For each course on page of results...
                         pageListing.objects.forEach(function (course) {
-                            // If the property is already there, just add to it
-                            if (subjectBin.hasOwnProperty(course.subject)) {
-                                // Push course object onto matching subjectBin property
-                                subjectBin[course.subject].push(course);
+                            if (subjectBin.hasOwnProperty(course.faculty)) {
+                                // We are within an existing faculty property
+                                if (subjectBin[course.faculty].hasOwnProperty(course.subject)) {
+                                    subjectBin[course.faculty][course.subject].push(course.asString);
+                                }
+                                else {
+                                    subjectBin[course.faculty][course.subject] = [course.asString];
+                                }
                             }
                             else {
-                                // If not there, create new property and add a first course to it
-                                // Square brackets, [course] are necessary
-                                subjectBin[course.subject] = [course];
+                                subjectBin[course.faculty] = {};
+                                subjectBin[course.faculty][course.subject] = [course.asString];
+
                             }
-                        })
+                        });
                     }).
                     error(function () {
                         $window.alert("Sorry, something went wrong.");

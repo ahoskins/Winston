@@ -14,15 +14,19 @@
 			<input type="search" id="searchBox" data-ng-model="searchBox" />
 		</div>
 		<br>
+        <accordion>
+            <accordion-group class="course-accordion" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin">
+                <accordion>
+                    <accordion-group class="course-accordion" heading="{{ subjectName }}" data-ng-repeat="(subjectName, subjectObject) in facultyObject">
+                        <accordion>
+                            <accordion-group class="course-accordion" heading="{{ singleCourse }}" data-ng-repeat="singleCourse in subjectObject">
+                            </accordion-group>
+                        </accordion>
+                    </accordion-group>
+                </accordion>
+            </accordion-group>
+        </accordion>
 
-		<accordion>
-			<accordion-group class="course-accordion" heading="{{ subjectName }}" data-ng-repeat="(subjectName, subjectObject) in subjectBin | courseFilter:filterText">
-			<accordion>
-				<accordion-group class="course-accordion" heading="{{ singleCourse.asString }} {{ singleCourse.subjectTitle }}" data-ng-repeat="singleCourse in subjectObject">
-				</accordion-group>
-			</accordion>
-			</accordion-group>
-		</accordion>
 	</div>
 
 	<!-- Vendor -->
