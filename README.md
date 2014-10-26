@@ -66,8 +66,8 @@ Can restrict the request to a specific term using a [search query](http://flask-
 `GET localhost:5000/api/courses/<course>`  
 Gets all available details regarding a certain course.  
 Where `<course>` is the value of a course's `course` attribute (which can be found from /api/courses-min)  
-*Example:* `GET localhost:5000/api/courses/1`  
-Returns all attributes for course 1
+*Example:* `GET localhost:5000/api/courses/000001`
+Returns all attributes for course "000001"
 
 #### generate-schedules
 `GET localhost:5000/api/generate-schedules?q={"term":term,"courses":[course_id_1, course_id_2, .., course_id_n]}`  
