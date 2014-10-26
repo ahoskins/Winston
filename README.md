@@ -118,18 +118,19 @@ Useful options:
 
 It is useful to methodically find bottlenecks with a *profiler*.
 
-One way to do this:  
+One way to do this:
+
 Install nose-cprof, a nose plugin that allows nose to use [cProfile](https://docs.python.org/2/library/profile.html)  
 > $ sudo pip install nose-cprof  
 
-Install [cprofilev](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)
+Install [cprofilev](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)  
 > $ sudo pip install cprofilev
 
-Run the tests with the profiler (creates a `stats.dat` file in the current directory by default)  
+1. Run the tests with the profiler (creates a `stats.dat` file in the current directory by default)  
 > $ nosetests [tests to run] --with-cprof
 
-View the results  
-> $ cprofilev stats.dat
+2. View the results
+> $ cprofilev stats.dat  
 > View localhost:5000 in a browser
 
 ## Contributing
