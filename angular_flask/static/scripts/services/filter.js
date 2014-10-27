@@ -26,7 +26,7 @@ coreModule.filter('courseFilter', function() {
                 // key is "ECE"
                 subject = key;
                 value.forEach(function (asString) {
-                    if (asString.toUpperCase().indexOf(field.toUpperCase()) > -1 ||
+                    if (asString.asString.toUpperCase().indexOf(field.toUpperCase()) > -1 ||
                         faculty.toUpperCase().indexOf(field.toUpperCase()) > -1  ||
                         subject.toUpperCase().indexOf(field.toUpperCase()) > -1 ) {
                         if (result.hasOwnProperty(faculty)) {

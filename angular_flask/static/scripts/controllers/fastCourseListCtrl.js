@@ -1,10 +1,11 @@
 // Classes Controller
 //
 
-coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFactory', '$timeout', function($scope, $window, fastCourseFactory, $timeout) {
+coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFactory', '$timeout', 'detailFactory', function($scope, $window, fastCourseFactory, $timeout, detailFactory) {
 
 	// New, organized course object
 	$scope.subjectBin = {};
+    $scope.description;
 
 	// temp used in transfer to new course object
 	var pageListing;
@@ -32,15 +33,15 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
                             if ($scope.subjectBin.hasOwnProperty(course.faculty)) {
                                 // We are within an existing faculty property
                                 if ($scope.subjectBin[course.faculty].hasOwnProperty(course.subject)) {
-                                    $scope.subjectBin[course.faculty][course.subject].push(course.asString);
+                                    $scope.subjectBin[course.faculty][course.subject].push(course);
                                 }
                                 else {
-                                    $scope.subjectBin[course.faculty][course.subject] = [course.asString];
+                                    $scope.subjectBin[course.faculty][course.subject] = [course];
                                 }
                             }
                             else {
                                 $scope.subjectBin[course.faculty] = {};
-                                $scope.subjectBin[course.faculty][course.subject] = [course.asString];
+                                $scope.subjectBin[course.faculty][course.subject] = [course];
 
                             }
                         });
@@ -77,6 +78,21 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 			$scope.filterText = val;
 		}, 500);
 	});
+
+    // This is run on the click of a couse accordion tab
+    //
+    // It retrieves the course details and displays it
+    $scope.loadMore = function (num) {
+        $scope.description = '';
+        detailFactory.getDetails(num).
+        success(function (data, status, headers, config) {
+            var result = angular.fromJson(data);
+            $scope.description = result.courseDescription;
+        })
+        .error(function () {
+            $window.alert("Something fucked up.");
+        });
+    };
 
 }]);
 
