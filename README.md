@@ -3,7 +3,27 @@ classtime
 
 Build a university schedule that fits your life in less than 5 minutes.
 
-#
+Table of Contents
+-----------------
+
+- [Get started](#get-started)
+- [The local database](#the-local-database)
+    - [seed_db](#seed_db)
+    - [delete_db](#delete_db)
+    - [refresh_db](#refresh_db)
+- [API](#api)
+    - [api/terms](#apiterms)
+    - [api/courses-min](#apicourses-min)
+    - [api/courses/\<course\>](#apicoursescourse)
+    - [api/generate-schedules](#apigenerate-schedules)
+- [Tests](#tests)
+- [Profiling](#profiling)
+- [Contributing](#contributing)
+
+-------
+
+Get Started
+-----------
 
 Get pip  
 > $ sudo apt-get install pip
@@ -32,24 +52,7 @@ If the install fails, you might also need to [install python-ldap's dependencies
 
 A virtual environment is an isolated build environment best used on a per-project basis. It is recommended. A good option is [virtualenv](http://virtualenv.readthedocs.org/en/latest/virtualenv.html).
 
-Table of Contents
------------------
-
-- [Get started](#get-started)
-- [The local database](#the-local-database)
-    - [seed_db](#seed_db)
-    - [delete_db](#delete_db)
-    - [refresh_db](#refresh_db)
-- [API](#api)
-    - [/api/terms](#apiterms)
-    - [/api/courses-min](#apicourses-min)
-    - [/api/courses/\<course\>](#apicoursescourse)
-    - [/api/generate-schedules](#apigenerate-schedules)
-- [Tests](#tests)
-- [Profiling](#profiling)
-- [Contributing](#contributing)
-
--------
+-----
 
 The local database
 ------------------
@@ -95,10 +98,10 @@ Is an alias for `$ python manage.py delete_db && python manage.py seed_db [--ter
 API
 ---
 
--> [/api/terms](#apiterms)
--> [/api/courses-min](#apicourses-min)
--> [/api/courses/\<course\>](#apicoursescourse)
--> [/api/generate-schedules](#apigenerate-schedules)
+-> [api/terms](#apiterms)
+-> [api/courses-min](#apicourses-min)
+-> [api/courses/\<course\>](#apicoursescourse)
+-> [api/generate-schedules](#apigenerate-schedules)
 
 Responses are communicated in [JavaScript Object Notation (JSON)](http://json.org/). Each endpoint returns a list of `objects`. A few useful book-keeping items are also included in each response.
 ```
@@ -119,7 +122,7 @@ Responses are communicated in [JavaScript Object Notation (JSON)](http://json.or
     "total_pages": <int>
 }
 ```
-The exception is [/api/courses-min](#apicourses-min), which returns only a single object (not a list), and no book-keeping items.
+The exception is [api/courses/\<course\>](#apicoursescourse), which returns only a single object (not a list), and no book-keeping items.
 
 It is possible for zero `<response object>`s to be returned.
 
@@ -128,7 +131,7 @@ Pagination is supported through `page` and `total_pages`. To get the *n*th page,
 
 Endpoints are documented individually:
 
-### /api/terms
+### api/terms
 
 Retrieve a list of available terms. Each term contains all available information.
 
@@ -183,7 +186,7 @@ Quickly retrieve a list of all available courses. Each course object contains on
 `subject` := variable-length subject identifier  
 `subjectTitle` := semantic subject name  
 
-### /api/courses/\<course\>
+### api/courses/\<course\>
 
 Retrieve detailed information about a single course.
 
@@ -231,7 +234,7 @@ Retrieve detailed information about a single course.
 `term` := [4-digit unique term identifier](#apiterms)    
 `units` := integer weight of the course  
 
-### /api/generate-schedules
+### api/generate-schedules
 
 ##### Request
 `GET localhost:5000/api/generate-schedules?q=<course-list>`
@@ -309,13 +312,13 @@ Common: `"MWF"` and `"TR"`
 
 ###### similar sections
 
-Two sections are similar if they have:
+Sections are similar if they have:
 - equal `course`
 - equal `component`
 - equal `startTime`
 - equal `endTime`
 
-Importantly, they will have:
+Importantly, they may have:
 - varying `section`
 - varying `campus`
 - varying `capacity`
@@ -329,6 +332,10 @@ Tests
 
 Core functionality is tested with [nosetests](https://nose.readthedocs.org/en/latest/).
 
+Test suites are in the `tests/` directory. Test filenames are prefixed with `test_`. Test functions are prefixed with `test_`.
+
+### Running the tests
+
 To run all tests
 > $ cd <project_root>
 > $ nosetests [options]
@@ -340,18 +347,22 @@ Useful options:
 - `--nocapture --pdb`: drop into [pdb](https://docs.python.org/2/library/pdb.html) on error or exception
 - `--nologcapture`: output all logging during test execution
 
+### Writing tests
+
+Check out ["writing tests"](https://nose.readthedocs.org/en/latest/writing_tests.html) in the [nose documentation](https://nose.readthedocs.org/en/latest/).
+
 -----
 
 Profiling
 ---------
 
-Performance bottlenecks are found by doing profiling on the test suite.
+Performance bottlenecks are found by profiling the test suite.
 
-Stats are collected with `nose-cprof` and analyzed with [`cprofilev`](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html).
+Stats are collected with [`nose-cprof`](https://docs.python.org/2/library/profile.html) and analyzed with [`cprofilev`](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html).
 
-[`nose-cprof`](https://docs.python.org/2/library/profile.html) is a [nose](#tests) plugin which lets nose use use python's builtin profiler, [`cProfile`](https://docs.python.org/2/library/profile.html).
+[`nose-cprof`](https://docs.python.org/2/library/profile.html) is a [nose](#tests) plugin which gives nose access to python's builtin profiler, [`cProfile`](https://docs.python.org/2/library/profile.html).
 
-#### Get started
+### Get started
 
 Use pip to install the nose-cprof plugin  
 > $ sudo pip install nose-cprof  
@@ -359,7 +370,7 @@ Use pip to install the nose-cprof plugin
 Install [cprofilev](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)
 > $ sudo pip install cprofilev
 
-#### Workflow
+### Workflow
 
 Run the tests with the profiler attached. The profiler creates an output file (named `stats.dat` by default).  
 > $ nosetests [path/to/test/file] --with-cprof
@@ -367,7 +378,7 @@ Run the tests with the profiler attached. The profiler creates an output file (n
 Start cprofilev  
 > $ cprofilev stats.dat  
 
-View and analyze
+View and [analyze](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)
 > http://localhost:5000
 
 -----
