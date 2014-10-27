@@ -28,21 +28,21 @@ Get started
 Get pip  
 > $ sudo apt-get install pip
 
-Clone the repo
+Clone the repo  
 > $ git clone https://github.com/rosshamish/classtime classtime  
 > $ cd classtime
 
-Install dependencies   
+Install dependencies  
 > $ sudo pip install -r requirements.txt
 
 Run the server  
 > $ python runserver.py
 
 View  
-> http://localhost:5000/
+> [http://localhost:5000](http://localhost:5000)
 
-Send a request to the [API](#api)
-> GET http://localhost:5000/api/terms
+Send a request to the [API](#api)  
+> GET [http://localhost:5000/api/terms](http://localhost:5000/api/terms)
 
 ##### Troubleshooting
 
@@ -50,7 +50,7 @@ If the install fails, you might also need to [install python-ldap's dependencies
 
 ##### virtualenv
 
-A virtual environment is an isolated build environment best used on a per-project basis. It is recommended. A good option is [virtualenv](http://virtualenv.readthedocs.org/en/latest/virtualenv.html).
+A virtual environment is an isolated build environment best used on a per-project basis. It is recommended to use one. A good option is [virtualenv](http://virtualenv.readthedocs.org/en/latest/virtualenv.html).
 
 -----
 
@@ -82,7 +82,6 @@ Delete the database completely. This is irreversible.
 
 `$ python manage.py delete_db`
 
-
 ### refresh_db
 
 Delete and rebuild the database with the specified term and all courses in it.
@@ -101,7 +100,7 @@ API
 , [api/courses/\<course\>](#apicoursescourse)
 , [api/generate-schedules](#apigenerate-schedules)
 
-Responses are communicated in [JavaScript Object Notation (JSON)](http://json.org/). Each endpoint returns a list of `objects`. A few useful book-keeping items are also included in each response.
+Responses are communicated in [JavaScript Object Notation (JSON)](http://json.org). Each endpoint returns a list of `objects`. A few useful book-keeping items are also included in each response.
 ```json
 {
     "num_results": <int>,
@@ -135,7 +134,7 @@ Endpoints are documented individually.
 Retrieve a list of available terms. Each term contains all available information.
 
 ##### Request
-`GET localhost:5000/api/terms`  
+`GET localhost:5000/api/terms`
 
 ##### Response
 ```json
@@ -187,9 +186,9 @@ Quickly retrieve a list of all available courses. Each course object contains on
 }
 ```
 
-`objects` := list of `\<course-min object\>`s
+`objects` := list of `<course-min object>`s
 
-###### `\<course-min object\>`
+###### \<course-min object\>
 
 `asString` := "\<subject\> \<level\>"  
 `course` := 6-digit unique course identifier  
@@ -202,7 +201,7 @@ Quickly retrieve a list of all available courses. Each course object contains on
 Retrieve detailed information about a single course.
 
 ##### Request
-`GET localhost:5000/api/courses/[<course>](#response-1)`  
+`GET localhost:5000/api/courses/<course>`  
 
 `course` := [6-digit unique course identifier](#apicourses-min)
 
@@ -229,10 +228,10 @@ Retrieve detailed information about a single course.
 }
 ```
 
-`asString` := \<subject\> \<level\>  
+`asString` := "\<subject\> \<level\>"  
 `career` := variable-length abbrevation of university program type (undergrad, grad, ..)  
 `catalog` := catalog id  
-`course` := [6-digit unique course identifier](#apicourses-min) 
+`course` := [6-digit unique course identifier](#apicourses-min)  
 `courseDescription` := often long description of the course  
 `courseTitle` := semantic course name  
 `department` := semantic department name  
@@ -247,17 +246,17 @@ Retrieve detailed information about a single course.
 ### api/generate-schedules
 
 ##### Request
-`GET localhost:5000/api/generate-schedules?q=<course-list>`
+`GET localhost:5000/api/generate-schedules?q=<request-parameters>`
 
 ```json
-course-list := {
-                   "term":term,
-                   "courses":[course, course2, .., courseN]
-               }
+request-parameters := {
+                          "term": term,
+                          "courses": [course, course2, .., courseN]
+                      }
 ```
 
 `term` := [4-digit unique term identifier](#apiterms)  
-`courseN` := [6-digit unique course identifier](#apicourses-min)
+`courses` := list of [6-digit unique course identifier](#apicourses-min)s
 
 ##### Response
 ```json
@@ -299,28 +298,28 @@ course-list := {
 }
 ```
 
-`objects` := list of `\<schedule object\>`s
+`objects` := list of `<schedule object>`s
 
-###### `\<schedule object\>`
+###### \<schedule object\>
 
-`sections` := list of `\<section object\>`s
+`sections` := list of `<section object>`s
 
-###### `\<section object\>`
+###### \<section object\>
 
-`<course attributes>` := all attributes from the parent [course](#apicoursescourse) object
+`<course attributes>` := all attributes from the parent [course](#apicoursescourse) object  
 
 `class_` := 5-digit unique section identifier  
 `component` := section type identifier, often 'LEC', 'LAB', 'SEM'  
 `day` := day(s) the section is on. uses [day format](#day-format)  
 `startTime` := time the section begins. uses [time format](#time-format)  
 `endTime` := time the section ends. uses [time format](#time-format)  
-`similarSections` := list of [similar](#similarsections) `\<section object\>`s
+`similarSections` := list of [similar](#similarsections) `<section object>`s
 
 `section` := section identifier. usually a letter and a number  
-`campus` := variable-length campus identifier
+`campus` := variable-length campus identifier  
 `capacity` := number of seats  
-`instructorUid` := instructor identifier
-`location` := somewhat semantic location name
+`instructorUid` := instructor identifier  
+`location` := somewhat semantic location name  
 
 ###### Day format
 
@@ -355,7 +354,7 @@ Importantly, they may have:
 - varying `location`
 - varying `instructorUid`
 
- ----
+-------
 
 Tests
 -----
@@ -411,7 +410,7 @@ Start cprofilev
 > $ cprofilev stats.dat  
 
 View and [analyze](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)  
-> http://localhost:5000
+> [http://localhost:5000](http://localhost:5000)
 
 -----
 
