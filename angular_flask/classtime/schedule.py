@@ -1,20 +1,18 @@
 
 import re
 
-from angular_flask.logging import logging
-
 class Schedule(object):
     """
-    Represents a 5-day week of 24-hour days, split into
-    30-minute blocks.
+    Represents a 5-day week of 24-hour days.
+    Each day is split into 30-minute blocks.
     """
     NUM_BLOCKS = 24*2
 
     NUM_DAYS = 5
     DAYS = 'MTWRF'
 
-    OPEN = 0
-    SYMBOLS = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    OPEN = -1
+    SYMBOLS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ-'
 
     # Semantic sorting constants
     SELF_IS_WORSE = True
@@ -23,7 +21,7 @@ class Schedule(object):
     def __init__(self, sections=None):
         self.schedule = [[Schedule.OPEN]*Schedule.NUM_BLOCKS
                          for _ in range(Schedule.NUM_DAYS)]
-        self._schedule_bitmap = [0 for _ in range(Schedule.NUM_DAYS)]
+        self.schedule_bitmap = [0 for _ in range(Schedule.NUM_DAYS)]
         # sections needs to be a list
         if sections is None:
             sections = []
@@ -82,7 +80,7 @@ class Schedule(object):
         """
         other = Schedule(section)
         for day in range(Schedule.NUM_DAYS):
-            if other._schedule_bitmap[day] & self._schedule_bitmap[day] != 0:
+            if other.schedule_bitmap[day] & self.schedule_bitmap[day] != 0:
                 return True
         return False
 
@@ -98,7 +96,7 @@ class Schedule(object):
         start = section.get('startTime')
         end = section.get('endTime')
         if days is None or start is None or end is None:
-            return
+            return self
 
         start = Schedule._timestr_to_blocknum(start)
         end = Schedule._timestr_to_blocknum(end)
@@ -107,6 +105,9 @@ class Schedule(object):
 
         return self
 
+    def clone(self):
+        return Schedule(self.sections)
+
     def add_section_with_deepishcopy(self, section):
         ret = Schedule(self.sections)
         ret.add_section(section)
@@ -114,21 +115,21 @@ class Schedule(object):
 
     def _add_by_block(self, day, start, end, section_num):
         daynum = Schedule._daystr_to_daynum(day)
-        for i in range(end-start+1):
-            self._schedule_bitmap[daynum] += (1 << start + i)
-            self.schedule[daynum][start + i] = section_num+1
+        for blocknum in range(start, end+1):
+            self.schedule_bitmap[daynum] += (1 << blocknum)
+            self.schedule[daynum][blocknum] = section_num
 
     @staticmethod
     def _timestr_to_blocknum(time):
         if not isinstance(time, str):
             time = str(time)
-        m = re.search('(\d\d):(\d\d) (\w\w)', time)
-        if m is None:
-            raise ValueError(r'time must match "\d\d:\d\d [AP]M\nGiven: "{}"'.format(time))
-        hour = int(m.group(1))
-        minute = int(m.group(2))
+        match = re.search(r'(\d\d):(\d\d) (\w\w)', time)
+        if match is None:
+            raise ValueError(r'time must match "\d\d:\d\d [AP]M')
+        hour = int(match.group(1))
+        minute = int(match.group(2))
         ampm_offset = 0
-        if hour != 12 and m.group(3) == 'PM':
+        if hour != 12 and match.group(3) == 'PM':
             ampm_offset = 12
 
         block = (hour+ampm_offset)*2 + minute/30
@@ -152,44 +153,44 @@ class Schedule(object):
         together so as to not waste time. Constantly alternating between
         class and break is bad. Having more than 3 hours in a row is bad.
         """
-        MAX_CONSECUTIVE_BLOCKS = 3*2 # 3 hours x 2 blocks/hour
+        max_consecutive_blocks = 3*2 # 3 hours x 2 blocks/hour
         score = 0
-        schedule_bitmap = list(self._schedule_bitmap)
+        schedule_bitmap_copy = list(self.schedule_bitmap)
         for day in range(Schedule.NUM_DAYS):
             consecutive_blocks = 0
-            day_bitmap = schedule_bitmap[day]
+            day_bitmap = schedule_bitmap_copy[day]
             while day_bitmap:
                 day_bitmap &= (day_bitmap << 1)
                 consecutive_blocks += 1
-            num_blocks_too_many = consecutive_blocks - MAX_CONSECUTIVE_BLOCKS
+            num_blocks_too_many = consecutive_blocks - max_consecutive_blocks
             if num_blocks_too_many > 0:
                 score -= num_blocks_too_many
         return score / 10.0
 
     def score_ideal_busy_range(self):
         #               0 1 2 3 4 5 6 7 8 9 1011121 2 3 4 5 6 7 8 9 101112
-        BAD_ZONE = int('11111111111111111100000000000000001111111111111111',2)
+        bad_zone = int('11111111111111111100000000000000001111111111111111', 2)
 
         for day in range(Schedule.NUM_DAYS):
-            in_bad_zone = self._schedule_bitmap[day] & BAD_ZONE
+            in_bad_zone = self.schedule_bitmap[day] & bad_zone
             num_outside = bin(in_bad_zone).count('1')
         return -1*num_outside / 10.0
 
     def score_start_earlier(self):
         score = 0
 
-        IDEAL_START_BLOCK = 8*2 # 8am
-        ideal_start_bitmap = (1 << IDEAL_START_BLOCK)
-        schedule_bitmap = list(self._schedule_bitmap)
+        ideal_start_block = 8*2 # 8am
+        ideal_start_bitmap = (1 << ideal_start_block)
+        schedule_bitmap_copy = list(self.schedule_bitmap)
         for day in range(Schedule.NUM_DAYS):
             # Because a 1 further to the left (earlier in the day)
             # will always make a larger number
-            if schedule_bitmap[day] == 0:
+            if schedule_bitmap_copy[day] == 0:
                 continue
-            if schedule_bitmap[day] > ideal_start_bitmap:
+            if schedule_bitmap_copy[day] > ideal_start_bitmap:
                 score += 2
                 continue
-            while schedule_bitmap[day] < ideal_start_bitmap:
-                schedule_bitmap[day] = schedule_bitmap[day] << 1
+            while schedule_bitmap_copy[day] < ideal_start_bitmap:
+                schedule_bitmap_copy[day] = schedule_bitmap_copy[day] << 1
                 score -= 1
         return score

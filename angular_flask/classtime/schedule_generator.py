@@ -9,10 +9,14 @@ class ScheduleGenerator(object):
     Class which builds optimal schedules out of
     course listings.
     """
+
+    CANDIDATE_POOL_SIZE = 50
+
     def __init__(self, cal, term, course_ids):
         """
-        course_ids should be a list of integers representing the
-        courses which should be in the schedule
+        cal := AcademicCalendar instance
+        term := 4-digit unique term identifier
+        course_ids := list of 6-digit unique course identifiers
         """
         self._course_ids = course_ids
         self._schedules_heapq = None
@@ -20,59 +24,34 @@ class ScheduleGenerator(object):
         self._cal = cal
         self._cal.select_current_term(term)
 
-    def get_schedules(self, num_schedules):
-        """Returns schedule objects generated from
+    def generate_schedules(self, num_requested):
+        """
+        Returns schedule objects generated from
         the courses passed upon initialization
         """
-        self._schedules_heapq = self._generate_schedules(num_schedules)
-        schedules_worst_to_best = [heapq.heappop(self._schedules_heapq)
-                                   for _ in range(len(self._schedules_heapq))]
-        return schedules_worst_to_best[::-1] # Reversed
-
-    def _generate_schedules(self, num_schedules):
-        """
-        Generates good schedules based on the course list
-        provided on initialization.
-
-        The schedule generated returned will *not* be one
-        of the schedules already in self.generated_schedules
-
-        Backtracking - just do a depth-first search of the
-        courses
-        - maintain them in a priority queue with the sort
-          order governed by their "score" regarding to
-          whatever cost functions we define
-        """
-        logging.info('Generating schedules for course ids {}'.format(self._course_ids))
+        logging.info('Making schedules for courses {}'.format(self._course_ids))
         components = self._cal.get_components_for_course_ids(self._course_ids)
-        logging.debug('There are {} components to schedule'.format(len(components)))
+        logging.debug('{} components to schedule'.format(len(components)))
 
-        CANDIDATE_POOL_SIZE = 50
-
-        components = sorted(components, key=lambda component: len(component))
+        components = sorted(components, key=len)
         candidates = [Schedule()]
-        components_considered = 0
-        for component in components:
-            logging.debug('Scheduling {}:{}\t({}/{})'.format(
-                          component[0].get('asString'), component[0].get('component'),
-                          components_considered+1, len(components)))
+        sections_chosen = 0
+        for sections in components:
             for candidate in candidates[:]:
-                if len(candidate.sections) != components_considered:
+                if len(candidate.sections) < sections_chosen:
                     continue
-                for section in component:
+                for section in sections:
                     if candidate.conflicts(section):
                         continue
-                    new_candidate = candidate.add_section_with_deepishcopy(section)
-                    if len(candidates) >= CANDIDATE_POOL_SIZE:
-                        heapq.heapreplace(candidates, new_candidate)
-                    else:
-                        heapq.heappush(candidates, new_candidate)
-            components_considered += 1
-            logging.debug('{} Candidates'.format(len(candidates)))
+                    new_candidate = candidate.clone().add_section(section)
+                    worst = heapq.heapreplace(candidates, new_candidate)
+                    if len(candidates) < ScheduleGenerator.CANDIDATE_POOL_SIZE:
+                        heapq.heappush(candidates, worst)
+            sections_chosen += 1
+            logging.debug('Scheduling {}:{}\t({}/{})'.format(
+                          sections[0].get('asString'),
+                          sections[0].get('component'),
+                          sections_chosen,
+                          len(components)))
 
-        winners = list()
-        while candidates and len(winners) < num_schedules:
-            smallest = heapq.heappop(candidates)
-            if len(smallest.sections) == len(components):
-                heapq.heappush(winners, smallest)
-        return winners
+        return sorted(candidates, reverse=True)[:num_requested]

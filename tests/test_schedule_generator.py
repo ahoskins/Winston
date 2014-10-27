@@ -10,7 +10,7 @@ def test_generate_schedule():
     course_list = ['002896', '001341']
     num_schedules = 10
     generator = ScheduleGenerator(cal, term, course_list)
-    schedules = generator.get_schedules(num_schedules)
+    schedules = generator.generate_schedules(num_schedules)
     logging.debug('Schedules:\n{}'.format(schedules))
 
     # First Year Engineering
@@ -18,7 +18,7 @@ def test_generate_schedule():
     course_list = ['001343', '004093', '004096', '006768', '009019']
     num_schedules = 10
     generator = ScheduleGenerator(cal, term, course_list)
-    schedules = generator.get_schedules(num_schedules)
+    schedules = generator.generate_schedules(num_schedules)
     logging.debug('Schedules:\n{}'.format(schedules))
 
     # Ross Anderson's 3rd Year Fall Term 2014 Course List
@@ -26,5 +26,5 @@ def test_generate_schedule():
     course_list = ['010344', '105014', '105006', '105471', '006708', '010812']
     num_schedules = 10
     generator = ScheduleGenerator(cal, term, course_list)
-    schedules = generator.get_schedules(num_schedules)
+    schedules = generator.generate_schedules(num_schedules)
     logging.debug('Schedules:\n{}'.format(schedules))

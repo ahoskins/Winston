@@ -71,7 +71,7 @@ def generate_schedules(result=None, search_params=None, **kw):
         return
 
     generator = ScheduleGenerator(cal, term, courses)
-    schedules = generator.get_schedules(10)
+    schedules = generator.generate_schedules(10)
     result['num_results'] = len(schedules)
     result['objects'] = list()
     for schedule in schedules:
