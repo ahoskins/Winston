@@ -4,7 +4,15 @@ html {
 }
 
 .course-accordion {
-	width: 50%;
+	width: 80%;
+}
+
+.faculty-accordion {
+    width: 50%;
+}
+
+.subject-accordion {
+    width: 70%;
 }
 
 #searchBox {
