@@ -15,6 +15,7 @@ def delete_db():
     logging.info('DB deleted!')
 
 def seed_db(args, db):
+    create_db()
     term = 1490
     if args.term:
         term = args.term
@@ -23,7 +24,6 @@ def seed_db(args, db):
 
 def refresh_db(args, db):
     delete_db()
-    create_db()
     seed_db(args, db)
 
 def main():
@@ -33,9 +33,7 @@ def main():
     parser.add_argument('--startfrom', help='the course id to begin filling at')
     args = parser.parse_args()
 
-    if args.command == 'create_db':
-        raise
-    elif args.command == 'delete_db':
+    if args.command == 'delete_db':
         delete_db()
     elif args.command == 'seed_db':
         seed_db(args, db)
