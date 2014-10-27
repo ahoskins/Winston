@@ -1,6 +1,5 @@
 
 import re
-import copy
 
 from angular_flask.logging import logging
 
@@ -106,8 +105,10 @@ class Schedule(object):
         for day in days:
             self._add_by_block(day, start, end, self.sections.index(section))
 
-    def add_section_and_deepcopy(self, section):
-        ret = copy.deepcopy(self)
+        return self
+
+    def add_section_with_deepishcopy(self, section):
+        ret = Schedule(self.sections)
         ret.add_section(section)
         return ret
 

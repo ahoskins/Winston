@@ -26,7 +26,7 @@ class ScheduleGenerator(object):
         """
         self._schedules_heapq = self._generate_schedules(num_schedules)
         schedules_worst_to_best = [heapq.heappop(self._schedules_heapq)
-                                        for _ in range(len(self._schedules_heapq))]
+                                   for _ in range(len(self._schedules_heapq))]
         return schedules_worst_to_best[::-1] # Reversed
 
     def _generate_schedules(self, num_schedules):
@@ -56,13 +56,13 @@ class ScheduleGenerator(object):
             logging.debug('Scheduling {}:{}\t({}/{})'.format(
                           component[0].get('asString'), component[0].get('component'),
                           components_considered+1, len(components)))
-            for sched in candidates[:]:
-                if len(sched.sections) != components_considered:
+            for candidate in candidates[:]:
+                if len(candidate.sections) != components_considered:
                     continue
                 for section in component:
-                    if sched.conflicts(section):
+                    if candidate.conflicts(section):
                         continue
-                    new_candidate = sched.add_section_and_deepcopy(section)
+                    new_candidate = candidate.add_section_with_deepishcopy(section)
                     if len(candidates) >= CANDIDATE_POOL_SIZE:
                         heapq.heapreplace(candidates, new_candidate)
                     else:
