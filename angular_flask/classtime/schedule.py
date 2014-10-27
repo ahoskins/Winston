@@ -121,9 +121,6 @@ class Schedule(object):
     @staticmethod
     def _timestr_to_blocknum(time):
         if not isinstance(time, str):
-            # logging.debug('in _timestr_to_blocknum, time was not instance of str')
-            # logging.debug('time: {}'.format(time))
-            # logging.debug('casting to str and continuing')
             time = str(time)
         m = re.search('(\d\d):(\d\d) (\w\w)', time)
         if m is None:
