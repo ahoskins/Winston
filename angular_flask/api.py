@@ -71,7 +71,11 @@ def generate_schedules(result=None, search_params=None, **kw):
     generator = ScheduleGenerator(cal, term, courses)
     schedules = generator.get_schedules(10)
     result['num_results'] = len(schedules)
-    result['objects'] = [schedule.sections for schedule in schedules]
+    result['objects'] = list()
+    for schedule in schedules:
+        result['objects'].append({
+            'sections': schedule.sections
+        })
     result['page'] = 1
     result['total_pages'] = 1
     return

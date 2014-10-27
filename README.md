@@ -259,39 +259,43 @@ course-list := {
 ```json
 {
     "objects": [
-        [
-            {
-                ...
-                <course attributes>
-                ...
-                "class_": "62293",
-                "component": "LEC",
-                "day": "MWF",
-                "startTime": "10:00 AM",
-                "endTime": "10:50 AM",
-                "similarSections": [
+        {
+            "sections" : [
+                {
                     ...
-                    { <section object> },
+                    <course attributes>
                     ...
-                ],
+                    "class_": "62293",
+                    "component": "LEC",
+                    "day": "MWF",
+                    "startTime": "10:00 AM",
+                    "endTime": "10:50 AM",
+                    "similarSections": [
+                        ...
+                        { <section object> },
+                        ...
+                    ],
+                    ...
+                    "section": "A02",
+                    "campus": "MAIN",
+                    "capacity": 0,
+                    "instructorUid": "jdavis",
+                    "location": "CCIS L2 190"
+                },
+                { <section object 2> },
                 ...
-                "section": "A02",
-                "campus": "MAIN",
-                "capacity": 0,
-                "instructorUid": "jdavis",
-                "location": "CCIS L2 190"
-            },
-            { <section object 2> },
-            ...
-            { <section object N> }
-        ]
-        [ <schedule object 2> ],
+                { <section object N> }
+            ]
+        },
+        { <schedule object 2> },
         ...
-        [ <schedule object M> ]
+        { <schedule object M> }
     ],
     ...
 }
 ```
+
+`sections` := list of \<section object\>s
 
 `<course attributes>` := all attributes from the [course](#apicoursescourse) object
 
