@@ -5,7 +5,6 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 
 	// New, organized course object
 	$scope.subjectBin = {};
-	var subjectBin = {};
 
 	// temp used in transfer to new course object
 	var pageListing;
@@ -30,18 +29,18 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 
                         // For each course on page of results...
                         pageListing.objects.forEach(function (course) {
-                            if (subjectBin.hasOwnProperty(course.faculty)) {
+                            if ($scope.subjectBin.hasOwnProperty(course.faculty)) {
                                 // We are within an existing faculty property
-                                if (subjectBin[course.faculty].hasOwnProperty(course.subject)) {
-                                    subjectBin[course.faculty][course.subject].push(course.asString);
+                                if ($scope.subjectBin[course.faculty].hasOwnProperty(course.subject)) {
+                                    $scope.subjectBin[course.faculty][course.subject].push(course.asString);
                                 }
                                 else {
-                                    subjectBin[course.faculty][course.subject] = [course.asString];
+                                    $scope.subjectBin[course.faculty][course.subject] = [course.asString];
                                 }
                             }
                             else {
-                                subjectBin[course.faculty] = {};
-                                subjectBin[course.faculty][course.subject] = [course.asString];
+                                $scope.subjectBin[course.faculty] = {};
+                                $scope.subjectBin[course.faculty][course.subject] = [course.asString];
 
                             }
                         });
@@ -57,25 +56,25 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
             $window.alert("Sorry, something went wrong.");
     });
 
-
-	// Gather new object received from the above
-	$scope.subjectBin = subjectBin;
-
+    // Wait 0.5 seconds until displaying any courses
+    //
+    // Without this delay the courses will immediately load, freeze up for a second, and then finally finish
+    // This is hides this lag (I better come up with a better fix eventually)
+    $timeout(function() {
+        $scope.filterText = '';
+    }, 500);
 
     // Filter watcher
     //
     // This watches the ng-model called "searchBox" and changes the $scope filter, filterText, every 0.5 second
     // It is affecting the regular $digest cycle, which is normally on every state change of the input (new text)
-    $scope.filterText = '';
-	var tempFilterText = '';
 	var filterTextTimeout;
 	$scope.$watch('searchBox', function(val) {
 		if (filterTextTimeout) {
 			$timeout.cancel(filterTextTimeout);
 		}
-		tempFilterText = val;
 		filterTextTimeout = $timeout(function() {
-			$scope.filterText = tempFilterText;
+			$scope.filterText = val;
 		}, 500);
 	});
 
