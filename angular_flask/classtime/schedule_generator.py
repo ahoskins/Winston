@@ -15,7 +15,7 @@ class ScheduleGenerator(object):
         courses which should be in the schedule
         """
         self._course_ids = course_ids
-        self._schedules = None
+        self._schedules_heapq = None
 
         self._cal = cal
         self._cal.select_current_term(term)
@@ -24,8 +24,10 @@ class ScheduleGenerator(object):
         """Returns schedule objects generated from
         the courses passed upon initialization
         """
-        self._generate_schedules(num_schedules)
-        return self._schedules
+        self._schedules_heapq = self._generate_schedules(num_schedules)
+        schedules_worst_to_best = [heapq.heappop(self._schedules_heapq)
+                                   for _ in range(len(self._schedules_heapq))]
+        return schedules_worst_to_best[::-1] # Reversed
 
     def _generate_schedules(self, num_schedules):
         """
@@ -45,24 +47,32 @@ class ScheduleGenerator(object):
         components = self._cal.get_components_for_course_ids(self._course_ids)
         logging.debug('There are {} components to schedule'.format(len(components)))
 
-        HEAP_SIZE = 50
+        CANDIDATE_POOL_SIZE = 50
 
         components = sorted(components, key=lambda component: len(component))
         candidates = [Schedule()]
-        for i, component in zip(range(len(components)), components):
-            logging.debug('Scheduling Course {}:{}\t({}/{})'.format(
-                          component[0].get('course'), component[0].get('component'),
-                          i+1, len(components)))
-            for sched in candidates[:]:
+        components_considered = 0
+        for component in components:
+            logging.debug('Scheduling {}:{}\t({}/{})'.format(
+                          component[0].get('asString'), component[0].get('component'),
+                          components_considered+1, len(components)))
+            for candidate in candidates[:]:
+                if len(candidate.sections) != components_considered:
+                    continue
                 for section in component:
-                    if sched.conflicts(section):
+                    if candidate.conflicts(section):
                         continue
-                    new_candidate = sched.add_section_and_deepcopy(section)
-                    if len(candidates) >= HEAP_SIZE:
+                    new_candidate = candidate.add_section_with_deepishcopy(section)
+                    if len(candidates) >= CANDIDATE_POOL_SIZE:
                         heapq.heapreplace(candidates, new_candidate)
                     else:
                         heapq.heappush(candidates, new_candidate)
+            components_considered += 1
             logging.debug('{} Candidates'.format(len(candidates)))
-        
-        self._schedules = [heapq.heappop(candidates)
-                           for _ in range(min(num_schedules, len(candidates)))]
+
+        winners = list()
+        while candidates and len(winners) < num_schedules:
+            smallest = heapq.heappop(candidates)
+            if len(smallest.sections) == len(components):
+                heapq.heappush(winners, smallest)
+        return winners

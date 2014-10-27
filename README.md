@@ -114,6 +114,25 @@ Useful options:
 - `--nocapture --pdb`: drop into [pdb](https://docs.python.org/2/library/pdb.html) on error or exception
 - `--nologcapture`: output all logging during test execution
 
+#### Profiling
+
+It is useful to methodically find bottlenecks with a *profiler*.
+
+One way to do this:
+
+Install nose-cprof, a nose plugin that allows nose to use [cProfile](https://docs.python.org/2/library/profile.html)  
+> $ sudo pip install nose-cprof  
+
+Install cprofilev (see how to use it [here](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html))  
+> $ sudo pip install cprofilev
+
+Run the tests with the profiler (creates a `stats.dat` file in the current directory by default)  
+> $ nosetests [tests to run] --with-cprof
+
+View the results
+> $ cprofilev stats.dat  
+> View localhost:5000 in a browser
+
 ## Contributing
 
 Commit messages follow the [Angular.js commit message style guide](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit?pli=1#)
