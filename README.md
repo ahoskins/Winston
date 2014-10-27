@@ -29,8 +29,8 @@ Get pip
 > $ sudo apt-get install pip
 
 Clone the repo
-> $ git clone https://github.com/rosshamish/classtime classtime
-> cd classtime
+> $ git clone https://github.com/rosshamish/classtime classtime  
+> $ cd classtime
 
 Install dependencies   
 > $ sudo pip install -r requirements.txt
@@ -187,6 +187,10 @@ Quickly retrieve a list of all available courses. Each course object contains on
 }
 ```
 
+`objects` := list of `\<course-min object\>`s
+
+###### `\<course-min object\>`
+
 `asString` := "\<subject\> \<level\>"  
 `course` := 6-digit unique course identifier  
 `faculty` := semantic faculty name  
@@ -295,18 +299,24 @@ course-list := {
 }
 ```
 
-`sections` := list of \<section object\>s
+`objects` := list of `\<schedule object\>`s
 
-`<course attributes>` := all attributes from the [course](#apicoursescourse) object
+###### `\<schedule object\>`
+
+`sections` := list of `\<section object\>`s
+
+###### `\<section object\>`
+
+`<course attributes>` := all attributes from the parent [course](#apicoursescourse) object
 
 `class_` := 5-digit unique section identifier  
 `component` := section type identifier, often 'LEC', 'LAB', 'SEM'  
 `day` := day(s) the section is on. uses [day format](#day-format)  
 `startTime` := time the section begins. uses [time format](#time-format)  
 `endTime` := time the section ends. uses [time format](#time-format)  
-`similarSections` := list of zero or more [similar sections](#similarsections)
+`similarSections` := list of [similar](#similarsections) `\<section object\>`s
 
-`section` := section identifier. usually a letter then a number  
+`section` := section identifier. usually a letter and a number  
 `campus` := variable-length campus identifier
 `capacity` := number of seats  
 `instructorUid` := instructor identifier
@@ -357,7 +367,7 @@ Test suites are in the `tests/` directory. Test filenames are prefixed with `tes
 ### Run tests
 
 Run all tests  
-> $ cd <project_root>
+> $ cd <project_root>  
 > $ nosetests [options]
 
 Run tests only in a specific file    
@@ -385,14 +395,14 @@ Profiling data is collected with [`nose-cprof`](https://github.com/msherry/nose-
 ### Get started
 
 Use pip to install the nose-cprof plugin  
-> $ sudo pip install nose-cprof  
+> $ sudo pip install nose-cprof
 
-Install [cprofilev](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)
+Install [cprofilev](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)  
 > $ sudo pip install cprofilev
 
 ### Workflow
 
-Run the tests with the profiler attached.
+Run the tests with the profiler attached.  
 > $ nosetests [path/to/test/file] --with-cprof --cprofile-stats-file OUTPUT-FILE
 
 > `OUTPUT-FILE` := filename to write profiling output to - default: `./stats.dat`
@@ -400,7 +410,7 @@ Run the tests with the profiler attached.
 Start cprofilev  
 > $ cprofilev stats.dat  
 
-View and [analyze](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)
+View and [analyze](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)  
 > http://localhost:5000
 
 -----
