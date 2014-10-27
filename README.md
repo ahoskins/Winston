@@ -3,7 +3,7 @@ classtime
 
 Build a university schedule that fits your life in less than 5 minutes.
 
-Table of Contents
+Table of contents
 -----------------
 
 - [Get started](#get-started)
@@ -22,7 +22,7 @@ Table of Contents
 
 -------
 
-Get Started
+Get started
 -----------
 
 Get pip  
@@ -56,9 +56,9 @@ A virtual environment is an isolated build environment best used on a per-projec
 
 The local database
 ------------------
--> [seed_db](#seed_db)
--> [delete_db](#delete_db)
--> [refresh_db](#refresh_db)
+[seed_db](#seed_db)
+, [delete_db](#delete_db)
+, [refresh_db](#refresh_db)
 
 The local database is used as a cache for the remote database. The server fetches from the remote lazily, waiting for requests that need the information before actually getting it. 
 
@@ -74,7 +74,7 @@ Seed the database with the specified term and all courses in it.
 
 `$ python manage.py seed_db [--term TERM]`
 
-`TERM` := [4-digit unique term identifier](#apiterms) - default: `1490` (Fall Term 2014)
+> `TERM` := [4-digit unique term identifier](#apiterms) - default: `1490` (Fall Term 2014)
 
 ### delete_db
 
@@ -85,26 +85,24 @@ Delete the database completely. This is irreversible.
 
 ### refresh_db
 
-Delete and rebuild the database.
+Delete and rebuild the database with the specified term and all courses in it.
 
 `$ python manage.py refresh_db [--term TERM]`
 
-Is an alias for `$ python manage.py delete_db && python manage.py seed_db [--term TERM]`
-
-
+> `TERM` := [4-digit unique term identifier](#apiterms) - default: `1490` (Fall Term 2014)
 
 -----
 
 API
 ---
 
--> [api/terms](#apiterms)
--> [api/courses-min](#apicourses-min)
--> [api/courses/\<course\>](#apicoursescourse)
--> [api/generate-schedules](#apigenerate-schedules)
+[api/terms](#apiterms)
+, [api/courses-min](#apicourses-min)
+, [api/courses/\<course\>](#apicoursescourse)
+, [api/generate-schedules](#apigenerate-schedules)
 
 Responses are communicated in [JavaScript Object Notation (JSON)](http://json.org/). Each endpoint returns a list of `objects`. A few useful book-keeping items are also included in each response.
-```
+```json
 {
     "num_results": <int>,
     "objects": [
@@ -122,6 +120,7 @@ Responses are communicated in [JavaScript Object Notation (JSON)](http://json.or
     "total_pages": <int>
 }
 ```
+
 The exception is [api/courses/\<course\>](#apicoursescourse), which returns only a single object (not a list), and no book-keeping items.
 
 It is possible for zero `<response object>`s to be returned.
@@ -129,24 +128,32 @@ It is possible for zero `<response object>`s to be returned.
 Pagination is supported through `page` and `total_pages`. To get the *n*th page, append `?page=<n>` to any endpoint
   - if you are using a [search query] already, use `?q=<search_query>&page=<n>`
 
-Endpoints are documented individually:
+Endpoints are documented individually.
 
 ### api/terms
 
 Retrieve a list of available terms. Each term contains all available information.
 
 ##### Request
-
 `GET localhost:5000/api/terms`  
 
 ##### Response
-```
+```json
 {
-    "endDate": "2007-12-05",
-    "startDate": "2007-09-05",
-    "term": "1210",
-    "termTitle": "Fall Term 2007"
+    "objects": [
+        {
+            "endDate": "2007-12-05",
+            "startDate": "2007-09-05",
+            "term": "1210",
+            "termTitle": "Fall Term 2007"
+        },
+        { <term object 2> },
+        ...
+        { <term object N> }
+    ],
+    ...
 }
+
 ```
 
 `endDate` := YYYY-MM-DD  
@@ -162,20 +169,20 @@ Quickly retrieve a list of all available courses. Each course object contains on
 `GET localhost:5000/api/courses-min`
 
 ##### Response
-```
+```json
 {
     "objects" : [
-                    {
-                        "asString": "ACCTG 300",
-                        "course": "000001",
-                        "faculty": "Faculty of Business",
-                        "subject": "ACCTG",
-                        "subjectTitle": "Accounting"
-                    },
-                    { <course-min object 2> },
-                    ...
-                    { <course-min object N> }
-                ]
+        {
+            "asString": "ACCTG 300",
+            "course": "000001",
+            "faculty": "Faculty of Business",
+            "subject": "ACCTG",
+            "subjectTitle": "Accounting"
+        },
+        { <course-min object 2> },
+        ...
+        { <course-min object N> }
+    ],
     ...
 }
 ```
@@ -196,7 +203,7 @@ Retrieve detailed information about a single course.
 `course` := [6-digit unique course identifier](#apicourses-min)
 
 ##### Response
-```
+```json
 {
     "asString": "ACCTG 300",
     "career": "UGRD",
@@ -216,7 +223,6 @@ Retrieve detailed information about a single course.
     "term": "1490",
     "units": 3
 }
-
 ```
 
 `asString` := \<subject\> \<level\>  
@@ -239,58 +245,62 @@ Retrieve detailed information about a single course.
 ##### Request
 `GET localhost:5000/api/generate-schedules?q=<course-list>`
 
-```
+```json
 course-list := {
                    "term":term,
                    "courses":[course, course2, .., courseN]
                }
-```  
+```
+
 `term` := [4-digit unique term identifier](#apiterms)  
 `courseN` := [6-digit unique course identifier](#apicourses-min)
 
 ##### Response
-```
+```json
 {
     "objects": [
-                    [
-                        {
-                            ...
-                            <course attributes>
-                            ...
-                            "class_": "62293",
-                            "component": "LEC",
-                            "day": "MWF",
-                            "startTime": "10:00 AM",
-                            "endTime": "10:50 AM",
-                            "similarSections": [
-                                { ... }
-                            ],
-                            ...
-                            "section": "A02",
-                            "campus": "MAIN",
-                            "capacity": 0,
-                            "instructorUid": "jdavis",
-                            "location": "CCIS L2 190"
-                        },
-                        { <section object 2> },
-                        ...
-                        { <section object N> }
-                    ]
-                    [ <schedule object 2> ],
+        [
+            {
+                ...
+                <course attributes>
+                ...
+                "class_": "62293",
+                "component": "LEC",
+                "day": "MWF",
+                "startTime": "10:00 AM",
+                "endTime": "10:50 AM",
+                "similarSections": [
                     ...
-                    [ <schedule object M> ]
-                ]
+                    { <section object> },
+                    ...
+                ],
+                ...
+                "section": "A02",
+                "campus": "MAIN",
+                "capacity": 0,
+                "instructorUid": "jdavis",
+                "location": "CCIS L2 190"
+            },
+            { <section object 2> },
+            ...
+            { <section object N> }
+        ]
+        [ <schedule object 2> ],
+        ...
+        [ <schedule object M> ]
+    ],
     ...
 }
 ```
+
 `<course attributes>` := all attributes from the [course](#apicoursescourse) object
 
 `class_` := 5-digit unique section identifier  
 `component` := section type identifier, often 'LEC', 'LAB', 'SEM'  
-`day` := day(s) the section is on, [formatted like this](#day-format)  
-`startTime` := [formatted like this](#time-format)  
-`endTime` := [also formattedl ike this](#time-format)  
-`similarSections` := [list of zero or more similar `<section object>`s](#similarsections)
+`day` := day(s) the section is on. uses [day format](#day-format)  
+`startTime` := time the section begins. uses [time format](#time-format)  
+`endTime` := time the section ends. uses [time format](#time-format)  
+`similarSections` := list of zero or more [similar sections](#similarsections)
 
 `section` := section identifier. usually a letter then a number  
 `campus` := variable-length campus identifier
@@ -298,19 +308,25 @@ course-list := {
 `instructorUid` := instructor identifier
 `location` := somewhat semantic location name
 
-###### day format
+###### Day format
+
 String containing one or more of the characters `"MTWRF"`, with each corresponding to a day from Monday through Friday.
 
-Common: `"MWF"` and `"TR"`
+eg `"MWF"`  
+eg `"TR"`
 
-###### time format
+###### Time format
+
 `"HH:MM XM"`
 
 `HH` := 2-digit hour between 00 and 12  
 `MM` := 2-digit minute between 00 and 59  
 `X` := `A` or `P`
 
-###### similar sections
+eg `"08:00 AM"`  
+eg `"09:50 PM"`
+
+###### Similar sections
 
 Sections are similar if they have:
 - equal `course`
@@ -334,20 +350,20 @@ Core functionality is tested with [nosetests](https://nose.readthedocs.org/en/la
 
 Test suites are in the `tests/` directory. Test filenames are prefixed with `test_`. Test functions are prefixed with `test_`.
 
-### Running the tests
+### Run tests
 
-To run all tests
+Run all tests  
 > $ cd <project_root>
 > $ nosetests [options]
 
-Or, to run tests only in a specific file, run  
+Run tests only in a specific file    
 > $ nosetests [path/to/test/file] [options]
 
 Useful options:
 - `--nocapture --pdb`: drop into [pdb](https://docs.python.org/2/library/pdb.html) on error or exception
 - `--nologcapture`: output all logging during test execution
 
-### Writing tests
+### Write tests
 
 Check out ["writing tests"](https://nose.readthedocs.org/en/latest/writing_tests.html) in the [nose documentation](https://nose.readthedocs.org/en/latest/).
 
@@ -356,11 +372,11 @@ Check out ["writing tests"](https://nose.readthedocs.org/en/latest/writing_tests
 Profiling
 ---------
 
-Performance bottlenecks are found by profiling the test suite.
+Performance bottlenecks are found by [profiling](http://en.wikipedia.org/wiki/Profiling_%28computer_programming%29) tests.
 
-Stats are collected with [`nose-cprof`](https://docs.python.org/2/library/profile.html) and analyzed with [`cprofilev`](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html).
+Profiling data is collected with [`nose-cprof`](https://github.com/msherry/nose-cprof) and analyzed with [`cprofilev`](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html).
 
-[`nose-cprof`](https://docs.python.org/2/library/profile.html) is a [nose](#tests) plugin which gives nose access to python's builtin profiler, [`cProfile`](https://docs.python.org/2/library/profile.html).
+> [`nose-cprof`](https://github.com/msherry/nose-cprof) is a [nose plugin](http://nose.readthedocs.org/en/latest/plugins/builtin.html) which gives nose access to python's builtin profiler, [`cProfile`](https://docs.python.org/2/library/profile.html).
 
 ### Get started
 
@@ -372,8 +388,10 @@ Install [cprofilev](http://ymichael.com/2014/03/08/profiling-python-with-cprofil
 
 ### Workflow
 
-Run the tests with the profiler attached. The profiler creates an output file (named `stats.dat` by default).  
-> $ nosetests [path/to/test/file] --with-cprof
+Run the tests with the profiler attached.
+> $ nosetests [path/to/test/file] --with-cprof --cprofile-stats-file OUTPUT-FILE
+
+> `OUTPUT-FILE` := filename to write profiling output to - default: `./stats.dat`
 
 Start cprofilev  
 > $ cprofilev stats.dat  
