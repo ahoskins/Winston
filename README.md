@@ -123,13 +123,13 @@ One way to do this:
 Install nose-cprof, a nose plugin that allows nose to use [cProfile](https://docs.python.org/2/library/profile.html)  
 > $ sudo pip install nose-cprof  
 
-Install [cprofilev](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)  
+Install cprofilev (see how to use it [here](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html))  
 > $ sudo pip install cprofilev
 
-1. Run the tests with the profiler (creates a `stats.dat` file in the current directory by default)  
+Run the tests with the profiler (creates a `stats.dat` file in the current directory by default)  
 > $ nosetests [tests to run] --with-cprof
 
-2. View the results
+View the results
 > $ cprofilev stats.dat  
 > View localhost:5000 in a browser
 
