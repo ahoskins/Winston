@@ -80,7 +80,6 @@ def generate_schedules(result=None, search_params=None, **kw):
         })
     return
 
-
 api_manager.create_api(Section,
                        collection_name='generate-schedules',
                        include_columns=[],
