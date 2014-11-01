@@ -44,7 +44,7 @@ class Schedule(object):
 
     def __lt__(self, other):
         """
-        This is where all cost functions will be performed
+        Sort schedules
         """
         if len(self.sections) > len(other.sections):
             return Schedule.SELF_IS_BETTER
@@ -97,7 +97,7 @@ class Schedule(object):
     def _add_by_block(self, day, start, end, section_num):
         daynum = Schedule._daystr_to_daynum(day)
         for blocknum in range(start, end+1):
-            self.schedule_bitmap[daynum] += (1 << blocknum)
+            self.schedule_bitmap[daynum] += (1 << (Schedule.NUM_BLOCKS - blocknum -1))
             self.schedule[daynum][blocknum] = section_num
 
     # -------------------------------
@@ -106,9 +106,9 @@ class Schedule(object):
     # -------------------------------
     def score_schedule(self):
         self.score = 0
-        self.score += self._score_classes_in_a_row()
-        self.score += self._score_ideal_busy_range()
-        self.score += self._score_start_earlier()
+        self.score += 1 * self._score_classes_in_a_row()
+        self.score += 1 * self._score_ideal_busy_range()
+        self.score += 1 * self._score_start_earlier()
 
     def _score_classes_in_a_row(self):
         """
@@ -118,41 +118,41 @@ class Schedule(object):
         class and break is bad. Having more than 3 hours in a row is bad.
         """
         max_consecutive_blocks = 3*2 # 3 hours x 2 blocks/hour
-        score = 0
-        schedule_bitmap_copy = list(self.schedule_bitmap)
-        for day in range(Schedule.NUM_DAYS):
+        total_marathon_blocks = 0
+        for day_bitmap in self.schedule_bitmap[:]:
             consecutive_blocks = 0
-            day_bitmap = schedule_bitmap_copy[day]
             while day_bitmap:
                 day_bitmap &= (day_bitmap << 1)
                 consecutive_blocks += 1
-            num_blocks_too_many = consecutive_blocks - max_consecutive_blocks
-            if num_blocks_too_many > 0:
-                score -= num_blocks_too_many
-        return score
+            marathon_blocks = consecutive_blocks - max_consecutive_blocks
+            if marathon_blocks > 0:
+                total_marathon_blocks += marathon_blocks
+        score = -1*total_marathon_blocks
+        return 5 * score
 
     def _score_ideal_busy_range(self):
-        #               0 1 2 3 4 5 6 7 8 9 A B C 1 2 3 4 5 6 7 8 9 A B C
-        bad_zone = int('11111111111111111100000000000000001111111111111111', 2)
-
+        #               0 1 2 3 4 5 6 7 8 9 A B C 1 2 3 4 5 6 7 8 9 A B 
+        bad_zone = int('111111111111111111000000000000001111111111111111', 2)
+        num_outside = 0
         for day in range(Schedule.NUM_DAYS):
             in_bad_zone = self.schedule_bitmap[day] & bad_zone
-            num_outside = bin(in_bad_zone).count('1')
-        return -1*num_outside
+            num_outside += bin(in_bad_zone).count('1')
+        score = -1*num_outside
+        return 1 * score
 
     def _score_start_earlier(self):
         score = 0
 
-        ideal_start_block = 8*2 # 8am
-        ideal_start_bitmap = (1 << (Schedule.NUM_BLOCKS - ideal_start_block +2))
+        early_block = 8*2
+        ideal_start_bitmap = (1 << (Schedule.NUM_BLOCKS - early_block -1))
         schedule_bitmap_copy = list(self.schedule_bitmap)
         for day in range(Schedule.NUM_DAYS):
             if schedule_bitmap_copy[day] == 0:
                 continue
             while schedule_bitmap_copy[day] < ideal_start_bitmap:
                 schedule_bitmap_copy[day] <<= 1
-                score += 1
-        return score
+                score -= 1
+        return 1 * score
 
     # ---------------------------
     # Static Methods
