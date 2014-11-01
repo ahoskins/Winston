@@ -38,10 +38,7 @@ class Schedule(object):
         for day, daynum in zip(self.schedule, range(len(self.schedule))):
             retstr += '{}: '.format(Schedule.DAYS[daynum])
             for block in day:
-                if block == Schedule.OPEN:
-                    retstr += '-'
-                else:
-                    retstr += Schedule.SYMBOLS[block]
+                retstr += Schedule.SYMBOLS[block]
             retstr += '\n'
         return retstr[:-1] # strip last newline
 
