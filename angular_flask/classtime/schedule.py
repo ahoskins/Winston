@@ -34,7 +34,7 @@ class Schedule(object):
             self.add_section(section)
 
     def __repr__(self):
-        retstr = '\n'
+        retstr = '\n   0 1 2 3 4 5 6 7 8 9 A B C 1 2 3 4 5 6 7 8 9 A B \n'
         for day, daynum in zip(self.schedule, range(len(self.schedule))):
             retstr += '{}: '.format(Schedule.DAYS[daynum])
             for block in day:
