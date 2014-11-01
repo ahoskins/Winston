@@ -163,7 +163,7 @@ class Schedule(object):
             time = str(time)
         match = re.search(r'(\d\d):(\d\d) (\w\w)', time)
         if match is None:
-            raise ValueError(r'time must match "\d\d:\d\d [AP]M')
+            raise ValueError('time must match "\d\d:\d\d [AP]M')
         hour = int(match.group(1))
         minute = int(match.group(2))
         ampm_offset = 0
