@@ -129,34 +129,29 @@ class Schedule(object):
             num_blocks_too_many = consecutive_blocks - max_consecutive_blocks
             if num_blocks_too_many > 0:
                 score -= num_blocks_too_many
-        return score / 10.0
+        return score
 
     def _score_ideal_busy_range(self):
-        #               0 1 2 3 4 5 6 7 8 9 1011121 2 3 4 5 6 7 8 9 101112
+        #               0 1 2 3 4 5 6 7 8 9 A B C 1 2 3 4 5 6 7 8 9 A B C
         bad_zone = int('11111111111111111100000000000000001111111111111111', 2)
 
         for day in range(Schedule.NUM_DAYS):
             in_bad_zone = self.schedule_bitmap[day] & bad_zone
             num_outside = bin(in_bad_zone).count('1')
-        return -1*num_outside / 10.0
+        return -1*num_outside
 
     def _score_start_earlier(self):
         score = 0
 
         ideal_start_block = 8*2 # 8am
-        ideal_start_bitmap = (1 << ideal_start_block)
+        ideal_start_bitmap = (1 << (Schedule.NUM_BLOCKS - ideal_start_block +2))
         schedule_bitmap_copy = list(self.schedule_bitmap)
         for day in range(Schedule.NUM_DAYS):
-            # Because a 1 further to the left (earlier in the day)
-            # will always make a larger number
             if schedule_bitmap_copy[day] == 0:
                 continue
-            if schedule_bitmap_copy[day] > ideal_start_bitmap:
-                score += 2
-                continue
             while schedule_bitmap_copy[day] < ideal_start_bitmap:
-                schedule_bitmap_copy[day] = schedule_bitmap_copy[day] << 1
-                score -= 1
+                schedule_bitmap_copy[day] <<= 1
+                score += 1
         return score
 
     # ---------------------------
