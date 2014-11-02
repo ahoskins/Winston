@@ -1,138 +1,420 @@
 classtime
 =========
 
-Magic university schedule builder based on public class data.  
+Build a university schedule that fits your life in less than 5 minutes.
 
-## Get Started
+Table of contents
+-----------------
 
-**Install all the necessary packages** (best done inside of a [virtual environment](http://virtualenv.readthedocs.org/en/latest/virtualenv.html))  
+- [Get started](#get-started)
+- [The local database](#the-local-database)
+    - [seed_db](#seed_db)
+    - [delete_db](#delete_db)
+    - [refresh_db](#refresh_db)
+- [API](#api)
+    - [api/terms](#apiterms)
+    - [api/courses-min](#apicourses-min)
+    - [api/courses/\<course\>](#apicoursescourse)
+    - [api/generate-schedules](#apigenerate-schedules)
+- [Tests](#tests)
+- [Profiling](#profiling)
+- [Contributing](#contributing)
+
+-------
+
+Get started
+-----------
+
+Get pip  
+> $ sudo apt-get install pip
+
+Clone the repo  
+> $ git clone https://github.com/rosshamish/classtime classtime  
+> $ cd classtime
+
+Install dependencies  
 > $ sudo pip install -r requirements.txt
 
-If this fails, you might also need to [install python-ldap's dependencies manually](stackoverflow.com/questions/4768446/python-cant-install-python-ldap)
-
-**Run the app**
+Run the server  
 > $ python runserver.py
 
-**Seed the db**  
-The server must be running, so do this in a second terminal
-> $ python manage.py seed_db
+View  
+> [http://localhost:5000](http://localhost:5000)
 
-**View**
-> http://localhost:5000/
+Send a request to the [API](#api)  
+> GET [http://localhost:5000/api/terms](http://localhost:5000/api/terms)
 
-## Seeding and managing the database
+##### Troubleshooting
 
-All database management is done using `$ python manage.py <command>`
+If the install fails, you might also need to [install python-ldap's dependencies manually](stackoverflow.com/questions/4768446/python-cant-install-python-ldap)
 
-#### $ python manage.py seed_db [--term TERM]
-Seeds the database with the specified term and all courses in it. 
-TERM is a 4-digit term id.  
-If no TERM is specified, defaults to 1490 (Fall Term 2014).
+##### virtualenv
 
-#### $ python manage.py delete_db
-Deletes the database completely
-
-#### $ python manage.py refresh_db [--term TERM]
-Delets then seeds the database.  
-Is an alias for `$ python manage.py delete_db && python manage.py seed_db [--term TERM]`
-
-## API
-
-All API responses are valid [JSON](http://json.org/), and support pagination through the `page` and `total_pages` attributes.  
-For paginated requests, append `?page=<n>` (or `?q=...&page=<n>` if you are using a search query) to get the `n`th page.
-
-#### terms
-`GET localhost:5000/api/terms/`  
-Gets a list of all available terms.  
-The `term` attribute of each term is its ID number, which is used to with /courses-min/ to only retrieve courses in a certain term.
-
-#### courses-min
-`GET localhost:5000/api/courses-min`  
-Gets a list of courses, retrieving a limited number of attributes:  
-```
-asString
-faculty
-subject
-subjectTitle
-course
-```
-These attributes are exactly specified in [api.py](angular_flask/api.py)  
-*Where:* In the `api_manager.create_api` call with `collection_name='courses-min'`, the `include_columns` list  
-Can restrict the request to a specific term using a [search query](http://flask-restless.readthedocs.org/en/latest/searchformat.html#quick-examples)  
-*Example (all courses in term 1490):*  
-`GET localhost:5000/api/courses-min?q={"filters":[{"name":"term","op":"equals","val":1490}]}`  
-
-#### courses/\<course\>
-`GET localhost:5000/api/courses/<course>`  
-Gets all available details regarding a certain course.  
-Where `<course>` is the value of a course's `course` attribute (which can be found from /api/courses-min)  
-*Example:* `GET localhost:5000/api/courses/000001`
-Returns all attributes for course "000001"
-
-#### generate-schedules
-`GET localhost:5000/api/generate-schedules?q={"term":term,"courses":[course_id_1, course_id_2, .., course_id_n]}`  
-Generates schedules for the given course ids in the given term.  
-Search query `q` must be of the form:  
-```
-q={
-    "term":term,
-    "courses":[course_id_1, course_id_2, .., course_id_n]
-}
-```
-Where:  
-`term` is a term id (found from /api/terms), and  
-`courses` is a list of course ids (found from /api/courses-min or /api/courses)
-
-Returns a list of schedules. Each schedule is a list of sections in the schedule.  Each section is a dictionary with descriptive attributes, including at a minimum:
-```
-class_ := a unique string which identifies this section
-course := a unique string which identifies the course this section is part of
-day := a string where each char represents a day this section is held on
-       days are, from Sunday to Saturday, 'UMTWRFS'
-startTime := a string of form '##:## XM'
-             where #'s are digits, and 
-             X is either A or P
-endTime := a string of the same form as startTime
-```
-
-#### Deprecated api endpoints
-~~`GET localhost:5000/api/terms/1490/courses`~~  
+A virtual environment is an isolated build environment best used on a per-project basis. It is recommended to use one. A good option is [virtualenv](http://virtualenv.readthedocs.org/en/latest/virtualenv.html).
 
 -----
 
-## Tests
+The local database
+------------------
+[seed_db](#seed_db)
+, [delete_db](#delete_db)
+, [refresh_db](#refresh_db)
 
-[nosetests](https://nose.readthedocs.org/en/latest/) is used.  
+The local database is used as a cache for the remote database. The server fetches from the remote lazily, waiting for requests that need the information before actually getting it. 
 
-In the project root, run  
+From this perspective, the database should be manually full-populated in production.
+
+However, this may not be necessary since it only takes a single request to cache locally, so the database will quickly fill with popular courses *anyway* as requests are served.
+
+That said, manual database management is done using `$ python manage.py <command>`, with the commands listed here:
+
+### seed_db
+
+Seed the database with the specified term and all courses in it.
+
+`$ python manage.py seed_db [--term TERM]`
+
+> `TERM` := [4-digit unique term identifier](#apiterms) - default: `1490` (Fall Term 2014)
+
+### delete_db
+
+Delete the database completely. This is irreversible.
+
+`$ python manage.py delete_db`
+
+### refresh_db
+
+Delete and rebuild the database with the specified term and all courses in it.
+
+`$ python manage.py refresh_db [--term TERM]`
+
+> `TERM` := [4-digit unique term identifier](#apiterms) - default: `1490` (Fall Term 2014)
+
+-----
+
+API
+---
+
+[api/terms](#apiterms)
+, [api/courses-min](#apicourses-min)
+, [api/courses/\<course\>](#apicoursescourse)
+, [api/generate-schedules](#apigenerate-schedules)
+
+Responses are communicated in [JavaScript Object Notation (JSON)](http://json.org). Each endpoint returns a list of `objects`. A few useful book-keeping items are also included in each response.
+```json
+{
+    "num_results": <int>,
+    "objects": [
+        {
+            <key>: <value>,
+            <key>: <value>,
+            ...
+            <key>: <value>
+        },
+        { <response object 2> },
+        ...
+        { <response object num_results> }
+    ],
+    "page": <int>,
+    "total_pages": <int>
+}
+```
+
+The exception is [api/courses/\<course\>](#apicoursescourse), which returns only a single object (not a list), and no book-keeping items.
+
+It is possible for zero `<response object>`s to be returned.
+
+Pagination is supported through `page` and `total_pages`. To get the *n*th page, append `?page=<n>` to any endpoint
+  - if you are using a [search query] already, use `?q=<search_query>&page=<n>`
+
+Endpoints are documented individually.
+
+### api/terms
+
+Retrieve a list of available terms. Each term contains all available information.
+
+##### Request
+`GET localhost:5000/api/terms`
+
+##### Response
+```json
+{
+    "objects": [
+        {
+            "endDate": "2007-12-05",
+            "startDate": "2007-09-05",
+            "term": "1210",
+            "termTitle": "Fall Term 2007"
+        },
+        { <term object 2> },
+        ...
+        { <term object N> }
+    ],
+    ...
+}
+
+```
+
+`endDate` := YYYY-MM-DD  
+`startDate` := YYYY-MM-DD  
+`term` :=  4-digit unique identifier  
+`termTitle` := semantic term name  
+
+### api/courses-min
+
+Quickly retrieve a list of all available courses. Each course object contains only essential information.
+
+##### Request
+`GET localhost:5000/api/courses-min`
+
+##### Response
+```json
+{
+    "objects" : [
+        {
+            "asString": "ACCTG 300",
+            "course": "000001",
+            "faculty": "Faculty of Business",
+            "subject": "ACCTG",
+            "subjectTitle": "Accounting"
+        },
+        { <course-min object 2> },
+        ...
+        { <course-min object N> }
+    ],
+    ...
+}
+```
+
+`objects` := list of `<course-min object>`s
+
+###### \<course-min object\>
+
+`asString` := "\<subject\> \<level\>"  
+`course` := 6-digit unique course identifier  
+`faculty` := semantic faculty name  
+`subject` := variable-length subject identifier  
+`subjectTitle` := semantic subject name  
+
+### api/courses/\<course\>
+
+Retrieve detailed information about a single course.
+
+##### Request
+`GET localhost:5000/api/courses/<course>`  
+
+`course` := [6-digit unique course identifier](#apicourses-min)
+
+##### Response
+```json
+{
+    "asString": "ACCTG 300",
+    "career": "UGRD",
+    "catalog": 300,
+    "course": "000001",
+    "courseDescription": "Provides a basic understanding of accounting: how accounting numbers 
+        are generated, the meaning of accounting reports, and how to use accounting reports to 
+        make decisions. Note: Not open to students registered in the Faculty of Business. Not 
+        for credit in the Bachelor of Commerce Program.",
+    "courseTitle": "Introduction to Accounting",
+    "department": "Department of Accounting, Operations and Information Systems",
+    "departmentCode": "AOIS",
+    "faculty": "Faculty of Business",
+    "facultyCode": "BC",
+    "subject": "ACCTG",
+    "subjectTitle": "Accounting",
+    "term": "1490",
+    "units": 3
+}
+```
+
+`asString` := "\<subject\> \<level\>"  
+`career` := variable-length abbrevation of university program type (undergrad, grad, ..)  
+`catalog` := catalog id  
+`course` := [6-digit unique course identifier](#apicourses-min)  
+`courseDescription` := often long description of the course  
+`courseTitle` := semantic course name  
+`department` := semantic department name  
+`departmentCode` := variable-length department identifier  
+`faculty` := semantic faculty name  
+`facultyCode` := variable-length faculty identifier  
+`subject` := variable-length subject identifier  
+`subjectTitle` := semantic subject name  
+`term` := [4-digit unique term identifier](#apiterms)    
+`units` := integer weight of the course  
+
+### api/generate-schedules
+
+##### Request
+`GET localhost:5000/api/generate-schedules?q=<request-parameters>`
+
+```json
+request-parameters := {
+                          "term": term,
+                          "courses": [course, course2, .., courseN]
+                      }
+```
+
+`term` := [4-digit unique term identifier](#apiterms)  
+`courses` := list of [6-digit unique course identifier](#apicourses-min)s
+
+##### Response
+```json
+{
+    "objects": [
+        {
+            "sections" : [
+                {
+                    ...
+                    <course attributes>
+                    ...
+                    "class_": "62293",
+                    "component": "LEC",
+                    "day": "MWF",
+                    "startTime": "10:00 AM",
+                    "endTime": "10:50 AM",
+                    "similarSections": [
+                        ...
+                        { <section object> },
+                        ...
+                    ],
+                    ...
+                    "section": "A02",
+                    "campus": "MAIN",
+                    "capacity": 0,
+                    "instructorUid": "jdavis",
+                    "location": "CCIS L2 190"
+                },
+                { <section object 2> },
+                ...
+                { <section object N> }
+            ]
+        },
+        { <schedule object 2> },
+        ...
+        { <schedule object M> }
+    ],
+    ...
+}
+```
+
+`objects` := list of `<schedule object>`s
+
+###### \<schedule object\>
+
+`sections` := list of `<section object>`s
+
+###### \<section object\>
+
+`<course attributes>` := all attributes from the parent [course](#apicoursescourse) object  
+
+`class_` := 5-digit unique section identifier  
+`component` := section type identifier, often 'LEC', 'LAB', 'SEM'  
+`day` := day(s) the section is on. uses [day format](#day-format)  
+`startTime` := time the section begins. uses [time format](#time-format)  
+`endTime` := time the section ends. uses [time format](#time-format)  
+`similarSections` := list of [similar](#similarsections) `<section object>`s
+
+`section` := section identifier. usually a letter and a number  
+`campus` := variable-length campus identifier  
+`capacity` := number of seats  
+`instructorUid` := instructor identifier  
+`location` := somewhat semantic location name  
+
+###### Day format
+
+String containing one or more of the characters `"MTWRF"`, with each corresponding to a day from Monday through Friday.
+
+eg `"MWF"`  
+eg `"TR"`
+
+###### Time format
+
+`"HH:MM XM"`
+
+`HH` := 2-digit hour between 00 and 12  
+`MM` := 2-digit minute between 00 and 59  
+`X` := `A` or `P`
+
+eg `"08:00 AM"`  
+eg `"09:50 PM"`
+
+###### Similar sections
+
+Sections are similar if they have:
+- equal `course`
+- equal `component`
+- equal `startTime`
+- equal `endTime`
+
+Importantly, they may have:
+- varying `section`
+- varying `campus`
+- varying `capacity`
+- varying `location`
+- varying `instructorUid`
+
+-------
+
+Tests
+-----
+
+Core functionality is tested with [nosetests](https://nose.readthedocs.org/en/latest/).
+
+Test suites are in the `tests/` directory. Test filenames are prefixed with `test_`. Test functions are prefixed with `test_`.
+
+### Run tests
+
+Run all tests  
+> $ cd <project_root>  
 > $ nosetests [options]
 
-Or, to run tests only in a specific file, run  
-> $ nosetests [path/to/test_file] [options]
+Run tests only in a specific file    
+> $ nosetests [path/to/test/file] [options]
 
 Useful options:
 - `--nocapture --pdb`: drop into [pdb](https://docs.python.org/2/library/pdb.html) on error or exception
 - `--nologcapture`: output all logging during test execution
 
-#### Profiling
+### Write tests
 
-It is useful to methodically find bottlenecks with a *profiler*.
+Check out ["writing tests"](https://nose.readthedocs.org/en/latest/writing_tests.html) in the [nose documentation](https://nose.readthedocs.org/en/latest/).
 
-One way to do this:
+-----
 
-Install nose-cprof, a nose plugin that allows nose to use [cProfile](https://docs.python.org/2/library/profile.html)  
-> $ sudo pip install nose-cprof  
+Profiling
+---------
 
-Install cprofilev (see how to use it [here](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html))  
+Performance bottlenecks are found by [profiling](http://en.wikipedia.org/wiki/Profiling_%28computer_programming%29) tests.
+
+Profiling data is collected with [`nose-cprof`](https://github.com/msherry/nose-cprof) and analyzed with [`cprofilev`](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html).
+
+> [`nose-cprof`](https://github.com/msherry/nose-cprof) is a [nose plugin](http://nose.readthedocs.org/en/latest/plugins/builtin.html) which gives nose access to python's builtin profiler, [`cProfile`](https://docs.python.org/2/library/profile.html).
+
+### Get started
+
+Use pip to install the nose-cprof plugin  
+> $ sudo pip install nose-cprof
+
+Install [cprofilev](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)  
 > $ sudo pip install cprofilev
 
-Run the tests with the profiler (creates a `stats.dat` file in the current directory by default)  
-> $ nosetests [tests to run] --with-cprof
+### Workflow
 
-View the results
+Run the tests with the profiler attached.  
+> $ nosetests [path/to/test/file] --with-cprof --cprofile-stats-file OUTPUT-FILE
+
+> `OUTPUT-FILE` := filename to write profiling output to - default: `./stats.dat`
+
+Start cprofilev  
 > $ cprofilev stats.dat  
-> View localhost:5000 in a browser
 
-## Contributing
+View and [analyze](http://ymichael.com/2014/03/08/profiling-python-with-cprofile.html)  
+> [http://localhost:5000](http://localhost:5000)
+
+-----
+
+Contributing
+------------
 
 Commit messages follow the [Angular.js commit message style guide](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit?pli=1#)

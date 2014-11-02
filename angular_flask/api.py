@@ -52,6 +52,9 @@ def generate_schedules(result=None, search_params=None, **kw):
     """
     if result is None:
         result = dict()
+    result['page'] = 1
+    result['total_pages'] = 1
+
     courses = search_params.get('courses')
     term = search_params.get('term')
     if courses is None or term is None:
@@ -62,20 +65,20 @@ def generate_schedules(result=None, search_params=None, **kw):
             culprit = 'term'
         errormsg = "field '{}' not present in /api/generate-schedules search query".format(culprit)
         logging.warning(errormsg)
+        
         result['num_results'] = 1
         result['objects'] = [{"error": errormsg}]
-        result['page'] = 1
-        result['total_pages'] = 1
         return
 
     generator = ScheduleGenerator(cal, term, courses)
-    schedules = generator.get_schedules(10)
+    schedules = generator.generate_schedules(10)
     result['num_results'] = len(schedules)
-    result['objects'] = [schedule.sections for schedule in schedules]
-    result['page'] = 1
-    result['total_pages'] = 1
+    result['objects'] = list()
+    for schedule in schedules:
+        result['objects'].append({
+            'sections': schedule.sections
+        })
     return
-
 
 api_manager.create_api(Section,
                        collection_name='generate-schedules',
