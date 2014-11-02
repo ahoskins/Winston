@@ -28,12 +28,17 @@ Get started
 Get pip  
 > $ sudo apt-get install pip
 
+Get bower
+> $ npm install -g bower
+
 Clone the repo  
 > $ git clone https://github.com/rosshamish/classtime classtime  
 > $ cd classtime
 
 Install dependencies  
 > $ sudo pip install -r requirements.txt
+
+> $ bower install
 
 Run the server  
 > $ python runserver.py
