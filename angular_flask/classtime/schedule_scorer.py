@@ -5,28 +5,43 @@ class ScheduleScorer(object):
 
     def __init__(self):
         self.schedule = None
-        self.score_dict = None
+        self.scores = dict()
         self.weights = {
             'no-marathons': 1,
             'nine-to-five': 50,
             'start-time': 1
         }
-
-    def get_scores(self):
-        if self.schedule is None:
-            return None
-        self.score_dict.update({
-            'overall': sum(self.score_dict.values())
-        })
-        return self.score_dict
-
-    def calculate_scores(self, schedule):
-        self.schedule = schedule
-        self.score_dict = {
-            'no-marathons': self.weights.get('no-marathons') * self._no_marathons(),
-            'nine-to-five': self.weights.get('nine-to-five') * self._nine_to_five(),
-            'start-time': self.weights.get('start-time') * self._start_time() 
+        self.methods = {
+            'no-marathons': self._no_marathons,
+            'nine-to-five': self._nine_to_five,
+            'start-time': self._start_time
         }
+
+    def read(self, name='all'):
+        if name == 'all':
+            return self.scores
+        else:
+            return self.scores.get(name)
+
+    def score(self, schedule):
+        self.schedule = schedule
+        for name in self.methods.keys():
+            self.scores.update({
+                name: self._weight(name) * self._score(name)
+            })
+        self.scores.update({
+            'overall': sum(self.scores.values())
+        })
+
+    def _weight(self, name):
+        return self.weights.get(name, None)
+
+    def _score(self, name):
+        score_method = self.methods.get(name)
+        if score_method is not None:
+            return score_method()
+        else:
+            return None
 
     def _no_marathons(self):
         """

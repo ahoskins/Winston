@@ -52,8 +52,8 @@ class Schedule(object):
         elif len(self.sections) < len(other.sections):
             return Schedule.SELF_IS_WORSE
 
-        this_score = self.scorer.get_scores().get('overall')
-        other_score = other.scorer.get_scores().get('overall')
+        this_score = self.scorer.read('overall')
+        other_score = other.scorer.read('overall')
         if this_score < other_score:
             return Schedule.SELF_IS_WORSE
         else:
@@ -91,7 +91,7 @@ class Schedule(object):
         for day in days:
             self._add_by_block(day, start, end, self.sections.index(section))
 
-        self.score_schedule()
+        self.scorer.score(self)
         return self
 
     def clone(self):
@@ -102,13 +102,6 @@ class Schedule(object):
         for blocknum in range(start, end+1):
             self.conflict_bitmap[daynum] += (1 << (Schedule.NUM_BLOCKS - blocknum -1))
             self.schedule[daynum][blocknum] = section_num
-
-    # -------------------------------
-    # Schedule Evaluation Functions
-    #   used for sorting
-    # -------------------------------
-    def score_schedule(self):
-        self.scorer.calculate_scores(self)    
 
     # ---------------------------
     # Static Methods
