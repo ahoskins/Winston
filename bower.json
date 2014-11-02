@@ -1,0 +1,6 @@
+{
+	"name": "classtime",
+	"dependencies": {
+		"angular-ui-calendar": "latest"
+	}
+}
