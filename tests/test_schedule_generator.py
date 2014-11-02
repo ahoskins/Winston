@@ -28,3 +28,17 @@ def test_generate_schedule():
     generator = ScheduleGenerator(cal, term, course_list)
     schedules = generator.generate_schedules(num_schedules)
     logging.debug('Schedules:\n{}'.format(schedules))
+
+    # Taylor Rault's 2nd Year Fall Term 2014 Course List
+    term = '1490'
+    course_list = ['006973', # MEC E 260
+                   '006790', # MATH 209
+                   '006974', # MEC E 265
+                   '098325', # MEC E 230
+                   '001607', # CIV E 270
+                   '004104', # ENGG 299
+                   ]
+    num_schedules = 10
+    generator = ScheduleGenerator(cal, term, course_list)
+    schedules = generator.generate_schedules(num_schedules)
+    logging.debug('Schedules:\n{}'.format(schedules))
