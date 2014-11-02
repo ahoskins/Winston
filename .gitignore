@@ -6,3 +6,4 @@ ignore
 *.swp
 ScheduleAlgorithm.docx
 stats.dat
+/angular_flask/static/scripts/vendor/bower_components

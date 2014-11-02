@@ -3,18 +3,54 @@
 
 coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFactory', '$timeout', 'detailFactory', function($scope, $window, fastCourseFactory, $timeout, detailFactory) {
 
-	// New, organized course object
-	$scope.subjectBin = {};
-    $scope.description;
+    // UI cal testing around
+    //
+    /* config object */
+//    $scope.uiConfig = {
+//        calendar:{
+//            height: 450,
+//            editable: true,
+//            header:{
+//                left: 'month basicWeek basicDay agendaWeek agendaDay',
+//                center: 'title',
+//                right: 'today prev,next'
+//            },
+//            dayClick: $scope.alertEventOnClick,
+//            eventDrop: $scope.alertOnDrop,
+//            eventResize: $scope.alertOnResize
+//        }
+//    };
+//
+//    $scope.eventSources = [
+//        {
+//            title  : 'event1',
+//            start  : '2010-01-01'
+//        },
+//        {
+//            title  : 'event2',
+//            start  : '2010-01-05',
+//            end    : '2010-01-07'
+//        },
+//        {
+//            title  : 'event3',
+//            start  : '2010-01-09T12:30:00',
+//            allDay : false // will make the time show
+//        }
+//    ];
 
-	// temp used in transfer to new course object
-	var pageListing;
+    // END UI cal testing around
 
-    // Counters
+    // New, organized course object
+    $scope.subjectBin = {};
+
+    // De-serialized API data
+    var pageListing;
+
+    // Counters for pageListing
     var page  = 1,
         total_pages;
 
-    // Purpose of first call to getCoursesPage is to get total_pages
+    // Purpose of first call is to get total_pages amount
     fastCourseFactory.getCoursesPage(1).
     success(function (data, status, headers, config) {
             // De-serialize JSON data
@@ -28,7 +64,7 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
                         // De-serialize JSON data
                         pageListing = angular.fromJson(data);
 
-                        // For each course on page of results...
+                        // For each course on page of results
                         pageListing.objects.forEach(function (course) {
                             if ($scope.subjectBin.hasOwnProperty(course.faculty)) {
                                 // We are within an existing faculty property
@@ -67,21 +103,21 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 
     // Filter watcher
     //
-    // This watches the ng-model called "searchBox" and changes the $scope filter, filterText, every 0.5 second
-    // It is affecting the regular $digest cycle, which is normally on every state change of the input (new text)
+    // Sets a watch on the input search box (every 500ms)
+    // This affects the normal $digest cycle
 	var filterTextTimeout;
 	$scope.$watch('searchBox', function(val) {
 		if (filterTextTimeout) {
 			$timeout.cancel(filterTextTimeout);
 		}
 		filterTextTimeout = $timeout(function() {
-			$scope.filterText = val;
+			$scope.filterText = val.toUpperCase();
 		}, 500);
 	});
 
-    // This is run on the click of a couse accordion tab
+    // On the click of a single course in the accordion
     //
-    // It retrieves the course details and displays it
+    // Retrieves course details and displays it
     $scope.loadMore = function (num) {
         $scope.description = '';
         detailFactory.getDetails(num).
