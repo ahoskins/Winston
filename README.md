@@ -263,7 +263,7 @@ request-parameters := {
 ```
 
 `term` := [4-digit unique term identifier](#apiterms)  
-`courses` := list of [6-digit unique course identifier](#apicourses-min)s
+`courses` := list of [6-digit unique course identifier](#apicourses-min)s  
 `busy-times` := list of [`busytime`](#busytime) objects
 
 ###### busytime object
