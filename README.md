@@ -266,7 +266,7 @@ request-parameters := {
 `courses` := list of [6-digit unique course identifier](#apicourses-min)s  
 `busy-times` := list of [`busytime`](#busytime) objects
 
-###### busytime object
+###### busytime
 
 `day` := day(s) which are busy. Uses [day format](#day-format)  
 `startTime` := time the user starts being busy. Uses [time format](#time-format)  
