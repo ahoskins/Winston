@@ -37,7 +37,6 @@ Clone the repo
 
 Install dependencies  
 > $ sudo pip install -r requirements.txt
-
 > $ bower install
 
 Run the server  
@@ -65,13 +64,7 @@ The local database
 , [delete_db](#delete_db)
 , [refresh_db](#refresh_db)
 
-The local database is used as a cache for the remote database. The server fetches from the remote lazily, waiting for requests that need the information before actually getting it. 
-
-From this perspective, the database should be manually full-populated in production.
-
-However, this may not be necessary since it only takes a single request to cache locally, so the database will quickly fill with popular courses *anyway* as requests are served.
-
-That said, manual database management is done using `$ python manage.py <command>`, with the commands listed here:
+The local database is used as a cache for the remote database. Schedule generation requests will fetch section data from the remote server, but terms and courses must be manually seeded.
 
 ### seed_db
 

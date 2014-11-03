@@ -3,13 +3,13 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="/static/styles/foundation.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/styles/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.css"/>
 </head>
 <body>
 
 	<div data-ng-controller="fastCourseListCtrl">
 
-        UI Cal testing around
-        <!--<div ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="myCalendar"></div>-->
+        <div id="cal" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div>
 
 		Search By All:
 		<br>

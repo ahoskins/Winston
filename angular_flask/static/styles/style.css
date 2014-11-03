@@ -8,7 +8,7 @@ html {
 }
 
 .faculty-accordion {
-    width: 50%;
+    width: 49%;
 }
 
 .subject-accordion {
@@ -16,5 +16,12 @@ html {
 }
 
 #searchBox {
+	width: 49%;
+}
+
+#cal {
+	position: absolute;
+	left: 50%;
 	width: 50%;
+	padding-top: 10px;
 }

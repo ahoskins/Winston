@@ -6,37 +6,52 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
     // UI cal testing around
     //
     /* config object */
-//    $scope.uiConfig = {
-//        calendar:{
-//            height: 450,
-//            editable: true,
-//            header:{
-//                left: 'month basicWeek basicDay agendaWeek agendaDay',
-//                center: 'title',
-//                right: 'today prev,next'
-//            },
-//            dayClick: $scope.alertEventOnClick,
-//            eventDrop: $scope.alertOnDrop,
-//            eventResize: $scope.alertOnResize
-//        }
-//    };
-//
-//    $scope.eventSources = [
-//        {
-//            title  : 'event1',
-//            start  : '2010-01-01'
-//        },
-//        {
-//            title  : 'event2',
-//            start  : '2010-01-05',
-//            end    : '2010-01-07'
-//        },
-//        {
-//            title  : 'event3',
-//            start  : '2010-01-09T12:30:00',
-//            allDay : false // will make the time show
-//        }
-//    ];
+    $scope.uiConfig = {
+        calendar:{
+            header: {
+
+            },
+            defaultView: 'agendaWeek',
+            allDaySlot: false,
+            minTime: "00:00:00",
+            maxTime: "22:00:00",
+            columnFormat: "dddd",
+            hiddenDays: [0,6]
+            //eventSources: [
+            //
+            //    // your event source
+            //    {
+            //        events: [ // put the array in the `events` property
+            //            {
+            //                title  : 'event1',
+            //                start  : '2014-11-04'
+            //            },
+            //            {
+            //                title  : 'event2',
+            //                start  : '2014-11-04',
+            //                end    : '2014-11-05'
+            //            }
+            //        ],
+            //        color: 'black',     // an option!
+            //        textColor: 'yellow' // an option!
+            //    }
+            //
+            //    // any other event sources...
+            //
+            //]
+        }
+    };
+
+    $scope.eventSources = [
+        {
+            events: [
+                {
+                    title: "hello",
+                    start: "2014-11-04"
+                }
+            ]
+        }
+    ];
 
     // END UI cal testing around
 
