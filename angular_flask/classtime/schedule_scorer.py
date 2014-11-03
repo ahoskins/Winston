@@ -5,43 +5,50 @@ class ScheduleScorer(object):
 
     def __init__(self):
         self.schedule = None
-        self.scores = dict()
-        self.weights = {
-            'no-marathons': 1,
-            'nine-to-five': 50,
-            'start-time': 1
-        }
-        self.methods = {
-            'no-marathons': self._no_marathons,
-            'nine-to-five': self._nine_to_five,
-            'start-time': self._start_time
+        self.score_values = dict()
+        self.score_info = {
+            'no-marathons': {
+                'weight': 1,
+                'function': self._no_marathons
+            },
+            'nine-to-five': {
+                'weight': 50,
+                'function': self._nine_to_five
+            },
+            'start-time': {
+                'weight': 1,
+                'function': self._start_time
+            }
         }
 
     def read(self, name='all'):
         if name == 'all':
-            return self.scores
+            return self.score_values
         else:
-            return self.scores.get(name)
+            return self.score_values.get(name)
 
     def score(self, schedule):
         self.schedule = schedule
-        for name in self.methods.keys():
-            self.scores.update({
+        for name in self.score_info.keys():
+            self.score_values.update({
                 name: self._weight(name) * self._score(name)
             })
-        self.scores.update({
-            'overall': sum(self.scores.values())
+        self.score_values.update({
+            'overall': sum(self.score_values.values())
         })
 
     def _weight(self, name):
-        return self.weights.get(name, None)
+        info = self.score_info.get(name)
+        if info is not None:
+            return info.get('weight', 1)
+        return None
 
     def _score(self, name):
-        score_method = self.methods.get(name)
-        if score_method is not None:
-            return score_method()
+        info = self.score_info.get(name)
+        if info is not None:
+            return info.get('function', lambda: 0)()
         else:
-            return None
+            return 0
 
     def _no_marathons(self):
         """
