@@ -8,16 +8,16 @@ class ScheduleScorer(object):
         self.score_values = dict()
         self.score_info = {
             'no-marathons': {
-                'weight': 1,
+                'weight': -100,
                 'function': self._no_marathons
             },
             'nine-to-five': {
-                'weight': 50,
+                'weight': 0,
                 'function': self._nine_to_five
             },
-            'start-time': {
-                'weight': 1,
-                'function': self._start_time
+            'start-early': {
+                'weight': 0,
+                'function': self._start_early
             }
         }
 
@@ -28,6 +28,8 @@ class ScheduleScorer(object):
             return self.score_values.get(name)
 
     def score(self, schedule):
+        """Score a schedule using each scoring function in self.score_info
+        """
         self.schedule = schedule
         for name in self.score_info.keys():
             self.score_values.update({
@@ -38,12 +40,16 @@ class ScheduleScorer(object):
         })
 
     def _weight(self, name):
+        """Return the weight of a particular scoring function
+        """
         info = self.score_info.get(name)
         if info is not None:
             return info.get('weight', 1)
         return None
 
     def _score(self, name):
+        """Run a particular scoring function, and return its result
+        """
         info = self.score_info.get(name)
         if info is not None:
             return info.get('function', lambda: 0)()
@@ -52,10 +58,9 @@ class ScheduleScorer(object):
 
     def _no_marathons(self):
         """
-        A schedule is better if it has a more even distribution
-        of breaks throughout the day, and also if it squishes sections
-        together so as to not waste time. Constantly alternating between
-        class and break is bad. Having more than 3 hours in a row is bad.
+        + weight: spread out. Less than 3hrs of consecutive classes
+        0 weight: -no effect-
+        - weight: clumped up. More than 3hrs of consecutive classes
         """
         max_consecutive_blocks = 3*2 # 3 hours x 2 blocks/hour
         total_marathon_blocks = 0
@@ -71,6 +76,11 @@ class ScheduleScorer(object):
         return 5 * score
 
     def _nine_to_five(self):
+        """
+        + weight: classes inside 9a-5p
+        0 weight: -no effect-
+        - weight: classes outside 9a-5p
+        """
         #               0 1 2 3 4 5 6 7 8 9 A B C 1 2 3 4 5 6 7 8 9 A B 
         bad_zone = int('111111111111111111000000000000000011111111111111', 2)
         num_outside = 0
@@ -80,7 +90,12 @@ class ScheduleScorer(object):
         score = -1*num_outside
         return 1 * 50 * score
 
-    def _start_time(self):
+    def _start_early(self):
+        """
+        + weight: start early
+        0 weight: -no effect-
+        - weight: start late
+        """
         score = 0
         early_block = 8*2
         ideal_start_bitmap = (1 << (sched_module.Schedule.NUM_BLOCKS - early_block -1))
