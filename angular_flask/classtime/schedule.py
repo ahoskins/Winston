@@ -13,39 +13,36 @@ class Schedule(object):
     DAYS = 'MTWRF'
 
     OPEN = -1
-    SYMBOLS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ-'
+    BUSY = -2
+    SYMBOLS = 'ABCDEFGHIJKLMNOPQRSTUVWx '
 
     # Semantic sorting constants
     SELF_IS_WORSE = True
     SELF_IS_BETTER = False
 
-    def __init__(self, sections=None):
+    def __init__(self, sections=None, busy_times=None):
+        
         self.schedule = [[Schedule.OPEN]*Schedule.NUM_BLOCKS
                          for _ in range(Schedule.NUM_DAYS)]
         self.conflict_bitmap = [0 for _ in range(Schedule.NUM_DAYS)]
-        # sections needs to be a list
-        if sections is None:
-            sections = []
-        elif not isinstance(sections, list):
-            sections = [sections]
-
         self.scorer = schedule_scorer.ScheduleScorer()
-        self.sections = []
-        for section in sections:
-            self.add_section(section)
+
+        self.sections = list()
+        self._add_initial_sections(sections)
+        self.busy_times = list()
+        self._add_initial_busy_times(busy_times)        
 
     def __repr__(self):
         retstr = '\n   0 1 2 3 4 5 6 7 8 9 A B C 1 2 3 4 5 6 7 8 9 A B \n'
-        for day, daynum in zip(self.schedule, range(len(self.schedule))):
+        for daynum, blocks in enumerate(self.schedule):
             retstr += '{}: '.format(Schedule.DAYS[daynum])
-            for block in day:
+            for block in blocks:
                 retstr += Schedule.SYMBOLS[block]
             retstr += '\n'
         return retstr[:-1] # strip last newline
 
     def __lt__(self, other):
-        """
-        Sort schedules
+        """Sort schedules
         """
         if len(self.sections) > len(other.sections):
             return Schedule.SELF_IS_BETTER
@@ -58,6 +55,21 @@ class Schedule(object):
             return Schedule.SELF_IS_WORSE
         else:
             return Schedule.SELF_IS_BETTER
+
+    def _add_initial_sections(self, sections):
+        if sections is not None:
+            if not isinstance(sections, list):
+                sections = [sections]
+            for section in sections:
+                self.add_section(section)
+
+    def _add_initial_busy_times(self, busy_times):
+        if busy_times is not None:
+            if not isinstance(busy_times, list):
+                busy_times = [busy_times]
+            for busy_time in busy_times:
+                self.busy_times.append(busy_time)
+                self.add_conflict(busy_time, Schedule.BUSY)
 
     def conflicts(self, section):
         """
@@ -80,22 +92,27 @@ class Schedule(object):
         Adds the section to the schedule
         """
         self.sections.append(section)
+        self.add_conflict(section, self.sections.index(section))
+        self.scorer.score(self)
+        return self
+
+    def add_conflict(self, section, section_num):
         days = section.get('day')
         start = section.get('startTime')
         end = section.get('endTime')
         if days is None or start is None or end is None:
-            return self
+            return
 
         start = Schedule._timestr_to_blocknum(start)
         end = Schedule._timestr_to_blocknum(end)
         for day in days:
-            self._add_by_block(day, start, end, self.sections.index(section))
+            self._add_by_block(day, start, end, section_num)
 
-        self.scorer.score(self)
-        return self
+    
 
     def clone(self):
-        return Schedule(self.sections)
+        return Schedule(sections=self.sections,
+                        busy_times=self.busy_times)
 
     def _add_by_block(self, day, start, end, section_num):
         daynum = Schedule._daystr_to_daynum(day)

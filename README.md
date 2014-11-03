@@ -250,11 +250,27 @@ Retrieve detailed information about a single course.
 request-parameters := {
                           "term": term,
                           "courses": [course, course2, .., courseN]
+                          "busy-times": [{
+                              "day": "[MTWRF]{1,5}"
+                              "startTime": "##:## [AP]M",
+                              "endTime": "##:## [AP]M"
+                            },
+                            { <busytime_2> },
+                            ...
+                            { <busytime_n> }
+                          ]
                       }
 ```
 
 `term` := [4-digit unique term identifier](#apiterms)  
 `courses` := list of [6-digit unique course identifier](#apicourses-min)s
+`busy-times` := list of [`busytime`](#busytime) objects
+
+###### busytime object
+
+`day` := day(s) which are busy. Uses [day format](#day-format)  
+`startTime` := time the user starts being busy. Uses [time format](#time-format)  
+`endTime` := time the user is not busy anymore. Uses [time format](#time-format)  
 
 ##### Response
 ```json

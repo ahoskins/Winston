@@ -130,9 +130,9 @@ class AcademicCalendar(object):
         try:
             self._local_db.session.commit()
         except:
-            logging.warning('Courses failed to add to database')
+            logging.warning('Failed to add courses to database')
         else:
-            logging.info('Courses successfully added to database')
+            logging.info('Added courses to database')
 
     def _populate_sections_for_course_id(self, courseid):
         if Section.query.filter_by(course=courseid).first():
@@ -168,8 +168,6 @@ class AcademicCalendar(object):
             self._local_db.session.commit()
         except:
             logging.warning('Failure')
-        else:
-            logging.info('Success')
 
     def _condense_similar_sections(self, sections):
         """

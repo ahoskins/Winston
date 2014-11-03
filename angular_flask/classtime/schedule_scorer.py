@@ -8,15 +8,15 @@ class ScheduleScorer(object):
         self.score_values = dict()
         self.score_info = {
             'no-marathons': {
-                'weight': -100,
+                'weight': 100,
                 'function': self._no_marathons
             },
-            'nine-to-five': {
-                'weight': 0,
-                'function': self._nine_to_five
+            'day-classes': {
+                'weight': 1,
+                'function': self._day_classes
             },
             'start-early': {
-                'weight': 0,
+                'weight': 1,
                 'function': self._start_early
             }
         }
@@ -75,14 +75,14 @@ class ScheduleScorer(object):
         score = -1*total_marathon_blocks
         return 5 * score
 
-    def _nine_to_five(self):
+    def _day_classes(self):
         """
-        + weight: classes inside 9a-5p
+        + weight: classes end before 5pm
         0 weight: -no effect-
-        - weight: classes outside 9a-5p
+        - weight: classes start at or after 5pm
         """
         #               0 1 2 3 4 5 6 7 8 9 A B C 1 2 3 4 5 6 7 8 9 A B 
-        bad_zone = int('111111111111111111000000000000000011111111111111', 2)
+        bad_zone = int('111111111111111100000000000000000011111111111111', 2)
         num_outside = 0
         for day_bitmap in self.schedule.conflict_bitmap:
             in_bad_zone = day_bitmap & bad_zone

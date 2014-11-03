@@ -12,14 +12,23 @@ class ScheduleGenerator(object):
 
     CANDIDATE_POOL_SIZE = 50
 
-    def __init__(self, cal, term, course_ids):
+    def __init__(self, cal, schedule_params):
         """
         cal := AcademicCalendar instance
         term := 4-digit unique term identifier
         course_ids := list of 6-digit unique course identifiers
         """
-        self._course_ids = course_ids
-        self._schedules_heapq = None
+        if 'term' not in schedule_params:
+            logging.warning('In ScheduleGenerator(), schedule_params'\
+                           +'does not have \'term\' field')
+        term = schedule_params.get('term', '1490')
+
+        if 'courses' not in schedule_params:
+            logging.warning('In ScheduleGenerator(), schedule_params'\
+                           +'is missing \'courses\' field')
+        self._course_ids = schedule_params.get('courses', list())
+
+        self._busy_times = schedule_params.get('busy-times', list())
 
         self._cal = cal
         self._cal.select_current_term(term)
@@ -31,10 +40,10 @@ class ScheduleGenerator(object):
         """
         logging.info('Making schedules for courses {}'.format(self._course_ids))
         components = self._cal.get_components_for_course_ids(self._course_ids)
-        logging.debug('{} components to schedule'.format(len(components)))
+        logging.debug('Scheduling {} components'.format(len(components)))
 
         components = sorted(components, key=len)
-        candidates = [Schedule()]
+        candidates = [Schedule(busy_times=self._busy_times)]
         sections_chosen = 0
         for sections in components:
             for candidate in candidates[:]:
