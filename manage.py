@@ -14,7 +14,7 @@ def delete_db():
     db.drop_all()
     logging.info('DB deleted!')
 
-def seed_db(args, db):
+def seed_db(args):
     create_db()
     term = 1490
     if args.term:
@@ -22,9 +22,9 @@ def seed_db(args, db):
     cal.select_current_term(term)
     logging.info('DB seeded with term {}'.format(term))
 
-def refresh_db(args, db):
+def refresh_db(args):
     delete_db()
-    seed_db(args, db)
+    seed_db(args)
 
 def main():
     parser = argparse.ArgumentParser(description='Manage the academic database')
@@ -36,9 +36,9 @@ def main():
     if args.command == 'delete_db':
         delete_db()
     elif args.command == 'seed_db':
-        seed_db(args, db)
+        seed_db(args)
     elif args.command == 'refresh_db':
-        refresh_db(args, db)
+        refresh_db(args)
     else:
         parser.print_usage()
         raise Exception('Invalid command')
