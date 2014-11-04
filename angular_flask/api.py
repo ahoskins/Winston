@@ -40,25 +40,7 @@ api_manager.create_api(Course,
 # Schedule Generation
 # --------------------------------
 
-def generate_schedules(result=None, search_params=None, **kw):
-    """
-    Expects a search query where 'q' is dictionary of the form:
-    {
-        "term": term_id,
-        "courses": [course_id_1, course_id_2, .., course_id_n],
-        "busy-times": [{
-            "day": "[MTWRF]{1,5}",
-            "startTime": "##:## [AP]M",
-            "endTime": "##:## [AP]M"
-          },
-          { <busytime_2> },
-          ...
-          { <busytime_n> }
-        ]
-    }
-    eg:
-    /api/generate-schedules?q={"term":"1490","courses":["001343", "009019"]}
-    """
+def generate_schedules(result=None, search_params=None):
     if result is None:
         result = dict()
     result['page'] = 1
