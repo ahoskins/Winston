@@ -61,7 +61,7 @@ class Schedule(object):
         return retstr[:-1] # remove trailing newline
 
     def _add_initial_sections(self, sections):
-        """Add sections when building a new :py:class:`~scheduling.Schedule`
+        """Add sections when building a new :py:class:`Schedule`
 
         :param sections: one or more sections to add
         :type sections: section dict or list of section dicts
@@ -73,7 +73,7 @@ class Schedule(object):
                 self.add_section(section)
 
     def _add_initial_busy_times(self, busy_times):
-        """Add busy_times when building a new :py:class:`~scheduling.Schedule`
+        """Add busy_times when building a new :py:class:`Schedule`
 
         :param busy_times: one or more busy_times to add
         :type busy_times: section dict or list of section dicts
@@ -122,7 +122,7 @@ class Schedule(object):
         return self
 
     def conflicts(self, section):
-        """Checks for a conflict between this :py:class:`~scheduling.Schedule`
+        """Checks for a conflict between this :py:class:`Schedule`
         and a section
 
         :param section: the section to check for conflicts with
@@ -142,7 +142,7 @@ class Schedule(object):
 
         :param section: the section to add
         :type section: section dict
-        :param int section_num: the index of :py:attribute:`Schedule.SYMBOLS` to
+        :param int section_num: the index of :py:attr:`Schedule.SYMBOLS` to
                                 represent this section with
         :raises ValueError: if one or more of:
                             * day
