@@ -1,14 +1,13 @@
 
-from tests import db
-
 from angular_flask.models import Term, Course
 
 def test_manage_seed_db():
     from manage import seed_db
-    class Arguments: pass
+    class Arguments:
+        pass
     args = Arguments()
     args.term = None
-    seed_db(args, db)
+    seed_db(args)
 
     def check_term(term_model):
         assert term_model.term is not None
