@@ -63,6 +63,9 @@ class ScheduleGenerator(object):
                           sections_chosen,
                           len(components)))
 
+        logging.warning('Null sections:'\
+                        +'{}'.format(Schedule.NULL_SECTIONS))
+
         candidates = [candidate for candidate in candidates
                       if len(candidate.sections) == sections_chosen]
         return sorted(candidates, reverse=True)[:num_requested]

@@ -1,5 +1,6 @@
 
 import re
+from angular_flask.logging import logging
 import schedule_scorer
 
 class Schedule(object):
@@ -20,6 +21,9 @@ class Schedule(object):
     SELF_IS_WORSE = True
     SELF_IS_BETTER = False
 
+    # Set of invalid sections
+    NULL_SECTIONS = set()
+
     def __init__(self, sections=None, busy_times=None):
         
         self.schedule = [[Schedule.OPEN]*Schedule.NUM_BLOCKS
@@ -39,7 +43,7 @@ class Schedule(object):
             for block in blocks:
                 retstr += Schedule.SYMBOLS[block]
             retstr += '\n'
-        return retstr[:-1] # strip last newline
+        return retstr[:-1] # remove trailing newline
 
     def __lt__(self, other):
         """Sort schedules
@@ -91,24 +95,25 @@ class Schedule(object):
 
         Adds the section to the schedule
         """
-        self.sections.append(section)
-        self.add_conflict(section, self.sections.index(section))
-        self.scorer.score(self)
+        try:
+            self.add_conflict(section, len(self.sections))
+        except ValueError as error:
+            Schedule.NULL_SECTIONS.add(error.args[0])
+        else:
+            self.sections.append(section)
+            self.scorer.score(self)
         return self
 
     def add_conflict(self, section, section_num):
         days = section.get('day')
         start = section.get('startTime')
         end = section.get('endTime')
-        if days is None or start is None or end is None:
-            return
-
+        if None in [days, start, end]:
+            raise ValueError(section.get('class_', '??'))
         start = Schedule._timestr_to_blocknum(start)
         end = Schedule._timestr_to_blocknum(end)
         for day in days:
-            self._add_by_block(day, start, end, section_num)
-
-    
+            self._add_by_block(day, start, end, section_num)            
 
     def clone(self):
         return Schedule(sections=self.sections,
