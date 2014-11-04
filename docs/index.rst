@@ -17,6 +17,8 @@ Documentation:
 
    the-api
    the-local-database
+
+   backend
    
    tests
    profiling
