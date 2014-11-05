@@ -11,7 +11,7 @@ Docs
 Documentation is located in the `docs` directory.  
 It is built using [sphinx](http://sphinx-doc.org/), and is best viewed in a browser.
 
-> $ pip install -r requirements.txt
+> $ pip install -r requirements.txt  
 > $ cd docs  
 > $ make html  
 > $ firefox _build/html/index.html &
