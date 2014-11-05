@@ -103,7 +103,7 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 		}
 		filterTextTimeout = $timeout(function() {
 			$scope.filterText = val.toUpperCase();
-		}, 500);
+		}, 200);
 	});
 
     // On the click of a single course in the accordion
@@ -119,6 +119,13 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
         .error(function () {
             $window.alert("Something fucked up.");
         });
+    };
+
+    // Speed up the accordion
+    $scope.amount = 0;
+    $scope.renderCourses = function () {
+        // Increase amount to 50
+        $scope.amount = 50;
     };
 
 }]);
