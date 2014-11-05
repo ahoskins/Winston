@@ -167,7 +167,7 @@ class AcademicCalendar(object):
         try:
             self._local_db.session.commit()
         except:
-            logging.warning('Failure')
+            logging.warning('Course {}: failed to add sections to database')
 
     def _condense_similar_sections(self, sections):
         """
@@ -186,7 +186,9 @@ class AcademicCalendar(object):
         """
         if len(sections) <= 1:
             return sections
-        logging.debug('Condensing Course {}:{}'.format(sections[0].get('course'), sections[0].get('component')))
+        logging.debug('Condensing Course {}:{}'.format(
+            sections[0].get('course'),
+            sections[0].get('component')))
         lag, lead, num_sections = 0, 1, len(sections)
         while lead < num_sections:
             section, lead_section = sections[lag], sections[lead]
@@ -200,7 +202,9 @@ class AcademicCalendar(object):
             else:
                 lag = lead
                 lead += 1
-        condensed = [section for section in sections if 'similarSections' in section]
+        condensed = [section
+                     for section in sections
+                     if 'similarSections' in section]
         if len(condensed) > 0:
             return condensed
         else:
