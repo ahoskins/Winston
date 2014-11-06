@@ -26,9 +26,6 @@ class Schedule(object):
     SELF_IS_BETTER = False
     """Semantic sorting constants"""
 
-    NULL_SECTIONS = set()
-    """Set of invalid sections"""
-
     def __init__(self, sections=None, busy_times=None):
         """Creates a schedule with the given initial conditions
 
@@ -96,11 +93,11 @@ class Schedule(object):
         """
         try:
             self.attempt_add_to_timetable(section, len(self.sections))
-        except ValueError as error:
-            Schedule.NULL_SECTIONS.add(error.args[0])
+        except ValueError:
+            pass
         else:
-            self.sections.append(section)
             self.scorer.update()
+        self.sections.append(section)
         return self
 
     def add_busy_time(self, busy_time):
@@ -116,7 +113,8 @@ class Schedule(object):
         try:
             self.attempt_add_to_timetable(busy_time, Schedule.BUSY)
         except ValueError:
-            pass
+            logging.warning('Failed to schedule busy time'\
+                +' {}'.format(busy_time))
         else:
             self.busy_times.append(busy_time)
         return self
@@ -252,7 +250,7 @@ class ScheduleScorer(object):
         self.score_values = dict()
         self.score_info = {
             'no-marathons': {
-                'weight': 100,
+                'weight': 10,
                 'function': self._no_marathons
             },
             'day-classes': {
@@ -260,7 +258,7 @@ class ScheduleScorer(object):
                 'function': self._day_classes
             },
             'start-early': {
-                'weight': 1,
+                'weight': -10,
                 'function': self._start_early
             }
         }
@@ -415,6 +413,11 @@ class ScheduleGenerator(object):
         candidates = [Schedule(busy_times=self._busy_times)]
         sections_chosen = 0
         for sections in components:
+            logging.debug('Scheduling {}:{}\t({}/{})'.format(
+                sections[0].get('asString'),
+                sections[0].get('component'),
+                Schedule.SYMBOLS[sections_chosen],
+                len(components)))
             for candidate in candidates[:]:
                 if len(candidate.sections) < sections_chosen:
                     continue
@@ -426,14 +429,7 @@ class ScheduleGenerator(object):
                     if len(candidates) < ScheduleGenerator.CANDIDATE_POOL_SIZE:
                         heapq.heappush(candidates, worst)
             sections_chosen += 1
-            logging.debug('Scheduling {}:{}\t({}/{})'.format(
-                          sections[0].get('asString'),
-                          sections[0].get('component'),
-                          sections_chosen,
-                          len(components)))
-
-        logging.warning('Null sections:'\
-            +'{}'.format(Schedule.NULL_SECTIONS))
+            
 
         candidates = [candidate for candidate in candidates
                       if len(candidate.sections) == sections_chosen]

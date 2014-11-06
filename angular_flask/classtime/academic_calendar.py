@@ -166,10 +166,16 @@ class AcademicCalendar(object):
                                                    current_course)
             classtimes = self._remote_db.search('classtimes',
                                                 path=current_section)
-            if len(classtimes) == 1:
+            if len(classtimes) == 0:
+                logging.warning('{} has zero timetable objects'\
+                    .format(section.get('asString')))
+                classtime = dict()
+            elif len(classtimes) == 1:
                 classtime = classtimes[0]
             else:
-                classtime = dict()
+                logging.warning('{} has multiple timetable objects'\
+                    .format(section.get('asString')))
+                classtime = classtimes[0]
             section['day'] = classtime.get('day')
             section['location'] = classtime.get('location')
             section['startTime'] = classtime.get('startTime')
