@@ -121,11 +121,14 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
         });
     };
 
-    // Speed up the accordion
-    $scope.amount = 0;
-    $scope.renderCourses = function () {
-        // Increase amount to 50
-        $scope.amount = 50;
+    // Speed up the accordion drastically with three lines
+    //
+    // renderCourses is called on every click of the 2nd layer of the accordion
+    // it will cause this layer to show its courses
+    // note: the courses will still be in the DOM even when the accordion is closed
+    $scope.subjects = [];
+    $scope.renderCourses = function (subject) {
+        $scope.subjects[subject] = 1;
     };
 
 }]);

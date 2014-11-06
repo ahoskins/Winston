@@ -20,9 +20,9 @@
         <accordion>
             <accordion-group class="faculty-accordion" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText">
                 <accordion>
-                    <accordion-group class="subject-accordion" heading="{{ subjectName }}" ng-click="renderCourses()" data-ng-repeat="(subjectName, subjectObject) in facultyObject">
+                    <accordion-group class="subject-accordion" heading="{{ subjectName }}" ng-click="renderCourses(subjectName)" data-ng-repeat="(subjectName, subjectObject) in facultyObject">
                         <accordion>
-                            <accordion-group class="course-accordion" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" data-ng-repeat="singleCourse in subjectObject | limitTo:amount">
+                            <accordion-group class="course-accordion" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject">
                                 {{ description }}
                             </accordion-group>
                         </accordion>
