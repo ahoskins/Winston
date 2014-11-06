@@ -1,17 +1,13 @@
 
-from angular_flask.classtime.remote_db.remotedb_factory import RemoteDatabaseFactory
-from angular_flask.classtime.local_db.localdb_factory import LocalDatabaseFactory
+from angular_flask.classtime.remote_db import RemoteDatabaseFactory
+from angular_flask.classtime.local_db import LocalDatabaseFactory
 from angular_flask.classtime.local_db import Term, Course, Section
 from angular_flask.logging import logging
 
 class AcademicCalendar(object):
     """Manages academic calendar data for a particular institution
-
-    Connects to an institution's course database using any
-    implementation of the AcademicDatabase abstract base class.
-
-    Manages terms, courses, and sections.
     """
+    
     def __init__(self, institution_name):
         """Create a calendar for a specific institution
 
@@ -127,9 +123,8 @@ class AcademicCalendar(object):
 
         logging.info('Populating courses for term {}'.format(self._term))
         logging.debug('Fetching courses from remote server...')
-        current_term = 'term={}'.format(self._term)
         all_courses = self._remote_db.search('courses',
-                                             path=current_term)
+                                             term=self._term)
         logging.debug('...fetched')
         logging.debug('Adding courses to local database...')
         for i, course in enumerate(all_courses, start=1):
@@ -151,10 +146,9 @@ class AcademicCalendar(object):
 
         logging.info('Populating sections for course {}'.format(course_id))
 
-        current_course = 'course={},term={}'.format(course_id,
-                                                    self._term)
         sections = self._remote_db.search('sections',
-                                          path=current_course)
+                                          term=self._term,
+                                          course=course_id)
         for section in sections:
             # class is a reserved keyword in python, so
             # instead class_ is used for the field in 
@@ -162,10 +156,10 @@ class AcademicCalendar(object):
             section['class_'] = section.get('class')
             section.pop('class', None)
 
-            current_section = 'class={},{}'.format(section.get('class_'),
-                                                   current_course)
             classtimes = self._remote_db.search('classtimes',
-                                                path=current_section)
+                                                term=self._term,
+                                                course=course_id,
+                                                class_=section.get('class_'))
             if len(classtimes) == 0:
                 logging.warning('{} has zero timetable objects'\
                     .format(section.get('asString')))

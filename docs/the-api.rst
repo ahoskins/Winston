@@ -272,6 +272,7 @@ Response
 -----------------
 :sections: list of <section object>s
 
+.. _5-digit-section-identifier
 .. _api-section-object:
 
 <section object>

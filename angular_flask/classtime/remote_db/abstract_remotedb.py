@@ -34,8 +34,8 @@ class AbstractRemoteDatabase(object):
     def search(self, name, **kwargs):
         """Search the database using a saved search
 
-        Can also take kwargs as a method of passing options
-        which change at runtime
+        :param str name: name of the saved search
+
         """
         raise NotImplementedError()
 

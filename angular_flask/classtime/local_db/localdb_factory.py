@@ -1,5 +1,5 @@
 
-from angular_flask.classtime.local_db import db
+from angular_flask.core import db
 
 class LocalDatabaseFactory(object):
     @staticmethod

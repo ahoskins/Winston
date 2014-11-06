@@ -2,9 +2,9 @@
 import ldap
 from ldap.controls import SimplePagedResultsControl
 
-import abstract_remotedb
+from angular_flask.classtime.remote_db import AbstractRemoteDatabase
 
-class LDAPDatabase(abstract_remotedb.AbstractRemoteDatabase):
+class RemoteLDAPDatabase(AbstractRemoteDatabase):
     """Manages a connection to a remote LDAP database
 
     Implements AbstractRemoteDatabase
@@ -52,12 +52,16 @@ class LDAPDatabase(abstract_remotedb.AbstractRemoteDatabase):
             'path_prefix': path_prefix
             }
 
-    def search(self, name, **kwargs):
+    def search(self, name, term=None, course=None, class_=None):
         """Perform a saved search, and return the result
 
         :param str name: the name of the search
-        :param kwargs: extra options. These will override any
-            options specified when saving the search.
+        :param str term: :ref:`term id <4-digit-term-identifier>`
+            (optional)
+        ::param str course: :ref:`course id <4-digit-term-identifier>`
+            (optional)
+        :param str class_: :ref:`section id <5-digit-section-identifier>`
+            (optional)
 
         :returns: list of record dictionaries. Each element contains
             all attributes specified in `attrs` in :py:meth:`save_search`.
@@ -68,13 +72,18 @@ class LDAPDatabase(abstract_remotedb.AbstractRemoteDatabase):
             raise ValueError('Saved search "{}" does not exist'.format(name))
         options = self._saved_searches.get(name)
         
-        if kwargs:
-            for key, val in kwargs.items():
-                options[key] = val
+        path_prefix = ''
+        if class_ is not None:
+            path_prefix += 'class={},'.format(class_)
+        if course is not None:
+            path_prefix += 'course={},'.format(course)
+        if term is not None:
+            path_prefix += 'term={},'.format(term)
+
         return self._search(search_flt=options.get('search_flt'),
                             attrs=options.get('attrs'),
                             limit=options.get('limit'),
-                            path_prefix=options.get('path'))
+                            path_prefix=path_prefix)
 
     def _search(self, search_flt, attrs, limit=None, path_prefix=None):
         """
@@ -97,16 +106,16 @@ class LDAPDatabase(abstract_remotedb.AbstractRemoteDatabase):
         if path_prefix == None:
             path = self._basedn
         else:
-            path = '{},{}'.format(path_prefix, self._basedn)
+            path = '{}{}'.format(path_prefix, self._basedn)
 
         page_control = SimplePagedResultsControl(
-            criticality=True, size=LDAPDatabase.PAGE_SIZE, cookie=''
+            criticality=True, size=RemoteLDAPDatabase.PAGE_SIZE, cookie=''
         )
 
         results = []
         pages_retrieved = 0
         first_pass = True
-        while pages_retrieved*LDAPDatabase.PAGE_SIZE < limit \
+        while pages_retrieved*RemoteLDAPDatabase.PAGE_SIZE < limit \
             and page_control.cookie \
             or first_pass:
             first_pass = False
