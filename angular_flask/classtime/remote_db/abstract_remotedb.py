@@ -39,7 +39,7 @@ class AbstractRemoteDatabase(object):
         """
         raise NotImplementedError()
 
-    def _search(self, **kwargs):
+    def _search(self, *args, **kwargs):
         """Internal search method - this actually *does* the searching.
 
         :py:func:`search` should call this method, passing

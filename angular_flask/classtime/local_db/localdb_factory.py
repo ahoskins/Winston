@@ -8,6 +8,6 @@ class LocalDatabaseFactory(object):
         In the future, this factory will create a db
         object for the specified institution.
 
-        For now, it just returns the db.
+        For now, it just returns the singleton db.
         """
         return db

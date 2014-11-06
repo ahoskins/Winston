@@ -5,18 +5,20 @@ from angular_flask.classtime.local_db import Term, Course, Section
 from angular_flask.logging import logging
 
 class AcademicCalendar(object):
-    """
-    Manages academic calendar information, including
-    terms, courses and sections.
+    """Manages academic calendar data for a particular institution
 
     Connects to an institution's course database using any
     implementation of the AcademicDatabase abstract base class.
+
+    Manages terms, courses, and sections.
     """
     def __init__(self, institution_name):
-        """
-        Initialize the Calendar with a database connection
-        to a specific institution whose configuration is defined
-        by a JSON file in academic_databases/institutions.
+        """Create a calendar for a specific institution
+
+        :param str institution_name: name of JSON configuration
+            file which describes how to deal with this particular
+            institution. See :py:class:`RemoteDatabaseFactory` for
+            the exact file location.
 
         See 'institutions/ualberta.json' for an example.
         """
@@ -35,13 +37,17 @@ class AcademicCalendar(object):
         self._term = None
 
     def select_current_term(self, termid):
-        """
-        Sets the current term to the given term.
+        """Set the calendar to a given term
 
-        If terms have not been populated, populates terms.
+        :param str termid: :ref:`4-digit term identifier
+            <4-digit-term-identifier>`
 
-        If courses for this term have not been populated,
-        populates courses for this term.
+        If the local db contains no terms, it will be
+        filled with all terms from the remote db.
+
+        If the local db contains no courses for this term,
+        it will be filled with all courses for this term
+        from the remote db.
         """
         if Term.query.first() is None:
             self._populate_terms()
@@ -50,21 +56,26 @@ class AcademicCalendar(object):
             logging.warning('Invalid termid {} selected'.format(termid))
             return
         self._term = termid
-        self._populate_courses_for_current_term()
+        self._populate_courses_for_cur_term()
 
     def get_components_for_course_ids(self, course_ids):
-        """
-        Returns a list of components
+        """Get components of all given courses
 
-        A component is a list of sections which could fill
-        a particular schedule slot (ie CHEM LAB, PHYS LEC)
+        :param course_ids: list of :ref:`6-digit course identifiers
+            <6-digit-course-identifier>`
+        :type course_ids: list of strings
 
-        A section is a dictionary of attributes defined
-        in the Section model.
+        :returns: list of components, where each element
+            is a list of all sections available for that
+            particular component. A component is a LEC,
+            LAB, SEM, etc. of a given course. The list is
+            ordered ascending by the number of sections in
+            each component. 
+        :rtype: list
         """
         components = []
         for course_id in course_ids:
-            self._populate_sections_for_course_id(course_id)
+            self._populate_sections_for_course(course_id)
             base_section_info = Course.query.get(course_id).to_dict()
             course_query = Section.query.filter_by(course=course_id)
             for component in ['LEC', 'LAB', 'SEM']:
@@ -79,13 +90,15 @@ class AcademicCalendar(object):
                     section = dict(base_section_info)
                     section.update(section_model.to_dict())
                     sections.append(section)
-                sections = self._condense_similar_sections(sections)
+                sections = _condense_similar_sections(sections)
 
                 if len(sections) > 0:
                     components.append(sections)
-        return components
+        return sorted(components, key=len)
 
     def _populate_terms(self):
+        """Fill the local db with terms
+        """
         if Term.query.first() is not None:
             return
 
@@ -100,53 +113,52 @@ class AcademicCalendar(object):
         else:
             logging.info('All terms successfully added')
 
-    def _populate_courses_for_current_term(self):
-        """
+    def _populate_courses_for_cur_term(self):
+        """Fill the local db with courses in the current term
+
         Prerequisite:
           Must have set the current term with select_current_term()
-
-        Populates the courses dictionary with all courses available in
-        the currently selected term
         """
-        if self._term == None:
+        if self._term is None:
             raise Exception('Must select a term before looking for courses!')
         
         if Course.query.first() is not None:
-            # If the course database is filled already, don't bother
             return
 
         logging.info('Populating courses for term {}'.format(self._term))
-        logging.debug('Fetching from remote server...')
+        logging.debug('Fetching courses from remote server...')
         current_term = 'term={}'.format(self._term)
         all_courses = self._remote_db.search('courses',
                                              path=current_term)
         logging.debug('...fetched')
-        num_courses = len(all_courses)
-        for i, course in zip(range(1, num_courses+1), all_courses):
+        logging.debug('Adding courses to local database...')
+        for i, course in enumerate(all_courses, start=1):
             if not Course.query.get(course.get('course')):
-                if i % 500 == 0 or i == num_courses:
-                    logging.debug('{}%\t({}/{})'.format(i*100/num_courses, i, num_courses))
+                if i % 500 == 0 or i == len(all_courses):
+                    logging.debug('{}%\t({}/{})'.format(
+                        i*100/len(all_courses), i, len(all_courses)))
                 self._local_db.session.add(Course(course))
         try:
             self._local_db.session.commit()
         except:
             logging.warning('Failed to add courses to database')
-        else:
-            logging.info('Added courses to database')
 
-    def _populate_sections_for_course_id(self, courseid):
-        if Section.query.filter_by(course=courseid).first():
+    def _populate_sections_for_course(self, course_id):
+        """Fill the local db with sections in the given course
+        """
+        if Section.query.filter_by(course=course_id).first():
             return
 
-        logging.info('Populating sections for course {}'.format(courseid))
+        logging.info('Populating sections for course {}'.format(course_id))
 
-        current_course = 'course={},term={}'.format(courseid,
+        current_course = 'course={},term={}'.format(course_id,
                                                     self._term)
         sections = self._remote_db.search('sections',
                                           path=current_course)
         for section in sections:
-            # class_ is a field in the Section sqlalchemy model
-            # because class is a reserved keyword in python
+            # class is a reserved keyword in python, so
+            # instead class_ is used for the field in 
+            # the Section sqlalchemy model
             section['class_'] = section.get('class')
             section.pop('class', None)
 
@@ -169,43 +181,36 @@ class AcademicCalendar(object):
         except:
             logging.warning('Course {}: failed to add sections to database')
 
-    def _condense_similar_sections(self, sections):
-        """
-        Returns a list of sections where each element has the
-        'similarSections' field.
 
-        similarSections is a list of other sections which are:
-        1. The same component (ie CHEM 103 LAB)
-        2. On the same day
-        2. At the same time (same startTime and endTime)
+def _condense_similar_sections(sections):
+    """Fold similar sections into each other and return the result
+    
+    :param list sections: a list of section dicts. **Must be sorted
+        by day, startTime, and endTime**.
+    :returns: a list of section dicts where each element has the
+    'similarSections' field.
 
-        PRECONDITIONS: sections **MUST** be sorted by:
-        1. day
-        2. startTime
-        3. endTime
-        """
-        if len(sections) <= 1:
-            return sections
-        logging.debug('Condensing Course {}:{}'.format(
-            sections[0].get('course'),
-            sections[0].get('component')))
-        lag, lead, num_sections = 0, 1, len(sections)
-        while lead < num_sections:
-            section, lead_section = sections[lag], sections[lead]
-            if  section.get('day') == lead_section.get('day') \
-            and section.get('startTime') == lead_section.get('startTime') \
-            and section.get('endTime') == lead_section.get('endTime'):
-                if 'similarSections' not in section:
-                    section['similarSections'] = []
-                section['similarSections'].append(lead_section)
-                lead += 1
-            else:
-                lag = lead
-                lead += 1
-        condensed = [section
-                     for section in sections
-                     if 'similarSections' in section]
-        if len(condensed) > 0:
-            return condensed
+    similarSections is a list of other sections which are:
+    1. The same component (ie CHEM 103 LAB)
+    2. On the same day
+    2. At the same time (same startTime and endTime)
+    """
+    if len(sections) <= 1:
+        return sections
+    logging.debug('Condensing Course {}:{}'.format(
+        sections[0].get('course'),
+        sections[0].get('component')))
+    lag, lead = 0, 1
+    while lead < len(sections):
+        section, lead_section = sections[lag], sections[:][lead]
+        if  section.get('day') == lead_section.get('day') \
+        and section.get('startTime') == lead_section.get('startTime') \
+        and section.get('endTime') == lead_section.get('endTime'):
+            if 'similarSections' not in section:
+                section['similarSections'] = []
+            section['similarSections'].append(lead_section)
+            sections.remove(lead_section)
         else:
-            return sections
+            lag = lead
+            lead += 1
+    return sections
