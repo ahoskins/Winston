@@ -20,9 +20,9 @@
         <accordion>
             <accordion-group class="faculty-accordion" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText">
                 <accordion>
-                    <accordion-group class="subject-accordion" heading="{{ subjectName }}" data-ng-repeat="(subjectName, subjectObject) in facultyObject">
+                    <accordion-group class="subject-accordion" heading="{{ subjectName }}" ng-click="renderCourses(subjectName)" data-ng-repeat="(subjectName, subjectObject) in facultyObject">
                         <accordion>
-                            <accordion-group class="course-accordion" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" data-ng-repeat="singleCourse in subjectObject">
+                            <accordion-group class="course-accordion" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject">
                                 {{ description }}
                             </accordion-group>
                         </accordion>
@@ -36,6 +36,7 @@
     <!--UI Calendar-->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery-ui/ui/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/scripts/vendor/moment.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular/angular.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-ui-calendar/src/calendar.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.min.js"></script>

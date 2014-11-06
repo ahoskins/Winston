@@ -3,55 +3,31 @@
 
 coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFactory', '$timeout', 'detailFactory', function($scope, $window, fastCourseFactory, $timeout, detailFactory) {
 
-    // UI cal testing around
-    //
-    /* config object */
+    // Event array
+    $scope.events = [
+        {title: 'All Day Event',start: new Date('Tue Nov 5 2014 09:00:00 GMT+0530 (IST)'),end: new Date('Tue Nov 5 2014 10:00:00 GMT+0530 (IST)')},
+        {title: 'Long Event',start: new Date('Tue Nov 5 2014 10:00:00 GMT+0530 (IST)'),end: new Date('Tue Nov 5 2014 11:00:00 GMT+0530 (IST)')},
+        {id: 999,title: 'Repeating Event',start: new Date('Tue Nov 4 2014 09:00:00 GMT+0530 (IST)'),allDay: false}
+    ];
+
+    // EventSources (required as binding to angular HTML directive)
+    $scope.eventSources = [$scope.events];
+
+    // General calendar config
     $scope.uiConfig = {
         calendar:{
-            header: {
-
+            height: 450,
+            editable: true,
+            header:{
+                left: 'title',
+                center: '',
+                right: 'today prev,next'
             },
             defaultView: 'agendaWeek',
-            allDaySlot: false,
-            minTime: "00:00:00",
-            maxTime: "22:00:00",
             columnFormat: "dddd",
             hiddenDays: [0,6]
-            //eventSources: [
-            //
-            //    // your event source
-            //    {
-            //        events: [ // put the array in the `events` property
-            //            {
-            //                title  : 'event1',
-            //                start  : '2014-11-04'
-            //            },
-            //            {
-            //                title  : 'event2',
-            //                start  : '2014-11-04',
-            //                end    : '2014-11-05'
-            //            }
-            //        ],
-            //        color: 'black',     // an option!
-            //        textColor: 'yellow' // an option!
-            //    }
-            //
-            //    // any other event sources...
-            //
-            //]
         }
     };
-
-    $scope.eventSources = [
-        {
-            events: [
-                {
-                    title: "hello",
-                    start: "2014-11-04"
-                }
-            ]
-        }
-    ];
 
     // END UI cal testing around
 
@@ -127,7 +103,7 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 		}
 		filterTextTimeout = $timeout(function() {
 			$scope.filterText = val.toUpperCase();
-		}, 500);
+		}, 200);
 	});
 
     // On the click of a single course in the accordion
@@ -143,6 +119,16 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
         .error(function () {
             $window.alert("Something fucked up.");
         });
+    };
+
+    // Speed up the accordion drastically with three lines
+    //
+    // renderCourses is called on every click of the 2nd layer of the accordion
+    // it will cause this layer to show its courses
+    // note: the courses will still be in the DOM even when the accordion is closed
+    $scope.subjects = [];
+    $scope.renderCourses = function (subject) {
+        $scope.subjects[subject] = 1;
     };
 
 }]);

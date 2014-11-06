@@ -13,6 +13,7 @@ coreModule.filter('courseFilter', function() {
     //
     // @returns {Object} same format as $scope.subjectBin
    return function(subjectBin, field) {
+
         var result = {},
             faculty,
             subject,
