@@ -410,10 +410,8 @@ class ScheduleGenerator(object):
         :rtype: list of :ref:`schedule objects <api-schedule-object>`
         """
         logging.info('Making schedules for courses {}'.format(self._course_ids))
-        components = self._cal.get_components_for_course_ids(self._course_ids)
-        logging.debug('Scheduling {} components'.format(len(components)))
 
-        components = sorted(components, key=len)
+        components = self._cal.get_components_for_course_ids(self._course_ids)
         candidates = [Schedule(busy_times=self._busy_times)]
         sections_chosen = 0
         for sections in components:
@@ -435,7 +433,7 @@ class ScheduleGenerator(object):
                           len(components)))
 
         logging.warning('Null sections:'\
-                        +'{}'.format(Schedule.NULL_SECTIONS))
+            +'{}'.format(Schedule.NULL_SECTIONS))
 
         candidates = [candidate for candidate in candidates
                       if len(candidate.sections) == sections_chosen]
