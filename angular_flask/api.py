@@ -40,37 +40,13 @@ api_manager.create_api(Course,
 # Schedule Generation
 # --------------------------------
 
-def generate_schedules(result=None, search_params=None, **kw):
-    """
-    Expects a search query where 'q' is dictionary of the form:
-    {
-        "term" : term_id,
-        "courses" : [course_id_1, course_id_2, .., course_id_n]
-    }
-    eg:
-    /api/generate-schedules?q={"term":"1490","courses":["001343", "009019"]}
-    """
+def generate_schedules(result=None, search_params=None):
     if result is None:
         result = dict()
     result['page'] = 1
     result['total_pages'] = 1
 
-    courses = search_params.get('courses')
-    term = search_params.get('term')
-    if courses is None or term is None:
-        culprit = ''
-        if courses is None:
-            culprit = 'courses'
-        if term is None:
-            culprit = 'term'
-        errormsg = "field '{}' not present in /api/generate-schedules search query".format(culprit)
-        logging.warning(errormsg)
-        
-        result['num_results'] = 1
-        result['objects'] = [{"error": errormsg}]
-        return
-
-    generator = ScheduleGenerator(cal, term, courses)
+    generator = ScheduleGenerator(cal, search_params)
     schedules = generator.generate_schedules(10)
     result['num_results'] = len(schedules)
     result['objects'] = list()

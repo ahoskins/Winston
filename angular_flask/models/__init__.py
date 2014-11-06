@@ -1,8 +1,4 @@
 
-from term import Term
-from course import Course
-from section import Section
-
-# This is removed because api.py is not importing Schedule
-#
-#from schedule import Schedule
+from angular_flask.models.term import Term
+from angular_flask.models.course import Course
+from angular_flask.models.section import Section
