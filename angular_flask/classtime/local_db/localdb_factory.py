@@ -1,13 +1,10 @@
 
-from angular_flask.core import db
+from .stdlocaldb import StandardLocalDatabase
 
 class LocalDatabaseFactory(object):
     @staticmethod
     def build(institution_name):
+        """Build a local database view for the given
+        institution
         """
-        In the future, this factory will create a db
-        object for the specified institution.
-
-        For now, it just returns the singleton db.
-        """
-        return db
+        return StandardLocalDatabase(institution_name)

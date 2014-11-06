@@ -1,13 +1,12 @@
 
 from angular_flask.classtime.remote_db import RemoteDatabaseFactory
 from angular_flask.classtime.local_db import LocalDatabaseFactory
-from angular_flask.classtime.local_db import Term, Course, Section
 from angular_flask.logging import logging
 
 class AcademicCalendar(object):
     """Manages academic calendar data for a particular institution
     """
-    
+
     def __init__(self, institution_name):
         """Create a calendar for a specific institution
 
@@ -26,7 +25,7 @@ class AcademicCalendar(object):
 
         try:
             self._local_db = LocalDatabaseFactory.build(institution_name)
-            self._local_db.create_all()
+            self._local_db.create()
         except:
             raise
 
@@ -45,10 +44,10 @@ class AcademicCalendar(object):
         it will be filled with all courses for this term
         from the remote db.
         """
-        if Term.query.first() is None:
+        if not self._local_db.terms().exists():
             self._populate_terms()
 
-        if Term.query.get(termid) is None:
+        if not self._local_db.terms().exists(termid):
             logging.warning('Invalid termid {} selected'.format(termid))
             return
         self._term = termid
@@ -72,18 +71,20 @@ class AcademicCalendar(object):
         components = []
         for course_id in course_ids:
             self._populate_sections_for_course(course_id)
-            base_section_info = Course.query.get(course_id).to_dict()
-            course_query = Section.query.filter_by(course=course_id)
+            base_section = self._local_db.courses().get(course_id).to_dict()
+            all_sections = self._local_db.sections() \
+                                         .query() \
+                                         .filter_by(course=course_id)
             for component in ['LEC', 'LAB', 'SEM']:
-                section_models = course_query \
-                                 .filter_by(component=component) \
-                                 .order_by(Section.day.desc()) \
-                                 .order_by(Section.startTime.desc()) \
-                                 .order_by(Section.endTime.desc()) \
-                                 .all()
+                section_models = all_sections \
+                    .filter_by(component=component) \
+                    .order_by(self._local_db.Section.day.desc()) \
+                    .order_by(self._local_db.Section.startTime.desc()) \
+                    .order_by(self._local_db.Section.endTime.desc()) \
+                    .all()
                 sections = []
                 for section_model in section_models:
-                    section = dict(base_section_info)
+                    section = dict(base_section)
                     section.update(section_model.to_dict())
                     sections.append(section)
                 sections = _condense_similar_sections(sections)
@@ -95,19 +96,19 @@ class AcademicCalendar(object):
     def _populate_terms(self):
         """Fill the local db with terms
         """
-        if Term.query.first() is not None:
+        if self._local_db.terms().exists():
             return
 
         all_terms = self._remote_db.search('terms')
         for term in all_terms:
-            if not Term.query.get(term.get('term')):
-                self._local_db.session.add(Term(term))
+            if not self._local_db.terms().exists(term.get('term')):
+                self._local_db.terms().add(term)
         try:
-            self._local_db.session.commit()
+            self._local_db.commit()
         except:
             logging.warning('Terms failed to add to local_db')
         else:
-            logging.info('All terms successfully added')
+            logging.info('Terms successfully populated')
 
     def _populate_courses_for_cur_term(self):
         """Fill the local db with courses in the current term
@@ -118,7 +119,7 @@ class AcademicCalendar(object):
         if self._term is None:
             raise Exception('Must select a term before looking for courses!')
         
-        if Course.query.first() is not None:
+        if self._local_db.courses().exists():
             return
 
         logging.info('Populating courses for term {}'.format(self._term))
@@ -128,27 +129,27 @@ class AcademicCalendar(object):
         logging.debug('...fetched')
         logging.debug('Adding courses to local database...')
         for i, course in enumerate(all_courses, start=1):
-            if not Course.query.get(course.get('course')):
+            if not self._local_db.courses().get(course.get('course')):
                 if i % 500 == 0 or i == len(all_courses):
                     logging.debug('{}%\t({}/{})'.format(
                         i*100/len(all_courses), i, len(all_courses)))
-                self._local_db.session.add(Course(course))
+                self._local_db.courses().add(course)
         try:
-            self._local_db.session.commit()
+            self._local_db.commit()
         except:
             logging.warning('Failed to add courses to database')
 
-    def _populate_sections_for_course(self, course_id):
+    def _populate_sections_for_course(self, course):
         """Fill the local db with sections in the given course
         """
-        if Section.query.filter_by(course=course_id).first():
+        if self._local_db.sections().query().filter_by(course=course).first():
             return
 
-        logging.info('Populating sections for course {}'.format(course_id))
+        logging.info('Populating sections for course {}'.format(course))
 
         sections = self._remote_db.search('sections',
                                           term=self._term,
-                                          course=course_id)
+                                          course=course)
         for section in sections:
             # class is a reserved keyword in python, so
             # instead class_ is used for the field in 
@@ -158,7 +159,7 @@ class AcademicCalendar(object):
 
             classtimes = self._remote_db.search('classtimes',
                                                 term=self._term,
-                                                course=course_id,
+                                                course=course,
                                                 class_=section.get('class_'))
             if len(classtimes) == 0:
                 logging.warning('{} has zero timetable objects'\
@@ -175,9 +176,9 @@ class AcademicCalendar(object):
             section['startTime'] = classtime.get('startTime')
             section['endTime'] = classtime.get('endTime')
 
-            self._local_db.session.add(Section(section))
+            self._local_db.sections().add(section)
         try:
-            self._local_db.session.commit()
+            self._local_db.commit()
         except:
             logging.warning('Course {}: failed to add sections to database')
 
