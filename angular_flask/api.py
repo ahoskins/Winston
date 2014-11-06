@@ -1,10 +1,8 @@
 
-from angular_flask.logging import logging
-
 from angular_flask.core import api_manager
 from angular_flask.models import Term, Course, Section
 
-from angular_flask.classtime import ScheduleGenerator
+from angular_flask.classtime.scheduling import ScheduleGenerator
 from angular_flask.classtime import cal
 
 # --------------------------------
