@@ -52,7 +52,7 @@ class ScheduleGenerator(object):
         candidates = [Schedule(busy_times=self._busy_times)]
         sections_chosen = 0
         for sections in components:
-            logging.debug('Scheduling {}:{}\t({}/{})'.format(
+            logging.debug('({}/{}) Scheduling {}:{}'.format(
                 sections[0].get('asString'),
                 sections[0].get('component'),
                 Schedule.SYMBOLS[sections_chosen],
