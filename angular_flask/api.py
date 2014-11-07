@@ -1,9 +1,14 @@
 
-from angular_flask.core import api_manager
-from angular_flask.models import Term, Course, Section
+import os
+import json
 
-from angular_flask.classtime.scheduling import ScheduleGenerator
-from angular_flask.classtime import cal
+from angular_flask.logging import logging
+
+from angular_flask.core import api_manager, db
+from angular_flask.models import Institution, Term, Course, Section
+
+from classtime.scheduling import ScheduleGenerator
+from classtime import cal
 
 # --------------------------------
 # General API calls
@@ -11,6 +16,30 @@ from angular_flask.classtime import cal
 # -> eg, collection_name='terms' specifies that it can be called
 #        at /api/terms/
 # --------------------------------
+
+def fill_institutions(search_params=None):
+    db.create_all()
+    if Institution.query.first() is None:
+        config_file = os.path.join(os.path.dirname(__file__), '..',
+            'classtime/institutions/institutions.json')
+        with open(config_file, 'r') as config:
+            config = json.loads(config.read())
+        institutions = config.get('institutions')
+        for institution in institutions:
+            if not Institution.query.get(institution.get('institution')):
+                db.session.add(Institution(institution))
+        try:
+            db.session.commit()
+        except:
+            logging.error('Institutions failed to add to database')
+            return None
+
+api_manager.create_api(Institution,
+                       collection_name='institutions',
+                       methods=['GET'],
+                       preprocessors={
+                           'GET_MANY': [fill_institutions]
+                       })
 
 api_manager.create_api(Term,
                        collection_name='terms',

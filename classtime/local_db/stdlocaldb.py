@@ -14,8 +14,8 @@ class StandardLocalDatabase(object):
     """View of the central database which is restricted to a single institution
     """
 
-    def __init__(self, institution_name):
-        self._institution = institution_name
+    def __init__(self, institution):
+        self._institution = institution
         self._model = None
 
         self.Term = Term

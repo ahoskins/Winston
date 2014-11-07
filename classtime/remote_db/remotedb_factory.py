@@ -5,18 +5,18 @@ from .ldapdb import RemoteLDAPDatabase
 
 class RemoteDatabaseFactory(object):
     @staticmethod
-    def build(institution_name):
+    def build(institution):
         """
         Builds an object which implements AbstractRemoteDatabase, based
-        on the config info stored in  
-        `institutions/<institution_name>.json`
+        on config info stored in  
+        `classtime/institutions/<institution>.json`
 
         Config info should be valid JSON which specifies
         all information required to create the type of 
         AbstractRemoteDatabase that the specified institution uses
         """
-        config_file = os.path.join(os.path.dirname(__file__),
-            'institutions/{}.json'.format(institution_name))
+        config_file = os.path.join(os.path.dirname(__file__), '..', # '..' -> up one level
+            'institutions/{}.json'.format(institution))
         with open(config_file, 'r') as config:
             config = json.loads(config.read())
 

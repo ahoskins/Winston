@@ -1,6 +1,6 @@
 
-from angular_flask.classtime.remote_db import RemoteDatabaseFactory
-from angular_flask.classtime.local_db import LocalDatabaseFactory
+from classtime.remote_db import RemoteDatabaseFactory
+from classtime.local_db import LocalDatabaseFactory
 from angular_flask.logging import logging
 logging = logging.getLogger(__name__)
 
@@ -8,24 +8,24 @@ class AcademicCalendar(object):
     """Manages academic calendar data for a particular institution
     """
 
-    def __init__(self, institution_name):
+    def __init__(self, institution):
         """Create a calendar for a specific institution
 
-        :param str institution_name: name of JSON configuration
+        :param str institution: name of JSON configuration
             file which describes how to deal with this particular
             institution. See :py:class:`RemoteDatabaseFactory` for
             the exact file location.
 
-        See 'institutions/ualberta.json' for an example.
+        See 'classtime/institutions/ualberta.json' for an example.
         """
         try:
-            self._remote_db = RemoteDatabaseFactory.build(institution_name)
+            self._remote_db = RemoteDatabaseFactory.build(institution)
             self._remote_db.connect()
         except:
             raise
 
         try:
-            self._local_db = LocalDatabaseFactory.build(institution_name)
+            self._local_db = LocalDatabaseFactory.build(institution)
             self._local_db.create()
         except:
             raise

@@ -17,7 +17,7 @@ Responses are communicated in `JavaScript Object Notation (javascript) <http://j
             },
             { <response object 2> },
             ...
-            { <response object num_results> }
+            { <response object N> }
         ],
         "page": <int>,
         "total_pages": <int>
@@ -28,6 +28,48 @@ The exception is :ref:`api/courses/\<course> <api-courses>`, which returns a sin
 It is possible for zero ``<response object>``\ s to be returned.
 
 Pagination is supported through ``page`` and ``total_pages``. To get the nth page, append ``?page=<n>`` to any endpoint - if you are using a search query already, use ``?q=<search_query>&page=<n>``
+
+.. _api-institutions
+
+api/institutions
+~~~~~~~~~~~~~~~~
+
+Retrieve a list of available institutions. Each institution contains all available information.
+
+Request
+'''''''
+
+::
+
+ GET localhost:5000/api/institutions
+
+Response
+''''''''
+
+.. code:: javascript
+
+    {
+        "objects": [
+            {
+                "institution": "ualberta",
+                "name": "University of Alberta"
+            },
+            { <institution object 2> },
+            ...
+            { <institution object N> }
+        ]
+        ...
+    }
+
+:objects: list of <institution object>s
+
+.. _api-institution-object:
+
+<institution object>
+-------------
+
+:institution: variable length institution identifier
+:name: semantic institution name
 
 .. _api-terms:
 

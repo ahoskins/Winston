@@ -2,7 +2,7 @@
 import ldap
 from ldap.controls import SimplePagedResultsControl
 
-from angular_flask.classtime.remote_db import AbstractRemoteDatabase
+from classtime.remote_db import AbstractRemoteDatabase
 
 class RemoteLDAPDatabase(AbstractRemoteDatabase):
     """Manages a connection to a remote LDAP database
