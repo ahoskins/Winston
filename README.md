@@ -1,7 +1,7 @@
 classtime
 =========
 
-Build a university schedule that fits your life in less than 5 minutes
+Find a university schedule that fits your life in less than 5 minutes
 
 [screenshot or image here]
 
@@ -13,7 +13,9 @@ It is written in [reStructuredText](http://docutils.sourceforge.net/docs/user/rs
 
 > $ git clone git@github.com:rosshamish/classtime  
 > $ cd classtime  
+
 > $ pip install -r requirements.txt  
+
 > $ cd docs  
 > $ make html  
 > $ firefox _build/html/index.html &
