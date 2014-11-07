@@ -18,7 +18,7 @@ It is written in [reStructuredText](http://docutils.sourceforge.net/docs/user/rs
 > $ make html  
 > $ firefox _build/html/index.html &
 
-If you find something unclear, broken, or missing: [add an issue](https://github.com/RossHamish/classtime/issues/new) to the [docs work queue](https://github.com/RossHamish/classtime/milestones). Be critical - it'll only improve faster. Note: if other tasks take priority, a small percentage of these might be ignored.
+If something is unclear, or you find a typo, [add an issue](https://github.com/RossHamish/classtime/issues/new) to the [docs work queue](https://github.com/RossHamish/classtime/milestones). Be critical - it'll only improve faster. Note: if other tasks take priority, a small percentage of these might be ignored.
 
 IRC
 ---
