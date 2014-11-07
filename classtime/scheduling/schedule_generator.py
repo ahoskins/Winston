@@ -52,11 +52,11 @@ class ScheduleGenerator(object):
         candidates = [Schedule(busy_times=self._busy_times)]
         sections_chosen = 0
         for sections in components:
-            logging.debug('({}/{}) Scheduling {}:{}'.format(
-                sections[0].get('asString'),
-                sections[0].get('component'),
-                Schedule.SYMBOLS[sections_chosen],
-                len(components)))
+            logging.debug('({symbol}/{num}) Scheduling {name}:{type}'.format(
+                symbol=Schedule.SYMBOLS[sections_chosen],
+                num=len(components),
+                name=sections[0].get('asString'),
+                type=sections[0].get('component')))
             for candidate in candidates[:]:
                 if len(candidate.sections) < sections_chosen:
                     continue
