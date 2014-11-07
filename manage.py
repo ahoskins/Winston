@@ -2,6 +2,7 @@
 import argparse
 
 from angular_flask.logging import logging
+logging = logging.getLogger(__name__)
 
 from angular_flask.core import db
 from angular_flask.classtime import cal

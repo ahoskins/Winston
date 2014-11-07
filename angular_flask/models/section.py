@@ -42,7 +42,7 @@ class Section(db.Model):
             self.__setattr__(key, value)
 
     def __repr__(self):
-        return '<Section: #{num} ({name}) @ {institution}'.format(
+        return '<Section: #{num} ({name}) @ {institution}>'.format(
                 num=self.class_,
                 name=self.asString,
                 institution=self.institution)

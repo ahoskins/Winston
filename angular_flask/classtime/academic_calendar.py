@@ -2,6 +2,7 @@
 from angular_flask.classtime.remote_db import RemoteDatabaseFactory
 from angular_flask.classtime.local_db import LocalDatabaseFactory
 from angular_flask.logging import logging
+logging = logging.getLogger(__name__)
 
 class AcademicCalendar(object):
     """Manages academic calendar data for a particular institution
@@ -48,7 +49,7 @@ class AcademicCalendar(object):
             self._populate_terms()
 
         if not self._local_db.terms().exists(termid):
-            logging.warning('Invalid termid {} selected'.format(termid))
+            logging.warning('Invalid term {} selected'.format(termid))
             return
         self._term = termid
         self._populate_courses_for_cur_term()
@@ -106,7 +107,7 @@ class AcademicCalendar(object):
         try:
             self._local_db.commit()
         except:
-            logging.warning('Terms failed to add to local_db')
+            logging.error('Terms failed to add to local_db')
         else:
             logging.info('Terms successfully populated')
 
@@ -137,7 +138,8 @@ class AcademicCalendar(object):
         try:
             self._local_db.commit()
         except:
-            logging.warning('Failed to add courses to database')
+            logging.error('Failed to add courses to database for'\
+                +'term={}'.format(self._term))
 
     def _populate_sections_for_course(self, course):
         """Fill the local db with sections in the given course
@@ -180,7 +182,8 @@ class AcademicCalendar(object):
         try:
             self._local_db.commit()
         except:
-            logging.warning('Course {}: failed to add sections to database')
+            logging.error('Failed to add sections to database for course {}'\
+                .format(course))
 
 
 def _condense_similar_sections(sections):

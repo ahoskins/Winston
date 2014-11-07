@@ -1,5 +1,6 @@
 
 from angular_flask.logging import logging
+logging = logging.getLogger(__name__)
 
 import re
 
@@ -113,8 +114,8 @@ class Schedule(object):
         try:
             self.attempt_add_to_timetable(busy_time, Schedule.BUSY)
         except ValueError:
-            logging.warning('Failed to schedule busy time'\
-                +' {}'.format(busy_time))
+            logging.error('Failed to schedule busy time {}'\
+                .format(busy_time))
         else:
             self.busy_times.append(busy_time)
         return self

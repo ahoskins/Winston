@@ -25,7 +25,7 @@ class Course(db.Model):
             self.__setattr__(key, value)
 
     def __repr__(self):
-        return '<Course: #{num} ({name}) @ {institution}'.format(
+        return '<Course: #{num} ({name}) @ {institution}>'.format(
                 num=self.course,
                 name=self.asString,
                 institution=self.institution)

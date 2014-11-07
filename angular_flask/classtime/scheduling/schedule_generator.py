@@ -1,5 +1,7 @@
 
 from angular_flask.logging import logging
+logging = logging.getLogger(__name__)
+
 import heapq
 
 from .schedule import Schedule
