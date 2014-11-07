@@ -8,7 +8,7 @@ from angular_flask.core import api_manager, db
 from angular_flask.models import Institution, Term, Course, Section
 
 from classtime.scheduling import ScheduleGenerator
-from classtime import cal
+import classtime
 
 # --------------------------------
 # General API calls
@@ -73,6 +73,7 @@ def generate_schedules(result=None, search_params=None):
     result['page'] = 1
     result['total_pages'] = 1
 
+    cal = classtime.get_calendar(search_params.get('institution', 'ualberta'))
     generator = ScheduleGenerator(cal, search_params)
     schedules = generator.generate_schedules(10)
     result['num_results'] = len(schedules)

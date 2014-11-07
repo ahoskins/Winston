@@ -63,6 +63,7 @@ Response
 
 :objects: list of <institution object>s
 
+.. _institution-identifier
 .. _api-institution-object:
 
 <institution object>
@@ -238,6 +239,7 @@ Request
 ::
 
  request-parameters = {
+                          "institution": institution,
 	                      "term": term,
 	                      "courses": [course, course2, .., courseN]
 	                      "busy-times": [{
@@ -251,6 +253,7 @@ Request
 	                      ]
 	                  }
 
+:institution: :ref:`unique institution identifier <institution-identifier>`
 :term: :ref:`4-digit unique term identifier <4-digit-term-identifier>`
 :courses: list of :ref:`6-digit unique course identifier <6-digit-course-identifier>`
 :busy-times: list of <busytime> objects
