@@ -2,12 +2,19 @@
 from angular_flask.core import db
 from angular_flask.models import Term, Course, Section
 
+MODEL_PRIMARY_KEY_MAP = {
+    Term: 'term',
+    Course: 'course',
+    Section: 'class_'
+}
+def primary_key_from_model(model):
+    return MODEL_PRIMARY_KEY_MAP.get(model, '')
+
 class StandardLocalDatabase(object):
     """View of the central database which is restricted to a single institution
     """
 
     def __init__(self, institution_name):
-        self._db_created = False
         self._institution = institution_name
         self._model = None
 
@@ -19,7 +26,6 @@ class StandardLocalDatabase(object):
         """Creates the central database, if it did not already exist
         """
         db.create_all()
-        self._db_created = True
 
     def terms(self):
         """Filters all requests to Term objects only. Returns self,
@@ -68,12 +74,15 @@ class StandardLocalDatabase(object):
         * local_db.sections().exists()
         """
         if primary_key is None:
-            return self._model.query.first() is not None
+            return self.query().first() is not None
         else:
-            return self._model.query.get(primary_key) is not None
+            return self.get(primary_key) is not None
 
     def get(self, primary_key):
-        return self._model.query.get(primary_key)
+        filter_dict = {
+            primary_key_from_model(self._model): primary_key
+        }
+        return self.query().filter_by(**filter_dict).first()
 
     def query(self):
         return self._model.query.filter_by(institution=self._institution)
