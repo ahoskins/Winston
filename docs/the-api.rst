@@ -29,6 +29,10 @@ It is possible for zero ``<response object>``\ s to be returned.
 
 Pagination is supported through ``page`` and ``total_pages``. To get the nth page, append ``?page=<n>`` to any endpoint - if you are using a search query already, use ``?q=<search_query>&page=<n>``
 
+Use `search queries <http://flask-restless.readthedocs.org/en/latest/searchformat.html#searchformat>`__ to filter an endpoint's output. Useful for:
+* getting terms for only a certain institution
+* getting courses for only a certain institution and a certain term
+
 .. _api-institutions
 
 api/institutions
