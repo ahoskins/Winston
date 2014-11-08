@@ -1,8 +1,9 @@
 
 from angular_flask.logging import logging
+logging = logging.getLogger(__name__)
 
-from angular_flask.classtime.scheduling import ScheduleGenerator
-from angular_flask.classtime import cal
+from classtime.scheduling import ScheduleGenerator
+from classtime import cal
 
 def check_generate_schedule(schedule_params):
     num_schedules = 10

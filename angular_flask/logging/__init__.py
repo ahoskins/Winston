@@ -1,6 +1,6 @@
 
 import logging
-logging.basicConfig(format='(%(asctime)s)%(levelname)s: %(message)s',
-	datefmt='%m/%d/%Y %I:%M:%S %p',
+logging.basicConfig(
+	format='%(levelname)s:\t%(message)s\t\t%(asctime)s  [%(name)s]',
+    datefmt='%I:%M:%S',
     level=logging.DEBUG)
-

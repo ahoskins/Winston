@@ -17,7 +17,7 @@ Responses are communicated in `JavaScript Object Notation (javascript) <http://j
             },
             { <response object 2> },
             ...
-            { <response object num_results> }
+            { <response object N> }
         ],
         "page": <int>,
         "total_pages": <int>
@@ -28,6 +28,53 @@ The exception is :ref:`api/courses/\<course> <api-courses>`, which returns a sin
 It is possible for zero ``<response object>``\ s to be returned.
 
 Pagination is supported through ``page`` and ``total_pages``. To get the nth page, append ``?page=<n>`` to any endpoint - if you are using a search query already, use ``?q=<search_query>&page=<n>``
+
+Use `search queries <http://flask-restless.readthedocs.org/en/latest/searchformat.html#searchformat>`__ to filter an endpoint's output. Useful for:
+* getting terms for only a certain institution
+* getting courses for only a certain institution and a certain term
+
+.. _api-institutions
+
+api/institutions
+~~~~~~~~~~~~~~~~
+
+Retrieve a list of available institutions. Each institution contains all available information.
+
+Request
+'''''''
+
+::
+
+ GET localhost:5000/api/institutions
+
+Response
+''''''''
+
+.. code:: javascript
+
+    {
+        "objects": [
+            {
+                "institution": "ualberta",
+                "name": "University of Alberta"
+            },
+            { <institution object 2> },
+            ...
+            { <institution object N> }
+        ]
+        ...
+    }
+
+:objects: list of <institution object>s
+
+.. _institution-identifier
+.. _api-institution-object:
+
+<institution object>
+-------------
+
+:institution: variable length institution identifier
+:name: semantic institution name
 
 .. _api-terms:
 
@@ -196,6 +243,7 @@ Request
 ::
 
  request-parameters = {
+                          "institution": institution,
 	                      "term": term,
 	                      "courses": [course, course2, .., courseN]
 	                      "busy-times": [{
@@ -209,6 +257,7 @@ Request
 	                      ]
 	                  }
 
+:institution: :ref:`unique institution identifier <institution-identifier>`
 :term: :ref:`4-digit unique term identifier <4-digit-term-identifier>`
 :courses: list of :ref:`6-digit unique course identifier <6-digit-course-identifier>`
 :busy-times: list of <busytime> objects
@@ -272,6 +321,7 @@ Response
 -----------------
 :sections: list of <section object>s
 
+.. _5-digit-section-identifier
 .. _api-section-object:
 
 <section object>

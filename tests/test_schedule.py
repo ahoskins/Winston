@@ -1,5 +1,5 @@
 
-from angular_flask.classtime.schedule import Schedule
+from classtime.schedule import Schedule
 
 def check_add_section(section, numblocks_expected):
     """

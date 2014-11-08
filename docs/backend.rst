@@ -3,7 +3,7 @@ Backend documentation
 
 The backend which powers classtime.
 
-.. py:currentmodule:: angular_flask.classtime.scheduling
+.. py:currentmodule:: classtime.scheduling
 
 Schedule
 --------

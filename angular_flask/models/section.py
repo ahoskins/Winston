@@ -2,6 +2,7 @@
 from angular_flask.core import db
 
 class Section(db.Model):
+    institution = db.Column(db.String(30))
     term = db.Column(db.String(4))
     course = db.Column(db.String(6), db.ForeignKey('course.course'))
     class_ = db.Column(db.String(5), primary_key=True, unique=True)
@@ -41,9 +42,10 @@ class Section(db.Model):
             self.__setattr__(key, value)
 
     def __repr__(self):
-        return '<Section: #{num} ({name})'.format(
+        return '<Section: #{num} ({name}) @ {institution}>'.format(
                 num=self.class_,
-                name=self.asString)
+                name=self.asString,
+                institution=self.institution)
 
     def to_dict(self):
         return dict((col, getattr(self, col)) for col in self.__table__.columns.keys())
