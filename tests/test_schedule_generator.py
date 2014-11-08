@@ -1,6 +1,6 @@
 
 from angular_flask.logging import logging
-logging = logging.getLogger(__name__)
+logging = logging.getLogger(__name__) # pylint: disable=C0103
 
 from classtime.scheduling import ScheduleGenerator
 from classtime import cal

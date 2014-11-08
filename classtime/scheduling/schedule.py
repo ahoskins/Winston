@@ -1,6 +1,6 @@
 
 from angular_flask.logging import logging
-logging = logging.getLogger(__name__)
+logging = logging.getLogger(__name__) # pylint: disable=C0103
 
 import re
 
@@ -250,15 +250,15 @@ class ScheduleScorer(object):
         self.score_values = dict()
         self.score_info = {
             'no-marathons': {
-                'weight': 50,
+                'weight': 10,
                 'function': self._no_marathons
             },
             'day-classes': {
-                'weight': 1,
+                'weight': 10,
                 'function': self._day_classes
             },
             'start-early': {
-                'weight': 1,
+                'weight': 1000,
                 'function': self._start_early
             }
         }
@@ -315,22 +315,19 @@ class ScheduleScorer(object):
     def _no_marathons(self):
         """Scores based on the class spread throughout the day
 
-        * + weight: spread out. Less than 3hrs of consecutive classes
+        * + weight: spread out. More breaks in between classes
         * 0 weight: -no effect-
-        * - weight: clumped up. More than 3hrs of consecutive classes
+        * - weight: clumped up. Less breaks in between classes
         """
-        max_consecutive_blocks = 3*2 # 3 hours x 2 blocks/hour
-        total_marathon_blocks = 0
+        total = 0
         for day_bitmap in self.schedule.timetable_bitmap[:]:
-            consecutive_blocks = 0
+            max_consecutive = 0
             while day_bitmap:
                 day_bitmap &= (day_bitmap << 1)
-                consecutive_blocks += 1
-            marathon_blocks = consecutive_blocks - max_consecutive_blocks
-            if marathon_blocks > 0:
-                total_marathon_blocks += marathon_blocks
-        score = -1*total_marathon_blocks
-        return 5 * score
+                max_consecutive += 1
+            total += max_consecutive
+        frac_of_nightmare = total / (5*Schedule.NUM_DAYS)
+        return -1 * 10 * frac_of_nightmare
 
     def _day_classes(self):
         """Scores based on having day classes versus night classes

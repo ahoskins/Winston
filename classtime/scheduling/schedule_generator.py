@@ -1,16 +1,72 @@
 
+import threading
+
 from angular_flask.logging import logging
-logging = logging.getLogger(__name__)
+logging = logging.getLogger(__name__) # pylint: disable=C0103
 
 import heapq
 
 from .schedule import Schedule
 
-class ScheduleGenerator(object):
+def add_candidate(candidates, candidate, heap_size):
+    discard = heapq.heapreplace(candidates, candidate)
+    if len(candidates) < heap_size:
+        heapq.heappush(candidates, discard)
+
+def is_hopeless(candidate, sections_chosen):
+    return len(candidate.sections) < sections_chosen
+
+# http://stackoverflow.com/questions/6893968/how-to-get-the-return-value-from-a-thread-in-python
+# http://stackoverflow.com/a/14331755/1817465
+def threaded(f, daemon=False):
+    import Queue
+
+    def wrapped_f(q, *args, **kwargs):
+        '''this function calls the decorated function and puts the 
+        result in a queue'''
+        ret = f(*args, **kwargs)
+        q.put(ret)
+
+    def wrap(*args, **kwargs):
+        '''this is the function returned from the decorator. It fires off
+        wrapped_f in a new thread and returns the thread object with
+        the result queue attached'''
+        q = Queue.Queue()
+
+        t = threading.Thread(target=wrapped_f, args=(q,)+args, kwargs=kwargs)
+        t.daemon = daemon
+        t.start()
+        t.result_queue = q        
+        return t
+
+    return wrap
+
+@threaded
+def get_best_candidates(candidates, sections, sections_chosen):
+    """Returns the N best schedules in this chunk of the candidate pool
+    of schedules
+
+    :param list chunk: schedules to sort
+    :returns: the N best schedules
+    :rtype: list of candidate schedules
+    """
+    for candidate in candidates[:]:
+        if is_hopeless(candidate, sections_chosen):
+            continue
+        for section in sections:
+            if candidate.conflicts(section):
+                continue
+            add_candidate(candidates,
+                candidate.clone().add_section(section),
+                ScheduleGenerator.CHUNK_SIZE+1)
+    return candidates
+
+class ScheduleGenerator(object): # pylint: disable=R0903
     """Generates schedules
     """
 
     CANDIDATE_POOL_SIZE = 50
+    CHUNK_SIZE = 25
     """Number of schedules to keep in consideration at any one time"""
 
     def __init__(self, cal, schedule_params):
@@ -57,19 +113,27 @@ class ScheduleGenerator(object):
                 num=len(components),
                 name=sections[0].get('asString'),
                 type=sections[0].get('component')))
-            for candidate in candidates[:]:
-                if len(candidate.sections) < sections_chosen:
-                    continue
-                for section in sections:
-                    if candidate.conflicts(section):
-                        continue
-                    new_candidate = candidate.clone().add_section(section)
-                    worst = heapq.heapreplace(candidates, new_candidate)
-                    if len(candidates) < ScheduleGenerator.CANDIDATE_POOL_SIZE:
-                        heapq.heappush(candidates, worst)
+            workers = list()
+            for chunk in ScheduleGenerator.chunks(candidates):
+                workers.append(get_best_candidates(candidates=chunk,
+                               sections=sections,
+                               sections_chosen=sections_chosen))
+            candidates = [candidate
+                          for worker in workers
+                          for candidate in worker.result_queue.get()]
+            candidates = candidates[:ScheduleGenerator.CANDIDATE_POOL_SIZE]
             sections_chosen += 1
-            
 
         candidates = [candidate for candidate in candidates
                       if len(candidate.sections) == sections_chosen]
         return sorted(candidates, reverse=True)[:num_requested]
+
+    # http://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks-in-python
+    @staticmethod
+    def chunks(full_list, chunk_size=None):
+        """ Yield successive n-sized chunks from l.
+        """
+        if chunk_size is None:
+            chunk_size = ScheduleGenerator.CHUNK_SIZE
+        for i in xrange(0, len(full_list), chunk_size):
+            yield full_list[i:i+chunk_size]

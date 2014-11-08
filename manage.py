@@ -2,7 +2,7 @@
 import argparse
 
 from angular_flask.logging import logging
-logging = logging.getLogger(__name__)
+logging = logging.getLogger(__name__) # pylint: disable=C0103
 
 from angular_flask.core import db
 from classtime import cal
