@@ -2,15 +2,14 @@
 from angular_flask.logging import logging
 logging = logging.getLogger(__name__) # pylint: disable=C0103
 
-from classtime.scheduling import ScheduleGenerator
-from classtime import cal
+from classtime.scheduling import generate_schedules
 
 def check_generate_schedule(schedule_params):
     num_schedules = 10
-    generator = ScheduleGenerator(cal, schedule_params)
-    schedules = generator.generate_schedules(num_schedules)
-    logging.debug(schedule_params.get('name', ''))
-    logging.debug(schedules)
+    institution = schedule_params.get('institution', 'ualberta')
+    schedules = generate_schedules(institution, schedule_params, num_schedules)
+    logging.info(schedule_params.get('name', ''))
+    logging.info(schedules)
 
 def test_generate_schedule():
     schedule_params_list = [

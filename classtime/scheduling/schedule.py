@@ -250,15 +250,15 @@ class ScheduleScorer(object):
         self.score_values = dict()
         self.score_info = {
             'no-marathons': {
-                'weight': 10,
+                'weight': 1000,
                 'function': self._no_marathons
             },
             'day-classes': {
-                'weight': 10,
+                'weight': 1,
                 'function': self._day_classes
             },
             'start-early': {
-                'weight': 1000,
+                'weight': 1,
                 'function': self._start_early
             }
         }
