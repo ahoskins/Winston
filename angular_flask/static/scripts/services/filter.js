@@ -28,9 +28,13 @@ coreModule.filter('courseFilter', function() {
                 // key is "ECE"
                 subject = key;
                 value.forEach(function (course) {
+                    // Filter accounts for the following (examples):
+                    //
+                    // CMPUT 272, Computer Science, Faculty of Science
+                    // ECE 325, Electrical and Computer Engineering, Faculty of Engineering
                     if (course.asString.toUpperCase().indexOf(field) > -1 ||
-                        faculty.toUpperCase().indexOf(field) > -1  ||
-                        subject.toUpperCase().indexOf(field) > -1 ) {
+                        course.subjectTitle.toUpperCase().indexOf(field) > -1 ||
+                        faculty.toUpperCase().indexOf(field) > -1 ) {
                         if (result.hasOwnProperty(faculty)) {
                             if (result[faculty].hasOwnProperty(subject)) {
                                 result[faculty][subject].push(course);

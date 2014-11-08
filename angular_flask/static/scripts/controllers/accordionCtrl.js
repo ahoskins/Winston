@@ -1,35 +1,7 @@
-// Classes Controller
+// Accordion Controller
 //
 
-coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFactory', '$timeout', 'detailFactory', function($scope, $window, fastCourseFactory, $timeout, detailFactory) {
-
-    // Event array
-    $scope.events = [
-        {title: 'All Day Event',start: new Date('Tue Nov 5 2014 09:00:00 GMT+0530 (IST)'),end: new Date('Tue Nov 5 2014 10:00:00 GMT+0530 (IST)')},
-        {title: 'Long Event',start: new Date('Tue Nov 5 2014 10:00:00 GMT+0530 (IST)'),end: new Date('Tue Nov 5 2014 11:00:00 GMT+0530 (IST)')},
-        {id: 999,title: 'Repeating Event',start: new Date('Tue Nov 4 2014 09:00:00 GMT+0530 (IST)'),allDay: false}
-    ];
-
-    // EventSources (required as binding to angular HTML directive)
-    $scope.eventSources = [$scope.events];
-
-    // General calendar config
-    $scope.uiConfig = {
-        calendar:{
-            height: 450,
-            editable: true,
-            header:{
-                left: 'title',
-                center: '',
-                right: 'today prev,next'
-            },
-            defaultView: 'agendaWeek',
-            columnFormat: "dddd",
-            hiddenDays: [0,6]
-        }
-    };
-
-    // END UI cal testing around
+coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', function($scope, $window, courseFactory, $timeout, detailFactory) {
 
     // New, organized course object
     $scope.subjectBin = {};
@@ -42,7 +14,7 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
         total_pages;
 
     // Purpose of first call is to get total_pages amount
-    fastCourseFactory.getCoursesPage(1).
+    courseFactory.getCoursesPage(1).
     success(function (data, status, headers, config) {
             // De-serialize JSON data
             pageListing = angular.fromJson(data);
@@ -50,7 +22,7 @@ coreModule.controller('fastCourseListCtrl', ['$scope', '$window', 'fastCourseFac
 
             // In these calls, actually get and arrange the data
             while (page < (total_pages + 1)) {
-                fastCourseFactory.getCoursesPage(page).
+                courseFactory.getCoursesPage(page).
                     success(function (data, status, headers, config) {
                         // De-serialize JSON data
                         pageListing = angular.fromJson(data);

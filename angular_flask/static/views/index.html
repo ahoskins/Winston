@@ -7,9 +7,7 @@
 </head>
 <body>
 
-	<div data-ng-controller="fastCourseListCtrl">
-
-        <div id="cal" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div>
+	<div data-ng-controller="accordionCtrl">
 
 		Search By All:
 		<br>
@@ -33,10 +31,15 @@
 
 	</div>
 
+    <div data-ng-controller="scheduleCtrl">
+
+        <div id="cal" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div>
+
+    </div>
+
     <!--UI Calendar-->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery-ui/ui/jquery-ui.js"></script>
-    <script type="text/javascript" src="/static/scripts/vendor/moment.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular/angular.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-ui-calendar/src/calendar.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.min.js"></script>
@@ -49,11 +52,12 @@
 	<script type="text/javascript" src="/static/scripts/app.js"></script>
 
     <!--Factories-->
-	<script type="text/javascript" src="/static/scripts/services/fastCourseFactory.js"></script>
+	<script type="text/javascript" src="/static/scripts/services/courseFactory.js"></script>
     <script type="text/javascript" src="/static/scripts/services/detailFactory.js"></script>
 
     <!--Controllers-->
-	<script type="text/javascript" src="/static/scripts/controllers/fastCourseListCtrl.js"></script>
+	<script type="text/javascript" src="/static/scripts/controllers/accordionCtrl.js"></script>
+    <script type="text/javascript" src="/static/scripts/controllers/scheduleCtrl.js"></script>
 
     <!--Filters-->
 	<script type="text/javascript" src="/static/scripts/services/filter.js"></script>

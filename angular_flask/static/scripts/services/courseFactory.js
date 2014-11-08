@@ -1,4 +1,4 @@
-coreModule.factory('fastCourseFactory', function ($window, $http, $q) {
+coreModule.factory('courseFactory', function ($window, $http, $q) {
 	
 	var factory = {};
 
