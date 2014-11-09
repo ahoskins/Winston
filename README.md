@@ -8,10 +8,9 @@ Find a university schedule that fits your life in less than 5 minutes
 Documentation
 -------------
 
-Documentation is located in the `docs` directory.  
-It is written in [reStructuredText](http://docutils.sourceforge.net/docs/user/rst/quickref.html), it is built using [sphinx](http://sphinx-doc.org/), and it is best viewed in an internet browser like Chrome or Firefox.
+Documentation follows [reStructuredText] syntax, looks great when built with [sphinx], and is best viewed in a browser.
 
-> $ git clone git@github.com:rosshamish/classtime  
+> $ git clone https://github.com/rosshamish/classtime  
 > $ cd classtime  
 
 > $ pip install -r requirements.txt  
@@ -20,11 +19,16 @@ It is written in [reStructuredText](http://docutils.sourceforge.net/docs/user/rs
 > $ make html  
 > $ firefox _build/html/index.html &
 
-If something is unclear, or you find a typo, [add an issue](https://github.com/RossHamish/classtime/issues/new) to the [docs work queue](https://github.com/RossHamish/classtime/milestones). Be critical - it'll only improve faster. Note: if other tasks take priority, a small percentage of these might be ignored.
+When documentation is unclear, missing, or incorrect, [add an issue][issue-new] to the [docs work queue][milestones].
+
+[reStructuredText]: http://docutils.sourceforge.net/docs/user/rst/quickref.html
+[sphinx]: http://sphinx-doc.org/
+[issue-new]: https://github.com/RossHamish/classtime/issues/new
+[milestones]: https://github.com/RossHamish/classtime/milestones
 
 IRC
 ---
 
 We hang out in channel #classtime on irc.freenode.net
 
-If you are unfamiliar with IRC, you can connect easily at http://webchat.freenode.net
+If you are unfamiliar with IRC, you can connect at http://webchat.freenode.net
