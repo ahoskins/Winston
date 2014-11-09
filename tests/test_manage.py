@@ -1,27 +1,40 @@
 
-from angular_flask.models import Term, Course
+import unittest
 
-def test_manage_seed_db():
-    from manage import seed_db
-    class Arguments:
+import manage
+
+class Arguments(object): # pylint: disable=R0903
+    def __init__(self, command, term, startfrom):
+        self.command = command
+        self.term = term
+        self.startfrom = startfrom
+
+class TestManageDatabase(unittest.TestCase): # pylint: disable=R0904
+    @classmethod
+    def setup_class(cls):
+        manage.delete_db()
+
+    @classmethod
+    def teardown_class(cls):
         pass
-    args = Arguments()
-    args.term = None
-    seed_db(args)
 
-    def check_term(term_model):
-        assert term_model.term is not None
-        assert term_model.termTitle is not None
-        assert term_model.courses is not None
+    def test_seed_db(self):
+        args = Arguments('seed_db', '1490', None)
+        manage.seed_db(args)
+        self.validate_terms()
+        self.validate_courses()
 
-    for term_model in Term.query.all():
-        yield check_term, term_model
+    def validate_terms(self): # pylint: disable=R0201
+        import angular_flask.models as models
+        for term_model in models.Term.query.all():
+            assert term_model.term is not None
+            assert term_model.termTitle is not None
+            assert term_model.courses is not None
 
-    def check_course(course_model):
-        assert course_model.term is not None
-        assert course_model.course is not None
-        assert course_model.asString is not None
-        assert course_model.sections is not None
-
-    for course_model in Course.query.all():
-        yield check_course, course_model
+    def validate_courses(self): # pylint: disable=R0201
+        import angular_flask.models as models
+        for course_model in models.Course.query.all():
+            assert course_model.term is not None
+            assert course_model.course is not None
+            assert course_model.asString is not None
+            assert course_model.sections is not None
