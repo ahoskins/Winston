@@ -9,10 +9,10 @@ import heapq
 
 from .schedule import Schedule
 
-CANDIDATE_POOL_SIZE = 100   
+CANDIDATE_POOL_SIZE = 120
 """Number of schedules to keep in consideration at any one time"""
 
-WORKERS = 12
+WORKERS = 16
 """Maximum number of worker processes to spawn"""
 
 WORKLOAD_SIZE = CANDIDATE_POOL_SIZE / WORKERS
@@ -52,9 +52,7 @@ def _get_candidates(candidates, sections, sections_chosen, heap_size, out_q):
             _add_candidates(candidates,
                 candidate.clone().add_section(section),
                 heap_size)
-    candidate_tuples = [(candidate.sections, candidate.busy_times)
-                        for candidate in candidates]
-    out_q.put(candidate_tuples)
+    out_q.put(candidates)
 
 def generate_schedules(institution, schedule_params, num_requested):
     """
@@ -109,9 +107,7 @@ def _generate_schedules(cal, course_ids, busy_times, num_requested):
             proc.start()
         candidates = list()
         for _ in range(len(procs)):
-            candidate_tuples = out_q.get()
-            for sections, busy_times in candidate_tuples:
-                candidates.append(Schedule(sections, busy_times))
+            candidates.extend(out_q.get())
         candidates = candidates[:CANDIDATE_POOL_SIZE]
         sections_chosen += 1
 

@@ -250,7 +250,7 @@ class ScheduleScorer(object):
         self.score_values = dict()
         self.score_info = {
             'no-marathons': {
-                'weight': 1000,
+                'weight': 1,
                 'function': self._no_marathons
             },
             'day-classes': {
@@ -258,7 +258,7 @@ class ScheduleScorer(object):
                 'function': self._day_classes
             },
             'start-early': {
-                'weight': 1,
+                'weight': -1,
                 'function': self._start_early
             }
         }
@@ -362,3 +362,34 @@ class ScheduleScorer(object):
                 day_bitmap <<= 1
                 score -= 1
         return 1 * score
+
+# http://bytes.com/topic/python/answers/552476-why-cant-you-pickle-instancemethods#edit2155350
+def _pickle_method(method):
+    """Allow pickling of Schedule object
+
+    This is necessary for multiprocessing.Queue.put() and
+    multiprocessing.Queue.get()
+    """
+    func_name = method.im_func.__name__
+    obj = method.im_self
+    cls = method.im_class
+    return _unpickle_method, (func_name, obj, cls)
+
+def _unpickle_method(func_name, obj, cls):
+    """Allow pickling of Schedule object
+
+    This is necessary for multiprocessing.Queue.put() and
+    multiprocessing.Queue.get()
+    """
+    for cls in cls.mro():
+        try:
+            func = cls.__dict__[func_name]
+        except KeyError:
+            pass
+        else:
+            break
+    return func.__get__(obj, cls)
+
+import copy_reg
+import types
+copy_reg.pickle(types.MethodType, _pickle_method, _unpickle_method)
