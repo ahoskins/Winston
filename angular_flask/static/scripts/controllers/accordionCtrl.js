@@ -33,6 +33,9 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
                                 // We are within an existing faculty property
                                 if ($scope.subjectBin[course.faculty].hasOwnProperty(course.subject)) {
                                     $scope.subjectBin[course.faculty][course.subject].push(course);
+
+                                    // Sort the courses by course level number (small --> large)
+                                    $scope.subjectBin[course.faculty][course.subject].sort(compareByCourseNumber);
                                 }
                                 else {
                                     $scope.subjectBin[course.faculty][course.subject] = [course];
@@ -41,7 +44,6 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
                             else {
                                 $scope.subjectBin[course.faculty] = {};
                                 $scope.subjectBin[course.faculty][course.subject] = [course];
-
                             }
                         });
                     }).
@@ -56,6 +58,28 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
             $window.alert("Sorry, something went wrong.");
     });
 
+
+    // Sort by asString property
+    //
+    // @param {Object} course object, from courses-min
+    // @param {Object} course object, from courses-min
+    //
+    // @return {int} compare result
+    function compareByCourseNumber(a, b) {
+        var aNum = a.asString.match(/\d+/);
+        var bNum = b.asString.match(/\d+/);
+
+        if (aNum < bNum) {
+            return -1;
+        }
+        else if (aNum > bNum) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
     // Wait 0.5 seconds until displaying any courses
     //
     // Without this delay the courses will immediately load, freeze up for a second, and then finally finish
@@ -66,7 +90,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 
     // Filter watcher
     //
-    // Sets a watch on the input search box (every 500ms)
+    // Sets a watch on the input search box (every 200ms)
     // This affects the normal $digest cycle
 	var filterTextTimeout;
 	$scope.$watch('searchBox', function(val) {
