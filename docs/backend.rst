@@ -20,11 +20,3 @@ ScheduleScorer
    :members:
    :undoc-members:
    :private-members:
-
-ScheduleGenerator
------------------
-
-.. autoclass:: ScheduleGenerator
-   :members:
-   :undoc-members:
-   :private-members:

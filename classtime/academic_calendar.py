@@ -2,7 +2,7 @@
 from classtime.remote_db import RemoteDatabaseFactory
 from classtime.local_db import LocalDatabaseFactory
 from angular_flask.logging import logging
-logging = logging.getLogger(__name__)
+logging = logging.getLogger(__name__) # pylint: disable=C0103
 
 class AcademicCalendar(object):
     """Manages academic calendar data for a particular institution

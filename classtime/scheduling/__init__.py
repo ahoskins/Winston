@@ -1,2 +1,2 @@
 
-from .schedule_generator import ScheduleGenerator
+from .schedule_generator import generate_schedules
