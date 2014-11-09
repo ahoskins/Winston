@@ -1,7 +1,7 @@
 // Accordion Controller
 //
 
-coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', function($scope, $window, courseFactory, $timeout, detailFactory) {
+coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope) {
 
     // New, organized course object
     $scope.subjectBin = {};
@@ -129,13 +129,13 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 
     // Add course to schedule
     //
-    $scope.addedCourses = [];
+    $rootScope.addedCourses = [];
 
     $scope.addToSchedule = function (course) {
         // Only add if the course isn't already there
-        if ($scope.addedCourses.indexOf(course) === -1) {
-            $scope.addedCourses.push(course);
-            $window.alert($scope.addedCourses.length);
+        if ($rootScope.addedCourses.indexOf(course) === -1) {
+            $rootScope.addedCourses.push(course);
+            $window.alert($rootScope.addedCourses.length);
         }
     };
 
