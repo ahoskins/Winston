@@ -25,4 +25,6 @@ html {
 	width: 50%;
 	top: 5px;
 	padding-top: 10px;
+	height: 1000px;
+	position: fixed;
 }
