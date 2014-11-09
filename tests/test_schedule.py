@@ -1,5 +1,5 @@
 
-from classtime.schedule import Schedule
+from classtime.scheduling.schedule import Schedule
 
 def check_add_section(section, numblocks_expected):
     """
@@ -7,10 +7,9 @@ def check_add_section(section, numblocks_expected):
     - fills the expected number of schedule blocks, and
     - fills the correct schedule blocks
     """
-    timetable = Schedule()
-    timetable.add_section(section)
+    schedule = Schedule(section)
     numblocks = 0
-    for day in timetable.schedule:
+    for day in schedule.timetable:
         for block in day:
             if block is not Schedule.OPEN:
                 numblocks += 1

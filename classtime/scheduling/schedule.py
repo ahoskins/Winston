@@ -17,9 +17,9 @@ class Schedule(object):
     """Number of days in a week, and the letters representing each"""
 
     OPEN = -1
-    """Nothing schedule in this block"""
-    BUSY = -2
-    """This block is busy with a non-school activity"""
+    """Free time"""
+    BUSY = -3
+    """Busy with a non-school activity"""
     SYMBOLS = 'ABCDEFGHIJKLMNOPQRSTUVWx '
     """Symbols used for drawing a Schedule to the console"""
 

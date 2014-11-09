@@ -62,7 +62,7 @@ def generate_schedules(institution, schedule_params, num_requested):
         for available parameters.
     """
     if 'term' not in schedule_params:
-        logging.warning("schedule_params does not have 'term' field")
+        logging.warning("schedule_params is missing 'term' field")
     term = schedule_params.get('term', '1490')
     cal = classtime.get_calendar(institution)
     cal.select_current_term(term)
@@ -82,7 +82,8 @@ def _generate_schedules(cal, course_ids, busy_times, num_requested):
         Will only return valid schedules, even if that means returning
         less than the requested number.
 
-    :returns: best schedules, constrained by initial conditions
+    :returns: the best possible schedules, sorted by ScheduleScorer
+        scoring functions
     :rtype: list of :ref:`schedule objects <api-schedule-object>`
     """
     logging.info('Making schedules for courses {}'.format(course_ids))
@@ -115,5 +116,5 @@ def _generate_schedules(cal, course_ids, busy_times, num_requested):
             proc.join()
 
     candidates = [candidate for candidate in candidates
-                  if len(candidate.sections) == sections_chosen]
+                  if len(candidate.sections) == len(components)]
     return sorted(candidates, reverse=True)[:num_requested]
