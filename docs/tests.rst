@@ -53,7 +53,7 @@ On Mac, check out `nosegrowl2 <https://github.com/j4mie/nosegrowl2>`__::
 Let watchdog run the tests
 """"""""""""""""""""""""""
 
-[watchdog](https://github.com/gorakhargosh/watchdog) watches your files, and lets you take action based on what changed - in this case, run tests!::
+`watchdog <https://github.com/gorakhargosh/watchdog`__ watches your files and lets you take action based on what changed - in this case, run tests!::
 
 	install: $ pip install watchdog
 	use: $ watchmedo shell-command --patterns="*.py" --recursive --command='nosetests --with-notify'
