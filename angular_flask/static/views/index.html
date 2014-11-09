@@ -2,6 +2,7 @@
 <html data-ng-app="coreModule">
 <head>
 	<link rel="stylesheet" type="text/css" href="/static/styles/foundation.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/styles/stylesheets/general_foundicons.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/styles/style.css"/>
     <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.css"/>
 </head>
@@ -20,9 +21,12 @@
                     <accordion-group class="subject-accordion" heading="{{ subjectName }}" ng-click="renderCourses(subjectName)" data-ng-repeat="(subjectName, subjectObject) in facultyObject">
                         <accordion>
                             <accordion-group class="course-accordion" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject">
+                                <i class="foundicon-plus" ng-click="addToSchedule(singleCourse.course)"> Add</i><br>
                                 {{ description }}
                             </accordion-group>
+
                         </accordion>
+
                     </accordion-group>
                 </accordion>
             </accordion-group>

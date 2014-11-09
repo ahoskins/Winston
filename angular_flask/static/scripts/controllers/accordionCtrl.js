@@ -127,6 +127,18 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         $scope.subjects[subject] = 1;
     };
 
+    // Add course to schedule
+    //
+    $scope.addedCourses = [];
+
+    $scope.addToSchedule = function (course) {
+        // Only add if the course isn't already there
+        if ($scope.addedCourses.indexOf(course) === -1) {
+            $scope.addedCourses.push(course);
+            $window.alert($scope.addedCourses.length);
+        }
+    };
+
 }]);
 
 

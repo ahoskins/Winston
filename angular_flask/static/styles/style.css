@@ -5,6 +5,7 @@ html {
 
 .course-accordion {
 	width: 80%;
+	/*position: absolute;*/
 }
 
 .faculty-accordion {
@@ -20,7 +21,6 @@ html {
 }
 
 #cal {
-	position: absolute;
 	left: 50%;
 	width: 50%;
 	top: 5px;
@@ -28,3 +28,8 @@ html {
 	height: 1000px;
 	position: fixed;
 }
+
+.foundicon-right-arrow {
+	position: relative;
+}
+
