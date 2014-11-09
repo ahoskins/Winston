@@ -1,6 +1,11 @@
 
-from classtime.scheduling.schedule import Schedule
+import unittest
 
+from classtime.scheduling import Schedule
+
+class TestSchedule(unittest.TestCase):
+    @classmethod
+    
 def check_add_section(section, numblocks_expected):
     """
     Check that adding a given section to a new Schedule
