@@ -105,10 +105,10 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // On the click of a single course in the accordion
     //
     // Retrieves course details and displays it
+    $scope.description = '';
     $scope.loadMore = function (num) {
-        $scope.description = '';
         detailFactory.getDetails(num).
-        success(function (data, status, headers, config) {
+        success(function (data) {
             var result = angular.fromJson(data);
             $scope.description = result.courseDescription;
         })

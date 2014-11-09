@@ -1,7 +1,7 @@
 // Schedule Controller
 //
 
-coreModule.controller('scheduleCtrl', ['$scope', '$window', function($scope, $window) {
+coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', function($scope, $window, $rootScope) {
     // Event array
     $scope.events = [
         {title: 'All Day Event',start: new Date('Tue Nov 5 2014 09:00:00 GMT+0530 (IST)'),end: new Date('Tue Nov 5 2014 10:00:00 GMT+0530 (IST)')},
@@ -27,5 +27,6 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', function($scope, $wi
             hiddenDays: [0,6]
         }
     };
+
 
 }]);
