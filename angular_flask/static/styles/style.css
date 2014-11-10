@@ -23,7 +23,7 @@ html {
 #cal {
 	left: 50%;
 	width: 50%;
-	top: 5px;
+	top: 50px;
 	padding-top: 10px;
 	height: 1000px;
 	position: fixed;
@@ -31,5 +31,11 @@ html {
 
 .foundicon-right-arrow {
 	position: relative;
+}
+
+#get-classes {
+	position: fixed;
+	top: 5px;
+	right: 5px;
 }
 

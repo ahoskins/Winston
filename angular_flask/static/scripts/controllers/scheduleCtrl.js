@@ -1,7 +1,7 @@
 // Schedule Controller
 //
 
-coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', function($scope, $window, $rootScope) {
+coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', function($scope, $window, $rootScope, scheduleFactory) {
     // Event array
     $scope.events = [
         {title: 'All Day Event',start: new Date('Tue Nov 11 2014 09:00:00 MDT'),end: new Date('Tue Nov 11 2014 10:00:00 MDT')}
@@ -30,6 +30,21 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', functi
             allDayDefault: false
             //timezoneParam: 'local'
         }
+    };
+
+    var scheduleListing;
+
+    $scope.getSchedules = function () {
+        scheduleFactory.getSchedules($rootScope.addedCourses).
+        success(function (data) {
+            scheduleListing = angular.fromJson(data);
+
+            // Do we have the response??? Yes, we do.
+            $window.alert(scheduleListing.objects[0].sections[0].asString);
+        }).
+        error(function() {
+               $window.alert("error dude");
+            });
     };
 
 
