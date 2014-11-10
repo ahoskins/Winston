@@ -7,13 +7,14 @@ from angular_flask.logging import logging
 from angular_flask.core import api_manager, db
 from angular_flask.models import Institution, Term, Course, Section
 
+import classtime.institutions
 import classtime.scheduling as scheduling
 
 def fill_institutions(search_params=None):
     db.create_all()
     if Institution.query.first() is None:
-        config_file = os.path.join(os.path.dirname(__file__), '..',
-            'classtime/institutions/institutions.json')
+        config_file = os.path.join(classtime.institutions.CONFIG_FOLDER_PATH,
+            'institutions.json')
         with open(config_file, 'r') as config:
             config = json.loads(config.read())
         institutions = config.get('institutions')
