@@ -1,4 +1,7 @@
 
+from angular_flask.logging import logging
+logging = logging.getLogger(__name__) #pylint: disable=C0103
+
 from angular_flask.core import db
 from angular_flask.models import Term, Course, Section
 
@@ -57,7 +60,17 @@ class StandardLocalDatabase(object):
         self._model = Section
         return self
 
-    def exists(self, primary_key=None):
+    def use(self, datatype):
+        if 'term' in datatype:
+            self.terms()
+        elif 'course' in datatype:
+            self.courses()
+        elif 'section' in datatype:
+            self.sections()
+        else:
+            logging.error('Cannot find datatype <{}>'.format(datatype))
+
+    def exists(self, primary_key=None, datatype=None, **kwargs):
         """Checks whether an object exists with the given primary key. 
         If no primary key is given, checks if *any* object exists.
 
@@ -73,6 +86,12 @@ class StandardLocalDatabase(object):
         * local_db.terms().exists('1490')
         * local_db.sections().exists()
         """
+        if datatype is not None:
+            self.use(datatype)
+
+        if kwargs:
+            return self.query().filter_by(**kwargs).first() is not None
+
         if primary_key is None:
             return self.query().first() is not None
         else:

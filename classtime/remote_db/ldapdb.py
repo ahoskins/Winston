@@ -87,6 +87,9 @@ class RemoteLDAPDatabase(AbstractRemoteDatabase):
                             limit=options.get('limit'),
                             path_prefix=path_prefix)
 
+    def known_searches(self):
+        return self._saved_searches.keys()
+
     def _search(self, search_flt, attrs, limit=None, path_prefix=None):
         """
         Query this academic calendar for records matching the search filter.

@@ -65,7 +65,7 @@ def generate_schedules(institution, schedule_params, num_requested):
         logging.warning("schedule_params is missing 'term' field")
     term = schedule_params.get('term', '1490')
     cal = classtime.get_calendar(institution)
-    cal.select_current_term(term)
+    cal.select_active_term(term)
 
     if 'courses' not in schedule_params:
         logging.warning("schedule_params is missing 'courses' field")
@@ -86,9 +86,13 @@ def _generate_schedules(cal, course_ids, busy_times, num_requested):
         scoring functions
     :rtype: list of :ref:`schedule objects <api-schedule-object>`
     """
-    logging.info('Making schedules for courses {}'.format(course_ids))
+    logging.info('Finding schedules for courses {}'.format(course_ids))
 
-    components = cal.get_components_for_course_ids(course_ids)
+    components = list()
+    for course in course_ids:
+        for component in cal.get_components(course):
+            components.append(component)
+    components = sorted(components, key=len)
     candidates = [Schedule(busy_times=busy_times)]
     sections_chosen = 0
     for sections in components:
@@ -117,4 +121,6 @@ def _generate_schedules(cal, course_ids, busy_times, num_requested):
 
     candidates = [candidate for candidate in candidates
                   if len(candidate.sections) == len(components)]
+    if len(candidates) == 0:
+        logging.error('No schedules found')
     return sorted(candidates, reverse=True)[:num_requested]
