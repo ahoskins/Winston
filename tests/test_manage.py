@@ -1,4 +1,6 @@
 
+from __future__ import absolute_import
+
 import unittest
 
 import manage
@@ -12,6 +14,7 @@ class Arguments(object): # pylint: disable=R0903
 class TestManageDatabase(unittest.TestCase): # pylint: disable=R0904
     @classmethod
     def setup_class(cls):
+        
         manage.delete_db()
 
     @classmethod
