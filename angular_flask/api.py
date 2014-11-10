@@ -9,13 +9,6 @@ from angular_flask.models import Institution, Term, Course, Section
 
 import classtime.scheduling as scheduling
 
-# --------------------------------
-# General API calls
-# -> collection_name specifies the path used to access the API
-# -> eg, collection_name='terms' specifies that it can be called
-#        at /api/terms/
-# --------------------------------
-
 def fill_institutions(search_params=None):
     db.create_all()
     if Institution.query.first() is None:
@@ -72,8 +65,10 @@ def generate_schedules(result=None, search_params=None):
     result['page'] = 1
     result['total_pages'] = 1
 
+    NUM_SCHEDULES = 10
+
     institution = search_params.get('institution', 'ualberta')
-    schedules = scheduling.generate_schedules(institution, search_params, 10)
+    schedules = scheduling.generate_schedules(institution, search_params, NUM_SCHEDULES)
     result['num_results'] = len(schedules)
     result['objects'] = list()
     for schedule in schedules:
