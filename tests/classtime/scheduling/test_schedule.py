@@ -51,22 +51,8 @@ class TestSchedule(unittest.TestCase): #pylint: disable=R0904
             }
         ]
         for section in testcases:
-            self.assert_section_add(section,
+            assert_section_add(section,
                 section.get('expected'))
-
-    def assert_section_add(self, section, numblocks_expected): #pylint: disable=R0201
-        """
-        Check that adding a given section to a new Schedule
-        - fills the expected number of timetable blocks
-        """
-        schedule = Schedule()
-        schedule.add_section(section)
-        numblocks = 0
-        for day in schedule.timetable:
-            for block in day:
-                if block is not Schedule.OPEN:
-                    numblocks += 1
-        assert numblocks == numblocks_expected
 
     def test_busy_time_add(self):
         testcases = [
@@ -107,22 +93,8 @@ class TestSchedule(unittest.TestCase): #pylint: disable=R0904
             }
         ]
         for section in testcases:
-            self.assert_busy_time_add(section,
+            assert_busy_time_add(section,
                 section.get('expected'))
-
-    def assert_busy_time_add(self, busy_time, numblocks_expected): #pylint: disable=R0201
-        """
-        Check that adding a given busy_time to a new Schedule
-        - fills the expected number of timetable blocks
-        """
-        schedule = Schedule()
-        schedule.add_busy_time(busy_time)
-        numblocks = 0
-        for day in schedule.timetable:
-            for block in day:
-                if block is not Schedule.OPEN:
-                    numblocks += 1
-        assert numblocks == numblocks_expected
 
     def test_conflict_recognition(self): #pylint: disable=R0201
         testcases = [
@@ -197,20 +169,48 @@ class TestSchedule(unittest.TestCase): #pylint: disable=R0904
             }
         ]
         for scenario in testcases:
-            self.assert_conflict_recognition(scenario.get('sections'),
+            assert_conflict_recognition(scenario.get('sections'),
                 scenario.get('expected'))
 
-    def assert_conflict_recognition(self, sections, has_conflict): #pylint: disable=R0201
-        """
-        Assert that a list of sections has either:
-        - one or more conflicts, or
-        - no conflicts
-        """
-        schedule = Schedule()
-        for section in sections:
-            if schedule.conflicts(section):
-                assert has_conflict == True
-                return
-            else:
-                schedule.add_section(section)
-        assert has_conflict == False
+def assert_busy_time_add(busy_time, numblocks_expected):
+    """
+    Check that adding a given busy_time to a new Schedule
+    - fills the expected number of timetable blocks
+    """
+    schedule = Schedule()
+    schedule.add_busy_time(busy_time)
+    numblocks = 0
+    for day in schedule.timetable:
+        for block in day:
+            if block is not Schedule.OPEN:
+                numblocks += 1
+    assert numblocks == numblocks_expected
+
+def assert_section_add(section, numblocks_expected):
+    """
+    Check that adding a given section to a new Schedule
+    - fills the expected number of timetable blocks
+    """
+    schedule = Schedule()
+    schedule.add_section(section)
+    numblocks = 0
+    for day in schedule.timetable:
+        for block in day:
+            if block is not Schedule.OPEN:
+                numblocks += 1
+    assert numblocks == numblocks_expected
+
+def assert_conflict_recognition(sections, has_conflict):
+    """
+    Assert that a list of sections has either:
+    - one or more conflicts, or
+    - no conflicts
+    """
+    schedule = Schedule()
+    for section in sections:
+        if schedule.conflicts(section):
+            assert has_conflict == True
+            return
+        else:
+            schedule.add_section(section)
+    assert has_conflict == False

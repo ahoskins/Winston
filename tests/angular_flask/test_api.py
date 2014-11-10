@@ -29,19 +29,13 @@ class TestAPI(object):
             endpoint += querystring
         return json.loads(self.client.get(endpoint).data)
 
-    def assert_valid_response(self, response): #pylint: disable=R0201
-        assert response.get('num_results') is not None
-        assert response.get('objects') is not None
-        assert response.get('page') is not None
-        assert response.get('total_pages') is not None
-
     def test_institutions(self):
         response = self.get('/api/institutions')
-        self.assert_valid_response(response)
+        assert_valid_response(response)
 
     def test_terms(self):
         response = self.get('/api/terms')
-        self.assert_valid_response(response)
+        assert_valid_response(response)
 
     def test_terms_with_query(self):
         query = {
@@ -56,11 +50,11 @@ class TestAPI(object):
             }
         }
         response = self.get('/api/terms', query)
-        self.assert_valid_response(response)
+        assert_valid_response(response)
 
     def test_courses(self):
         response = self.get('/api/courses')
-        self.assert_valid_response(response)
+        assert_valid_response(response)
 
     def test_courses_with_query(self):
         filters = [
@@ -81,11 +75,11 @@ class TestAPI(object):
             }
         }
         response = self.get('/api/courses', query)
-        self.assert_valid_response(response)
+        assert_valid_response(response)
 
     def test_courses_min(self):
         response = self.get('/api/courses-min')
-        self.assert_valid_response(response)
+        assert_valid_response(response)
 
     def test_courses_min_with_query(self):
         filters = [
@@ -106,7 +100,7 @@ class TestAPI(object):
             }
         }
         response = self.get('/api/courses-min', query)
-        self.assert_valid_response(response)
+        assert_valid_response(response)
 
     def test_generate_schedules(self):
         queries = [
@@ -187,19 +181,25 @@ class TestAPI(object):
         ]
         for query in queries:
             response = self.get('/api/generate-schedules', query)
-            self.assert_valid_response(response)
+            assert_valid_response(response)
             schedules = response.get('objects')
-            yield self.assert_valid_schedules, schedules, query
+            yield assert_valid_schedules, schedules, query
 
-    def assert_valid_schedules(self, schedules, query): #pylint: disable=R0201
-        for schedule in schedules:
-            assert 'sections' in schedule
-            sections = schedule.get('sections')
-            assert len(sections) > 0
-            for section in sections:
-                assert section.get('institution') == query['q']['institution']
-                assert section.get('term') == query['q']['term']
+def assert_valid_response(response):
+    assert response.get('num_results') is not None
+    assert response.get('objects') is not None
+    assert response.get('page') is not None
+    assert response.get('total_pages') is not None
 
-                assert section.get('asString') is not None
-                assert section.get('course') in query['q']['courses']
-                assert section.get('component') is not None
+def assert_valid_schedules(schedules, query):
+    for schedule in schedules:
+        assert 'sections' in schedule
+        sections = schedule.get('sections')
+        assert len(sections) > 0
+        for section in sections:
+            assert section.get('institution') == query['q']['institution']
+            assert section.get('term') == query['q']['term']
+
+            assert section.get('asString') is not None
+            assert section.get('course') in query['q']['courses']
+            assert section.get('component') is not None
