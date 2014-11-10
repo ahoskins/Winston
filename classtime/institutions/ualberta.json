@@ -1,4 +1,5 @@
 {
+    "name" : "ualberta",
     "type" : "ldap",
     "server" : "directory.srv.ualberta.ca",
     "basedn" : "ou=calendar,dc=ualberta,dc=ca",
