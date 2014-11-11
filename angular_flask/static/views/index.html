@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html data-ng-app="coreModule">
 <head>
+    <!--Stylesheets-->
 	<link rel="stylesheet" type="text/css" href="/static/styles/foundation.min.css"/>
     <link rel="stylesheet" type="text/css" href="/static/styles/stylesheets/general_foundicons.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/styles/style.css"/>
     <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.css"/>
 </head>
 <body>
-
+    <!--Accordion: controlled by accordionCtrl.js-->
 	<div data-ng-controller="accordionCtrl">
 		Search By All:
 		<br>
@@ -15,18 +16,18 @@
 			<input type="search" id="searchBox" data-ng-model="searchBox" />
 		</div>
 		<br>
+
         <accordion>
             <accordion-group class="faculty-accordion" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText">
                 <accordion>
                     <accordion-group class="subject-accordion" heading="{{ subjectName }}" ng-click="renderCourses(subjectName)" data-ng-repeat="(subjectName, subjectObject) in facultyObject">
                         <accordion>
                             <accordion-group class="course-accordion" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject">
-                                <i class="foundicon-plus" ng-click="addToSchedule(singleCourse.course)"> Add</i><br>
+                                <a><i class="foundicon-plus" ng-click="addToSchedule(singleCourse.course)"> Add</i></a>
+                                <br>
                                 {{ description }}
                             </accordion-group>
-
                         </accordion>
-
                     </accordion-group>
                 </accordion>
             </accordion-group>
@@ -34,14 +35,15 @@
 
 	</div>
 
+    <!--Schedule: controlled by scheduleCtrl.js-->
     <div data-ng-controller="scheduleCtrl">
-        <button id="get-classes" ng-click="getSchedules()"></button>
+        <button id="get-classes" ng-click="getSchedules()">Gen-sched</button>
 
         <div id="cal" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div>
 
     </div>
 
-    <!--UI Calendar-->
+    <!--Core Dependencies-->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery-ui/ui/jquery-ui.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular/angular.min.js"></script>
@@ -49,10 +51,10 @@
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/fullcalendar/gcal.js"></script>
 
-    <!--Style-->
+    <!--MM-Foundation-->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-foundation/mm-foundation-tpls.min.js"></script>
 
-    <!--App.js-->
+    <!--Module: App.js-->
 	<script type="text/javascript" src="/static/scripts/app.js"></script>
 
     <!--Factories-->

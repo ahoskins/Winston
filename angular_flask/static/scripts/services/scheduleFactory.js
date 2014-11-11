@@ -13,7 +13,6 @@ coreModule.factory('scheduleFactory', function ($window, $http, $q) {
         requestParams["term"] = "1490";
         requestParams["courses"] = addedCourses;
 
-        $window.alert()
         return( $http({method: 'GET', url: '/api/generate-schedules?q=' + angular.toJson(requestParams) }) );
 
     };
