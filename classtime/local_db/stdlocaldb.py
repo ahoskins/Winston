@@ -97,7 +97,10 @@ class StandardLocalDatabase(object):
         else:
             return self.get(primary_key) is not None
 
-    def get(self, primary_key):
+    def get(self, primary_key, datatype=None):
+        if datatype is not None:
+            self.use(datatype)
+        
         filter_dict = {
             primary_key_from_model(self._model): primary_key
         }

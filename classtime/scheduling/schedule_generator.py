@@ -1,12 +1,12 @@
 
 import multiprocessing
-import classtime
 
 from angular_flask.logging import logging
 logging = logging.getLogger(__name__) # pylint: disable=C0103
 
-import heapq
+import classtime
 
+import heapq
 from .schedule import Schedule
 
 CANDIDATE_POOL_SIZE = 120
@@ -52,7 +52,7 @@ def _generate_schedules(cal, course_ids, busy_times, num_requested):
     """
     logging.info('Finding schedules for courses {}'.format(course_ids))
 
-    components = _get_components(cal, course_ids)
+    components = cal.get_components(course_ids)
     components = sorted(components, key=len)
 
     candidates = [Schedule(busy_times=busy_times)]
@@ -70,39 +70,50 @@ def _generate_schedules(cal, course_ids, busy_times, num_requested):
         logging.error('No schedules found')
     return sorted(candidates, reverse=True)[:num_requested]
 
-def _get_components(cal, course_ids):
-    """Get a list of components which are present in these course ids"""
-    out_q = multiprocessing.Queue()
-    procs = list()
-    for course_id in course_ids:
-        proc = multiprocessing.Process(
-            target=_put_components_on_queue,
-            args=(cal, course_id, out_q))
-        procs.append(proc)
-        proc.start()
-    components = list()
-    for _ in range(len(procs)):
-        components.extend(out_q.get())
-    for proc in procs:
-        proc.join()
-    return components
-
-def _put_components_on_queue(cal, course_id, out_q):
-    """Put this course's components onto the `out_q`
-
-    Should only put a single object onto the queue. Likely,
-    this will be a list of (lists of sections)
-
-    :param AcademicCalendar cal: the calendar to read from
-    :param str course_id: :ref:`6-digit course identifier 
-        <6-digit-course-identifier>`
-    :param multiprocessing.Queue out_q: queue to put the
-        results on
-    """
-    out_q.put([component        # generator, not function
-               for component in cal.get_components(course_id)])
-
 def _add_component(candidates, component, pace):
+    """
+    Schedule generation algorithm
+    1. Take a candidate schedule.
+    2. Make a new candidate schedule by adding a candidate section ("A2")
+        from the given component ("CHEM 101 LEC").
+    3. If the new candidate schedule has a direct conflict, throw it out
+    4. Do (2,3) for all available sections in the component.
+    5. Do (4) for all candidate schedules.
+    6. Do battle royale with the schedules to cull the weak.
+        Return the victors.
+
+    7. Add the next component using (1->6).
+    8. Continue until all components are scheduled.
+    """
+    def _candidate_battle_royale(candidates, component, pace, heap_size, out_q):
+        """Put the `heap_size` best candidates onto the `out_q`
+
+        :param list candidates: candidate schedules
+        :param list component: sections to consider. Exactly one is added to any
+            given schedule.
+        :param int pace: the number of components which should already have been
+            added to a schedule. If a schedule has less than this, it can never
+            be a complete schedule. Therefore, time should not be wasted on it.
+        :param int heap_size: number of candidate schedules which should escape
+            alive
+        :param multiprocessing.Queue out_q: a multiprocessing Queue to put 
+            results onto.
+
+        :returns: the best schedules
+        :rtype: list of schedules
+        """
+        for candidate in candidates[:]:
+            if _is_hopeless(candidate, pace):
+                continue
+            for section in component:
+                if candidate.conflicts(section):
+                    continue
+                _add_candidates(candidates,
+                    candidate.clone().add_section(section),
+                    heap_size)
+        out_q.put(candidates)
+        return
+
     out_q = multiprocessing.Queue()
     procs = list()
     for chunk in _chunks(candidates):
@@ -119,34 +130,6 @@ def _add_component(candidates, component, pace):
     for proc in procs:
         proc.join()
     return candidates
-
-def _candidate_battle_royale(candidates, component, pace, heap_size, out_q):
-    """Put the `heap_size` best candidates onto the `out_q`
-
-    :param list candidates: candidate schedules
-    :param list component: sections to consider. Exactly one is added to any
-        given schedule.
-    :param int pace: the number of components which should already have been
-        added to a schedule. If a schedule has less than this, it can never
-        be a complete schedule. Therefore, time should not be wasted on it.
-    :param int heap_size: number of candidate schedules which should escape
-        alive
-    :param multiprocessing.Queue out_q: a multiprocessing Queue to put results
-        onto.
-
-    :returns: the best schedules
-    :rtype: list of schedules
-    """
-    for candidate in candidates[:]:
-        if _is_hopeless(candidate, pace):
-            continue
-        for section in component:
-            if candidate.conflicts(section):
-                continue
-            _add_candidates(candidates,
-                candidate.clone().add_section(section),
-                heap_size)
-    out_q.put(candidates)
 
 def _add_candidates(candidates, candidate, heap_size):
     discard = heapq.heapreplace(candidates, candidate)

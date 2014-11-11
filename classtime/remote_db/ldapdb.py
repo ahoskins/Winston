@@ -21,14 +21,14 @@ class RemoteLDAPDatabase(AbstractRemoteDatabase):
         """Connect to the LDAP server
         """
         try:
-            self._client.simple_bind_s()
+            self._client.simple_bind()
         except ldap.LDAPError:
             raise
 
     def disconnect(self):
         """Disconnect from the LDAP server
         """
-        self._client.unbind_s()
+        self._client.unbind()
 
     def save_search(self, name, search_flt, attrs, limit=None, path_prefix=None):
         """Save a search for later, and name it
@@ -51,6 +51,9 @@ class RemoteLDAPDatabase(AbstractRemoteDatabase):
             'limit'      : limit,
             'path_prefix': path_prefix
             }
+
+    def known_searches(self):
+        return self._saved_searches.keys()
 
     def search(self, name, limit=None, term=None, course=None, class_=None):
         """Perform a saved search, and return the result
@@ -87,9 +90,6 @@ class RemoteLDAPDatabase(AbstractRemoteDatabase):
                             limit=options.get('limit'),
                             path_prefix=path_prefix)
 
-    def known_searches(self):
-        return self._saved_searches.keys()
-
     def _search(self, search_flt, attrs, limit=None, path_prefix=None):
         """
         Query this academic calendar for records matching the search filter.
@@ -105,10 +105,10 @@ class RemoteLDAPDatabase(AbstractRemoteDatabase):
         path -- extra LDAP dn: is prepended to this object's basedn
               ie the LDAP directory to look from relative to the root
         """
-        if limit == None:
+        if limit is None:
             limit = float('inf')
         
-        if path_prefix == None:
+        if path_prefix is None:
             path = self._basedn
         else:
             path = '{}{}'.format(path_prefix, self._basedn)
@@ -133,17 +133,114 @@ class RemoteLDAPDatabase(AbstractRemoteDatabase):
             pages_retrieved += 1
             _, result_data, msgid, serverctrls = self._client.result3(msgid)
             page_control.cookie = serverctrls[0].cookie
-            # LDAP returns a list of 2-element lists. The 0th element
-            # is the dn, 1st element is the attribute dict
-            result_data = [i[1] for i in result_data]
             results += extract_results_from_ldap_data(result_data)
         return results
 
+    def search_multiple(self, names, extras):
+        """Make many searches simultaneously(ish). Will return a hard capped
+        maximum of `RemoteLDAPDatabase.PAGE_SIZE` records. As of this writing,
+        that is 300.
+
+        Maintains order
+
+        The hard cap is because paginated LDAP requests cannot be pipelined
+        since their results must be read before doing the next step.
+
+        :param list(str) searches: each str is a named saved search
+        :param list(dict) extras: each dict is extra config for a corresponding
+            search ::
+
+                extras := [extra, extra, ...] (same len as names)
+
+                extra := {
+                    "limit": None,
+                    "term": <4-digit-term-identifier>,
+                    "course": <6-digit-course-identifier>,
+                    "class_": <5-digit-section-identifier>
+                }
+
+            All fields are optional, but every search must have a corresponding
+            ``extra`` dict, even if it is empty.
+        :returns: results of each search
+        :rtype: list(dict)
+        """
+        promises = list()
+        for name, extra in zip(names, extras):
+            promises.append(self._promise_to_search(name, extra))
+
+        results = list()
+        for promise in promises:
+            results.append(self._get_results_from_promise(promise))
+
+        return results
+
+    def _promise_to_search(self, name, extra):
+        if name not in self._saved_searches.keys():
+            raise ValueError('Saved search "{}" does not exist'.format(name))
+        options = self._saved_searches.get(name)
+
+        path_prefix = ''
+        if 'limit' in extra:
+            options['limit'] = extra['limit']
+        if 'class_' in extra:
+            path_prefix += 'class={},'.format(extra['class_'])
+        if 'course' in extra:
+            path_prefix += 'course={},'.format(extra['course'])
+        if 'term' in extra:
+            path_prefix += 'term={},'.format(extra['term'])
+
+        def _get_promise(self, search_flt, attrs, limit=None, path_prefix=None):
+            if limit is None:
+                limit = float('inf')
+
+            if path_prefix is None:
+                path = self._basedn
+            else:
+                path = '{}{}'.format(path_prefix, self._basedn)
+
+            try:
+                promise = self._client.search(
+                    path,
+                    ldap.SCOPE_ONELEVEL,
+                    filterstr=search_flt,
+                    attrlist=attrs)
+            except:
+                raise
+            else:
+                return promise
+
+        return _get_promise(self,
+            search_flt=options.get('search_flt'),
+            attrs=options.get('attrs'),
+            limit=options.get('limit'),
+            path_prefix=path_prefix)
+
+    def _get_results_from_promise(self, promise):
+        _, result_data = self._client.result(promise)
+        return extract_results_from_ldap_data(result_data)
+
 def extract_results_from_ldap_data(data):
-    """If you think you want to change this, you're probably
-    looking in the wrong place. READ-ONLY"""
-    # Each key's value is a single-element list.
-    # This pulls the value out of the list.
+    """
+    LDAP returns a list of 2-element lists::
+
+      data := [[data, attrs], [data, attrs], ..]
+
+    attrs is a dictionary mapping:
+
+    ``attribute names -> [attribute value, attribute value, ..]``
+
+    However, in every case used here, there is only one value
+    in the values list.
+
+    Each attribute value is encoded in utf-8, and must be
+    decoded into python-default unicode.
+
+    Example usage::
+
+    result_type, result_data = <boundldapclient>.result(msgid)
+    assert result_type == ldap.RES_SEARCH_RESULT
+    return extract_results_from_ldap_data(result_data)
+    """
     return [{k:v[0].decode('utf-8')
-            for k, v in d.items()}
+            for k, v in d[1].items()}
             for d in data]
