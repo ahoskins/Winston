@@ -140,6 +140,8 @@ class RemoteLDAPDatabase(AbstractRemoteDatabase):
         return results
 
 def extract_results_from_ldap_data(data):
+    """If you think you want to change this, you're probably
+    looking in the wrong place. READ-ONLY"""
     # Each key's value is a single-element list.
     # This pulls the value out of the list.
     return [{k:v[0].decode('utf-8')
