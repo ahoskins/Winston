@@ -52,7 +52,7 @@ class RemoteLDAPDatabase(AbstractRemoteDatabase):
             'path_prefix': path_prefix
             }
 
-    def search(self, name, term=None, course=None, class_=None):
+    def search(self, name, limit=None, term=None, course=None, class_=None):
         """Perform a saved search, and return the result
 
         :param str name: the name of the search
@@ -73,6 +73,8 @@ class RemoteLDAPDatabase(AbstractRemoteDatabase):
         options = self._saved_searches.get(name)
         
         path_prefix = ''
+        if limit is not None:
+            options['limit'] = limit
         if class_ is not None:
             path_prefix += 'class={},'.format(class_)
         if course is not None:

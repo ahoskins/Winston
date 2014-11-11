@@ -31,7 +31,7 @@ class AbstractRemoteDatabase(object):
         """
         raise NotImplementedError()
 
-    def search(self, name, **kwargs):
+    def search(self, name, limit=None, **kwargs):
         """Search the database using a saved search
 
         :param str name: name of the saved search
@@ -39,7 +39,7 @@ class AbstractRemoteDatabase(object):
         """
         raise NotImplementedError()
 
-    def _search(self, *args, **kwargs):
+    def _search(self, limit=None, *args, **kwargs):
         """Internal search method - this actually *does* the searching.
 
         :py:func:`search` should call this method, passing

@@ -1,7 +1,9 @@
 
 import os
 import json
+
 from .ldapdb import RemoteLDAPDatabase
+import classtime.institutions
 
 class RemoteDatabaseFactory(object):
     @staticmethod
@@ -15,8 +17,8 @@ class RemoteDatabaseFactory(object):
         all information required to create the type of 
         AbstractRemoteDatabase that the specified institution uses
         """
-        config_file = os.path.join(os.path.dirname(__file__), '..', # '..' -> up one level
-            'institutions/{}.json'.format(institution))
+        config_file = os.path.join(classtime.institutions.CONFIG_FOLDER_PATH,
+            '{institution}.json'.format(institution=institution))
         with open(config_file, 'r') as config:
             config = json.loads(config.read())
 

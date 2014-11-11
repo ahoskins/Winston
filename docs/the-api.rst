@@ -238,24 +238,24 @@ Request
 
 ::
  
- GET localhost:5000/api/generate-schedules?q=<request-parameters>``
+ GET localhost:5000/api/generate-schedules?q=<q>
 
 ::
 
- request-parameters = {
-                          "institution": institution,
-	                      "term": term,
-	                      "courses": [course, course2, .., courseN]
-	                      "busy-times": [{
-	                          "day": "[MTWRF]{1,5}"
-	                          "startTime": "##:## [AP]M",
-	                          "endTime": "##:## [AP]M"
-	                        },
-	                        { <busytime object_2> },
-	                        ...
-	                        { <busytime object_n> }
-	                      ]
-	                  }
+ q = {
+      "institution": institution,
+      "term": term,
+      "courses": [course, course2, .., courseN]
+      "busy-times": [{
+          "day": "[MTWRF]{1,5}"
+          "startTime": "##:## [AP]M",
+          "endTime": "##:## [AP]M"
+        },
+        { <busytime object_2> },
+        ...
+        { <busytime object_n> }
+      ]
+ }
 
 :institution: :ref:`unique institution identifier <institution-identifier>`
 :term: :ref:`4-digit unique term identifier <4-digit-term-identifier>`
