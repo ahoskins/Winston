@@ -64,9 +64,16 @@ class AcademicCalendar(object):
             courses = self._fetch(term=self._term)
             self._save(courses)
 
-    def get_components(self, course):
-        self.save_sections(course)
+    def get_components(self, courses):
+        self._fetch_and_save_sections(courses)
 
+        components = list()
+        for course in courses:
+            for component in self._get_components_single(course):
+                components.append(component)
+        return components
+
+    def _get_components_single(self, course):
         course_data = self._local_db.courses().get(course).to_dict()
         section_query = self._local_db.sections() \
                                       .query() \
@@ -78,8 +85,9 @@ class AcademicCalendar(object):
                 .order_by(self._local_db.Section.startTime.desc()) \
                 .order_by(self._local_db.Section.endTime.desc()) \
                 .all()
-            logging.debug('Found {} {}s for {}'.format(
-                len(section_models), component, course))
+            if len(section_models) > 0:
+                logging.debug('{}:{} - {} found'.format(
+                    course, component, len(section_models)))
             sections = list()
             for section_model in section_models:
                 section = dict(course_data)
@@ -89,30 +97,111 @@ class AcademicCalendar(object):
             if len(component) > 0:
                 yield component
 
-    def save_sections(self, course):
-        self.use('sections')
-        if self._has_any(course=course):
-            logging.debug('Not fetching <{}> course <{}> sections {}'.format(
-                self._institution, course, '(already in local db)'))
+    def _fetch_and_save_sections(self, courses):
+        if len(courses) <= 0:
             return
-        sections = self._fetch(term=self._term,
-                               course=course)
+        for course in courses:
+            base_course_info = self._local_db.courses().get(course).to_dict()
 
-        self.use('classtimes')
-        for section in sections:
-            # class is a reserved keyword in python, so
-            # instead class_ is used for the field in 
-            # the Section sqlalchemy model
-            section['class_'] = section.get('class')
-            section.pop('class', None)
+            sections = list()
+            self.use('sections')
+            if self._has_any(term=self._term,
+                                 course=course):
+                continue
 
-            classtimes = self._fetch(term=self._term,
-                                     course=course,
-                                     class_=section.get('class_'))
-            _apply_classtimes(section, classtimes)
+            sections_fetched = self._fetch(term=self._term,
+                                   course=course)
+            for section in sections_fetched:
+                _section = dict(base_course_info)
+                _section.update(section)
+                _section['class_'] = section.get('class')
+                sections.append(_section)
 
-        self.use('sections')
-        self._save(sections)
+            self.use('classtimes')
+            classtimes_of_each = self._fetch_multiple(extras=[{
+                'term': section.get('term'),
+                'course': section.get('course'),
+                'class_': section.get('class')
+            } for section in sections])
+
+            for section, classtimes in zip(sections, classtimes_of_each):
+                _apply_classtimes(section, classtimes)
+
+            self.use('sections')
+            self._save(sections, update=True)
+
+    def _fetch(self, datatype=None, **kwargs):
+        if datatype is None:
+            datatype = self._datatype
+        if datatype not in self._remote_db.known_searches():
+            logging.error('AcademicCalendar <{}> has no datatype <{}>'.format(
+                self._institution, datatype))
+            return False
+        logging.debug("Fetching single <{}> <{}> ({}) from remote db".format(
+            self._institution, datatype, kwargs))
+        return self._remote_db.search(datatype, **kwargs)
+
+    def _fetch_multiple(self, datatype=None, extras=None):
+        if datatype is None:
+            datatype = self._datatype
+        if extras is None:
+            extras = list()
+
+        if datatype not in self._remote_db.known_searches():
+            logging.error('AcademicCalendar <{}> has no datatype <{}>'.format(
+                self._institution, datatype))
+            return False
+        logging.debug("Fetching <{}> <{}> <{}> from remote db".format(
+            len(extras), self._institution, datatype))
+
+        return self._remote_db.search_multiple([datatype]*len(extras), extras)
+
+    def _save(self, objects, datatype=None, primary_key=None, update=False):
+        if len(objects) <= 0:
+            return
+        if datatype is None:
+            datatype = self._datatype
+        if primary_key is None:
+            primary_key = self._primary_key
+
+        def log_progress(i, num):
+            def report(i, num):
+                logging.debug('...{}%\t({}/{})'.format(i*100/num, i, num))
+            if i == num:
+                report(i, num)
+                return
+            if num > 5 and i % (num/5) == 0:
+                report(i, num)
+                return
+
+        logging.debug("Saving some <{}> <{}> to local db".format(
+            self._institution, datatype))
+        self._local_db.use(datatype)
+        for i, obj in enumerate(objects, start=1):
+            if not self._has_any(datatype=datatype,
+                                 primary_key=obj.get(primary_key)):
+                self._local_db.add(obj)
+            elif update:
+                db_obj = self._local_db.get(datatype=datatype,
+                                            primary_key=obj.get(primary_key))
+                for attr, value in obj.iteritems():
+                    setattr(db_obj, attr, value)
+            log_progress(i, len(objects))
+        try:
+            self._local_db.commit()
+        except:
+            logging.error("Failed to save <{}> <{}> to local_db".format(
+                self._institution, datatype))
+        else:
+            logging.info("Saved some <{}> <{}> to local_db".format(
+                self._institution, datatype))
+
+    def _has_any(self, datatype=None, primary_key=None, **kwargs):
+        if datatype is None:
+            datatype = self._datatype
+        return self._local_db.exists(datatype=datatype,
+                                     primary_key=primary_key,
+                                     **kwargs)
 
     def use(self, datatype):
         if 'term' in datatype:
@@ -125,49 +214,6 @@ class AcademicCalendar(object):
             self._use_classtimes()
         else:
             logging.error('Cannot find datatype <{}>'.format(datatype))
-
-    def _has_any(self, datatype=None, primary_key=None, **kwargs):
-        if datatype is None:
-            datatype = self._datatype
-        return self._local_db.exists(datatype=datatype,
-                                     primary_key=primary_key,
-                                     **kwargs)
-
-    def _fetch(self, datatype=None, **kwargs):
-        if datatype is None:
-            datatype = self._datatype
-        if datatype not in self._remote_db.known_searches():
-            logging.error('AcademicCalendar <{}> has no datatype <{}>'.format(
-                self._institution, datatype))
-            return False
-        logging.debug("Fetching <{}> <{}> <{}> from remote db".format(
-            self._institution, datatype, kwargs))
-        return self._remote_db.search(datatype, **kwargs)
-
-    def _save(self, objects, datatype=None, primary_key=None):
-        if datatype is None:
-            datatype = self._datatype
-        if primary_key is None:
-            primary_key = self._primary_key
-
-        logging.debug("Saving some <{}> <{}> to local db".format(
-            self._institution, datatype))
-        self._local_db.use(datatype)
-        for i, obj in enumerate(objects, start=1):
-            if not self._has_any(datatype=datatype,
-                                 primary_key=obj.get(primary_key)):
-                if i % len(objects)/5 == 0 or i == len(objects):
-                    logging.debug('...{}%\t({}/{})'.format(
-                        i*100/len(objects), i, len(objects)))
-                self._local_db.add(obj)
-        try:
-            self._local_db.commit()
-        except:
-            logging.error("Failed to add <{}> <{}> to local_db".format(
-                self._institution, datatype))
-        else:
-            logging.info("Saved some <{}> <{}> to local_db".format(
-                self._institution, datatype))
 
     def _use_terms(self):
         self._datatype = 'terms'
@@ -226,6 +272,10 @@ def _condense_similar_sections(sections):
     return sections
 
 def _apply_classtimes(section, classtimes):
+    section['asString'] = '{} {} {}'.format(
+        section.get('asString'),
+        section.get('component'),
+        section.get('section'))
     if len(classtimes) == 0:
         logging.warning('{} has zero timetable objects'\
             .format(section.get('asString')))
@@ -233,8 +283,9 @@ def _apply_classtimes(section, classtimes):
     elif len(classtimes) == 1:
         classtime = classtimes[0]
     else:
-        logging.warning('{} has multiple timetable objects'\
-            .format(section.get('asString')))
+        # --> too noisy while debugging other things
+        # logging.warning('{} has multiple timetable objects'.format(
+        #     section.get('asString'))
         classtime = classtimes[0]
     section['day'] = classtime.get('day')
     section['location'] = classtime.get('location')
