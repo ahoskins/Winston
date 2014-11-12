@@ -48,4 +48,6 @@ class Section(db.Model):
                 institution=self.institution)
 
     def to_dict(self):
-        return dict((col, getattr(self, col)) for col in self.__table__.columns.keys())
+        d = dict((col, getattr(self, col)) for col in self.__table__.columns.keys())
+        d['class'] = d.get('class_')
+        return d

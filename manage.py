@@ -20,7 +20,7 @@ def seed_db(args):
     term = 1490
     if args.term:
         term = args.term
-    cal.select_current_term(term)
+    cal.select_active_term(term)
     logging.info('DB seeded with term {}'.format(term))
 
 def refresh_db(args):

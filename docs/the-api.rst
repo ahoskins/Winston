@@ -372,15 +372,6 @@ Time format
 Similar sections
 ----------------      
 
-Sections are similar if they have: 
-- equal ``course``
-- equal ``component``
-- equal ``startTime``
-- equal ``endTime``
+Sections are *similar* if they have equal ``course``, ``component``, and ``startTime`` and ``endTime``.
 
-Importantly, they may have:
-- varying ``section``
-- varying ``campus``
-- varying ``capacity``
-- varying ``location``
-- varying ``instructorUid``
+Importantly, they may have varying ``section``, ``instructorUid``,  ``capacity``, and ``location``.

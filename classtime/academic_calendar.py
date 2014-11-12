@@ -1,8 +1,9 @@
 
-from classtime.remote_db import RemoteDatabaseFactory
-from classtime.local_db import LocalDatabaseFactory
 from angular_flask.logging import logging
 logging = logging.getLogger(__name__) # pylint: disable=C0103
+
+from classtime.remote_db import RemoteDatabaseFactory
+from classtime.local_db import LocalDatabaseFactory
 
 class AcademicCalendar(object):
     """Manages academic calendar data for a particular institution
@@ -18,6 +19,9 @@ class AcademicCalendar(object):
 
         See 'classtime/institutions/ualberta.json' for an example.
         """
+        self._institution = institution
+        self._datatype = 'terms'
+        self._primary_key = 'term'
         try:
             self._remote_db = RemoteDatabaseFactory.build(institution)
             self._remote_db.connect()
@@ -32,7 +36,7 @@ class AcademicCalendar(object):
 
         self._term = None
 
-    def select_current_term(self, termid):
+    def select_active_term(self, termid):
         """Set the calendar to a given term
 
         :param str termid: :ref:`4-digit term identifier
@@ -45,146 +49,191 @@ class AcademicCalendar(object):
         it will be filled with all courses for this term
         from the remote db.
         """
-        if not self._local_db.terms().exists():
-            self._populate_terms()
-
-        if not self._local_db.terms().exists(termid):
+        self.use('terms')
+        if not self._has_any():
+            terms = self._fetch()
+            self._save(terms)
+        if not self._has_any(primary_key=termid):
             logging.warning('Invalid term {} selected'.format(termid))
             return
         self._term = termid
-        self._populate_courses_for_cur_term()
 
-    def get_components_for_course_ids(self, course_ids):
-        """Get components of all given courses
+        self.use('courses')
+        if not self._has_any():
+            logging.info('Fetching courses for term {}'.format(self._term))
+            courses = self._fetch(term=self._term)
+            self._save(courses)
 
-        :param course_ids: list of :ref:`6-digit course identifiers
-            <6-digit-course-identifier>`
-        :type course_ids: list of strings
+    def get_components(self, courses):
+        self._fetch_and_save_sections(courses)
 
-        :returns: list of components, where each element
-            is a list of all sections available for that
-            particular component. A component is a LEC,
-            LAB, SEM, etc. of a given course. The list is
-            ordered ascending by the number of sections in
-            each component. 
-        :rtype: list
-        """
-        components = []
-        for course_id in course_ids:
-            self._populate_sections_for_course(course_id)
-            base_section = self._local_db.courses().get(course_id).to_dict()
-            all_sections = self._local_db.sections() \
-                                         .query() \
-                                         .filter_by(course=course_id)
-            for component in ['LEC', 'LAB', 'SEM']:
-                section_models = all_sections \
-                    .filter_by(component=component) \
-                    .order_by(self._local_db.Section.day.desc()) \
-                    .order_by(self._local_db.Section.startTime.desc()) \
-                    .order_by(self._local_db.Section.endTime.desc()) \
-                    .all()
-                sections = []
-                for section_model in section_models:
-                    section = dict(base_section)
-                    section.update(section_model.to_dict())
-                    sections.append(section)
-                sections = _condense_similar_sections(sections)
+        components = list()
+        for course in courses:
+            for component in self._get_components_single(course):
+                components.append(component)
+        return components
 
-                if len(sections) > 0:
-                    components.append(sections)
-        return sorted(components, key=len)
+    def _get_components_single(self, course):
+        course_data = self._local_db.courses().get(course).to_dict()
+        section_query = self._local_db.sections() \
+                                      .query() \
+                                      .filter_by(course=course)
+        for component in ['LEC', 'LAB', 'SEM']:
+            section_models = section_query \
+                .filter_by(component=component) \
+                .order_by(self._local_db.Section.day.desc()) \
+                .order_by(self._local_db.Section.startTime.desc()) \
+                .order_by(self._local_db.Section.endTime.desc()) \
+                .all()
+            if len(section_models) > 0:
+                logging.debug('{}:{} - {} found'.format(
+                    course, component, len(section_models)))
+            sections = list()
+            for section_model in section_models:
+                section = dict(course_data)
+                section.update(section_model.to_dict())
+                sections.append(section)
+            component = _condense_similar_sections(sections)
+            if len(component) > 0:
+                yield component
 
-    def _populate_terms(self):
-        """Fill the local db with terms
-        """
-        if self._local_db.terms().exists():
+    def _fetch_and_save_sections(self, courses):
+        if len(courses) <= 0:
             return
+        for course in courses:
+            base_course_info = self._local_db.courses().get(course).to_dict()
 
-        all_terms = self._remote_db.search('terms')
-        for term in all_terms:
-            if not self._local_db.terms().exists(term.get('term')):
-                self._local_db.terms().add(term)
+            sections = list()
+            self.use('sections')
+            if self._has_any(term=self._term,
+                                 course=course):
+                continue
+
+            sections_fetched = self._fetch(term=self._term,
+                                   course=course)
+            for section in sections_fetched:
+                _section = dict(base_course_info)
+                _section.update(section)
+                _section['class_'] = section.get('class')
+                sections.append(_section)
+
+            self.use('classtimes')
+            classtimes_of_each = self._fetch_multiple(extras=[{
+                'term': section.get('term'),
+                'course': section.get('course'),
+                'class_': section.get('class')
+            } for section in sections])
+
+            for section, classtimes in zip(sections, classtimes_of_each):
+                _apply_classtimes(section, classtimes)
+
+            self.use('sections')
+            self._save(sections, update=True)
+
+    def _fetch(self, datatype=None, **kwargs):
+        if datatype is None:
+            datatype = self._datatype
+        if datatype not in self._remote_db.known_searches():
+            logging.error('AcademicCalendar <{}> has no datatype <{}>'.format(
+                self._institution, datatype))
+            return False
+        logging.debug("Fetching single <{}> <{}> ({}) from remote db".format(
+            self._institution, datatype, kwargs))
+        return self._remote_db.search(datatype, **kwargs)
+
+    def _fetch_multiple(self, datatype=None, extras=None):
+        if datatype is None:
+            datatype = self._datatype
+        if extras is None:
+            extras = list()
+
+        if datatype not in self._remote_db.known_searches():
+            logging.error('AcademicCalendar <{}> has no datatype <{}>'.format(
+                self._institution, datatype))
+            return False
+        logging.debug("Fetching <{}> <{}> <{}> from remote db".format(
+            len(extras), self._institution, datatype))
+
+        return self._remote_db.search_multiple([datatype]*len(extras), extras)
+
+    def _save(self, objects, datatype=None, primary_key=None, update=False):
+        if len(objects) <= 0:
+            return
+        if datatype is None:
+            datatype = self._datatype
+        if primary_key is None:
+            primary_key = self._primary_key
+
+        def log_progress(i, num):
+            def report(i, num):
+                logging.debug('...{}%\t({}/{})'.format(i*100/num, i, num))
+            if i == num:
+                report(i, num)
+                return
+            if num > 5 and i % (num/5) == 0:
+                report(i, num)
+                return
+
+        logging.debug("Saving some <{}> <{}> to local db".format(
+            self._institution, datatype))
+        self._local_db.use(datatype)
+        for i, obj in enumerate(objects, start=1):
+            if not self._has_any(datatype=datatype,
+                                 primary_key=obj.get(primary_key)):
+                self._local_db.add(obj)
+            elif update:
+                db_obj = self._local_db.get(datatype=datatype,
+                                            primary_key=obj.get(primary_key))
+                for attr, value in obj.iteritems():
+                    setattr(db_obj, attr, value)
+            log_progress(i, len(objects))
         try:
             self._local_db.commit()
         except:
-            logging.error('Terms failed to add to local_db')
+            logging.error("Failed to save <{}> <{}> to local_db".format(
+                self._institution, datatype))
         else:
-            logging.info('Terms successfully populated')
+            logging.info("Saved some <{}> <{}> to local_db".format(
+                self._institution, datatype))
 
-    def _populate_courses_for_cur_term(self):
-        """Fill the local db with courses in the current term
+    def _has_any(self, datatype=None, primary_key=None, **kwargs):
+        if datatype is None:
+            datatype = self._datatype
+        return self._local_db.exists(datatype=datatype,
+                                     primary_key=primary_key,
+                                     **kwargs)
 
-        Prerequisite:
-          Must have set the current term with select_current_term()
-        """
-        if self._term is None:
-            raise Exception('Must select a term before looking for courses!')
-        
-        if self._local_db.courses().exists():
-            return
+    def use(self, datatype):
+        if 'term' in datatype:
+            self._use_terms()
+        elif 'course' in datatype:
+            self._use_courses()
+        elif 'section' in datatype:
+            self._use_sections()
+        elif 'classtime' in datatype:
+            self._use_classtimes()
+        else:
+            logging.error('Cannot find datatype <{}>'.format(datatype))
 
-        logging.info('Populating courses for term {}'.format(self._term))
-        logging.debug('Fetching courses from remote server...')
-        all_courses = self._remote_db.search('courses',
-                                             term=self._term)
-        logging.debug('...fetched')
-        logging.debug('Adding courses to local database...')
-        for i, course in enumerate(all_courses, start=1):
-            if not self._local_db.courses().get(course.get('course')):
-                if i % 500 == 0 or i == len(all_courses):
-                    logging.debug('{}%\t({}/{})'.format(
-                        i*100/len(all_courses), i, len(all_courses)))
-                self._local_db.courses().add(course)
-        try:
-            self._local_db.commit()
-        except:
-            logging.error('Failed to add courses to database for'\
-                +'term={}'.format(self._term))
+    def _use_terms(self):
+        self._datatype = 'terms'
+        self._primary_key = 'term'
+        return self
 
-    def _populate_sections_for_course(self, course):
-        """Fill the local db with sections in the given course
-        """
-        if self._local_db.sections().query().filter_by(course=course).first():
-            return
+    def _use_courses(self):
+        self._datatype = 'courses'
+        self._primary_key = 'course'
+        return self
 
-        logging.info('Populating sections for course {}'.format(course))
+    def _use_sections(self):
+        self._datatype = 'sections'
+        self._primary_key = 'class_'
+        return self
 
-        sections = self._remote_db.search('sections',
-                                          term=self._term,
-                                          course=course)
-        for section in sections:
-            # class is a reserved keyword in python, so
-            # instead class_ is used for the field in 
-            # the Section sqlalchemy model
-            section['class_'] = section.get('class')
-            section.pop('class', None)
-
-            classtimes = self._remote_db.search('classtimes',
-                                                term=self._term,
-                                                course=course,
-                                                class_=section.get('class_'))
-            if len(classtimes) == 0:
-                logging.warning('{} has zero timetable objects'\
-                    .format(section.get('asString')))
-                classtime = dict()
-            elif len(classtimes) == 1:
-                classtime = classtimes[0]
-            else:
-                logging.warning('{} has multiple timetable objects'\
-                    .format(section.get('asString')))
-                classtime = classtimes[0]
-            section['day'] = classtime.get('day')
-            section['location'] = classtime.get('location')
-            section['startTime'] = classtime.get('startTime')
-            section['endTime'] = classtime.get('endTime')
-
-            self._local_db.sections().add(section)
-        try:
-            self._local_db.commit()
-        except:
-            logging.error('Failed to add sections to database for course {}'\
-                .format(course))
-
+    def _use_classtimes(self):
+        self._datatype = 'classtimes'
+        self._primary_key = None
+        return self
 
 def _condense_similar_sections(sections):
     """Fold similar sections into each other and return the result
@@ -201,9 +250,7 @@ def _condense_similar_sections(sections):
     """
     if len(sections) <= 1:
         return sections
-    logging.debug('Condensing Course {}:{}'.format(
-        sections[0].get('course'),
-        sections[0].get('component')))
+    length_pre = len(sections)
     lag, lead = 0, 1
     while lead < len(sections):
         section, lead_section = sections[lag], sections[:][lead]
@@ -217,4 +264,32 @@ def _condense_similar_sections(sections):
         else:
             lag = lead
             lead += 1
+    if len(sections) < length_pre:
+        logging.debug("Condensed course <{}:{}>'s sections: {}->{}".format(
+            sections[0].get('course'),
+            sections[0].get('component'),
+            length_pre, len(sections)))
     return sections
+
+def _apply_classtimes(section, classtimes):
+    section['asString'] = '{} {} {}'.format(
+        section.get('asString'),
+        section.get('component'),
+        section.get('section'))
+    if len(classtimes) == 0:
+        logging.warning('{} has zero timetable objects'\
+            .format(section.get('asString')))
+        classtime = dict()
+    elif len(classtimes) == 1:
+        classtime = classtimes[0]
+    else:
+        # --> too noisy while debugging other things
+        # logging.warning('{} has multiple timetable objects'.format(
+        #     section.get('asString'))
+        classtime = classtimes[0]
+    section['day'] = classtime.get('day')
+    section['location'] = classtime.get('location')
+    section['startTime'] = classtime.get('startTime')
+    section['endTime'] = classtime.get('endTime')
+
+    return section

@@ -1,9 +1,10 @@
+
 class AbstractRemoteDatabase(object):
     """
-    Abstract base class which all Database Connections should
-    inherit from.
+    Abstract base class which all remote database connections must
+    inherit from
 
-    Defines methods which all connections should implement.
+    Defines the public interface of any implementation
     """
 
     def connect(self, **kwargs):
@@ -34,15 +35,26 @@ class AbstractRemoteDatabase(object):
     def search(self, name, limit=None, **kwargs):
         """Search the database using a saved search
 
+        Is a wrapper for _search()
+
         :param str name: name of the saved search
 
         """
         raise NotImplementedError()
 
-    def _search(self, limit=None, *args, **kwargs):
-        """Internal search method - this actually *does* the searching.
+    def known_searches(self):
+        """Return names of known searches
 
-        :py:func:`search` should call this method, passing
-        in the proper kwargs
+        :returns: list of names of searches currently saved
+        :rtype: list of strings
+        """
+        raise NotImplementedError()
+
+
+    def _search(self, limit=None, *args, **kwargs):
+        """Lowest level search method
+
+        :py:func:`search` should wrap this method in order
+        to pass in the proper arguments
         """
         raise NotImplementedError()
