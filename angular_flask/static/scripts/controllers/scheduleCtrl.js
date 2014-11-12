@@ -3,9 +3,7 @@
 
 coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', function($scope, $window, $rootScope, scheduleFactory) {
     // Event array
-    $scope.events = [
-        //{title: 'All Day Event',start: new Date('Tue Nov 11 2014 09:00:00 MDT'),end: new Date('Tue Nov 11 2014 10:00:00 MDT')}
-    ];
+    $scope.events = [ ];
 
     // EventSources (required as binding to angular HTML directive)
     $scope.eventSources = [$scope.events];
@@ -41,59 +39,123 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
 
             // Time //
             var startTimeString;
-            var hour;
-            var minute;
+            var startHour;
+            var startMinute;
+
             if (classtime.startTime.match(/PM/)) {
                 // PM
                 startTimeString = classtime.startTime.match(/(\d+):(\d+)/);
-                hour = parseInt(startTimeString[1] + 12);
-                minute = parseInt(startTimeString[2]);
-                // use startTimeString[0] and startTimeString[1] for hour and minute, respectively
+                startHour = parseInt(startTimeString[1]) + 12;
+                startMinute = parseInt(startTimeString[2]);
             }
             else {
                 // AM
                 startTimeString = classtime.startTime.match(/(\d+):(\d+)/);
-                hour = parseInt(startTimeString[1]);
-                minute = parseInt(startTimeString[2]);
+                startHour = parseInt(startTimeString[1]);
+                startMinute = parseInt(startTimeString[2]);
             }
 
-            //// Day //
-            //var date = new Date();
-            //var d;
-            //var m = date.getMonth();
-            //var y = date.getFullYear();
+            var endTimeString;
+            var endHour;
+            var endMinute;
+
+            if (classtime.endTime.match(/PM/)) {
+                // PM
+                endTimeString = classtime.endTime.match(/(\d+):(\d+)/);
+                endHour = parseInt(endTimeString[1]) + 12;
+                endMinute = parseInt(endTimeString[2]);
+            }
+            else {
+                // AM
+                endTimeString = classtime.endTime.match(/(\d+):(\d+)/);
+                endHour = parseInt(endTimeString[1]);
+                endMinute = parseInt(endTimeString[2]);
+            }
+
+
+            // Day //
+            var date = new Date();
+            var d = date.getDate();
+            var m = date.getMonth();
+            var y = date.getFullYear();
+
+            var dayNumber = date.getDay();
+            var offset;
+
+            // Sunday 0
+            // Monday 1
+            // Tuesday 2
+            // Wednesday 3
+            // Thursday 4
+            // Friday 5
+            // Saturday 6
+
+            // getDay() returns day of week as number
+            // Enumerate the parsed day of the week
+            // find the offset between current, and this day
+            // this will tell you the day of the week
             //
-            //if (classtime.day.match(/TR/)) {
-            //    // Tuesday and Thursday
-            //    $scope.events.push({
-            //        title: classtime.asString,
-            //        start: new Date(y,m,d, hour, minute),
-            //        end: new Date(y,m,d,hour,minute)
-            //    });
-            //}
+            if (classtime.day.match(/M/)) {
+                offset = 1 - dayNumber;
+
+                $scope.events.push({
+                    title: classtime.asString,
+                    start: new Date(y,m,d + offset, startHour, startMinute),
+                    end: new Date(y,m,d + offset,endHour,endMinute)
+                });
+            }
+
+            if (classtime.day.match(/T/)) {
+                offset = 2 - dayNumber;
+
+                $scope.events.push({
+                    title: classtime.asString,
+                    start: new Date(y,m,d + offset, startHour, startMinute),
+                    end: new Date(y,m,d + offset,endHour,endMinute)
+                });
+            }
+
+            if (classtime.day.match(/W/)) {
+                offset = 3 - dayNumber;
+
+                $scope.events.push({
+                    title: classtime.asString,
+                    start: new Date(y,m,d + offset, startHour, startMinute),
+                    end: new Date(y,m,d + offset,endHour,endMinute)
+                });
+            }
+
+            if (classtime.day.match(/R/)) {
+                offset = 4 - dayNumber;
+
+                $scope.events.push({
+                    title: classtime.asString,
+                    start: new Date(y,m,d + offset, startHour, startMinute),
+                    end: new Date(y,m,d + offset,endHour,endMinute)
+                });
+            }
+
+            if (classtime.day.match(/F/)) {
+                offset = 5 - dayNumber;
+
+                $scope.events.push({
+                    title: classtime.asString,
+                    start: new Date(y,m,d + offset, startHour, startMinute),
+                    end: new Date(y,m,d + offset,endHour,endMinute)
+                });
+            }
 
 
         });
-
-
-        //$scope.events.push({
-        //    title: scheduleListing.objects[0].sections[0].asString,
-        //    start: new Date(y,m,d,,0),
-        //    end: new Date(y,m,d,18,0)
-        //});
-
 
     };
 
     $scope.getSchedules = function () {
         scheduleFactory.getSchedules($rootScope.addedCourses).
         success(function (data) {
-            scheduleListing = angular.fromJson(data);
+                scheduleListing = angular.fromJson(data);
 
-            // Do we have the response??? Yes, we do.
-            $window.alert(scheduleListing.objects[0].sections[0].asString);
-
-            renderSchedule();
+                renderSchedule();
         }).
         error(function() {
                $window.alert("error dude");
