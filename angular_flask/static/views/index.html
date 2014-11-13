@@ -10,6 +10,7 @@
 <body>
     <!--Accordion: controlled by accordionCtrl.js-->
 	<div data-ng-controller="accordionCtrl">
+
 		Search By All:
 		<br>
 		<div class="search-box">
@@ -25,7 +26,7 @@
                             <accordion-group class="course-accordion" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject">
                                 <a><i class="foundicon-plus" ng-click="addToSchedule(singleCourse.course)"> Add</i></a>
                                 <br>
-                                {{ description }}
+                                {{ description[singleCourse.course] }}
                             </accordion-group>
                         </accordion>
                     </accordion-group>
@@ -37,7 +38,12 @@
 
     <!--Schedule: controlled by scheduleCtrl.js-->
     <div data-ng-controller="scheduleCtrl">
-        <button id="get-classes" ng-click="getSchedules()">Gen-sched</button>
+        <button id="get-classes" ng-click="getSchedules()">Gen-Sched</button>
+        <div id="tally">{{ shoppingCartSize }}</div>
+
+        <!--Prev/Next-->
+        <button id="next" ng-click="displayDifferentSchedule(1)">Next</button>
+        <button id="prev" ng-click="displayDifferentSchedule(0)">Prev</button>
 
         <div id="cal" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div>
 

@@ -3,27 +3,36 @@
 
 coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope) {
 
-    // New, organized course object
+    // Organized course object
+    //
+    // $scope.subjectBin = {
+    //    "Faculty of Engineering": {
+    //          "ECE": [{<courses-min-object>}, {<courses-min-object>}],
+    //          "MEC E": [{<courses-min-object>}]
+    //     },
+    //    "Faculty of Science": {
+    //          "CMPUT": [{<courses-min-object}]
+    //     }
+    // }
     $scope.subjectBin = {};
 
-    // De-serialized API data
-    var pageListing;
-
-    // Counters for pageListing
-    var page  = 1,
-        total_pages;
-
-    // Purpose of first call is to get total_pages amount
+    // Read in courses from factory, courseFactory.js ////////////
+    /////////////////////////////////////////////////////////////
+    //
+    // @callee: on page load
+    //
+    // @returns: sorted $scope.subjectBin
     courseFactory.getCoursesPage(1).
-    success(function (data, status, headers, config) {
+    success(function (data) {
             // De-serialize JSON data
-            pageListing = angular.fromJson(data);
-            total_pages = pageListing.total_pages;
+            var pageListing = angular.fromJson(data),
+                total_pages = pageListing.total_pages,
+                page = 1;
 
             // In these calls, actually get and arrange the data
             while (page < (total_pages + 1)) {
                 courseFactory.getCoursesPage(page).
-                    success(function (data, status, headers, config) {
+                    success(function (data) {
                         // De-serialize JSON data
                         pageListing = angular.fromJson(data);
 
@@ -58,7 +67,6 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
             $window.alert("Sorry, something went wrong.");
     });
 
-
     // Sort by asString property
     //
     // @param {Object} course object, from courses-min
@@ -80,6 +88,38 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         }
     }
 
+    // Performance //////////////////////////////////////
+    /////////////////////////////////////////////////////
+    //
+    // @callee: 2nd layer of accordion
+    //
+    // On click of the 2nd layer of the accordion
+    // Will cause this 3rd layer to get rendered on the DOM and showed
+    // Note: the courses will still be in the DOM even when the accordion is closed
+    $scope.subjects = [];
+    $scope.renderCourses = function (subject) {
+        $scope.subjects[subject] = 1;
+    };
+
+    // @callee: 3rd layer of accordion
+    //
+    // On click of 3rd layer of accordion
+    // Retrieves course details and displays it
+    $scope.description = {};
+    $scope.loadMore = function (courseIdNumber) {
+        // Only call API if not yet added to $scope.description
+        if (!$scope.description.hasOwnProperty(courseIdNumber)) {
+            detailFactory.getDetails(courseIdNumber).
+                success(function (data) {
+                    var result = angular.fromJson(data);
+                    $scope.description[courseIdNumber] = result.courseDescription;
+                })
+                .error(function () {
+                    $window.alert("Something fucked up.");
+                });
+        }
+    };
+
     // Wait 0.5 seconds until displaying any courses
     //
     // Without this delay the courses will immediately load, freeze up for a second, and then finally finish
@@ -88,54 +128,37 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         $scope.filterText = '';
     }, 500);
 
-    // Filter watcher
+    // Watcher: search box filter
     //
     // Sets a watch on the input search box (every 200ms)
     // This affects the normal $digest cycle
-	var filterTextTimeout;
-	$scope.$watch('searchBox', function(val) {
-		if (filterTextTimeout) {
-			$timeout.cancel(filterTextTimeout);
-		}
-		filterTextTimeout = $timeout(function() {
-			$scope.filterText = val.toUpperCase();
-		}, 200);
-	});
+    var filterTextTimeout;
+    $scope.$watch('searchBox', function(val) {
+        if (filterTextTimeout) {
+            $timeout.cancel(filterTextTimeout);
+        }
+        filterTextTimeout = $timeout(function() {
+            $scope.filterText = val.toUpperCase();
+        }, 200);
+    });
 
-    // On the click of a single course in the accordion
+    // Add to Schedule ////////////////////////////////////
+    ///////////////////////////////////////////////////////
     //
-    // Retrieves course details and displays it
-    $scope.description = '';
-    $scope.loadMore = function (num) {
-        detailFactory.getDetails(num).
-        success(function (data) {
-            var result = angular.fromJson(data);
-            $scope.description = result.courseDescription;
-        })
-        .error(function () {
-            $window.alert("Something fucked up.");
-        });
-    };
-
-    // Speed up the accordion drastically with three lines
-    //
-    // renderCourses is called on every click of the 2nd layer of the accordion
-    // it will cause this layer to show its courses
-    // note: the courses will still be in the DOM even when the accordion is closed
-    $scope.subjects = [];
-    $scope.renderCourses = function (subject) {
-        $scope.subjects[subject] = 1;
-    };
-
     // Add course to schedule
     //
     $rootScope.addedCourses = [];
+    $rootScope.shoppingCartSize = 0;
 
+    // @callee: "Add" button under 3rd layer of accordion
+    //
     $scope.addToSchedule = function (course) {
         // Only add if the course isn't already there
         if ($rootScope.addedCourses.indexOf(course) === -1) {
             $rootScope.addedCourses.push(course);
-            $window.alert($rootScope.addedCourses.length);
+
+            // Update view tally
+            $rootScope.shoppingCartSize = $rootScope.shoppingCartSize + 1;
         }
     };
 

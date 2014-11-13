@@ -25,7 +25,7 @@ html {
 	width: 50%;
 	top: 50px;
 	padding-top: 10px;
-	height: 1000px;
+	height: auto;
 	position: fixed;
 }
 
@@ -39,3 +39,26 @@ html {
 	right: 5px;
 }
 
+#tally {
+	position: fixed;
+	top: 5px;
+	right: 20px;
+}
+
+#next {
+	position: fixed;
+	top: 5px;
+	right: 20%;
+}
+
+#prev {
+	position: fixed;
+	top: 5px;
+	right: 28%;
+}
+
+.shoppingCart {
+	position: fixed;
+	top: 700px;
+	left: 50%;
+}

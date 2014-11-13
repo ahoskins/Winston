@@ -16,8 +16,7 @@ coreModule.filter('courseFilter', function() {
 
         var result = {},
             faculty,
-            subject,
-            courseSafe;
+            subject;
 
         // For each key-value pair in SubjectBin
         // Example--> ECE: [{course obj 1}, {course obj 2}]
