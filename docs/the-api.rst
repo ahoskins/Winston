@@ -29,9 +29,25 @@ It is possible for zero ``<response object>``\ s to be returned.
 
 Pagination is supported through ``page`` and ``total_pages``. To get the nth page, append ``?page=<n>`` to any endpoint - if you are using a search query already, use ``?q=<search_query>&page=<n>``
 
-Use `search queries <http://flask-restless.readthedocs.org/en/latest/searchformat.html#searchformat>`__ to filter an endpoint's output. Useful for:
-* getting terms for only a certain institution
-* getting courses for only a certain institution and a certain term
+Search queries
+~~~~~~~~~~~~~~
+
+`Search queries <http://flask-restless.readthedocs.org/en/latest/searchformat.html#searchformat>`__ are used to restrict an endpoint's output. This is useful both for performance and semantic reasons.
+
+Format is::
+
+ /api/<endpoint>?q={"filters":[{"name":<attribute_name>,"op":<comparison>,"val":<attribute_value>},{ ... },...]}
+
+Examples:
+
+ * Get courses for a certain institution and a certain term::
+
+	 GET /api/courses-min?q={"filters":[{"name":"institution","op":"equal","val":"ualberta"},{"name":"term","op":"equal","val":"1490"}]}
+
+ * Get terms for a certain institution::
+
+ 	 GET /api/terms?q={"filters":[{"name":"institution","op":"equal","val":"ualberta"}]}
+
 
 .. _api-institutions
 
