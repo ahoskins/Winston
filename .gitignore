@@ -14,3 +14,7 @@ stats.dat
 
 # sphinx (docs) build folder
 _build
+
+# nose coverage output
+.coverage
+cover/*
