@@ -64,7 +64,7 @@ def _generate_schedules(cal, term, course_ids, busy_times, num_requested):
 
     candidates = [candidate for candidate in candidates
                   if len(candidate.sections) == len(components)]
-    if len(candidates) == 1:
+    if len(candidates) == 0:
         logging.error('No schedules found')
     return sorted(candidates, reverse=True)[:num_requested]
 
