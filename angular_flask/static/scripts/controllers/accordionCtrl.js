@@ -135,7 +135,6 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         // Only add if the course isn't already there
         if ($rootScope.addedCourses.indexOf(course) === -1) {
             $rootScope.addedCourses.push(course);
-            $window.alert($rootScope.addedCourses.length);
         }
     };
 

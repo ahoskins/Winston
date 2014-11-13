@@ -30,58 +30,51 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         }
     };
 
-    // Schedule object
-    var scheduleListing;
-
-    var renderSchedule = function () {
+    var renderSchedule = function (scheduleListing) {
 
         scheduleListing.objects[0].sections.forEach(function (classtime) {
 
             // Time //
-            var startTimeString;
-            var startHour;
-            var startMinute;
+            //
+            //
+            var startTimeString = classtime.startTime.match(/(\d+):(\d+)/),
+                endTimeString = classtime.endTime.match(/(\d+):(\d+)/);
 
+            // Minute
+            var startMinute = parseInt(startTimeString[2]),
+                endMinute = parseInt(endTimeString[2]);
+
+            // Hour
+            var startHour;
             if (classtime.startTime.match(/PM/)) {
                 // PM
-                startTimeString = classtime.startTime.match(/(\d+):(\d+)/);
                 startHour = parseInt(startTimeString[1]) + 12;
-                startMinute = parseInt(startTimeString[2]);
             }
             else {
                 // AM
-                startTimeString = classtime.startTime.match(/(\d+):(\d+)/);
                 startHour = parseInt(startTimeString[1]);
-                startMinute = parseInt(startTimeString[2]);
             }
 
-            var endTimeString;
             var endHour;
-            var endMinute;
-
             if (classtime.endTime.match(/PM/)) {
                 // PM
-                endTimeString = classtime.endTime.match(/(\d+):(\d+)/);
                 endHour = parseInt(endTimeString[1]) + 12;
-                endMinute = parseInt(endTimeString[2]);
             }
             else {
                 // AM
-                endTimeString = classtime.endTime.match(/(\d+):(\d+)/);
                 endHour = parseInt(endTimeString[1]);
-                endMinute = parseInt(endTimeString[2]);
             }
 
-
             // Day //
-            var date = new Date();
-            var d = date.getDate();
-            var m = date.getMonth();
-            var y = date.getFullYear();
+            //
+            //
+            var date = new Date(),
+                d = date.getDate(),
+                m = date.getMonth(),
+                y = date.getFullYear();
 
-            var dayNumber = date.getDay();
-            var offset;
-
+            // JavaScript function Date.getDay()
+            //
             // Sunday 0
             // Monday 1
             // Tuesday 2
@@ -89,82 +82,67 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
             // Thursday 4
             // Friday 5
             // Saturday 6
-
-            // getDay() returns day of week as number
-            // Enumerate the parsed day of the week
-            // find the offset between current, and this day
-            // this will tell you the day of the week
             //
+            // @return {int} enumeration of current day of the week
+            var dayNumber = date.getDay(),
+                offset;
+
+
+            // Use the current day {int:0:6} of the week
+            // Enumerate each day of the week {int:0:6}
+            // and find the offset {int:0:6}
+            // Use this offset to find calendar day number  {int:0:31}
             if (classtime.day.match(/M/)) {
                 offset = 1 - dayNumber;
-
-                $scope.events.push({
-                    title: classtime.asString,
-                    start: new Date(y,m,d + offset, startHour, startMinute),
-                    end: new Date(y,m,d + offset,endHour,endMinute)
-                });
+                addEvent(offset);
             }
 
             if (classtime.day.match(/T/)) {
                 offset = 2 - dayNumber;
-
-                $scope.events.push({
-                    title: classtime.asString,
-                    start: new Date(y,m,d + offset, startHour, startMinute),
-                    end: new Date(y,m,d + offset,endHour,endMinute)
-                });
+                addEvent(offset);
             }
 
             if (classtime.day.match(/W/)) {
                 offset = 3 - dayNumber;
-
-                $scope.events.push({
-                    title: classtime.asString,
-                    start: new Date(y,m,d + offset, startHour, startMinute),
-                    end: new Date(y,m,d + offset,endHour,endMinute)
-                });
+                addEvent(offset);
             }
 
             if (classtime.day.match(/R/)) {
                 offset = 4 - dayNumber;
-
-                $scope.events.push({
-                    title: classtime.asString,
-                    start: new Date(y,m,d + offset, startHour, startMinute),
-                    end: new Date(y,m,d + offset,endHour,endMinute)
-                });
+                addEvent(offset);
             }
 
             if (classtime.day.match(/F/)) {
                 offset = 5 - dayNumber;
+                addEvent(offset);
+            }
 
+            // Add event using parameters:
+            // asString
+            // Time
+            // Day
+            //
+            // @returns {void} an event is added to $scope.events array
+            function addEvent(offset) {
                 $scope.events.push({
                     title: classtime.asString,
                     start: new Date(y,m,d + offset, startHour, startMinute),
                     end: new Date(y,m,d + offset,endHour,endMinute)
                 });
             }
-
-
         });
-
     };
 
     $scope.getSchedules = function () {
         scheduleFactory.getSchedules($rootScope.addedCourses).
         success(function (data) {
-                scheduleListing = angular.fromJson(data);
+                var scheduleListing = angular.fromJson(data);
 
-                renderSchedule();
+                renderSchedule(scheduleListing);
         }).
         error(function() {
                $window.alert("error dude");
             });
     };
-
-    // This is not needed, but may be needed in the future
-    //
-    //$('cal').fullCalendar('refetchEvents');
-
 
 }]);
