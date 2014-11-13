@@ -38,8 +38,12 @@
 
     <!--Schedule: controlled by scheduleCtrl.js-->
     <div data-ng-controller="scheduleCtrl">
-        <button id="get-classes" ng-click="getSchedules()">Gen-sched</button>
+        <button id="get-classes" ng-click="getSchedules()">Gen-Sched</button>
         <div id="tally">{{ shoppingCart }}</div>
+
+        <!--Prev/Next-->
+        <button id="next" ng-click="displayDifferentSchedule(1)">Next</button>
+        <button id="prev" ng-click="displayDifferentSchedule(0)">Prev</button>
 
         <div id="cal" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div>
 

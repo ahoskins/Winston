@@ -45,3 +45,15 @@ html {
 	right: 20px;
 }
 
+#next {
+	position: fixed;
+	top: 5px;
+	right: 20%;
+}
+
+#prev {
+	position: fixed;
+	top: 5px;
+	right: 28%;
+}
+
