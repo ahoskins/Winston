@@ -5,7 +5,7 @@ from angular_flask.logging import logging
 logging = logging.getLogger(__name__) # pylint: disable=C0103
 
 from angular_flask.core import db
-from classtime import cal
+import classtime
 
 def create_db():
     db.create_all()
@@ -20,7 +20,7 @@ def seed_db(args):
     term = 1490
     if args.term:
         term = args.term
-    cal.select_active_term(term)
+    classtime.get_calendar('ualberta').select_active_term(term)
     logging.info('DB seeded with term {}'.format(term))
 
 def refresh_db(args):

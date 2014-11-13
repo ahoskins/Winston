@@ -14,7 +14,7 @@ def primary_key_from_model(model):
     return MODEL_PRIMARY_KEY_MAP.get(model, '')
 
 class StandardLocalDatabase(object):
-    """View of the central database which is restricted to a single institution
+    """A single institution's view of the local database
     """
 
     def __init__(self, institution):
@@ -26,12 +26,12 @@ class StandardLocalDatabase(object):
         self.Section = Section
 
     def create(self):
-        """Creates the central database, if it did not already exist
+        """Create the database, if it did not already exist
         """
         db.create_all()
 
-    def terms(self):
-        """Filters all requests to Term objects only. Returns self,
+    def use_terms(self):
+        """Filter all requests to Term objects only. Returns self,
         so this method should be chained with other methods.
 
         :returns: self
@@ -40,8 +40,8 @@ class StandardLocalDatabase(object):
         self._model = Term
         return self
 
-    def courses(self):
-        """Filters all requests to Course objects only. Returns self,
+    def use_courses(self):
+        """Filter all requests to Course objects only. Returns self,
         so this method should be chained with other methods.
 
         :returns: self
@@ -50,8 +50,8 @@ class StandardLocalDatabase(object):
         self._model = Course
         return self
 
-    def sections(self):
-        """Filters all requests to Section objects only. Should be
+    def use_sections(self):
+        """Filter all requests to Section objects only. Should be
         the first call in every chained call to the StandardLocalDatabase.
 
         :returns: self
@@ -62,11 +62,11 @@ class StandardLocalDatabase(object):
 
     def use(self, datatype):
         if 'term' in datatype:
-            self.terms()
+            self.use_terms()
         elif 'course' in datatype:
-            self.courses()
+            self.use_courses()
         elif 'section' in datatype:
-            self.sections()
+            self.use_sections()
         else:
             logging.error('Cannot find datatype <{}>'.format(datatype))
 
