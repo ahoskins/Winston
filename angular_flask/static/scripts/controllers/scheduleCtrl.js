@@ -2,14 +2,18 @@
 //
 
 coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', function($scope, $window, $rootScope, scheduleFactory) {
+
+    // Full Calendar Config ////////////////////////////
+    ////////////////////////////////////////////////////
+    //
     // Event array
     $scope.events = [ ];
 
-    // EventSources (required as binding to angular HTML directive)
+    // EventSources array
     $scope.eventSources = [$scope.events];
 
     // General calendar config
-    // Nov 10 -14 is displaying...this is the current week
+    // Note: It is displaying the current week (with the day number hidden)
     $scope.uiConfig = {
         calendar: {
             height: 1000,
@@ -30,7 +34,62 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         }
     };
 
+    // Get Schedules /////////////////////////////////
+    //////////////////////////////////////////////////
+    //
 
+    var scheduleInstance,
+        scheduleLength,
+        scheduleIndex = 0;
+
+    // Event handle for gen-sched button
+    //
+    $scope.getSchedules = function () {
+        scheduleFactory.getSchedules($rootScope.addedCourses).
+            success(function (data) {
+                var scheduleListing = angular.fromJson(data);
+
+                // Create closure with current scheduleListing
+                scheduleInstance = renderSchedule(scheduleListing);
+
+                // Invoke the closure
+                scheduleInstance(0);
+            }).
+            error(function() {
+                $window.alert("error dude");
+            });
+    };
+
+    // Event handle for prev/next buttons
+    //
+    $scope.displayDifferentSchedule = function (forward) {
+
+        // Adjust schedule index
+        if (forward) {
+            scheduleIndex = scheduleIndex + 1;
+            if (scheduleIndex >= scheduleLength) {
+                scheduleIndex = scheduleLength - 1;
+            }
+        }
+        else {
+            scheduleIndex = scheduleIndex - 1;
+            if (scheduleIndex < 0) {
+                scheduleIndex = 0;
+            }
+        }
+
+        // Clear current events
+        while ($scope.events.length > 0) {
+            $scope.events.pop();
+        }
+
+        // Invoke the closure on the new index
+        scheduleInstance(scheduleIndex);
+    };
+
+    // @callee: $scope.getSchedules
+    //
+    // @returns: updated $scope.events
     var renderSchedule = function (scheduleListing) {
 
         scheduleLength = scheduleListing.objects.length;
@@ -142,57 +201,5 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
                 }
             });
         };
-
     };
-
-
-    var scheduleInstance,
-        scheduleLength,
-        scheduleIndex = 0;
-
-    // Event handle for prev/next buttons
-    //
-    $scope.displayDifferentSchedule = function (forward) {
-
-        // Adjust schedule index
-        if (forward) {
-            scheduleIndex = scheduleIndex + 1;
-            if (scheduleIndex >= scheduleLength) {
-                scheduleIndex = scheduleLength - 1;
-            }
-        }
-        else {
-            scheduleIndex = scheduleIndex - 1;
-            if (scheduleIndex < 0) {
-                scheduleIndex = 0;
-            }
-        }
-
-        // Clear current events
-        while ($scope.events.length > 0) {
-            $scope.events.pop();
-        }
-
-        // Invoke the closure on the new index
-        scheduleInstance(scheduleIndex);
-    };
-
-    // Event handle for gen-sched button
-    //
-    $scope.getSchedules = function () {
-        scheduleFactory.getSchedules($rootScope.addedCourses).
-        success(function (data) {
-                var scheduleListing = angular.fromJson(data);
-
-                // Create closure with current scheduleListing
-                scheduleInstance = renderSchedule(scheduleListing);
-
-                // Invoke the closure
-                scheduleInstance(0);
-        }).
-        error(function() {
-               $window.alert("error dude");
-            });
-    };
-
 }]);

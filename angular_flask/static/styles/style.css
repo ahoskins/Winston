@@ -25,7 +25,7 @@ html {
 	width: 50%;
 	top: 50px;
 	padding-top: 10px;
-	height: 1000px;
+	height: auto;
 	position: fixed;
 }
 
@@ -57,3 +57,8 @@ html {
 	right: 28%;
 }
 
+.shoppingCart {
+	position: fixed;
+	top: 700px;
+	left: 50%;
+}
