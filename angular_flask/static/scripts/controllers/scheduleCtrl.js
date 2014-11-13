@@ -46,7 +46,7 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
 
             // Hour
             var startHour;
-            if (classtime.startTime.match(/PM/)) {
+            if (classtime.startTime.match(/PM/) && startTimeString[1] != 12) {
                 // PM
                 startHour = parseInt(startTimeString[1]) + 12;
             }
@@ -56,7 +56,7 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
             }
 
             var endHour;
-            if (classtime.endTime.match(/PM/)) {
+            if (classtime.endTime.match(/PM/) && endTimeString[1] != 12) {
                 // PM
                 endHour = parseInt(endTimeString[1]) + 12;
             }
