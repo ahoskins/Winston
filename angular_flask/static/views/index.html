@@ -10,6 +10,7 @@
 <body>
     <!--Accordion: controlled by accordionCtrl.js-->
 	<div data-ng-controller="accordionCtrl">
+
 		Search By All:
 		<br>
 		<div class="search-box">
@@ -38,6 +39,7 @@
     <!--Schedule: controlled by scheduleCtrl.js-->
     <div data-ng-controller="scheduleCtrl">
         <button id="get-classes" ng-click="getSchedules()">Gen-sched</button>
+        <div id="tally">{{ shoppingCart }}</div>
 
         <div id="cal" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div>
 

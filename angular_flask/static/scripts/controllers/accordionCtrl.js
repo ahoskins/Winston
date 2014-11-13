@@ -130,11 +130,15 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // Add course to schedule
     //
     $rootScope.addedCourses = [];
+    $rootScope.shoppingCart = 0;
 
     $scope.addToSchedule = function (course) {
         // Only add if the course isn't already there
         if ($rootScope.addedCourses.indexOf(course) === -1) {
             $rootScope.addedCourses.push(course);
+
+            // Update view tally
+            $rootScope.shoppingCart = $rootScope.shoppingCart + 1;
         }
     };
 
