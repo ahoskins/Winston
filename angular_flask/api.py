@@ -10,7 +10,7 @@ from angular_flask.models import Institution, Term, Course, Section
 import classtime.institutions
 import classtime.scheduling as scheduling
 
-def fill_institutions(search_params=None):
+def fill_institutions(search_params=None): #pylint: disable=W0613
     db.create_all()
     if Institution.query.first() is None:
         config_file = os.path.join(classtime.institutions.CONFIG_FOLDER_PATH,
@@ -60,7 +60,7 @@ api_manager.create_api(Course,
 # Schedule Generation
 # --------------------------------
 
-def generate_schedules(result=None, search_params=None):
+def find_schedules(result=None, search_params=None):
     if result is None:
         result = dict()
     result['page'] = 1
@@ -69,7 +69,9 @@ def generate_schedules(result=None, search_params=None):
     NUM_SCHEDULES = 10
 
     institution = search_params.get('institution', 'ualberta')
-    schedules = scheduling.generate_schedules(institution, search_params, NUM_SCHEDULES)
+    schedules = scheduling.find_schedules(institution,
+        search_params,
+        NUM_SCHEDULES)
     result['num_results'] = len(schedules)
     result['objects'] = list()
     for schedule in schedules:
@@ -83,5 +85,5 @@ api_manager.create_api(Section,
                        include_columns=[],
                        methods=['GET'],
                        postprocessors={
-                           'GET_MANY': [generate_schedules]
+                           'GET_MANY': [find_schedules]
                        })
