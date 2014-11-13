@@ -105,16 +105,19 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // On the click of a single course in the accordion
     //
     // Retrieves course details and displays it
-    $scope.description = '';
-    $scope.loadMore = function (num) {
-        detailFactory.getDetails(num).
-        success(function (data) {
-            var result = angular.fromJson(data);
-            $scope.description = result.courseDescription;
-        })
-        .error(function () {
-            $window.alert("Something fucked up.");
-        });
+    $scope.description = {};
+    $scope.loadMore = function (courseIdNumber) {
+        // Only call API if not yet added to $scope.description
+        if (!$scope.description.hasOwnProperty(courseIdNumber)) {
+            detailFactory.getDetails(courseIdNumber).
+                success(function (data) {
+                    var result = angular.fromJson(data);
+                    $scope.description[courseIdNumber] = result.courseDescription;
+                })
+                .error(function () {
+                    $window.alert("Something fucked up.");
+                });
+        }
     };
 
     // Speed up the accordion drastically with three lines
@@ -130,7 +133,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // Add course to schedule
     //
     $rootScope.addedCourses = [];
-    $rootScope.shoppingCart = 0;
+    $rootScope.shoppingCartSize = 0;
 
     $scope.addToSchedule = function (course) {
         // Only add if the course isn't already there
@@ -138,7 +141,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
             $rootScope.addedCourses.push(course);
 
             // Update view tally
-            $rootScope.shoppingCart = $rootScope.shoppingCart + 1;
+            $rootScope.shoppingCartSize = $rootScope.shoppingCartSize + 1;
         }
     };
 

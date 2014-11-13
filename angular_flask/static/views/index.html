@@ -26,7 +26,7 @@
                             <accordion-group class="course-accordion" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject">
                                 <a><i class="foundicon-plus" ng-click="addToSchedule(singleCourse.course)"> Add</i></a>
                                 <br>
-                                {{ description }}
+                                {{ description[singleCourse.course] }}
                             </accordion-group>
                         </accordion>
                     </accordion-group>
@@ -39,7 +39,7 @@
     <!--Schedule: controlled by scheduleCtrl.js-->
     <div data-ng-controller="scheduleCtrl">
         <button id="get-classes" ng-click="getSchedules()">Gen-Sched</button>
-        <div id="tally">{{ shoppingCart }}</div>
+        <div id="tally">{{ shoppingCartSize }}</div>
 
         <!--Prev/Next-->
         <button id="next" ng-click="displayDifferentSchedule(1)">Next</button>
