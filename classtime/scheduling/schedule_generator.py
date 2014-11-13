@@ -18,7 +18,7 @@ WORKERS = 16
 WORKLOAD_SIZE = CANDIDATE_POOL_SIZE / WORKERS
 """Number of candidate schedules to give to each worker process"""
 
-def generate_schedules(institution, schedule_params, num_requested):
+def find_schedules(institution, schedule_params, num_requested):
     """
     :param AcademicCalendar cal: calendar to pull section data from
     :param dict schedule_params: parameters to build the schedule with.
@@ -26,19 +26,18 @@ def generate_schedules(institution, schedule_params, num_requested):
         for available parameters.
     """
     if 'term' not in schedule_params:
-        logging.error("schedule_params is missing 'term' field")
-    term = schedule_params.get('term', '1490')
+        logging.error("Schedule generation call did not specify <term>")
+    term = schedule_params.get('term', '')
     cal = classtime.get_calendar(institution)
-    cal.select_active_term(term)
 
     if 'courses' not in schedule_params:
-        logging.error("schedule_params is missing 'courses' field")
+        logging.error("Schedule generation call did not specify <courses>")
     course_ids = schedule_params.get('courses', list())
     busy_times = schedule_params.get('busy-times', list())
 
-    return _generate_schedules(cal, course_ids, busy_times, num_requested)
+    return _generate_schedules(cal, term, course_ids, busy_times, num_requested)
 
-def _generate_schedules(cal, course_ids, busy_times, num_requested):
+def _generate_schedules(cal, term, course_ids, busy_times, num_requested):
     """Generate a finite number of schedules
 
     :param int num_requested: maximum number of schedules to return.
@@ -50,11 +49,10 @@ def _generate_schedules(cal, course_ids, busy_times, num_requested):
         scoring functions
     :rtype: list of :ref:`schedule objects <api-schedule-object>`
     """
-    logging.info('Finding schedules for courses {}'.format(course_ids))
-
-    components = cal.get_components(course_ids)
+    components = cal.get_components(term, course_ids)
     components = sorted(components, key=len)
 
+    logging.info('Finding schedules for courses {}'.format(course_ids))
     candidates = [Schedule(busy_times=busy_times)]
     for pace, component in enumerate(components):
         logging.debug('({symbol}/{num}) Scheduling {name}:{type}'.format(
@@ -66,7 +64,7 @@ def _generate_schedules(cal, course_ids, busy_times, num_requested):
 
     candidates = [candidate for candidate in candidates
                   if len(candidate.sections) == len(components)]
-    if len(candidates) == 0:
+    if len(candidates) == 1:
         logging.error('No schedules found')
     return sorted(candidates, reverse=True)[:num_requested]
 

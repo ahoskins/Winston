@@ -10,7 +10,5 @@ from angular_flask.models import Institution
 
 from .academic_calendar import AcademicCalendar
 
-def get_calendar(_institution):
-    return AcademicCalendar(_institution)
-
-cal = get_calendar('ualberta')
+def get_calendar(institution):
+    return AcademicCalendar(institution)

@@ -18,7 +18,7 @@ class Schedule(object):
 
     OPEN = -1
     """Free time"""
-    BUSY = -3
+    BUSY = -2
     """Busy with a non-school activity"""
     SYMBOLS = 'ABCDEFGHIJKLMNOPQRSTUVWx '
     """Symbols used for drawing a Schedule to the console"""
