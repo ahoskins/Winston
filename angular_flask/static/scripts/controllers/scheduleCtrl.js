@@ -103,6 +103,15 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
 
             scheduleListing.objects[i].sections.forEach(function (classtime) {
 
+                // Null check
+                //
+                // TODO: Maybe want to flag the skipped class
+                if (classtime.startTime === null ||
+                    classtime.endTime === null   ||
+                    classtime.day === null         ) {
+                    return;
+                }
+
                 // Time //
                 //
                 //
