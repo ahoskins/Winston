@@ -71,17 +71,17 @@ def _generate_schedules(cal, term, course_ids, busy_times, num_requested):
 def _add_component(candidates, component, pace):
     """
     Schedule generation algorithm
-    1. Take a candidate schedule.
-    2. Make a new candidate schedule by adding a candidate section ("A2")
-        from the given component ("CHEM 101 LEC").
-    3. If the new candidate schedule has a direct conflict, throw it out
-    4. Do (2,3) for all available sections in the component.
-    5. Do (4) for all candidate schedules.
-    6. Do battle royale with the schedules to cull the weak.
-        Return the victors.
+    1. Pick a schedule candidate from the list.
+    2. Pick a section ("A2") for a component ("LAB") of a course ("CHEM")
+      2b. If the section conflicts with the schedule, throw it out
+      2c. Otherwise, add it to the schedule.
+    3. Do 2 for all section options ("A3") for the component ("LAB").
+    4. Do 3 for all components ("LAB") of a course ("CHEM")
+    5. Do 4 for all schedule candidates
+    6. Do battle royale with the schedules. Only keep the best.
 
     7. Add the next component using (1->6).
-    8. Continue until all components are scheduled.
+    8. Repeat until all courses are scheduled.
     """
     def _candidate_battle_royale(candidates, component, pace, heap_size, out_q):
         """Put the `heap_size` best candidates onto the `out_q`

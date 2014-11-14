@@ -116,6 +116,7 @@ class AcademicCalendar(object):
         for course in courses:
             self.use_sections()
             if self._doesnt_know_about(term=self._term, course=course):
+                self.use_sections()
                 sections = self._fetch_sections(course)
                 self._save(sections)
 
@@ -148,28 +149,6 @@ class AcademicCalendar(object):
             if len(component) > 0:
                 yield component
 
-    def _fetch_sections(self, course):
-        self.use_sections()
-        sections = self._fetch(term=self._term,
-                                   course=course)
-        course_info = self._local_db.use_courses().get(course)
-        course_info_dict = course_info.to_dict()
-        for section in sections:
-            section = _section_apply_course_info(section, course_info_dict)
-
-        self.use_classtimes()
-        classtimes_by_section = self._fetch_multiple(extras=[{
-            'term': section.get('term'),
-            'course': section.get('course'),
-            'class_': section.get('class')
-        } for section in sections])
-
-        for section, classtimes in zip(sections, classtimes_by_section):
-            section = _section_apply_times(section, classtimes)
-
-        self.use_sections()
-        return sections
-
     def _fetch(self, datatype=None, **kwargs):
         if datatype is None:
             datatype = self._datatype
@@ -199,6 +178,30 @@ class AcademicCalendar(object):
         results = self._remote_db.search_multiple([datatype]*len(extras),
                                                   extras)
         return results
+
+    def _fetch_sections(self, course):
+        self.use_sections()
+        sections = self._fetch(term=self._term,
+                                   course=course)
+
+        course_info = self._local_db.use_courses().get(course)
+        course_info_dict = course_info.to_dict()
+        sections = [_section_apply_course_info(section, course_info_dict)
+                    for section in sections]
+
+        self.use_classtimes()
+        classtimes_by_section = self._fetch_multiple(extras=[{
+            'term': section.get('term'),
+            'course': section.get('course'),
+            'class_': section.get('class')
+        } for section in sections])
+        for section, classtimes in zip(sections, classtimes_by_section):
+            section = _section_apply_times(section, classtimes)
+
+        sections = [_section_add_dependencies(self, section)
+                    for section in sections]
+
+        return sections
 
     def _save(self, objects, datatype=None, primary_key=None, update=False):
         if datatype is None:
@@ -307,6 +310,26 @@ def _section_apply_times(section, classtimes):
     section['endTime'] = classtime.get('endTime')
 
     return section
+
+def _section_add_dependencies(self, section):
+    dbthiscourse = self._local_db.sections().get(section.get('course'))
+    dbsections = {
+        dbsection.section: dbsection
+        for dbsection in dbthiscourse
+    }
+    dbautoenrolls = {
+        dbsection.autoEnroll: dbsection
+        for dbsection in dbthiscourse
+    }
+
+    dependencies = list()
+    sectionstr = section.get('section')
+    if sectionstr in dbsections:
+        dependencies.append(dbsections.get(sectionstr))
+    if sectionstr in dbautoenrolls:
+        dependencies.append(dbautoenrolls.get(sectionstr))
+
+    section['dependencies'] = dependencies
 
 def _condense_similar_sections(sections):
     """Fold similar sections into each other and return the result

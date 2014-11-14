@@ -223,14 +223,13 @@ def extract_results_from_ldap_data(data):
     """
     LDAP returns a list of 2-element lists::
 
-      data := [[data, attrs], [data, attrs], ..]
+      data := [[unused, attrs], [unused, attrs], ..]
 
     attrs is a dictionary mapping:
 
     ``attribute names -> [attribute value, attribute value, ..]``
 
-    However, in every case used here, there is only one value
-    in the values list.
+    In every case used here, there is exactly one value in the list.
 
     Each attribute value is encoded in utf-8, and must be
     decoded into python-default unicode.

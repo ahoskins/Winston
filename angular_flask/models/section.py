@@ -15,7 +15,7 @@ class Section(db.Model):
 
     session = db.Column(db.String(30))
     campus = db.Column(db.String(10))
-    # autoEnroll = db.relationship('Section')
+    autoEnroll = db.Column(db.String(10), db.ForeignKey('section.section'))
     # ("frequently null") classTopic = ...
     classNotes = db.Column(db.String(80))
     # consent
@@ -28,7 +28,7 @@ class Section(db.Model):
     # examStartTime
     # examEndTime
     # examLocation
-    asString = db.String(db.String(80))
+    asString = db.Column(db.String(16))
 
     day = db.Column(db.String(10))
     startTime = db.Column(db.String(30))
