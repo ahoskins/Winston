@@ -290,10 +290,6 @@ def _section_apply_course_info(section_dict, course_dict):
     return section_dict
 
 def _section_apply_times(section, classtimes):
-    section['asString'] = '{} {} {}'.format(
-        section.get('asString'),
-        section.get('component'),
-        section.get('section'))
     if len(classtimes) == 0:
         logging.warning('{} has zero timetable objects'\
             .format(section.get('asString')))
