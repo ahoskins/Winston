@@ -174,6 +174,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         return !isNaN(parseFloat(val));
     };
 
+
 }]);
 
 

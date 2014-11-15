@@ -5,14 +5,14 @@
 // fields of each course.  It also filters against the "key"(s) in "subjectBin"
 // All filtering is CASE IN-SENSITIVE
 
-coreModule.filter('courseFilter', function() {
+coreModule.filter('courseFilter', ['pmkr.filterStabilize', function(stabilize) {
     // Invoked from index.html accordion
     // Used filterText to trim subjectBin
     // @param {Object} $scope.subjectBin is passed in
     // @param {Object} $scope.filterText is passed in
     //
     // @returns {Object} same format as $scope.subjectBin
-   return function(subjectBin, field) {
+   return stabilize(function(subjectBin, field) {
 
         var result = {},
             faculty,
@@ -53,8 +53,8 @@ coreModule.filter('courseFilter', function() {
         });
 
         return result;
-   };
-});
+   });
+}]);
 
 
 
