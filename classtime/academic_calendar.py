@@ -117,6 +117,7 @@ class AcademicCalendar(object):
         for course in courses:
             self.use_sections()
             if self._doesnt_know_about(term=self._term, course=course):
+                logging.critical('didnt know about {}'.format(course))
                 sections = self._fetch_sections(course)
                 self._save(sections)
 
