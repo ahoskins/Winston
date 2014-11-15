@@ -1,6 +1,5 @@
 
 import threading
-import collections
 
 from angular_flask.logging import logging
 logging = logging.getLogger(__name__) # pylint: disable=C0103
@@ -117,7 +116,6 @@ class AcademicCalendar(object):
         for course in courses:
             self.use_sections()
             if self._doesnt_know_about(term=self._term, course=course):
-                logging.critical('didnt know about {}'.format(course))
                 sections = self._fetch_sections(course)
                 self._save(sections)
 
@@ -209,14 +207,12 @@ class AcademicCalendar(object):
         def _update_logs(i, num):
             logging.debug('...{}%\t({}/{})'.format(i*100/num, i, num))
 
-
         logging.debug("Saving some <{}> <{}> to local db".format(
             self._institution, datatype))
-        self._local_db.use(datatype)
         for i, obj in enumerate(objects, start=1):
             if self._doesnt_know_about(datatype=datatype,
                                        primary_key=obj.get(primary_key)):
-                self._local_db.add(obj)
+                self._local_db.use(datatype).add(obj)
             elif update:
                 db_obj = self._local_db.get(datatype=datatype,
                                             primary_key=obj.get(primary_key))
@@ -249,15 +245,16 @@ class AcademicCalendar(object):
         """
         datatype = datatype.lower()
         if 'term' in datatype:
-            return self.use_terms()
+            self.use_terms()
         elif 'course' in datatype:
-            return self.use_courses()
+            self.use_courses()
         elif 'section' in datatype:
-            return self.use_sections()
+            self.use_sections()
         elif 'classtime' in datatype:
-            return self.use_classtimes()
+            self.use_classtimes()
         else:
             logging.error('Cannot find datatype <{}>'.format(datatype))
+        return self
 
     def use_terms(self):
         self._datatype = 'terms'
@@ -271,7 +268,7 @@ class AcademicCalendar(object):
 
     def use_sections(self):
         self._datatype = 'sections'
-        self._primary_key = 'class_'
+        self._primary_key = 'class'
         return self
 
     def use_classtimes(self):
@@ -297,9 +294,8 @@ def _section_apply_times(section, classtimes):
     elif len(classtimes) == 1:
         classtime = classtimes[0]
     else:
-        # --> too noisy while debugging other things
-        # logging.warning('{} has multiple timetable objects'.format(
-        #     section.get('asString'))
+        logging.warning('{} has multiple timetable objects'.format(
+            section.get('asString')))
         classtime = classtimes[0]
     section['day'] = classtime.get('day')
     section['location'] = classtime.get('location')

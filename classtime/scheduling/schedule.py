@@ -137,19 +137,24 @@ class Schedule(object):
         return False
 
     def has_dependency_conflict(self, section):
-        logging.warning('called dep')
-        for other in self.sections:
-
-            if section.get('course') != other.get('course'):
+        potential_dependencies = [other.get('section')
+            for other in self.sections
+            if other.get('course') == section.get('course')
+            and other.get('component') != section.get('component')]
+        
+        satisfied = False
+        for other in potential_dependencies:
+            if section.get('autoEnroll') is None \
+            and other.get('autoEnroll') is None:
                 continue
-
-            if section.get('autoEnroll', 'B') == other.get('section', 'A'):
+            if section.get('autoEnroll') == other.get('section') \
+            or section.get('section') == other.get('autoEnroll'):
                 continue
-            if section.get('section', 'B') == other.get('autoEnroll', 'A'):
-                continue
-            logging.warning('{}<-/->{}'.format(
-                section.get('asString'), other.get('asString')))
-            return False
+            logging.critical('[{}] needed:{} got:{}'.format(
+                section.get('asString'),
+                section.get('autoEnroll'),
+                other.get('section')))
+            return True
         return False
 
     def attempt_add_to_timetable(self, section, section_num):

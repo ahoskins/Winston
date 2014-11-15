@@ -18,7 +18,7 @@ WORKERS = 16
 WORKLOAD_SIZE = CANDIDATE_POOL_SIZE / WORKERS
 """Number of candidate schedules to give to each worker process"""
 
-def find_schedules(institution, schedule_params, num_requested):
+def find_schedules(schedule_params, num_requested):
     """
     :param AcademicCalendar cal: calendar to pull section data from
     :param dict schedule_params: parameters to build the schedule with.
@@ -28,6 +28,7 @@ def find_schedules(institution, schedule_params, num_requested):
     if 'term' not in schedule_params:
         logging.error("Schedule generation call did not specify <term>")
     term = schedule_params.get('term', '')
+    institution = schedule_params.get('institution', 'ualberta')
     cal = classtime.get_calendar(institution)
 
     if 'courses' not in schedule_params:
@@ -35,7 +36,18 @@ def find_schedules(institution, schedule_params, num_requested):
     course_ids = schedule_params.get('courses', list())
     busy_times = schedule_params.get('busy-times', list())
 
-    return _generate_schedules(cal, term, course_ids, busy_times, num_requested)
+    logging.info('Received schedule request')
+
+    schedules = _generate_schedules(cal,
+        term, course_ids, busy_times,
+        num_requested)
+    if len(schedules) == 0:
+        logging.error('No schedules found for q={}'.format(
+            schedule_params))
+    else:
+        logging.info('Returning {} schedules from request q={}'.format(
+            len(schedules), schedule_params))
+    return schedules
 
 def _generate_schedules(cal, term, course_ids, busy_times, num_requested):
     """Generate a finite number of schedules
@@ -58,7 +70,6 @@ def _generate_schedules(cal, term, course_ids, busy_times, num_requested):
     components = cal.get_components(term, course_ids)
     components = sorted(components, key=len)
 
-    logging.info('Finding schedules for courses {}'.format(course_ids))
     candidates = [Schedule(busy_times=busy_times)]
     for pace, component in enumerate(components):
         _log_scheduling_component(len(components), component, pace)
@@ -66,10 +77,7 @@ def _generate_schedules(cal, term, course_ids, busy_times, num_requested):
 
     candidates = [candidate for candidate in candidates
                   if len(candidate.sections) == len(components)]
-    if len(candidates) == 0:
-        logging.error('No schedules found')
-    else:
-        logging.info('{} schedules found'.format(len(candidates)))
+    logging.debug('Generated {} schedules'.format(len(candidates)))
     return sorted(candidates, reverse=True)[:num_requested]
 
 def _add_component(candidates, component, pace):
@@ -108,8 +116,8 @@ def _add_component(candidates, component, pace):
             if _is_hopeless(candidate, pace):
                 continue
             for section in component:
-                # if candidate.has_dependency_conflict(section):
-                #     continue
+                if candidate.has_dependency_conflict(section):
+                    continue
                 if candidate.conflicts(section):
                     continue
                 _add_candidates(candidates,
