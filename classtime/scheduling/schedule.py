@@ -136,31 +136,21 @@ class Schedule(object):
                 return True
         return False
 
-    def dependencies_satisfied(self, section):
-        def _dependency_satisfied(dependency, section):
-            if dependency.get('course') != section.get('course'):
-                return True
-            if dependency.get('autoEnroll') is None \
-               and section.get('autoEnroll') is None:
-                return True
+    def has_dependency_conflict(self, section):
+        logging.warning('called dep')
+        for other in self.sections:
 
-            if dependency.get('section') == section.get('autoEnroll'):
-                return True
-            if dependency.get('autoEnroll') == section.get('section'):
-                return True
+            if section.get('course') != other.get('course'):
+                continue
+
+            if section.get('autoEnroll', 'B') == other.get('section', 'A'):
+                continue
+            if section.get('section', 'B') == other.get('autoEnroll', 'A'):
+                continue
+            logging.warning('{}<-/->{}'.format(
+                section.get('asString'), other.get('asString')))
             return False
-        for section in self.sections:
-            for dependency in section['dependencies']:
-                for section in self.sections:
-                    if not _dependency_satisfied(dependency, section):
-                        logging.info('Invalid dependency! For:')
-                        logging.info('{}<->{}'.format(
-                          dependency.get('asString'), section.get('asString')))
-                        return False
-                logging.info('Dependencies satisfied! For:')
-                logging.info('{}<->{}'.format(
-                    dependency.get('asString'), section.get('asString')))
-        return True
+        return False
 
     def attempt_add_to_timetable(self, section, section_num):
         """Attempts to add a section to the timetable

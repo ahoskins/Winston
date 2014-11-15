@@ -104,44 +104,44 @@ class TestAPI(object):
 
     def test_generate_schedules(self):
         queries = [
-            {
-                "q": {  # Random courses
-                        "institution": "ualberta",
-                        "term": "1490",
-                        "courses": ["001343",
-                                    "009019"],
-                        "busy-times": [{
-                            "day": "MWF",
-                            "startTime": "04:00 PM",
-                            "endTime": "06:00 PM"
-                            }
-                        ]
-                }
-            },
-            {
-                "q": {  # 1st year engineering 2014 Fall Term
-                        "institution": "ualberta",
-                        "term": "1490",
-                        "courses": ["001343",
-                                    "004093",
-                                    "004096",
-                                    "006768",
-                                    "009019"],
-                        "busy-times": []
-                }
-            },
-            {
-                "q": {  # 3rd year CompE 2014 Fall Term
-                        "institution": "ualberta",
-                        "term": "1490",
-                        "courses": ["010344",
-                                    "105014",
-                                    "105006",
-                                    "105471",
-                                    "006708",
-                                    "010812"]
-                }
-            },
+            # {
+            #     "q": {  # Random courses
+            #             "institution": "ualberta",
+            #             "term": "1490",
+            #             "courses": ["001343",
+            #                         "009019"],
+            #             "busy-times": [{
+            #                 "day": "MWF",
+            #                 "startTime": "04:00 PM",
+            #                 "endTime": "06:00 PM"
+            #                 }
+            #             ]
+            #     }
+            # },
+            # {
+            #     "q": {  # 1st year engineering 2014 Fall Term
+            #             "institution": "ualberta",
+            #             "term": "1490",
+            #             "courses": ["001343",
+            #                         "004093",
+            #                         "004096",
+            #                         "006768",
+            #                         "009019"],
+            #             "busy-times": []
+            #     }
+            # },
+            # {
+            #     "q": {  # 3rd year CompE 2014 Fall Term
+            #             "institution": "ualberta",
+            #             "term": "1490",
+            #             "courses": ["010344",
+            #                         "105014",
+            #                         "105006",
+            #                         "105471",
+            #                         "006708",
+            #                         "010812"]
+            #     }
+            # },
             {
                 "q": {  # 2nd year MecE Fall Term 2014
                         "institution": "ualberta",
@@ -155,29 +155,29 @@ class TestAPI(object):
                                     ]
                 }
             },
-            {
-                "q": {  # 1st year engineering Fall Term 2014
-                        "institution": "ualberta",
-                        "term": "1490",
-                        "courses": ["001343",
-                                    "004093",
-                                    "004096",
-                                    "006768",
-                                    "009019"],
-                        "busy-times": [
-                            {
-                                "day": "MWF",
-                                "startTime": "07:00 AM",
-                                "endTime": "09:50 AM"
-                            },
-                            {
-                                "day": "TR",
-                                "startTime": "04:00 PM",
-                                "endTime": "10:00 PM"
-                            }
-                        ]
-                }
-            }
+            # {
+            #     "q": {  # 1st year engineering Fall Term 2014
+            #             "institution": "ualberta",
+            #             "term": "1490",
+            #             "courses": ["001343",
+            #                         "004093",
+            #                         "004096",
+            #                         "006768",
+            #                         "009019"],
+            #             "busy-times": [
+            #                 {
+            #                     "day": "MWF",
+            #                     "startTime": "07:00 AM",
+            #                     "endTime": "09:50 AM"
+            #                 },
+            #                 {
+            #                     "day": "TR",
+            #                     "startTime": "04:00 PM",
+            #                     "endTime": "10:00 PM"
+            #                 }
+            #             ]
+            #     }
+            # }
         ]
         for query in queries:
             response = self.get('/api/generate-schedules', query)

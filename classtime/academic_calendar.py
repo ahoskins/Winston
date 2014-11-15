@@ -137,14 +137,13 @@ class AcademicCalendar(object):
                 .order_by(self._local_db.Section.startTime.desc()) \
                 .order_by(self._local_db.Section.endTime.desc()) \
                 .all()
-            if len(section_models) > 0:
-                logging.debug('{}:{} - {} found'.format(
-                    course, component, len(section_models)))
+            if len(section_models) == 0:
+                continue
+            logging.debug('{}:{} - {} found'.format(
+                course, component, len(section_models)))
             sections = [section_model.to_dict()
                         for section_model in section_models]
             sections = [_section_apply_course_info(section, course_info)
-                        for section in sections]
-            sections = [_section_add_dependencies(sections, section)
                         for section in sections]
             component = _condense_similar_sections(sections)
             if len(component) > 0:
@@ -183,7 +182,7 @@ class AcademicCalendar(object):
     def _fetch_sections(self, course):
         self.use_sections()
         sections = self._fetch(term=self._term,
-                                   course=course)
+                               course=course)
 
         self.use_classtimes()
         classtimes_by_section = self._fetch_multiple(extras=[{
@@ -284,6 +283,9 @@ def _section_apply_course_info(section_dict, course_dict):
     section_dict.update(course_dict)
     section_dict.update(clone)
     section_dict['class_'] = clone.get('class')
+    section_dict['asString'] = ' '.join([course_dict.get('asString'),
+                                         section_dict.get('component'),
+                                         section_dict.get('section')])
     return section_dict
 
 def _section_apply_times(section, classtimes):
@@ -303,23 +305,6 @@ def _section_apply_times(section, classtimes):
     section['startTime'] = classtime.get('startTime')
     section['endTime'] = classtime.get('endTime')
 
-    return section
-
-def _section_add_dependencies(sections, section):
-    """Adds a list of section dicts as a new attribute, 'dependencies'
-
-    Each section in 'dependencies' is a required co-dependency of the given
-    section. The sections are in the same *course*. If a schedule has a section
-    with an unsatisfied dependency (ie the dependency exists but a different
-    section has been chosen for that component), then the schedule is invalid.
-    """
-    dependencies = list()
-    for __section in sections[:]:
-        if __section.get('autoEnroll', '') == section.get('section'):
-            dependencies.append(__section)
-    if len(dependencies) > 0:
-        import rpdb2; rpdb2.start_embedded_debugger('classtime')
-    section['dependencies'] = dependencies
     return section
 
 def _condense_similar_sections(sections):
@@ -343,7 +328,8 @@ def _condense_similar_sections(sections):
         section, lead_section = sections[lag], sections[:][lead]
         if  section.get('day') == lead_section.get('day') \
         and section.get('startTime') == lead_section.get('startTime') \
-        and section.get('endTime') == lead_section.get('endTime'):
+        and section.get('endTime') == lead_section.get('endTime') \
+        and section.get('autoEnroll') == lead_section.get('autoEnroll'):
             if 'similarSections' not in section:
                 section['similarSections'] = []
             section['similarSections'].append(lead_section)
