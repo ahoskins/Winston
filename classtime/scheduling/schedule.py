@@ -136,6 +136,32 @@ class Schedule(object):
                 return True
         return False
 
+    def dependencies_satisfied(self, section):
+        def _dependency_satisfied(dependency, section):
+            if dependency.get('course') != section.get('course'):
+                return True
+            if dependency.get('autoEnroll') is None \
+               and section.get('autoEnroll') is None:
+                return True
+
+            if dependency.get('section') == section.get('autoEnroll'):
+                return True
+            if dependency.get('autoEnroll') == section.get('section'):
+                return True
+            return False
+        for section in self.sections:
+            for dependency in section['dependencies']:
+                for section in self.sections:
+                    if not _dependency_satisfied(dependency, section):
+                        logging.info('Invalid dependency! For:')
+                        logging.info('{}<->{}'.format(
+                          dependency.get('asString'), section.get('asString')))
+                        return False
+                logging.info('Dependencies satisfied! For:')
+                logging.info('{}<->{}'.format(
+                    dependency.get('asString'), section.get('asString')))
+        return True
+
     def attempt_add_to_timetable(self, section, section_num):
         """Attempts to add a section to the timetable
 

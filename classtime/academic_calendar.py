@@ -1,5 +1,6 @@
 
 import threading
+import collections
 
 from angular_flask.logging import logging
 logging = logging.getLogger(__name__) # pylint: disable=C0103
@@ -116,7 +117,6 @@ class AcademicCalendar(object):
         for course in courses:
             self.use_sections()
             if self._doesnt_know_about(term=self._term, course=course):
-                self.use_sections()
                 sections = self._fetch_sections(course)
                 self._save(sections)
 
@@ -126,7 +126,7 @@ class AcademicCalendar(object):
         return all_components
 
     def _get_components_single(self, course):
-        course_data = self._local_db.use_courses().get(course).to_dict()
+        course_info = self._local_db.use_courses().get(course).to_dict()
         section_query = self._local_db.use_sections() \
                                       .query() \
                                       .filter_by(course=course)
@@ -140,11 +140,12 @@ class AcademicCalendar(object):
             if len(section_models) > 0:
                 logging.debug('{}:{} - {} found'.format(
                     course, component, len(section_models)))
-            sections = list()
-            for section_model in section_models:
-                section = dict(course_data)
-                section.update(section_model.to_dict())
-                sections.append(section)
+            sections = [section_model.to_dict()
+                        for section_model in section_models]
+            sections = [_section_apply_course_info(section, course_info)
+                        for section in sections]
+            sections = [_section_add_dependencies(sections, section)
+                        for section in sections]
             component = _condense_similar_sections(sections)
             if len(component) > 0:
                 yield component
@@ -184,11 +185,6 @@ class AcademicCalendar(object):
         sections = self._fetch(term=self._term,
                                    course=course)
 
-        course_info = self._local_db.use_courses().get(course)
-        course_info_dict = course_info.to_dict()
-        sections = [_section_apply_course_info(section, course_info_dict)
-                    for section in sections]
-
         self.use_classtimes()
         classtimes_by_section = self._fetch_multiple(extras=[{
             'term': section.get('term'),
@@ -198,9 +194,7 @@ class AcademicCalendar(object):
         for section, classtimes in zip(sections, classtimes_by_section):
             section = _section_apply_times(section, classtimes)
 
-        sections = [_section_add_dependencies(self, section)
-                    for section in sections]
-
+        self.use_sections()
         return sections
 
     def _save(self, objects, datatype=None, primary_key=None, update=False):
@@ -311,25 +305,22 @@ def _section_apply_times(section, classtimes):
 
     return section
 
-def _section_add_dependencies(self, section):
-    dbthiscourse = self._local_db.sections().get(section.get('course'))
-    dbsections = {
-        dbsection.section: dbsection
-        for dbsection in dbthiscourse
-    }
-    dbautoenrolls = {
-        dbsection.autoEnroll: dbsection
-        for dbsection in dbthiscourse
-    }
+def _section_add_dependencies(sections, section):
+    """Adds a list of section dicts as a new attribute, 'dependencies'
 
+    Each section in 'dependencies' is a required co-dependency of the given
+    section. The sections are in the same *course*. If a schedule has a section
+    with an unsatisfied dependency (ie the dependency exists but a different
+    section has been chosen for that component), then the schedule is invalid.
+    """
     dependencies = list()
-    sectionstr = section.get('section')
-    if sectionstr in dbsections:
-        dependencies.append(dbsections.get(sectionstr))
-    if sectionstr in dbautoenrolls:
-        dependencies.append(dbautoenrolls.get(sectionstr))
-
+    for __section in sections[:]:
+        if __section.get('autoEnroll', '') == section.get('section'):
+            dependencies.append(__section)
+    if len(dependencies) > 0:
+        import rpdb2; rpdb2.start_embedded_debugger('classtime')
     section['dependencies'] = dependencies
+    return section
 
 def _condense_similar_sections(sections):
     """Fold similar sections into each other and return the result

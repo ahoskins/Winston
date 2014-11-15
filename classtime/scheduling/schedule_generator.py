@@ -49,17 +49,19 @@ def _generate_schedules(cal, term, course_ids, busy_times, num_requested):
         scoring functions
     :rtype: list of :ref:`schedule objects <api-schedule-object>`
     """
+    def _log_scheduling_component(num, component, pace):
+        logging.debug('({symbol}/{num}) Scheduling {name}'.format(
+            symbol=Schedule.SYMBOLS[pace],
+            num=num,
+            name=' '.join(component[0].get('asString').split()[:-1])))
+
     components = cal.get_components(term, course_ids)
     components = sorted(components, key=len)
 
     logging.info('Finding schedules for courses {}'.format(course_ids))
     candidates = [Schedule(busy_times=busy_times)]
     for pace, component in enumerate(components):
-        logging.debug('({symbol}/{num}) Scheduling {name}:{type}'.format(
-            symbol=Schedule.SYMBOLS[pace],
-            num=len(components),
-            name=component[0].get('asString'),
-            type=component[0].get('component')))
+        _log_scheduling_component(len(components), component, pace)
         candidates = _add_component(candidates, component, pace)
 
     candidates = [candidate for candidate in candidates
@@ -105,6 +107,8 @@ def _add_component(candidates, component, pace):
                 continue
             for section in component:
                 if candidate.conflicts(section):
+                    continue
+                if not candidate.dependencies_satisfied(section):
                     continue
                 _add_candidates(candidates,
                     candidate.clone().add_section(section),
