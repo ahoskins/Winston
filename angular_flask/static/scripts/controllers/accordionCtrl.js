@@ -22,8 +22,10 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // @callee: on page load
     //
     // @returns: sorted $scope.subjectBin
+    var tempSubjectBin = {};
+
     courseFactory.getCoursesPage(1).
-    success(function (data) {
+        success(function (data) {
             // De-serialize JSON data
             var pageListing = angular.fromJson(data),
                 total_pages = pageListing.total_pages,
@@ -38,21 +40,21 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 
                         // For each course on page of results
                         pageListing.objects.forEach(function (course) {
-                            if ($scope.subjectBin.hasOwnProperty(course.faculty)) {
+                            if (tempSubjectBin.hasOwnProperty(course.faculty)) {
                                 // We are within an existing faculty property
-                                if ($scope.subjectBin[course.faculty].hasOwnProperty(course.subject)) {
-                                    $scope.subjectBin[course.faculty][course.subject].push(course);
+                                if (tempSubjectBin[course.faculty].hasOwnProperty(course.subject)) {
+                                    tempSubjectBin[course.faculty][course.subject].push(course);
 
                                     // Sort the courses by course level number (small --> large)
-                                    $scope.subjectBin[course.faculty][course.subject].sort(compareByCourseNumber);
+                                    tempSubjectBin[course.faculty][course.subject].sort(compareByCourseNumber);
                                 }
                                 else {
-                                    $scope.subjectBin[course.faculty][course.subject] = [course];
+                                    tempSubjectBin[course.faculty][course.subject] = [course];
                                 }
                             }
                             else {
-                                $scope.subjectBin[course.faculty] = {};
-                                $scope.subjectBin[course.faculty][course.subject] = [course];
+                                tempSubjectBin[course.faculty] = {};
+                                tempSubjectBin[course.faculty][course.subject] = [course];
                             }
                         });
                     }).
@@ -62,10 +64,12 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 
                 page = page + 1;
             }
-    }).
-    error(function () {
+            $scope.subjectBin = tempSubjectBin;
+        }).
+        error(function () {
             $window.alert("Sorry, something went wrong.");
-    });
+        });
+
 
     // Sort by asString property
     //
@@ -134,6 +138,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // This affects the normal $digest cycle
     var filterTextTimeout;
     $scope.$watch('searchBox', function(val) {
+
         if (filterTextTimeout) {
             $timeout.cancel(filterTextTimeout);
         }
@@ -160,6 +165,13 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
             // Update view tally
             $rootScope.shoppingCartSize = $rootScope.shoppingCartSize + 1;
         }
+    };
+
+    // Helper functions ///////////////////////////////////
+    ///////////////////////////////////////////////////////
+    //
+    var isString = function(val) {
+        return !isNaN(parseFloat(val));
     };
 
 }]);
