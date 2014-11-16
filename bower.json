@@ -2,7 +2,8 @@
   "name": "classtime",
   "dependencies": {
     "angular-ui-calendar": "latest",
-    "angular-foundation": "0.4.0"
+    "angular-foundation": "0.4.0",
+    "underscore": "latest"
   },
   "resolutions": {
     "jquery": "~1.10.2"

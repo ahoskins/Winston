@@ -5,6 +5,7 @@ venv
 ignore
 *.swp
 ScheduleAlgorithm.docx
+.idea
 
 # nose-cprof output
 stats.dat
