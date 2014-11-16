@@ -78,7 +78,6 @@ def _generate_schedules(cal, term, course_ids, busy_times):
 
     candidates = [candidate for candidate in candidates
                   if len(candidate.sections) == len(components)]
-    logging.debug('Generated {} schedules'.format(len(candidates)))
     return sorted(candidates, reverse=True)
 
 def _add_component(candidates, component, pace):

@@ -142,12 +142,12 @@ class Schedule(object):
                 return True
         return False
 
-    def _has_dependency_conflict(self, section):    
+    def _has_dependency_conflict(self, section):
         potential_dependencies = [other
             for other in self.sections
             if other.get('course') == section.get('course')
             and other.get('component') != section.get('component')]
-        
+
         for other in potential_dependencies:
             if section.get('autoEnroll') is None \
             and other.get('autoEnroll') is None:
@@ -207,7 +207,7 @@ class Schedule(object):
         :returns: a new schedule with identical
                   * section list
                   * busy_time list
-                  * timetablen
+                  * timetable
         :rtype: Schedule
         """
         return Schedule(sections=self.sections,
