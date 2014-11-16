@@ -3,7 +3,7 @@ classtime
 
 Find a university schedule that fits your life in less than 5 minutes
 
-[screenshot or image here]
+![screenshot or image here](https://cloud.githubusercontent.com/assets/1527504/5063160/358f456e-6d98-11e4-9a65-01f91607817d.png)
 
 Documentation
 -------------
