@@ -117,8 +117,6 @@ def _add_component(candidates, component, pace):
             if _is_hopeless(candidate, pace):
                 continue
             for section in component:
-                if candidate.has_dependency_conflict(section):
-                    continue
                 if candidate.conflicts(section):
                     continue
                 _add_candidates(candidates,

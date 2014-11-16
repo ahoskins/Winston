@@ -130,19 +130,24 @@ class Schedule(object):
         :returns: whether it conflicts or not
         :rtype: boolean
         """
+        if self._has_timetable_conflict(section):
+            return True
+        if self._has_dependency_conflict(section):
+            return True
+
+    def _has_timetable_conflict(self, section):
         other = Schedule(section)
         for day in range(Schedule.NUM_DAYS):
             if other.timetable_bitmap[day] & self.timetable_bitmap[day] != 0:
                 return True
         return False
 
-    def has_dependency_conflict(self, section):
-        potential_dependencies = [other.get('section')
+    def _has_dependency_conflict(self, section):    
+        potential_dependencies = [other
             for other in self.sections
             if other.get('course') == section.get('course')
             and other.get('component') != section.get('component')]
         
-        satisfied = False
         for other in potential_dependencies:
             if section.get('autoEnroll') is None \
             and other.get('autoEnroll') is None:
@@ -150,10 +155,11 @@ class Schedule(object):
             if section.get('autoEnroll') == other.get('section') \
             or section.get('section') == other.get('autoEnroll'):
                 continue
-            logging.critical('[{}] needed:{} got:{}'.format(
+            logging.debug('Enforced dependency {}->{}, {}->{}'.format(
                 section.get('asString'),
                 section.get('autoEnroll'),
-                other.get('section')))
+                other.get('asString'),
+                other.get('autoEnroll')))
             return True
         return False
 
@@ -201,7 +207,7 @@ class Schedule(object):
         :returns: a new schedule with identical
                   * section list
                   * busy_time list
-                  * timetable
+                  * timetablen
         :rtype: Schedule
         """
         return Schedule(sections=self.sections,

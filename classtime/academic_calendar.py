@@ -144,9 +144,8 @@ class AcademicCalendar(object):
                         for section_model in section_models]
             sections = [_section_apply_course_info(section, course_info)
                         for section in sections]
-            component = _condense_similar_sections(sections)
-            if len(component) > 0:
-                yield component
+            if len(sections) > 0:
+                yield sections
 
     def _fetch(self, datatype=None, **kwargs):
         if datatype is None:
@@ -303,40 +302,3 @@ def _section_apply_times(section, classtimes):
     section['endTime'] = classtime.get('endTime')
 
     return section
-
-def _condense_similar_sections(sections):
-    """Fold similar sections into each other and return the result
-    
-    :param list sections: a list of section dicts. **Must be sorted
-        by day, startTime, and endTime**.
-    :returns: a list of section dicts where each element has the
-    'similarSections' field.
-
-    similarSections is a list of other sections which are:
-    1. The same component (ie CHEM 103 LAB)
-    2. On the same day
-    2. At the same time (same startTime and endTime)
-    """
-    if len(sections) <= 1:
-        return sections
-    length_pre = len(sections)
-    lag, lead = 0, 1
-    while lead < len(sections):
-        section, lead_section = sections[lag], sections[:][lead]
-        if  section.get('day') == lead_section.get('day') \
-        and section.get('startTime') == lead_section.get('startTime') \
-        and section.get('endTime') == lead_section.get('endTime') \
-        and section.get('autoEnroll') == lead_section.get('autoEnroll'):
-            if 'similarSections' not in section:
-                section['similarSections'] = []
-            section['similarSections'].append(lead_section)
-            sections.remove(lead_section)
-        else:
-            lag = lead
-            lead += 1
-    if len(sections) < length_pre:
-        logging.debug("Condensed course <{}:{}>'s sections: {}->{}".format(
-            sections[0].get('course'),
-            sections[0].get('component'),
-            length_pre, len(sections)))
-    return sections
