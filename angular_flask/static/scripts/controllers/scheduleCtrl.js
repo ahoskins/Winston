@@ -87,6 +87,12 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         scheduleInstance(scheduleIndex);
     };
 
+    // Event handle for clear button
+    $scope.clearAdded = function () {
+        $rootScope.addedCourses = [];
+        $rootScope.shoppingCartSize = 0;
+    };
+
     // @callee: $scope.getSchedules
     //
     // @returns: updated $scope.events

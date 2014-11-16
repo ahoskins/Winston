@@ -170,8 +170,11 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // Helper functions ///////////////////////////////////
     ///////////////////////////////////////////////////////
     //
-    var isString = function(val) {
+    var isNumber = function(val) {
         return !isNaN(parseFloat(val));
+    };
+    var isString = function(val) {
+        return (typeof val === "string");
     };
 
 

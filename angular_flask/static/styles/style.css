@@ -48,17 +48,17 @@ html {
 #next {
 	position: fixed;
 	top: 5px;
-	right: 20%;
+	right: 18%;
 }
 
 #prev {
 	position: fixed;
 	top: 5px;
-	right: 28%;
+	right: 26%;
 }
 
-.shoppingCart {
+#clear {
 	position: fixed;
-	top: 700px;
-	left: 50%;
+	top: 5px;
+	right: 34%;
 }
