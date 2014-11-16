@@ -51,29 +51,25 @@ class AcademicCalendar(object):
         # pylint: disable=W0212
         def _idly_download_courses(self, sleeptime):
             import time
-            self.use_terms()
-            if self._doesnt_know_about():
+            if self.doesnt_know_about(datatype='terms'):
                 logging.info('[worker] Fetching all <{}> terms'.format(
                     institution))
-                terms = self._fetch()
-                self._save(terms)
+                terms = self._fetch(datatype='terms')
+                self._save(terms, datatype='terms')
 
-            self._local_db.push_terms()
             terms = [term.term
-                     for term in self._local_db.query().all()]
-            self._local_db.pop_datatype()
+                     for term in self._local_db.query(datatype='terms').all()]
 
             terms.append('1490')
             terms.reverse()
             for termid in terms:
-                self.use_courses()
-                if self._doesnt_know_about(term=termid):
-                    logging.info('[worker] Fetching <{}> <{}> for <term={}>'.format(
+                if self.doesnt_know_about(datatype='courses', term=termid):
+                    logging.info('[worker] Fetching courses - <{}> <term={}>'.format(
                         institution, 'courses', termid))
-                    courses = self._fetch(term=termid)
-                    self._save(courses)
-                    logging.info('[worker]...Saved <{}> <{} for <term={}>, sleeping for {}s now'.format(
-                        institution, 'courses', termid, sleeptime))
+                    courses = self._fetch(datatype='courses', term=termid)
+                    self._save(courses, datatype='courses')
+                    logging.info('[worker]...Saved {} courses - <{}> <term={}>. Sleeping {}s'.format(
+                        len(courses), institution, termid, sleeptime))
                     for _ in range(sleeptime):
                         time.sleep(1)
 
@@ -99,34 +95,30 @@ class AcademicCalendar(object):
         it will be filled with all courses for this term
         from the remote db.
         """
-        self.push_terms()
-        if self._doesnt_know_about():
-            terms = self._fetch()
-            self._save(terms)
-        self.pop_datatype()
+        if self.doesnt_know_about(datatype='terms'):
+            terms = self._fetch(datatype='terms')
+            self._save(terms, datatype='terms')
 
-        self.push_terms()
-        if self._doesnt_know_about(primary_key=termid):
+        if self.doesnt_know_about(datatype='terms', identifier=termid):
             logging.critical('Invalid term <{}> at <{}>'.format(
                 termid, self._institution))
-        self.pop_datatype()
         self._term = termid
 
-        self.push_courses()
-        if self._doesnt_know_about():
+        if self.doesnt_know_about(datatype='courses', term=termid):
             logging.info('Fetching courses, <{}> <term={}>'.format(
                 self._institution, self._term))
-            courses = self._fetch(term=self._term)
-            self._save(courses)
+            courses = self._fetch(datatype='courses', term=self._term)
+            self._save(courses, datatype='courses')
 
     def get_components(self, term, courses):
         self.select_active_term(term)
 
         for course in courses:
-            self.use_sections()
-            if self._doesnt_know_about(term=self._term, course=course):
-                sections = self._fetch_sections(course)
-                self._save(sections)
+            if self.doesnt_know_about(datatype='sections',
+                                      term=self._term, course=course):
+                sections = self._fetch(datatype='sections',
+                    term=self._term, course=course)
+                self._save(sections, datatype='sections')
 
         all_components = list()
         for course in courses:
@@ -134,10 +126,20 @@ class AcademicCalendar(object):
         return all_components
 
     def _get_components_single(self, course):
-        course_info = self._local_db.use_courses().get(course).to_dict()
-        section_query = self._local_db.use_sections() \
-                                      .query() \
-                                      .filter_by(course=course)
+        def _attach_course_info(section_dict, course_dict):
+            clone = dict(section_dict)
+            section_dict.update(course_dict)
+            section_dict.update(clone)
+            section_dict['class_'] = clone.get('class')
+            section_dict['asString'] = ' '.join([course_dict.get('asString'),
+                                                 section_dict.get('component'),
+                                                 section_dict.get('section')])
+            return section_dict
+
+        course_info = self._local_db.get(datatype='course', identifier=course) \
+                                    .to_dict()
+        section_query = self._local_db.query(datatype='sections') \
+                                      .filter_by(term=self._term, course=course)
         for component in ['LEC', 'LAB', 'SEM']:
             section_models = section_query \
                 .filter_by(component=component) \
@@ -151,98 +153,108 @@ class AcademicCalendar(object):
                 course, component, len(section_models)))
             sections = [section_model.to_dict()
                         for section_model in section_models]
-            sections = [_section_apply_course_info(section, course_info)
+            sections = [_attach_course_info(section, course_info)
                         for section in sections]
-            if len(sections) > 0:
-                yield sections
+            yield sections
 
-    def _fetch(self, datatype=None, **kwargs):
-        if datatype is None:
-            datatype = self._datatype
+    def _fetch(self, datatype, **kwargs):
         if datatype not in self._remote_db.known_searches():
             logging.error('<{}> has no datatype <{}>'.format(
                 self._institution, datatype))
-            return False
-        logging.debug("Fetching <{}> <{}> ({}) from remote db".format(
-            self._institution, datatype, kwargs))
-        results = self._remote_db.search(datatype, **kwargs)
+            results = list()
+        else:
+            logging.debug("Fetching <{}> <{}> ({}) from remote db".format(
+                self._institution, datatype, kwargs))
+            results = self._remote_db.search(datatype, **kwargs)
+
+            if 'section' in datatype.lower():
+                results = self._attach_classtimes(results)
         return results
 
-    def _fetch_multiple(self, datatype=None, extras=None):
-        if datatype is None:
-            datatype = self._datatype
-        if extras is None:
-            extras = list()
-
+    def _fetch_multiple(self, datatype, identifiers):
         if datatype not in self._remote_db.known_searches():
             logging.error('<{}> has no datatype <{}>'.format(
                 self._institution, datatype))
-            return False
+            results = list()
+        else:
+            logging.debug("Fetching <{}> <{}> <{}> from remote db".format(
+                len(identifiers), self._institution, datatype))
 
-        logging.debug("Fetching <{}> <{}> <{}> from remote db".format(
-            len(extras), self._institution, datatype))
+            results = self._remote_db.search_multiple(
+                [datatype] * len(identifiers),
+                identifiers)
 
-        results = self._remote_db.search_multiple([datatype] * len(extras),
-                                                  extras)
+            if 'section' in datatype.lower():
+                results = self._attach_classtimes(results)
         return results
 
-    def _fetch_sections(self, course):
-        self.use_sections()
-        sections = self._fetch(term=self._term,
-                               course=course)
+    def _attach_classtimes(self, sections):
+        def _attach_classtimes_single(section, classtimes):
+            if len(classtimes) == 0:
+                logging.warning('{} has zero timetable objects'
+                                .format(section.get('asString')))
+                classtime = dict()
+            elif len(classtimes) == 1:
+                classtime = classtimes[0]
+            else:
+                logging.warning('{} has multiple timetable objects'.format(
+                    section.get('asString')))
+                classtime = classtimes[0]
+            section['day'] = classtime.get('day')
+            section['location'] = classtime.get('location')
+            section['startTime'] = classtime.get('startTime')
+            section['endTime'] = classtime.get('endTime')
+            return section
 
-        self.use_classtimes()
-        classtimes_by_section = self._fetch_multiple(extras=[{
+        identifiers = [{
             'term': section.get('term'),
             'course': section.get('course'),
             'class_': section.get('class')
-        } for section in sections])
-        for section, classtimes in zip(sections, classtimes_by_section):
-            section = _section_apply_times(section, classtimes)
-
-        self.use_sections()
+        } for section in sections]
+        classtimes = self._fetch_multiple(datatype='classtimes',
+            identifiers=identifiers)
+        for section, classtime in zip(sections, classtimes):
+            section = _attach_classtimes_single(section, classtime)
         return sections
 
-    def _save(self, objects, datatype=None, primary_key=None, update=False):
-        if datatype is None:
-            datatype = self._datatype
-        if primary_key is None:
-            primary_key = self._primary_key
+    def _save(self, objects, datatype, should_update=False):
+        self.push_datatype(datatype)
 
-        def _should_update_logs(i, num):
+        def _should_report_progress(i, num):
             return i == num or num < 5 or i % (num / 5) == 0
 
-        def _update_logs(i, num):
+        def _report_progress(i, num):
             logging.debug('...{}%\t({}/{})'.format(i * 100 / num, i, num))
 
         logging.debug("Saving some <{}> <{}> to local db".format(
             self._institution, datatype))
         for i, obj in enumerate(objects, start=1):
-            if self._doesnt_know_about(datatype=datatype,
-                                       primary_key=obj.get(primary_key)):
-                self._local_db.use(datatype).add(obj)
-            elif update:
-                db_obj = self._local_db.get(datatype=datatype,
-                                            primary_key=obj.get(primary_key))
-                for attr, value in obj.iteritems():
-                    setattr(db_obj, attr, value)
-            if _should_update_logs(i, len(objects)):
-                _update_logs(i, len(objects))
+            should_add = self.doesnt_know_about(datatype=self.cur_datatype(),
+                identifier=obj.get(self.cur_primary_key()))
+            if should_add:
+                self._local_db.add(obj, datatype=self.cur_datatype())
+            elif should_update:
+                self._local_db.update(obj,
+                    datatype=self.cur_datatype(),
+                    identifier=obj.get(self.cur_primary_key()))
+            if _should_report_progress(i, len(objects)):
+                _report_progress(i, len(objects))
         try:
             self._local_db.commit()
         except:
             logging.error("Failed to save <{}> <{}> to local_db".format(
-                self._institution, datatype))
+                self._institution, self.cur_datatype()))
         else:
             logging.debug("Saved some <{}> <{}> to local_db".format(
-                self._institution, datatype))
+                self._institution, self.cur_datatype()))
 
-    def _doesnt_know_about(self, datatype=None, primary_key=None, **kwargs):
-        if datatype is None:
-            datatype = self._datatype
-        return not self._local_db.exists(datatype=datatype,
-                                         primary_key=primary_key,
-                                         **kwargs)
+        self.pop_datatype()
+
+    def doesnt_know_about(self, datatype, identifier=None, **kwargs):
+        retval = not self._local_db.exists(datatype=datatype,
+                                           identifier=identifier,
+                                           **kwargs)
+        return retval
 
     def push_datatype(self, datatype):
         """ONLY for use with unknown datatypes coming from an outside source.
@@ -293,33 +305,3 @@ class AcademicCalendar(object):
         self._datatype_stack.append('classtimes')
         self._primary_key_stack.append(None)
         return self
-
-
-def _section_apply_course_info(section_dict, course_dict):
-    clone = dict(section_dict)
-    section_dict.update(course_dict)
-    section_dict.update(clone)
-    section_dict['class_'] = clone.get('class')
-    section_dict['asString'] = ' '.join([course_dict.get('asString'),
-                                         section_dict.get('component'),
-                                         section_dict.get('section')])
-    return section_dict
-
-
-def _section_apply_times(section, classtimes):
-    if len(classtimes) == 0:
-        logging.warning('{} has zero timetable objects'
-                        .format(section.get('asString')))
-        classtime = dict()
-    elif len(classtimes) == 1:
-        classtime = classtimes[0]
-    else:
-        logging.warning('{} has multiple timetable objects'.format(
-            section.get('asString')))
-        classtime = classtimes[0]
-    section['day'] = classtime.get('day')
-    section['location'] = classtime.get('location')
-    section['startTime'] = classtime.get('startTime')
-    section['endTime'] = classtime.get('endTime')
-
-    return section

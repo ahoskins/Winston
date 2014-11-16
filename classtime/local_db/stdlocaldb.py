@@ -31,6 +31,7 @@ class StandardLocalDatabase(object):
         db.create_all()
 
     def push_datatype(self, datatype):
+        datatype = datatype.lower()
         if 'term' in datatype:
             self.push_terms()
         elif 'course' in datatype:
@@ -78,7 +79,7 @@ class StandardLocalDatabase(object):
     def cur_datatype_model(self):
         return self._model_stack[-1]
 
-    def exists(self, datatype, primary_key=None, **kwargs):
+    def exists(self, datatype, identifier=None, **kwargs):
         """Checks whether an object exists with the given primary key. 
         If no primary key is given, checks if *any* object exists.
 
@@ -94,35 +95,37 @@ class StandardLocalDatabase(object):
         * local_db.push_terms().exists('1490').pop_datatype()
         * local_db.push_sections().exists().pop_datatype()
         """
-        self.push_datatype(datatype)
-
         if kwargs:
-            retval = self.query().filter_by(**kwargs).first() is not None
-        elif primary_key is None:
-            retval = self.query().first() is not None
+            retval = self.query(datatype) \
+                         .filter_by(**kwargs) \
+                         .first() is not None
+        elif identifier is None:
+            retval = self.query(datatype) \
+                         .first() is not None
         else:
-            retval = self.get(datatype, primary_key) is not None
-
-        self.pop_datatype()
+            retval = self.get(datatype, identifier) is not None
         return retval
 
-    def get(self, datatype, primary_key):
+    def get(self, datatype, identifier):
         self.push_datatype(datatype)
         
         filter_dict = {
-            primary_key_from_model(self.cur_datatype_model()): primary_key
+            primary_key_from_model(self.cur_datatype_model()): identifier
         }
-        retval = self.query().filter_by(**filter_dict).first()
+        retval = self.query(datatype).filter_by(**filter_dict).first()
 
         self.pop_datatype()
         return retval
 
-    def query(self):
-        return self.cur_datatype_model() \
-                   .query \
-                   .filter_by(institution=self._institution)
+    def query(self, datatype):
+        self.push_datatype(datatype)
+        retval = self.cur_datatype_model() \
+                 .query \
+                 .filter_by(institution=self._institution)
+        self.pop_datatype()
+        return retval
 
-    def add(self, datatype, model_dict):
+    def add(self, model_dict, datatype):
         """Adds an 'add command' to the running transaction which will
         add a new model with attributes specified by dict 'data_dict'
 
@@ -135,6 +138,13 @@ class StandardLocalDatabase(object):
         db.session.add(self.cur_datatype_model()(model_dict))
 
         self.pop_datatype()
+
+    def update(self, model_dict, datatype, identifier):
+        db_obj = self.get(datatype=datatype,
+                          identifier=identifier)
+        for attr, value in model_dict.iteritems():
+            setattr(db_obj, attr, value)
+
 
     def commit(self):
         """Commits the running transaction to the database
