@@ -68,10 +68,7 @@ def find_schedules(result=None, search_params=None):
 
     NUM_SCHEDULES = 10
 
-    institution = search_params.get('institution', 'ualberta')
-    schedules = scheduling.find_schedules(institution,
-        search_params,
-        NUM_SCHEDULES)
+    schedules = scheduling.find_schedules(search_params, NUM_SCHEDULES)
     result['num_results'] = len(schedules)
     result['objects'] = list()
     for schedule in schedules:
