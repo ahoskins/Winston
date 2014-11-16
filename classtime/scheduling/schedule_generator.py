@@ -39,17 +39,18 @@ def find_schedules(schedule_params, num_requested):
     logging.info('Received schedule request')
 
     schedules = _generate_schedules(cal,
-        term, course_ids, busy_times,
-        num_requested)
+        term, course_ids, busy_times)
     if len(schedules) == 0:
         logging.error('No schedules found for q={}'.format(
             schedule_params))
     else:
-        logging.info('Returning {} schedules from request q={}'.format(
-            len(schedules), schedule_params))
-    return schedules
+        logging.info('Returning {}/{} schedules from request q={}'.format(
+            min(num_requested, len(schedules)),
+            len(schedules),
+            schedule_params))
+    return schedules[:num_requested]
 
-def _generate_schedules(cal, term, course_ids, busy_times, num_requested):
+def _generate_schedules(cal, term, course_ids, busy_times):
     """Generate a finite number of schedules
 
     :param int num_requested: maximum number of schedules to return.
@@ -78,7 +79,7 @@ def _generate_schedules(cal, term, course_ids, busy_times, num_requested):
     candidates = [candidate for candidate in candidates
                   if len(candidate.sections) == len(components)]
     logging.debug('Generated {} schedules'.format(len(candidates)))
-    return sorted(candidates, reverse=True)[:num_requested]
+    return sorted(candidates, reverse=True)
 
 def _add_component(candidates, component, pace):
     """
