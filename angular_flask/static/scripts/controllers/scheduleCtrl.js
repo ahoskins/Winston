@@ -113,6 +113,10 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         // @return {void}: updates $scope.events
         return function (i) {
 
+            var cachedColors = [];
+            var colorPallet = ['#443111', '#d0c8b3', '#af9b56', '#2a4560', '#83a283'];
+            var colorPalletIndex = 0;
+
             scheduleListing.objects[i].sections.forEach(function (classtime) {
 
                 // Null check
@@ -201,18 +205,24 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
                     offset = 5 - dayNumber;
                 }
 
-                // Add event using parameters:
-                // asString
-                // Time
-                // Day
+                // Color //
                 //
-                // @returns {void} an event is added to $scope.events array
-                function addEvent(offset) {
-                    $scope.events.push({
-                        title: classtime.asString,
-                        start: new Date(y,m,d + offset, startHour, startMinute),
-                        end: new Date(y,m,d + offset,endHour,endMinute)
-                    });
+                var currentColor;
+                var foundColor = false;
+
+                cachedColors.forEach(function (cachedCourse) {
+                    // Already in cached colors
+                    if (cachedCourse.name === classtime.course) {
+                        currentColor = cachedCourse.color;
+                        foundColor = true;
+                    }
+                });
+
+                // Not already in cache
+                if (!foundColor) {
+                    currentColor = colorPallet[colorPalletIndex];
+                    cachedColors.push({name: classtime.course, color: currentColor});
+                    colorPalletIndex = colorPalletIndex + 1;
                 }
 
                 // Add event //
