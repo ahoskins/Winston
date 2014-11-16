@@ -18,7 +18,7 @@ WORKERS = 16
 WORKLOAD_SIZE = CANDIDATE_POOL_SIZE / WORKERS
 """Number of candidate schedules to give to each worker process"""
 
-def find_schedules(institution, schedule_params, num_requested):
+def find_schedules(schedule_params, num_requested):
     """
     :param AcademicCalendar cal: calendar to pull section data from
     :param dict schedule_params: parameters to build the schedule with.
@@ -28,6 +28,7 @@ def find_schedules(institution, schedule_params, num_requested):
     if 'term' not in schedule_params:
         logging.error("Schedule generation call did not specify <term>")
     term = schedule_params.get('term', '')
+    institution = schedule_params.get('institution', 'ualberta')
     cal = classtime.get_calendar(institution)
 
     if 'courses' not in schedule_params:
@@ -35,9 +36,21 @@ def find_schedules(institution, schedule_params, num_requested):
     course_ids = schedule_params.get('courses', list())
     busy_times = schedule_params.get('busy-times', list())
 
-    return _generate_schedules(cal, term, course_ids, busy_times, num_requested)
+    logging.info('Received schedule request')
 
-def _generate_schedules(cal, term, course_ids, busy_times, num_requested):
+    schedules = _generate_schedules(cal,
+        term, course_ids, busy_times)
+    if len(schedules) == 0:
+        logging.error('No schedules found for q={}'.format(
+            schedule_params))
+    else:
+        logging.info('Returning {}/{} schedules from request q={}'.format(
+            min(num_requested, len(schedules)),
+            len(schedules),
+            schedule_params))
+    return schedules[:num_requested]
+
+def _generate_schedules(cal, term, course_ids, busy_times):
     """Generate a finite number of schedules
 
     :param int num_requested: maximum number of schedules to return.
@@ -49,39 +62,38 @@ def _generate_schedules(cal, term, course_ids, busy_times, num_requested):
         scoring functions
     :rtype: list of :ref:`schedule objects <api-schedule-object>`
     """
+    def _log_scheduling_component(num, component, pace):
+        logging.debug('({symbol}/{num}) Scheduling {name}'.format(
+            symbol=Schedule.SYMBOLS[pace],
+            num=num,
+            name=' '.join(component[0].get('asString').split()[:-1])))
+
     components = cal.get_components(term, course_ids)
     components = sorted(components, key=len)
 
-    logging.info('Finding schedules for courses {}'.format(course_ids))
     candidates = [Schedule(busy_times=busy_times)]
     for pace, component in enumerate(components):
-        logging.debug('({symbol}/{num}) Scheduling {name}:{type}'.format(
-            symbol=Schedule.SYMBOLS[pace],
-            num=len(components),
-            name=component[0].get('asString'),
-            type=component[0].get('component')))
+        _log_scheduling_component(len(components), component, pace)
         candidates = _add_component(candidates, component, pace)
 
     candidates = [candidate for candidate in candidates
                   if len(candidate.sections) == len(components)]
-    if len(candidates) == 0:
-        logging.error('No schedules found')
-    return sorted(candidates, reverse=True)[:num_requested]
+    return sorted(candidates, reverse=True)
 
 def _add_component(candidates, component, pace):
     """
     Schedule generation algorithm
-    1. Take a candidate schedule.
-    2. Make a new candidate schedule by adding a candidate section ("A2")
-        from the given component ("CHEM 101 LEC").
-    3. If the new candidate schedule has a direct conflict, throw it out
-    4. Do (2,3) for all available sections in the component.
-    5. Do (4) for all candidate schedules.
-    6. Do battle royale with the schedules to cull the weak.
-        Return the victors.
+    1. Pick a schedule candidate from the list.
+    2. Pick a section ("A2") for a component ("LAB") of a course ("CHEM")
+      2b. If the section conflicts with the schedule, throw it out
+      2c. Otherwise, add it to the schedule.
+    3. Do 2 for all section options ("A3") for the component ("LAB").
+    4. Do 3 for all components ("LAB") of a course ("CHEM")
+    5. Do 4 for all schedule candidates
+    6. Do battle royale with the schedules. Only keep the best.
 
     7. Add the next component using (1->6).
-    8. Continue until all components are scheduled.
+    8. Repeat until all courses are scheduled.
     """
     def _candidate_battle_royale(candidates, component, pace, heap_size, out_q):
         """Put the `heap_size` best candidates onto the `out_q`

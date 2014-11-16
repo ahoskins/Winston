@@ -125,7 +125,7 @@ class AcademicCalendar(object):
         return all_components
 
     def _get_components_single(self, course):
-        course_data = self._local_db.use_courses().get(course).to_dict()
+        course_info = self._local_db.use_courses().get(course).to_dict()
         section_query = self._local_db.use_sections() \
                                       .query() \
                                       .filter_by(course=course)
@@ -136,39 +136,16 @@ class AcademicCalendar(object):
                 .order_by(self._local_db.Section.startTime.desc()) \
                 .order_by(self._local_db.Section.endTime.desc()) \
                 .all()
-            if len(section_models) > 0:
-                logging.debug('{}:{} - {} found'.format(
-                    course, component, len(section_models)))
-            sections = list()
-            for section_model in section_models:
-                section = dict(course_data)
-                section.update(section_model.to_dict())
-                sections.append(section)
-            component = _condense_similar_sections(sections)
-            if len(component) > 0:
-                yield component
-
-    def _fetch_sections(self, course):
-        self.use_sections()
-        sections = self._fetch(term=self._term,
-                                   course=course)
-        course_info = self._local_db.use_courses().get(course)
-        course_info_dict = course_info.to_dict()
-        for section in sections:
-            section = _section_apply_course_info(section, course_info_dict)
-
-        self.use_classtimes()
-        classtimes_by_section = self._fetch_multiple(extras=[{
-            'term': section.get('term'),
-            'course': section.get('course'),
-            'class_': section.get('class')
-        } for section in sections])
-
-        for section, classtimes in zip(sections, classtimes_by_section):
-            section = _section_apply_times(section, classtimes)
-
-        self.use_sections()
-        return sections
+            if len(section_models) == 0:
+                continue
+            logging.debug('{}:{} - {} found'.format(
+                course, component, len(section_models)))
+            sections = [section_model.to_dict()
+                        for section_model in section_models]
+            sections = [_section_apply_course_info(section, course_info)
+                        for section in sections]
+            if len(sections) > 0:
+                yield sections
 
     def _fetch(self, datatype=None, **kwargs):
         if datatype is None:
@@ -200,6 +177,23 @@ class AcademicCalendar(object):
                                                   extras)
         return results
 
+    def _fetch_sections(self, course):
+        self.use_sections()
+        sections = self._fetch(term=self._term,
+                               course=course)
+
+        self.use_classtimes()
+        classtimes_by_section = self._fetch_multiple(extras=[{
+            'term': section.get('term'),
+            'course': section.get('course'),
+            'class_': section.get('class')
+        } for section in sections])
+        for section, classtimes in zip(sections, classtimes_by_section):
+            section = _section_apply_times(section, classtimes)
+
+        self.use_sections()
+        return sections
+
     def _save(self, objects, datatype=None, primary_key=None, update=False):
         if datatype is None:
             datatype = self._datatype
@@ -212,14 +206,12 @@ class AcademicCalendar(object):
         def _update_logs(i, num):
             logging.debug('...{}%\t({}/{})'.format(i*100/num, i, num))
 
-
         logging.debug("Saving some <{}> <{}> to local db".format(
             self._institution, datatype))
-        self._local_db.use(datatype)
         for i, obj in enumerate(objects, start=1):
             if self._doesnt_know_about(datatype=datatype,
                                        primary_key=obj.get(primary_key)):
-                self._local_db.add(obj)
+                self._local_db.use(datatype).add(obj)
             elif update:
                 db_obj = self._local_db.get(datatype=datatype,
                                             primary_key=obj.get(primary_key))
@@ -252,15 +244,16 @@ class AcademicCalendar(object):
         """
         datatype = datatype.lower()
         if 'term' in datatype:
-            return self.use_terms()
+            self.use_terms()
         elif 'course' in datatype:
-            return self.use_courses()
+            self.use_courses()
         elif 'section' in datatype:
-            return self.use_sections()
+            self.use_sections()
         elif 'classtime' in datatype:
-            return self.use_classtimes()
+            self.use_classtimes()
         else:
             logging.error('Cannot find datatype <{}>'.format(datatype))
+        return self
 
     def use_terms(self):
         self._datatype = 'terms'
@@ -274,7 +267,7 @@ class AcademicCalendar(object):
 
     def use_sections(self):
         self._datatype = 'sections'
-        self._primary_key = 'class_'
+        self._primary_key = 'class'
         return self
 
     def use_classtimes(self):
@@ -287,6 +280,9 @@ def _section_apply_course_info(section_dict, course_dict):
     section_dict.update(course_dict)
     section_dict.update(clone)
     section_dict['class_'] = clone.get('class')
+    section_dict['asString'] = ' '.join([course_dict.get('asString'),
+                                         section_dict.get('component'),
+                                         section_dict.get('section')])
     return section_dict
 
 def _section_apply_times(section, classtimes):
@@ -297,9 +293,8 @@ def _section_apply_times(section, classtimes):
     elif len(classtimes) == 1:
         classtime = classtimes[0]
     else:
-        # --> too noisy while debugging other things
-        # logging.warning('{} has multiple timetable objects'.format(
-        #     section.get('asString'))
+        logging.warning('{} has multiple timetable objects'.format(
+            section.get('asString')))
         classtime = classtimes[0]
     section['day'] = classtime.get('day')
     section['location'] = classtime.get('location')
@@ -307,39 +302,3 @@ def _section_apply_times(section, classtimes):
     section['endTime'] = classtime.get('endTime')
 
     return section
-
-def _condense_similar_sections(sections):
-    """Fold similar sections into each other and return the result
-    
-    :param list sections: a list of section dicts. **Must be sorted
-        by day, startTime, and endTime**.
-    :returns: a list of section dicts where each element has the
-    'similarSections' field.
-
-    similarSections is a list of other sections which are:
-    1. The same component (ie CHEM 103 LAB)
-    2. On the same day
-    2. At the same time (same startTime and endTime)
-    """
-    if len(sections) <= 1:
-        return sections
-    length_pre = len(sections)
-    lag, lead = 0, 1
-    while lead < len(sections):
-        section, lead_section = sections[lag], sections[:][lead]
-        if  section.get('day') == lead_section.get('day') \
-        and section.get('startTime') == lead_section.get('startTime') \
-        and section.get('endTime') == lead_section.get('endTime'):
-            if 'similarSections' not in section:
-                section['similarSections'] = []
-            section['similarSections'].append(lead_section)
-            sections.remove(lead_section)
-        else:
-            lag = lead
-            lead += 1
-    if len(sections) < length_pre:
-        logging.debug("Condensed course <{}:{}>'s sections: {}->{}".format(
-            sections[0].get('course'),
-            sections[0].get('component'),
-            length_pre, len(sections)))
-    return sections

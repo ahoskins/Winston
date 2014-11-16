@@ -69,6 +69,7 @@ class StandardLocalDatabase(object):
             self.use_sections()
         else:
             logging.error('Cannot find datatype <{}>'.format(datatype))
+        return self
 
     def exists(self, primary_key=None, datatype=None, **kwargs):
         """Checks whether an object exists with the given primary key. 
