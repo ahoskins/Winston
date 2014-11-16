@@ -2,12 +2,14 @@
 import threading
 
 from angular_flask.logging import logging
-logging = logging.getLogger(__name__) # pylint: disable=C0103
+logging = logging.getLogger(__name__)  # pylint: disable=C0103
 
 from classtime.remote_db import RemoteDatabaseFactory
 from classtime.local_db import LocalDatabaseFactory
 
+
 class AcademicCalendar(object):
+
     """Manages academic calendar data for a particular institution
 
     Internal access method style is::
@@ -29,8 +31,8 @@ class AcademicCalendar(object):
         """
         self._institution = institution
         self._term = None
-        self._datatype = 'terms'
-        self._primary_key = 'term'
+        self._datatype_stack = ['terms']
+        self._primary_key_stack = ['term']
 
         try:
             self._remote_db = RemoteDatabaseFactory.build(institution)
@@ -46,30 +48,36 @@ class AcademicCalendar(object):
 
     @classmethod
     def idly_fill(cls, institution):
-        #pylint: disable=W0212
+        # pylint: disable=W0212
         def _idly_download_courses(self, sleeptime):
             import time
             self.use_terms()
             if self._doesnt_know_about():
-                logging.info('[idle_worker] Fetching all <{}> terms'.format(institution))
+                logging.info('[worker] Fetching all <{}> terms'.format(
+                    institution))
                 terms = self._fetch()
                 self._save(terms)
 
-            terms = [term.term for term in self._local_db.use_terms().query().all()]
+            self._local_db.push_terms()
+            terms = [term.term
+                     for term in self._local_db.query().all()]
+            self._local_db.pop_datatype()
+
             terms.append('1490')
             terms.reverse()
             for termid in terms:
                 self.use_courses()
                 if self._doesnt_know_about(term=termid):
-                    logging.info('[idle_worker] Fetching <{}> <{}> for <term={}>'.format(
+                    logging.info('[worker] Fetching <{}> <{}> for <term={}>'.format(
                         institution, 'courses', termid))
                     courses = self._fetch(term=termid)
                     self._save(courses)
-                    logging.info('[idle_worker]...Saved <{}> <{} for <term={}>, sleeping for {}s now'.format(
+                    logging.info('[worker]...Saved <{}> <{} for <term={}>, sleeping for {}s now'.format(
                         institution, 'courses', termid, sleeptime))
-                    for _ in range(sleeptime): time.sleep(1)
+                    for _ in range(sleeptime):
+                        time.sleep(1)
 
-        #pylint: enable=W0212 #pylint: disable=I0012
+        # pylint: enable=W0212 #pylint: disable=I0012
         if AcademicCalendar.idle_workers.get(institution) is None:
             idle_worker = threading.Thread(
                 target=_idly_download_courses,
@@ -91,19 +99,20 @@ class AcademicCalendar(object):
         it will be filled with all courses for this term
         from the remote db.
         """
-        self.use_terms()
+        self.push_terms()
         if self._doesnt_know_about():
             terms = self._fetch()
             self._save(terms)
+        self.pop_datatype()
 
-        self.use_terms()
+        self.push_terms()
         if self._doesnt_know_about(primary_key=termid):
-            logging.critical('Invalid term <{}> at <{}>. Not activated.'.format(
+            logging.critical('Invalid term <{}> at <{}>'.format(
                 termid, self._institution))
-            return
+        self.pop_datatype()
         self._term = termid
 
-        self.use_courses()
+        self.push_courses()
         if self._doesnt_know_about():
             logging.info('Fetching courses, <{}> <term={}>'.format(
                 self._institution, self._term))
@@ -173,7 +182,7 @@ class AcademicCalendar(object):
         logging.debug("Fetching <{}> <{}> <{}> from remote db".format(
             len(extras), self._institution, datatype))
 
-        results = self._remote_db.search_multiple([datatype]*len(extras),
+        results = self._remote_db.search_multiple([datatype] * len(extras),
                                                   extras)
         return results
 
@@ -201,10 +210,10 @@ class AcademicCalendar(object):
             primary_key = self._primary_key
 
         def _should_update_logs(i, num):
-            return i == num or num < 5 or i % (num/5) == 0
+            return i == num or num < 5 or i % (num / 5) == 0
 
         def _update_logs(i, num):
-            logging.debug('...{}%\t({}/{})'.format(i*100/num, i, num))
+            logging.debug('...{}%\t({}/{})'.format(i * 100 / num, i, num))
 
         logging.debug("Saving some <{}> <{}> to local db".format(
             self._institution, datatype))
@@ -235,7 +244,7 @@ class AcademicCalendar(object):
                                          primary_key=primary_key,
                                          **kwargs)
 
-    def use(self, datatype):
+    def push_datatype(self, datatype):
         """ONLY for use with unknown datatypes coming from an outside source.
 
         If you know the datatype from context, use the named method.
@@ -244,36 +253,47 @@ class AcademicCalendar(object):
         """
         datatype = datatype.lower()
         if 'term' in datatype:
-            self.use_terms()
+            self.push_terms()
         elif 'course' in datatype:
-            self.use_courses()
+            self.push_courses()
         elif 'section' in datatype:
-            self.use_sections()
+            self.push_sections()
         elif 'classtime' in datatype:
-            self.use_classtimes()
+            self.push_classtimes()
         else:
             logging.error('Cannot find datatype <{}>'.format(datatype))
         return self
 
-    def use_terms(self):
-        self._datatype = 'terms'
-        self._primary_key = 'term'
+    def pop_datatype(self):
+        self._datatype_stack.pop()
+        self._primary_key_stack.pop()
+
+    def cur_datatype(self):
+        return self._datatype_stack[-1]
+
+    def cur_primary_key(self):
+        return self._primary_key_stack[-1]
+        
+    def push_terms(self):
+        self._datatype_stack.append('terms')
+        self._primary_key_stack.append('term')
         return self
 
-    def use_courses(self):
-        self._datatype = 'courses'
-        self._primary_key = 'course'
+    def push_courses(self):
+        self._datatype_stack.append('courses')
+        self._primary_key_stack.append('course')
         return self
 
-    def use_sections(self):
-        self._datatype = 'sections'
-        self._primary_key = 'class'
+    def push_sections(self):
+        self._datatype_stack.append('sections')
+        self._primary_key_stack.append('class')
         return self
 
-    def use_classtimes(self):
-        self._datatype = 'classtimes'
-        self._primary_key = None
+    def push_classtimes(self):
+        self._datatype_stack.append('classtimes')
+        self._primary_key_stack.append(None)
         return self
+
 
 def _section_apply_course_info(section_dict, course_dict):
     clone = dict(section_dict)
@@ -285,10 +305,11 @@ def _section_apply_course_info(section_dict, course_dict):
                                          section_dict.get('section')])
     return section_dict
 
+
 def _section_apply_times(section, classtimes):
     if len(classtimes) == 0:
-        logging.warning('{} has zero timetable objects'\
-            .format(section.get('asString')))
+        logging.warning('{} has zero timetable objects'
+                        .format(section.get('asString')))
         classtime = dict()
     elif len(classtimes) == 1:
         classtime = classtimes[0]
