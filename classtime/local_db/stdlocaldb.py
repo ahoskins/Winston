@@ -15,6 +15,11 @@ def primary_key_from_model(model):
 
 class StandardLocalDatabase(object):
     """A single institution's view of the local database
+
+    Uses a stack-based accessor idiom. Usage:
+    self.push_<datatype>()
+    ... use self.cur_datatype_model() ...
+    self.pop_<datatype>()
     """
 
     def __init__(self, institution):
@@ -89,11 +94,6 @@ class StandardLocalDatabase(object):
 
         :returns: whether the object with that primary key exists
         :rtype: boolean
-
-        Usage: 
-        * local_db.push_terms().exists().pop_datatype()
-        * local_db.push_terms().exists('1490').pop_datatype()
-        * local_db.push_sections().exists().pop_datatype()
         """
         if kwargs:
             retval = self.query(datatype) \

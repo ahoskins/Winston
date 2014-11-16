@@ -2,20 +2,18 @@
 import threading
 
 from angular_flask.logging import logging
-logging = logging.getLogger(__name__)  # pylint: disable=C0103
+logging = logging.getLogger(__name__) # pylint: disable=C0103
 
 from classtime.remote_db import RemoteDatabaseFactory
 from classtime.local_db import LocalDatabaseFactory
 
-
 class AcademicCalendar(object):
-
     """Manages academic calendar data for a particular institution
 
-    Internal access method style is::
-
-     self.use_<datatype>()
-     self._<fetch_query_or_save_datatype>()
+    Uses a stack-based access idiom. Usage::
+     self.push_<datatype>()
+     ... use self.cur_datatype() or self.cur_primary_key() ...
+     self.pop_<datatype>()
     """
 
     idle_workers = dict()
@@ -48,6 +46,9 @@ class AcademicCalendar(object):
 
     @classmethod
     def idly_fill(cls, institution):
+        """Launches a new thread which idly fetches and saves
+        course data from the given institution
+        """
         # pylint: disable=W0212
         def _idly_download_courses(self, sleeptime):
             import time
@@ -64,12 +65,12 @@ class AcademicCalendar(object):
             terms.reverse()
             for termid in terms:
                 if self.doesnt_know_about(datatype='courses', term=termid):
-                    logging.info('[worker] Fetching courses - <{}> <term={}>'.format(
-                        institution, 'courses', termid))
+                    msg = '[worker] Fetching courses - <{}> <term={}>'
+                    logging.info(msg.format(institution, termid))
                     courses = self._fetch(datatype='courses', term=termid)
                     self._save(courses, datatype='courses')
-                    logging.info('[worker]...Saved {} courses - <{}> <term={}>. Sleeping {}s'.format(
-                        len(courses), institution, termid, sleeptime))
+                    msg = '[worker]...Saved {} courses - <{}> <term={}>'
+                    logging.info(msg.format(len(courses), institution, termid))
                     for _ in range(sleeptime):
                         time.sleep(1)
 
@@ -234,8 +235,7 @@ class AcademicCalendar(object):
             if should_add:
                 self._local_db.add(obj, datatype=self.cur_datatype())
             elif should_update:
-                self._local_db.update(obj,
-                    datatype=self.cur_datatype(),
+                self._local_db.update(obj, datatype=self.cur_datatype(),
                     identifier=obj.get(self.cur_primary_key()))
             if _should_report_progress(i, len(objects)):
                 _report_progress(i, len(objects))
