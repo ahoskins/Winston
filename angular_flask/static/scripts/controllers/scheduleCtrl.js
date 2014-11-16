@@ -42,11 +42,14 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         scheduleLength,
         scheduleIndex = 0;
 
+
     // Event handle for gen-sched button
     //
     $scope.getSchedules = function () {
         scheduleFactory.getSchedules($rootScope.addedCourses).
             success(function (data) {
+                disableGenerateSchedules();
+
                 var scheduleListing = angular.fromJson(data);
 
                 // Create closure with current scheduleListing
@@ -56,7 +59,7 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
                 scheduleInstance(0);
             }).
             error(function() {
-                $window.alert("error dude");
+                $window.alert("Schedules not found.");
             });
     };
 
@@ -78,25 +81,28 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
             }
         }
 
-        // Clear current events
-        while ($scope.events.length > 0) {
-            $scope.events.pop();
-        }
+        clearEvents();
 
         // Invoke the closure on the new index
         scheduleInstance(scheduleIndex);
     };
 
     // Event handle for clear button
+    //
     $scope.clearAdded = function () {
         $rootScope.addedCourses = [];
         $rootScope.shoppingCartSize = 0;
+
+        clearEvents();
+
+        enableGenerateSchedules();
     };
+
 
     // @callee: $scope.getSchedules
     //
     // @returns: updated $scope.events
-    var renderSchedule = function (scheduleListing) {
+    function renderSchedule (scheduleListing) {
 
         scheduleLength = scheduleListing.objects.length;
 
@@ -171,34 +177,28 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
                 var dayNumber = date.getDay(),
                     offset;
 
-
                 // Use the current day {int:0:6} of the week
                 // Enumerate each day of the week {int:0:6}
                 // and find the offset {int:0:6}
                 // Use this offset to find calendar day number  {int:0:31}
                 if (classtime.day.match(/M/)) {
                     offset = 1 - dayNumber;
-                    addEvent(offset);
                 }
 
                 if (classtime.day.match(/T/)) {
                     offset = 2 - dayNumber;
-                    addEvent(offset);
                 }
 
                 if (classtime.day.match(/W/)) {
                     offset = 3 - dayNumber;
-                    addEvent(offset);
                 }
 
                 if (classtime.day.match(/R/)) {
                     offset = 4 - dayNumber;
-                    addEvent(offset);
                 }
 
                 if (classtime.day.match(/F/)) {
                     offset = 5 - dayNumber;
-                    addEvent(offset);
                 }
 
                 // Add event using parameters:
@@ -214,7 +214,37 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
                         end: new Date(y,m,d + offset,endHour,endMinute)
                     });
                 }
+
+                // Add event //
+                //
+                $scope.events.push({
+                    title: classtime.asString,
+                    start: new Date(y,m,d + offset, startHour, startMinute),
+                    end: new Date(y,m,d + offset,endHour,endMinute),
+                    color: currentColor
+                });
             });
         };
-    };
+    }
+
+
+
+    // Helper functions
+    //
+    function disableGenerateSchedules() {
+        // Disable
+        document.getElementById('get-classes').disabled = true;
+    }
+
+    function enableGenerateSchedules() {
+        // Enable
+        document.getElementById('get-classes').disabled = false;
+    }
+
+    function clearEvents() {
+        // Clear current events
+        while ($scope.events.length > 0) {
+            $scope.events.pop();
+        }
+    }
 }]);
