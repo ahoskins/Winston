@@ -138,6 +138,9 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // This affects the normal $digest cycle
     var filterTextTimeout;
     $scope.$watch('searchBox', function(val) {
+        if (!isString(val)) {
+            return;
+        }
 
         if (filterTextTimeout) {
             $timeout.cancel(filterTextTimeout);
