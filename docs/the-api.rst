@@ -55,11 +55,11 @@ Examples:
 
  * Get courses for a certain institution and a certain term::
 
-	 GET /api/courses-min?q={"filters":[{"name":"institution","op":"equal","val":"ualberta"},{"name":"term","op":"equal","val":"1490"}]}
+	 GET /api/courses-min?q={"filters":[{"name":"institution","op":"equals","val":"ualberta"},{"name":"term","op":"equal","val":"1490"}]}
 
  * Get terms for a certain institution::
 
- 	 GET /api/terms?q={"filters":[{"name":"institution","op":"equal","val":"ualberta"}]}
+ 	 GET /api/terms?q={"filters":[{"name":"institution","op":"equals","val":"ualberta"}]}
 
 
 .. _api-institutions
