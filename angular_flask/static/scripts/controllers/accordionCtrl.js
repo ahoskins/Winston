@@ -1,7 +1,7 @@
 // Accordion Controller
 //
 
-coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope) {
+coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', '$location', '$anchorScroll', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope, $location, $anchorScroll) {
 
     // Organized course object
     //
@@ -122,6 +122,13 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
                     $window.alert("Something fucked up.");
                 });
         }
+
+        // Scroll to opened accordion
+        //
+        // Change location hash
+        $location.hash(courseIdNumber);
+        // Scroll to this hash
+        $anchorScroll();
     };
 
     // Wait 0.5 seconds until displaying any courses
