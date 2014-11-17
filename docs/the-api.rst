@@ -27,7 +27,20 @@ The exception is :ref:`api/courses/\<course> <api-courses>`, which returns a sin
 
 It is possible for zero ``<response object>``\ s to be returned.
 
-Pagination is supported through ``page`` and ``total_pages``. To get the nth page, append ``?page=<n>`` to any endpoint - if you are using a search query already, use ``?q=<search_query>&page=<n>``
+Pagination
+~~~~~~~~~~
+
+Each response includes:
+ * ``page`` := page number returned
+ * ``total_pages`` := total number of pages
+
+To get the nth page, append ``?page=<n>`` to any endpoint::
+
+ GET /api/courses-min?page=2
+
+If you are using a search query, append the page number with ``&``::
+
+ GET /api/courses-min?q=<search_query>&page=2
 
 Search queries
 ~~~~~~~~~~~~~~
