@@ -103,6 +103,15 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     $scope.subjects = [];
     $scope.renderCourses = function (subject) {
         $scope.subjects[subject] = 1;
+
+        $location.hash(subject);
+        $anchorScroll();
+
+    };
+
+    $scope.adjustScrollHash = function(faculty) {
+        $location.hash(faculty);
+        $anchorScroll();
     };
 
     // @callee: 3rd layer of accordion

@@ -19,9 +19,9 @@
 		<br>
 
         <accordion>
-            <accordion-group class="faculty-accordion" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText">
+            <accordion-group class="faculty-accordion" id="{{ facultyName }}" heading="{{ facultyName }}" ng-click="adjustScrollHash(facultyName)" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText">
                 <accordion>
-                    <accordion-group class="subject-accordion" heading="{{ subjectName }}" ng-click="renderCourses(subjectName)" data-ng-repeat="(subjectName, subjectObject) in facultyObject">
+                    <accordion-group class="subject-accordion" id="{{ subjectName }}" heading="{{ subjectName }}" ng-click="renderCourses(subjectName)" data-ng-repeat="(subjectName, subjectObject) in facultyObject">
                         <accordion>
                             <accordion-group class="course-accordion" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject">
                                 <a><i class="foundicon-plus" ng-click="addToSchedule(singleCourse)"> Add</i></a>
@@ -40,7 +40,7 @@
     <div data-ng-controller="scheduleCtrl">
         <button id="get-classes" ng-click="getSchedules()">Generate</button>
 
-        <a class="button dropdown" id="shopping-cart" dropdown-toggle="#cart">Shopping Cart</a>
+        <a class="button dropdown" id="shopping-cart" dropdown-toggle="#cart">Shopping Cart ({{ shoppingCartSize }})</a>
         <ul id="cart" class="f-dropdown">
             <li ng-repeat="course in addedCourses">
                 <span>{{course.asString  }}  <span><i class="foundicon-minus" ng-click="removeFromSchedule(course)"></i></span></span>

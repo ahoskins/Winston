@@ -51,6 +51,7 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         $rootScope.shoppingCartSize = $rootScope.shoppingCartSize - 1;
     };
 
+
     // Event handle for gen-sched button
     //
     $scope.getSchedules = function () {
