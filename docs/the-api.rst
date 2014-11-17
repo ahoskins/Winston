@@ -61,6 +61,17 @@ Examples:
 
  	 GET /api/terms?q={"filters":[{"name":"institution","op":"equals","val":"ualberta"}]}
 
+Available operators `listed here <http://flask-restless.readthedocs.org/en/latest/searchformat.html#operators>`__. As of this writing, they are::
+
+    ==, eq, equals, equals_to
+    !=, neq, does_not_equal, not_equal_to
+    >, gt, <, lt
+    >=, ge, gte, geq, <=, le, lte, leq
+    in, not_in
+    is_null, is_not_null
+    like
+    has
+    any
 
 .. _api-institutions
 
