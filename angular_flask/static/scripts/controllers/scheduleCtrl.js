@@ -159,6 +159,27 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
                     endHour = parseInt(endTimeString[1]);
                 }
 
+                // Color //
+                //
+                //
+                var currentColor;
+                var foundColor = false;
+
+                cachedColors.forEach(function (cachedCourse) {
+                    // Already in cached colors
+                    if (cachedCourse.name === classtime.course) {
+                        currentColor = cachedCourse.color;
+                        foundColor = true;
+                    }
+                });
+
+                // Not already in cache
+                if (!foundColor) {
+                    currentColor = colorPallet[colorPalletIndex];
+                    cachedColors.push({name: classtime.course, color: currentColor});
+                    colorPalletIndex = colorPalletIndex + 1;
+                }
+
                 // Day //
                 //
                 //
@@ -187,52 +208,40 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
                 // Use this offset to find calendar day number  {int:0:31}
                 if (classtime.day.match(/M/)) {
                     offset = 1 - dayNumber;
+                    addEvent();
                 }
 
                 if (classtime.day.match(/T/)) {
                     offset = 2 - dayNumber;
+                    addEvent();
                 }
 
                 if (classtime.day.match(/W/)) {
                     offset = 3 - dayNumber;
+                    addEvent();
                 }
 
                 if (classtime.day.match(/R/)) {
                     offset = 4 - dayNumber;
+                    addEvent();
                 }
 
                 if (classtime.day.match(/F/)) {
                     offset = 5 - dayNumber;
-                }
-
-                // Color //
-                //
-                var currentColor;
-                var foundColor = false;
-
-                cachedColors.forEach(function (cachedCourse) {
-                    // Already in cached colors
-                    if (cachedCourse.name === classtime.course) {
-                        currentColor = cachedCourse.color;
-                        foundColor = true;
-                    }
-                });
-
-                // Not already in cache
-                if (!foundColor) {
-                    currentColor = colorPallet[colorPalletIndex];
-                    cachedColors.push({name: classtime.course, color: currentColor});
-                    colorPalletIndex = colorPalletIndex + 1;
+                    addEvent();
                 }
 
                 // Add event //
                 //
-                $scope.events.push({
-                    title: classtime.asString,
-                    start: new Date(y,m,d + offset, startHour, startMinute),
-                    end: new Date(y,m,d + offset,endHour,endMinute),
-                    color: currentColor
-                });
+                function addEvent() {
+                    $scope.events.push({
+                        title: classtime.asString,
+                        start: new Date(y, m, d + offset, startHour, startMinute),
+                        end: new Date(y, m, d + offset, endHour, endMinute),
+                        color: currentColor
+                    });
+                }
+
             });
         };
     }
