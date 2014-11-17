@@ -62,3 +62,9 @@ html {
 	top: 5px;
 	right: 34%;
 }
+
+#shopping-cart {
+	position: fixed;
+	top: 5px;
+	right: 10%;
+}

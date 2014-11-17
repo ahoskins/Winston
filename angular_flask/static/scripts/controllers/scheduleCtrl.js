@@ -43,6 +43,14 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         scheduleIndex = 0;
 
 
+    $scope.removeFromSchedule = function(course) {
+        var index = $scope.addedCourses.indexOf(course);
+        if (index > -1) {
+            $scope.addedCourses.splice(index, 1);
+        }
+        $rootScope.shoppingCartSize = $rootScope.shoppingCartSize - 1;
+    };
+
     // Event handle for gen-sched button
     //
     $scope.getSchedules = function () {
