@@ -1,7 +1,7 @@
 // Accordion Controller
 //
 
-coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', '$location', '$anchorScroll', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope, $location, $anchorScroll) {
+coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', '$location', '$anchorScroll', '$document', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope, $location, $anchorScroll, $document) {
 
     // Organized course object
     //
@@ -95,6 +95,10 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // Performance //////////////////////////////////////
     /////////////////////////////////////////////////////
     //
+    //
+    // @callee: 1st layer of accordion
+    //
+
     // @callee: 2nd layer of accordion
     //
     // On click of the 2nd layer of the accordion
@@ -103,15 +107,6 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     $scope.subjects = [];
     $scope.renderCourses = function (subject) {
         $scope.subjects[subject] = 1;
-
-        $location.hash(subject);
-        $anchorScroll();
-
-    };
-
-    $scope.adjustScrollHash = function(faculty) {
-        $location.hash(faculty);
-        $anchorScroll();
     };
 
     // @callee: 3rd layer of accordion
@@ -131,13 +126,6 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
                     $window.alert("Something fucked up.");
                 });
         }
-
-        // Scroll to opened accordion
-        //
-        // Change location hash
-        $location.hash(courseIdNumber);
-        // Scroll to this hash
-        $anchorScroll();
     };
 
     // Wait 0.5 seconds until displaying any courses
@@ -195,7 +183,6 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     var isString = function(val) {
         return (typeof val === "string");
     };
-
 
 }]);
 

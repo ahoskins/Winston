@@ -19,11 +19,11 @@
 		<br>
 
         <accordion>
-            <accordion-group class="faculty-accordion" id="{{ facultyName }}" heading="{{ facultyName }}" ng-click="adjustScrollHash(facultyName)" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText">
+            <accordion-group class="faculty-accordion" id="{{ facultyName }}" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText" scroll-smooth>
                 <accordion>
-                    <accordion-group class="subject-accordion" id="{{ subjectName }}" heading="{{ subjectName }}" ng-click="renderCourses(subjectName)" data-ng-repeat="(subjectName, subjectObject) in facultyObject">
+                    <accordion-group class="subject-accordion" id="{{ subjectName }}" heading="{{ subjectName }}" ng-click="renderCourses(subjectName)" data-ng-repeat="(subjectName, subjectObject) in facultyObject" scroll-smooth>
                         <accordion>
-                            <accordion-group class="course-accordion" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject">
+                            <accordion-group class="course-accordion" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject" scroll-smooth>
                                 <a><i class="foundicon-plus" ng-click="addToSchedule(singleCourse)"> Add</i></a>
                                 <br>
                                 {{ description[singleCourse.course] }}
@@ -69,9 +69,12 @@
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/fullcalendar/gcal.js"></script>
 
+    <!--Memoization-->
     <script type="text/javascript" src="/static/scripts/vendor/memoize.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/filterStabilize.js"></script>
 
+    <!--Smooth Scroll-->
+    <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-scroll/angular-scroll.min.js"></script>
 
     <!--MM-Foundation-->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-foundation/mm-foundation-tpls.min.js"></script>
@@ -90,6 +93,9 @@
 
     <!--Filters-->
 	<script type="text/javascript" src="/static/scripts/services/filter.js"></script>
+
+    <!--Directive-->
+    <script type="text/javascript" src="/static/scripts/services/scrollSmooth.js"></script>
 
 	</body>
 </html>

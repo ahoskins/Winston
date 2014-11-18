@@ -3,7 +3,8 @@
   "dependencies": {
     "angular-ui-calendar": "latest",
     "angular-foundation": "0.4.0",
-    "underscore": "latest"
+    "underscore": "latest",
+    "angular-scroll": "latest"
   },
   "resolutions": {
     "jquery": "~1.10.2"
