@@ -1,6 +1,7 @@
 
 import os
 import json
+from collections import defaultdict
 
 from angular_flask.logging import logging
 
@@ -56,17 +57,66 @@ api_manager.create_api(Course,
                        results_per_page=COURSES_PER_PAGE,
                        max_results_per_page=COURSES_PER_PAGE)
 
+def courses_min_structured(result=None, search_params=None):
+    def new_list_and_set():
+        return list(defaultdict(list)), set()
+    if result is None:
+        return
+    obj_courses = result['objects']
+    faculty_list, faculty_set = new_list_and_set()
+    subject_list, subject_set = new_list_and_set()
+    for course in obj_courses:
+        if course.get('faculty') not in faculty_set:
+            faculty_set.add(course.get('faculty'))
+            faculty_list.append({
+                'faculty': course.get('faculty'),
+                'subjects': list()
+            })
+            subject_list, subject_set = new_list_and_set()
+
+        if course.get('subject') not in subject_set:
+            subject_set.add(course.get('subject'))
+            subject_list.append({
+                'subject': course.get('subject'),
+                'subjectTitle': course.get('subjectTitle'),
+                'courses': list()
+            })
+            faculty_list[-1]['subjects'] = subject_list
+
+        subject_list[-1]['courses'].append({
+            'course': course.get('course'),
+            'asString': course.get('asString')
+        })
+    result['objects'] = faculty_list
+    return
+
+
+
+api_manager.create_api(Course,
+                       collection_name='courses-min-structured',
+                       methods=['GET'],
+                       include_columns=['asString',
+                                        'faculty',
+                                        'subject',
+                                        'subjectTitle',
+                                        'course'],
+                       postprocessors={
+                           'GET_MANY': [courses_min_structured]
+                       },
+                       results_per_page=COURSES_PER_PAGE,
+                       max_results_per_page=COURSES_PER_PAGE)
+
+  
 # --------------------------------
 # Schedule Generation
 # --------------------------------
 
+NUM_SCHEDULES = 10
 def find_schedules(result=None, search_params=None):
     if result is None:
         result = dict()
     result['page'] = 1
     result['total_pages'] = 1
-
-    NUM_SCHEDULES = 10
 
     schedules = scheduling.find_schedules(search_params, NUM_SCHEDULES)
     result['num_results'] = len(schedules)
