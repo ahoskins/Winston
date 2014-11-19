@@ -1,7 +1,7 @@
 // Accordion Controller
 //
 
-coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', '$location', '$anchorScroll', '$document', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope, $location, $anchorScroll, $document) {
+coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope) {
 
     // Organized course object
     //
@@ -114,6 +114,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // On click of 3rd layer of accordion
     // Retrieves course details and displays it
     $scope.description = {};
+    $scope.showId = [];
     $scope.loadMore = function (courseIdNumber) {
         // Only call API if not yet added to $scope.description
         if (!$scope.description.hasOwnProperty(courseIdNumber)) {
@@ -134,7 +135,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // This is hides this lag (I better come up with a better fix eventually)
     $timeout(function() {
         $scope.filterText = '';
-    }, 500);
+    }, 1000);
 
     // Watcher: search box filter
     //

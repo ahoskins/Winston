@@ -3,9 +3,9 @@ html {
 	margin-right: 10px;
 }
 
+/*Add some fade in animation here*/
 .course-accordion {
 	width: 80%;
-	/*position: absolute;*/
 }
 
 .faculty-accordion {

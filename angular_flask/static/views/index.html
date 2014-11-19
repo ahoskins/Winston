@@ -5,6 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="/static/styles/foundation.min.css"/>
     <link rel="stylesheet" type="text/css" href="/static/styles/stylesheets/general_foundicons.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/styles/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/styles/animate.css"/>
     <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.css"/>
 </head>
 <body>
@@ -19,14 +20,16 @@
 		<br>
 
         <accordion>
-            <accordion-group class="faculty-accordion" id="{{ facultyName }}" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText" scroll-smooth>
+            <accordion-group class="faculty-accordion animate-if" id="{{ facultyName }}" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText" scroll-smooth>
                 <accordion>
-                    <accordion-group class="subject-accordion" id="{{ subjectName }}" heading="{{ subjectName }}" ng-click="renderCourses(subjectName)" data-ng-repeat="(subjectName, subjectObject) in facultyObject" scroll-smooth>
+                    <accordion-group class="subject-accordion animate-if" id="{{ subjectName }}" heading="{{ subjectName }}" ng-click="renderCourses(subjectName)" data-ng-repeat="(subjectName, subjectObject) in facultyObject" scroll-smooth>
                         <accordion>
-                            <accordion-group class="course-accordion" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject" scroll-smooth>
-                                <a><i class="foundicon-plus" ng-click="addToSchedule(singleCourse)"> Add</i></a>
-                                <br>
-                                {{ description[singleCourse.course] }}
+                            <accordion-group class="course-accordion animate-if" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject" scroll-smooth>
+                                <div class="animate-if">
+                                    <a><i class="foundicon-plus" ng-click="addToSchedule(singleCourse)"> Add</i></a>
+                                    <br>
+                                    {{ description[singleCourse.course] }}
+                                </div>
                             </accordion-group>
                         </accordion>
                     </accordion-group>
@@ -61,13 +64,16 @@
     </div>
 
     <!--Core Dependencies-->
-    <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery-ui/ui/jquery-ui.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular/angular.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/underscore/underscore-min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-ui-calendar/src/calendar.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/fullcalendar/gcal.js"></script>
+
+    <!--Animate-->
+    <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-animate/angular-animate.min.js"></script>
 
     <!--Memoization-->
     <script type="text/javascript" src="/static/scripts/vendor/memoize.js"></script>
