@@ -261,12 +261,12 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
     //
     function disableGenerateSchedules() {
         // Disable
-        document.getElementById('get-classes').disabled = true;
+        document.getElementById('generate-button').disabled = true;
     }
 
     function enableGenerateSchedules() {
         // Enable
-        document.getElementById('get-classes').disabled = false;
+        document.getElementById('generate-button').disabled = false;
     }
 
     function clearEvents() {

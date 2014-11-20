@@ -41,7 +41,7 @@
 
     <!--Schedule: controlled by scheduleCtrl.js-->
     <div data-ng-controller="scheduleCtrl">
-        <button id="get-classes" ng-click="getSchedules()">Generate</button>
+        <button id="generate-button" ng-click="getSchedules()">Generate</button>
 
         <a class="button dropdown" id="shopping-cart" dropdown-toggle="#cart">Shopping Cart ({{ shoppingCartSize }})</a>
         <ul id="cart" class="f-dropdown">
@@ -50,7 +50,7 @@
             </li>
         </ul>
 
-        <div id="tally">{{ shoppingCartSize }}</div>
+        <div id="shopping-cart-size">{{ shoppingCartSize }}</div>
 
         <!--Clear-->
         <button id="clear" ng-click="clearAdded()">Clear</button>
@@ -59,7 +59,7 @@
         <!--<button id="next" ng-click="displayDifferentSchedule(1)">Next</button>-->
         <!--<button id="prev" ng-click="displayDifferentSchedule(0)">Prev</button>-->
 
-        <div id="cal" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div>
+        <div id="schedule-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div>
 
     </div>
 

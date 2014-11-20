@@ -3,24 +3,34 @@ html {
 	margin-right: 10px;
 }
 
-/*Add some fade in animation here*/
-.course-accordion {
-	width: 80%;
-}
-
-.faculty-accordion {
-    width: 49%;
-}
-
-.subject-accordion {
-    width: 70%;
-}
-
+/*Accordion*/
+/**/
+/**/
 #searchBox {
 	width: 49%;
 }
 
-#cal {
+.faculty-accordion {
+	width: 49%;
+}
+
+.subject-accordion {
+	width: 70%;
+}
+
+.course-accordion {
+	width: 80%;
+}
+
+.foundicon-right-arrow {
+	position: relative;
+}
+
+
+/*Schedule*/
+/**/
+/**/
+#schedule-div {
 	left: 50%;
 	width: 50%;
 	top: 50px;
@@ -29,17 +39,13 @@ html {
 	position: fixed;
 }
 
-.foundicon-right-arrow {
-	position: relative;
-}
-
-#get-classes {
+#generate-button {
 	position: fixed;
 	top: 5px;
 	right: 5px;
 }
 
-#tally {
+#shopping-cart-size {
 	position: fixed;
 	top: 5px;
 	right: 20px;
