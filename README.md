@@ -10,13 +10,18 @@ Documentation
 
 Documentation follows [reStructuredText] syntax, looks great when built with [sphinx], and is best viewed in a browser.
 
+Clone the repo
 > $ git clone https://github.com/rosshamish/classtime  
 > $ cd classtime  
 
+Install requirements
 > $ pip install -r requirements.txt  
 
+Build with [sphinx]
 > $ cd docs  
 > $ make html  
+
+View
 > $ firefox _build/html/index.html &
 
 When documentation is unclear, missing, or incorrect, [add an issue][issue-new] to the [docs work queue][milestones].
