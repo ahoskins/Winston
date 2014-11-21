@@ -30,10 +30,3 @@ When documentation is unclear, missing, or incorrect, [add an issue][issue-new] 
 [sphinx]: http://sphinx-doc.org/
 [issue-new]: https://github.com/RossHamish/classtime/issues/new
 [milestones]: https://github.com/RossHamish/classtime/milestones
-
-IRC
----
-
-We hang out in channel #classtime on irc.freenode.net
-
-If you are unfamiliar with IRC, you can connect at http://webchat.freenode.net
