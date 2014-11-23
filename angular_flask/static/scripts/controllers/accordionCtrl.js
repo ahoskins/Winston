@@ -26,7 +26,12 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 //          }]
 //    }];
     $scope.subjectBin = [];
-    
+
+    function FacultyObject(faculty, subjects) {
+        this.faculty = faculty;
+        this.subjects = subjects;
+    }
+
     function insertIntoSubjectBin(SFacultyGroup) {
         var inserted = false;
         var SfacultyName = SFacultyGroup.faculty;
@@ -34,25 +39,24 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         // Case 1: Insert into already existing faculty
         $scope.subjectBin.forEach(function(subjectBinObject) {
             if (subjectBinObject.faculty === SfacultyName) {
+
                 // faculty object already exists
                 // Push onto subjects array
                 SFacultyGroup.subjects.forEach(function(Ssubject) {
-                    subjectBinObject.push(Ssubject);
+                    subjectBinObject.subjects.push(Ssubject);
                 });
                 inserted = true;
             }
         });
 
+        // Case 2: create new faculty and insert
         if (!inserted) {
-            // Case 2: create new faculty and insert
-            var newObj = {
-                faculty: SfacultyName,
-                subjects: []
-            };
-
+            var subjects = [];
             SFacultyGroup.subjects.forEach(function (subject) {
-                newObj.subjects.push(subject);
+                subjects.push(subject);
             });
+
+            var newObj = new FacultyObject(SfacultyName, subjects);
 
             $scope.subjectBin.push(newObj);
         }
@@ -69,10 +73,30 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     courseFactory.getCoursesPage(1).
         success(function (data) {
             var pageListing = angular.fromJson(data),
-            total_pages = pageListing.total_pages;
+                total_pages = pageListing.total_pages;
+
             parsePage(pageListing);
+
+            //Get remaining pages
+            var page = 1;
+            while (page <= total_pages) {
+                courseFactory.getCoursesPage(page).
+                    success(function (data1) {
+                        pageListing = angular.fromJson(data1);
+                        //console.log(pageListing);
+                        parsePage(pageListing);
+                    }).
+                    error(function () {
+                        $window.alert("Failed to get data");
+                    });
+               page = page + 1;
+            }
             console.log($scope.subjectBin);
+        }).
+        error(function () {
+           $window.alert("Failed to get data");
         });
+
 
     // Read in courses from factory, courseFactory.js ////////////
     /////////////////////////////////////////////////////////////
