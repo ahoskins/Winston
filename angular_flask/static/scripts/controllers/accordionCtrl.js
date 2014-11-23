@@ -3,6 +3,7 @@
 
 coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope) {
 
+    // OLD $scope.subjectBin
     // Organized course object
     //
     // $scope.subjectBin = {
@@ -15,13 +16,14 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     //     }
     // }
 
+    // NEW $scope.subjectBin
     // $scope.subjectBin = [{
 //          facultyName: 'Faculty of Engineering',
 //          subjects: [{
-//             subjectName: 'ECE',
+//             subject: 'ECE',
 //             courses: [{course-object>}...]
 //          }, {
-//             subjectName: 'MEC E',
+//             subject: 'MEC E',
 //             courses: [{<course-object>},...]
 //          }]
 //    }];
@@ -69,34 +71,35 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         });
     }
 
+    var total_pages,
+        page = 1;
 
-    courseFactory.getCoursesPage(1).
-        success(function (data) {
-            var pageListing = angular.fromJson(data),
-                total_pages = pageListing.total_pages;
+    getData(page);
 
-            parsePage(pageListing);
+    function getData(page) {
+        courseFactory.getCoursesPage(page).
+            success(function (data) {
 
-            //Get remaining pages
-            var page = 1;
-            while (page <= total_pages) {
-                courseFactory.getCoursesPage(page).
-                    success(function (data1) {
-                        pageListing = angular.fromJson(data1);
-                        //console.log(pageListing);
-                        parsePage(pageListing);
-                    }).
-                    error(function () {
-                        $window.alert("Failed to get data");
-                    });
-               page = page + 1;
-            }
-            console.log($scope.subjectBin);
-        }).
-        error(function () {
-           $window.alert("Failed to get data");
-        });
+                var pageListing = angular.fromJson(data);
 
+                if (page === 1) {
+                    total_pages = pageListing.total_pages;
+                }
+
+                parsePage(pageListing);
+
+                //Get remaining pages
+                page = page + 1;
+
+                if (page <= total_pages) {
+                    getData(page);
+                }
+                
+            }).
+            error(function () {
+                $window.alert("Failed to get data");
+            });
+    }
 
     // Read in courses from factory, courseFactory.js ////////////
     /////////////////////////////////////////////////////////////

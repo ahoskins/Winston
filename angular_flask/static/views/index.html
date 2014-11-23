@@ -19,6 +19,25 @@
 		</div>
 		<br>
 
+
+        <accordion>
+            <accordion-group class="faculty-accordion animate-if" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" data-ng-repeat="facultyObject in subjectBin" scroll-smooth>
+                <accordion>
+                    <accordion-group class="subject-accordion animate-if" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" data-ng-repeat="subjectObject in facultyObject.subjects" scroll-smooth>
+                        <accordion>
+                            <accordion-group class="course-accordion animate-if" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" scroll-smooth>
+                                <div class="animate-if">
+                                    <a><i class="foundicon-plus" ng-click="addToSchedule(singleCourse)"> Add</i></a>
+                                    <br>
+                                    {{ description[singleCourse.course] }}
+                                </div>
+                            </accordion-group>
+                        </accordion>
+                    </accordion-group>
+                </accordion>
+            </accordion-group>
+        </accordion>
+
         <!--<accordion>-->
             <!--<accordion-group class="faculty-accordion animate-if" id="{{ facultyName }}" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText" scroll-smooth>-->
                 <!--<accordion>-->
