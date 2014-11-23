@@ -57,6 +57,28 @@ api_manager.create_api(Course,
                        results_per_page=COURSES_PER_PAGE,
                        max_results_per_page=COURSES_PER_PAGE)
 
+def courses_min_order_faculty_subject(search_params=None):
+    logging.warning(str(search_params))
+    if search_params is None:
+        return
+    if 'order_by' not in search_params:
+        search_params['order_by'] = list()
+    search_params['order_by'].extend([
+        {
+            'field': 'faculty',
+            'direction': 'asc'
+        },
+        {
+            'field': 'subject',
+            'direction': 'asc'
+        },
+        {
+            'field': 'asString',
+            'direction': 'asc'
+        }
+    ])
+
+
 def courses_min_structured(result=None, search_params=None):
     def new_list_and_set():
         return list(defaultdict(list)), set()
@@ -90,8 +112,6 @@ def courses_min_structured(result=None, search_params=None):
     result['objects'] = faculty_list
     return
 
-
-
 api_manager.create_api(Course,
                        collection_name='courses-min-structured',
                        methods=['GET'],
@@ -100,6 +120,9 @@ api_manager.create_api(Course,
                                         'subject',
                                         'subjectTitle',
                                         'course'],
+                       preprocessors={
+                           'GET_MANY': [courses_min_order_faculty_subject]
+                       },
                        postprocessors={
                            'GET_MANY': [courses_min_structured]
                        },
