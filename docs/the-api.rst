@@ -283,19 +283,29 @@ Request
 ::
 
  q = {
-      "institution": institution,
-      "term": term,
-      "courses": [course, course2, .., courseN]
-      "busy-times": [{
-          "day": "[MTWRF]{1,5}"
-          "startTime": "##:## [AP]M",
-          "endTime": "##:## [AP]M"
+        "institution": institution,
+        "term": term,
+        "courses": [course, course2, .., courseN],
+        "busy-times": [{
+            "day": "[MTWRF]{1,5}"
+            "startTime": "##:## [AP]M",
+            "endTime": "##:## [AP]M"
         },
         { <busytime object_2> },
         ...
         { <busytime object_n> }
+      ],
+        "electives": [
+            {
+                "courses": [course, course2, .., courseN]
+            },
+            { <electives object_2> },
+            ...
+            { <electives object_n> }
       ]
  }
+
+See the method `TestAPI.test_generate_schedules` in `tests/angular_flask/test_api.py` for concrete examples.
 
 :institution: :ref:`unique institution identifier <institution-identifier>`
 :term: :ref:`4-digit unique term identifier <4-digit-term-identifier>`
@@ -329,11 +339,6 @@ Response
                         "day": "MWF",
                         "startTime": "10:00 AM",
                         "endTime": "10:50 AM",
-                        "similarSections": [
-                            ...
-                            { <section object> },
-                            ...
-                        ],
                         ...
                         "section": "A02",
                         "campus": "MAIN",
@@ -374,7 +379,6 @@ Response
 :day: day(s) the section is on. Uses :ref:`day format <day-format>`
 :startTime: time the section begins. Uses :ref:`time format <time-format>`
 :endTime: time the section ends. Uses :ref:`time format <time-format>`
-:similarSections: list of `similar <similar-sections>` :ref:`\<section object> <api-section-object>`
 
 :section: section identifier. usually a letter and a number
 :campus: variable-length campus identifier
@@ -406,12 +410,3 @@ Time format
 
 | eg "08:00 AM"
 | eg "09:50 PM"
-
-.. _similar-sections:
-
-Similar sections
-----------------      
-
-Sections are *similar* if they have equal ``course``, ``component``, and ``startTime`` and ``endTime``.
-
-Importantly, they may have varying ``section``, ``instructorUid``,  ``capacity``, and ``location``.
