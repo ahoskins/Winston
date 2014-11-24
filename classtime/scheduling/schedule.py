@@ -27,6 +27,10 @@ class Schedule(object):
     SELF_IS_BETTER = False
     """Semantic sorting constants"""
 
+    SIMILARITY_THRESHOLD = 4
+    """Number of different blocks allowed until two schedules are
+       not considered similar anymore"""
+
     def __init__(self, sections=None, busy_times=None, preferences=None):
         """Creates a schedule with the given initial conditions
 
@@ -163,6 +167,13 @@ class Schedule(object):
                 other.get('autoEnroll')))
             return True
         return False
+
+    def is_similar(self, other):
+        total_difference = 0
+        for day in range(Schedule.NUM_DAYS):
+            diff = other.timetable_bitmap[day] ^ self.timetable_bitmap[day]
+            total_difference += bin(diff).count('1')
+        return total_difference > Schedule.SIMILARITY_THRESHOLD
 
     def attempt_add_to_timetable(self, section, section_num):
         """Attempts to add a section to the timetable

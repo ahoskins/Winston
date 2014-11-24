@@ -87,6 +87,8 @@ def _generate_schedules(cal, term, course_ids, busy_times, electives_groups, pre
     candidates = _schedule_electives(candidates, cal,
         term, electives_groups, _log_scheduling_component)
 
+    candidates = _condense_schedules(candidates)
+
     return sorted(candidates,
         reverse=True,
         key=lambda sched: sched.overall_score())
@@ -198,6 +200,9 @@ def _add_candidates(candidates, candidate, heap_size):
 
 def _is_hopeless(candidate, sections_chosen):
     return len(candidate.sections) < sections_chosen
+
+def _condense_schedules(schedules):
+    pass
 
 # http://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks-in-python
 def _chunks(full_list, chunk_size=None):
