@@ -18,7 +18,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 
     // NEW $scope.subjectBin
     // $scope.subjectBin = [{
-//          facultyName: 'Faculty of Engineering',
+//          faculty: 'Faculty of Engineering',
 //          subjects: [{
 //             subject: 'ECE',
 //             courses: [{course-object>}...]
@@ -94,7 +94,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
                 if (page <= total_pages) {
                     getData(page);
                 }
-                
+
             }).
             error(function () {
                 $window.alert("Failed to get data");

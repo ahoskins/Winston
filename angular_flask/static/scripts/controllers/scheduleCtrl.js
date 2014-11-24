@@ -105,6 +105,8 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         clearEvents();
 
         enableGenerateSchedules();
+
+        console.log($scope.subjectBin);
     };
 
 
