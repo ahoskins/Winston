@@ -27,7 +27,7 @@ class Schedule(object):
     SELF_IS_BETTER = False
     """Semantic sorting constants"""
 
-    def __init__(self, sections=None, busy_times=None):
+    def __init__(self, sections=None, busy_times=None, preferences=None):
         """Creates a schedule with the given initial conditions
 
         :param sections: one or more sections to include in the
@@ -42,7 +42,8 @@ class Schedule(object):
                          for _ in range(Schedule.NUM_DAYS)]
         self.timetable_bitmap = [0 for _ in range(Schedule.NUM_DAYS)]
 
-        self.scorer = ScheduleScorer(self)
+        self.scorer = ScheduleScorer(self, preferences)
+        self.preferences = preferences
 
         self.sections = list()
         self._add_initial_sections(sections)
@@ -208,10 +209,12 @@ class Schedule(object):
                   * section list
                   * busy_time list
                   * timetable
+                  * preferences
         :rtype: Schedule
         """
         return Schedule(sections=self.sections,
-                        busy_times=self.busy_times)
+                        busy_times=self.busy_times,
+                        preferences=self.preferences)
 
     def __lt__(self, other):
         if len(self.sections) > len(other.sections):
@@ -219,12 +222,13 @@ class Schedule(object):
         elif len(self.sections) < len(other.sections):
             return Schedule.SELF_IS_WORSE
 
-        this_score = self.scorer.read('overall')
-        other_score = other.scorer.read('overall')
-        if this_score < other_score:
+        if self.overall_score() < other.overall_score():
             return Schedule.SELF_IS_WORSE
         else:
             return Schedule.SELF_IS_BETTER
+
+    def overall_score(self):
+        return self.scorer.read('overall')
 
     @staticmethod
     def _timestr_to_blocknum(time):
@@ -268,24 +272,28 @@ class Schedule(object):
 class ScheduleScorer(object):
     """Scores a schedule using a suite of scoring functions
     """
-    def __init__(self, schedule):
+    def __init__(self, schedule, preferences=None):
         """Creates a new ScheduleScorer to score the given schedule
 
         :param Schedule schedule: the schedule to be scored
         """
         self.schedule = schedule
         self.score_values = dict()
+
+        if preferences is None:
+            preferences = dict()
+
         self.score_info = {
             'no-marathons': {
-                'weight': 1,
+                'weight': preferences.get('no-marathons', 1),
                 'function': self._no_marathons
             },
             'day-classes': {
-                'weight': 1,
+                'weight': preferences.get('day-classes', 1),
                 'function': self._day_classes
             },
             'start-early': {
-                'weight': -1,
+                'weight': preferences.get('start-early', 1),
                 'function': self._start_early
             }
         }

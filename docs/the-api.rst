@@ -73,7 +73,7 @@ Available operators `listed here <http://flask-restless.readthedocs.org/en/lates
     has
     any
 
-.. _api-institutions
+.. _api-institutions:
 
 api/institutions
 ~~~~~~~~~~~~~~~~
@@ -107,11 +107,11 @@ Response
 
 :objects: list of <institution object>s
 
-.. _institution-identifier
+.. _institution-identifier:
 .. _api-institution-object:
 
 <institution object>
--------------
+--------------------
 
 :institution: variable length institution identifier
 :name: semantic institution name
@@ -283,24 +283,43 @@ Request
 ::
 
  q = {
-      "institution": institution,
-      "term": term,
-      "courses": [course, course2, .., courseN]
-      "busy-times": [{
-          "day": "[MTWRF]{1,5}"
-          "startTime": "##:## [AP]M",
-          "endTime": "##:## [AP]M"
-        },
-        { <busytime object_2> },
-        ...
-        { <busytime object_n> }
-      ]
+        "institution": institution,
+        "term": term,
+        "courses": [course, course2, .., courseN],
+        "busy-times": [
+            {
+                "day": "[MTWRF]{1,5}"
+                "startTime": "##:## [AP]M",
+                "endTime": "##:## [AP]M"
+            },
+            { <busytime object_2> },
+            ...
+            { <busytime object_n> }
+        ],
+        "electives": [
+            {
+                "courses": [course, course2, .., courseN]
+            },
+            { <electives object_2> },
+            ...
+            { <electives object_n> }
+        ],
+        "preferences": {
+            "start-early": <integer>,
+            "no-marathons": <integer>,
+            "day-classes": <integer>
+        }
+
  }
+
+See the method ``TestAPI.test_generate_schedules`` in ``tests/angular_flask/test_api.py`` for concrete examples.
 
 :institution: :ref:`unique institution identifier <institution-identifier>`
 :term: :ref:`4-digit unique term identifier <4-digit-term-identifier>`
 :courses: list of :ref:`6-digit unique course identifier <6-digit-course-identifier>`
 :busy-times: list of <busytime> objects
+:electives: (optional) list of one-key dictionaries containing a 'courses' list
+:preferences: (optional) specify the weight of each :ref:`preference <api-preference-identifier>`. There are sensible defaults.
 
 .. _api-busytime-object:
 
@@ -310,6 +329,35 @@ Request
 :day: day(s) which are busy. Uses :ref:`day format <day-format>`
 :startTime: time the user starts being busy. Uses :ref:`time format <time-format>`
 :endTime: time the user is not busy anymore. Uses :ref:`time format <time-format>`
+
+.. _api-preference-identifier:
+
+Preferences
+-----------
+
+In `preferences`, each key's value is the preference's **weighting**.  
+Positive, negative, and zero-valued weightings are described for each preference type.
+
+There are sensible defaults for each preference, and all preferences are optional.
+
+Currently supported preferences:
+
+- ``no-marathons``
+    - ``weight > 0`` = avoid long stretches of classes in a row
+    - ``weight < 0`` = prefer long stretches of classes in a row
+    - ``weight = 0`` = no preference
+
+- ``day-classes``
+    - ``weight > 0`` = prefer daytime classes
+    - ``weight < 0`` = prefer night classes (5pm and on)
+    - ``weight = 0`` = no preference
+
+- ``start-early``
+    - ``weight > 0`` = prefer early starts
+    - ``weight < 0`` = prefer late starts
+    - ``weight = 0`` = no preference
+
+> Note: ``start-early`` can be used in tandem with ``busy_times`` to specify *how* early to start
 
 Response
 ''''''''
@@ -329,11 +377,6 @@ Response
                         "day": "MWF",
                         "startTime": "10:00 AM",
                         "endTime": "10:50 AM",
-                        "similarSections": [
-                            ...
-                            { <section object> },
-                            ...
-                        ],
                         ...
                         "section": "A02",
                         "campus": "MAIN",
@@ -361,7 +404,7 @@ Response
 -----------------
 :sections: list of <section object>s
 
-.. _5-digit-section-identifier
+.. _5-digit-section-identifier:
 .. _api-section-object:
 
 <section object>
@@ -374,7 +417,6 @@ Response
 :day: day(s) the section is on. Uses :ref:`day format <day-format>`
 :startTime: time the section begins. Uses :ref:`time format <time-format>`
 :endTime: time the section ends. Uses :ref:`time format <time-format>`
-:similarSections: list of `similar <similar-sections>` :ref:`\<section object> <api-section-object>`
 
 :section: section identifier. usually a letter and a number
 :campus: variable-length campus identifier
@@ -406,12 +448,3 @@ Time format
 
 | eg "08:00 AM"
 | eg "09:50 PM"
-
-.. _similar-sections:
-
-Similar sections
-----------------      
-
-Sections are *similar* if they have equal ``course``, ``component``, and ``startTime`` and ``endTime``.
-
-Importantly, they may have varying ``section``, ``instructorUid``,  ``capacity``, and ``location``.

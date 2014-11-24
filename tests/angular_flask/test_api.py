@@ -157,6 +157,7 @@ class TestAPI(object):
             },
             {
                 "q": {  # 1st year engineering Fall Term 2014
+                        # With tons of busy time
                         "institution": "ualberta",
                         "term": "1490",
                         "courses": ["001343",
@@ -176,6 +177,50 @@ class TestAPI(object):
                                 "endTime": "10:00 PM"
                             }
                         ]
+                }
+            },
+            {
+                "q": {  # 1st year engineering Fall Term 2014
+                        # With the elective (6th course, complemenetary elec)
+                        "institution": "ualberta",
+                        "term": "1490",
+                        "courses": ["001343", # Chem 103
+                                    "004093",
+                                    "004096",
+                                    "006768",
+                                    "009019"],
+                        "electives": [
+                            {
+                                "courses": ["000268", # Anthr 101
+                                            "000269", # Anthr 110
+                                            "000270", # Anthr 150
+                                            ]
+                            }
+                        ]
+                }
+            },
+            {
+                "q": {  # 1st year engineering Fall Term 2014
+                        # preferences => start late, marathon class blocks
+                        "institution": "ualberta",
+                        "term": "1490",
+                        "courses": ["001343", # Chem 103
+                                    "004093",
+                                    "004096",
+                                    "006768",
+                                    "009019"],
+                        "electives": [
+                            {
+                                "courses": ["000268", # Anthr 101
+                                            "000269", # Anthr 110
+                                            "000270", # Anthr 150
+                                            ]
+                            }
+                        ],
+                        "preferences": {
+                            "start-early": -10,
+                            "no-marathons": -10
+                        }
                 }
             }
         ]
@@ -201,5 +246,9 @@ def assert_valid_schedules(schedules, query):
             assert section.get('term') == query['q']['term']
 
             assert section.get('asString') is not None
-            assert section.get('course') in query['q']['courses']
+            elective_courses = [course
+                for elective in query['q'].get('electives', dict())
+                for course in elective.get('courses')]
+            assert section.get('course') in query['q']['courses'] \
+                or section.get('course') in elective_courses
             assert section.get('component') is not None
