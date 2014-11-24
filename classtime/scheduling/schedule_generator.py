@@ -25,6 +25,8 @@ def find_schedules(schedule_params, num_requested):
         Check :ref:`api/generate-schedules <api-generate-schedules>`
         for available parameters.
     """
+    logging.info('Received schedule request')
+
     if 'term' not in schedule_params:
         logging.error("Schedule generation call did not specify <term>")
     term = schedule_params.get('term', '')
@@ -35,12 +37,15 @@ def find_schedules(schedule_params, num_requested):
         logging.error("Schedule generation call did not specify <courses>")
     course_ids = schedule_params.get('courses', list())
     busy_times = schedule_params.get('busy-times', list())
-
-    logging.info('Received schedule request')
+    electives_groups = schedule_params.get('electives', list())
+    for electives_group in electives_groups:
+        if 'courses' not in electives_group:
+            logging.warning('"courses" not found for electives. q={}'.format(
+                schedule_params))
 
     schedules = _generate_schedules(cal,
-        term, course_ids, busy_times)
-    if len(schedules) == 0:
+        term, course_ids, busy_times, electives_groups)
+    if not schedules:
         logging.error('No schedules found for q={}'.format(
             schedule_params))
     else:
@@ -48,9 +53,14 @@ def find_schedules(schedule_params, num_requested):
             min(num_requested, len(schedules)),
             len(schedules),
             schedule_params))
+        logging.debug('Request q={}\nResponse ({}/{}):\n{}'.format(
+            schedule_params,
+            min(num_requested, len(schedules)),
+            len(schedules),
+            schedules[:num_requested]))
     return schedules[:num_requested]
 
-def _generate_schedules(cal, term, course_ids, busy_times):
+def _generate_schedules(cal, term, course_ids, busy_times, electives_groups):
     """Generate a finite number of schedules
 
     :param int num_requested: maximum number of schedules to return.
@@ -68,17 +78,56 @@ def _generate_schedules(cal, term, course_ids, busy_times):
             num=num,
             name=' '.join(component[0].get('asString').split()[:-1])))
 
-    components = cal.get_components(term, course_ids)
-    components = sorted(components, key=len)
-
     candidates = [Schedule(busy_times=busy_times)]
-    for pace, component in enumerate(components):
-        _log_scheduling_component(len(components), component, pace)
-        candidates = _add_component(candidates, component, pace)
 
-    candidates = [candidate for candidate in candidates
-                  if len(candidate.sections) == len(components)]
-    return sorted(candidates, reverse=True)
+    candidates = _schedule_mandatory_courses(candidates, cal,
+        term, course_ids, _log_scheduling_component)
+
+    candidates = _schedule_electives(candidates, cal,
+        term, electives_groups, _log_scheduling_component)
+
+    return sorted(candidates,
+        reverse=True,
+        key=lambda sched: sched.overall_score())
+
+def _schedule_mandatory_courses(candidates, cal, term, course_ids, _log):
+    courses = sorted(cal.course_components(term, course_ids), key=len)
+    total_components = sum([len(components)
+                            for components in courses])
+
+    pace = 0
+    for course in courses:
+        for component in course:
+            _log(total_components, component, pace)
+            candidates = _add_component(candidates, component, pace)
+            pace += 1
+    return [candidate for candidate in candidates
+            if len(candidate.sections) == pace]
+
+def _schedule_electives(base_candidates, cal, term, electives_groups, _log):
+    if base_candidates:
+        base_pace = len(base_candidates[0].sections)
+    else:
+        base_pace = 0
+
+    electives_course_lists = [electives.get('courses', list())
+                              for electives in electives_groups]
+    if not electives_course_lists:
+        return base_candidates
+
+    completed_schedules = list()
+    for course_list in electives_course_lists:
+        for course in course_list:
+            candidates = base_candidates[:]
+            pace = base_pace
+            for component in cal.course_components(term, course, single=True):
+                _log(base_pace, component, pace)
+                candidates = _add_component(candidates, component, pace)
+                pace += 1
+            candidates = [candidate for candidate in candidates
+                          if len(candidate.sections) == pace]
+            completed_schedules += candidates
+    return completed_schedules
 
 def _add_component(candidates, component, pace):
     """

@@ -10,7 +10,7 @@ from classtime.local_db import LocalDatabaseFactory
 class AcademicCalendar(object):
     """Manages academic calendar data for a particular institution
 
-    Uses a stack-based access idiom. Usage::
+    Internally, uses a stack-based access idiom. Usage::
      self.push_<datatype>()
      ... use self.cur_datatype() or self.cur_primary_key() ...
      self.pop_<datatype>()
@@ -111,9 +111,10 @@ class AcademicCalendar(object):
             courses = self._fetch(datatype='courses', term=self._term)
             self._save(courses, datatype='courses')
 
-    def get_components(self, term, courses):
+    def course_components(self, term, courses, single=False):
         self.select_active_term(term)
-
+        if single:
+            courses = [courses]
         for course in courses:
             if self.doesnt_know_about(datatype='sections',
                                       term=self._term, course=course):
@@ -123,7 +124,10 @@ class AcademicCalendar(object):
 
         all_components = list()
         for course in courses:
-            all_components.extend(self._get_components_single(course))
+            all_components.append(self._get_components_single(course))
+
+        if single:
+            all_components = all_components[0]
         return all_components
 
     def _get_components_single(self, course):
@@ -141,6 +145,7 @@ class AcademicCalendar(object):
                                     .to_dict()
         section_query = self._local_db.query(datatype='sections') \
                                       .filter_by(term=self._term, course=course)
+        components = list()
         for component in ['LEC', 'LAB', 'SEM']:
             section_models = section_query \
                 .filter_by(component=component) \
@@ -156,7 +161,8 @@ class AcademicCalendar(object):
                         for section_model in section_models]
             sections = [_attach_course_info(section, course_info)
                         for section in sections]
-            yield sections
+            components.append(sections)
+        return components
 
     def _fetch(self, datatype, **kwargs):
         if datatype not in self._remote_db.known_searches():
