@@ -58,7 +58,6 @@ api_manager.create_api(Course,
                        max_results_per_page=COURSES_PER_PAGE)
 
 def courses_min_order_faculty_subject(search_params=None):
-    logging.warning(str(search_params))
     if search_params is None:
         return
     if 'order_by' not in search_params:
