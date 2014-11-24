@@ -286,15 +286,16 @@ Request
         "institution": institution,
         "term": term,
         "courses": [course, course2, .., courseN],
-        "busy-times": [{
-            "day": "[MTWRF]{1,5}"
-            "startTime": "##:## [AP]M",
-            "endTime": "##:## [AP]M"
-        },
-        { <busytime object_2> },
-        ...
-        { <busytime object_n> }
-      ],
+        "busy-times": [
+            {
+                "day": "[MTWRF]{1,5}"
+                "startTime": "##:## [AP]M",
+                "endTime": "##:## [AP]M"
+            },
+            { <busytime object_2> },
+            ...
+            { <busytime object_n> }
+        ],
         "electives": [
             {
                 "courses": [course, course2, .., courseN]
@@ -302,7 +303,13 @@ Request
             { <electives object_2> },
             ...
             { <electives object_n> }
-      ]
+        ],
+        "preferences": {
+            "start-early": <integer>,
+            "no-marathons": <integer>,
+            "day-classes": <integer>
+        }
+
  }
 
 See the method `TestAPI.test_generate_schedules` in `tests/angular_flask/test_api.py` for concrete examples.
@@ -311,6 +318,8 @@ See the method `TestAPI.test_generate_schedules` in `tests/angular_flask/test_ap
 :term: :ref:`4-digit unique term identifier <4-digit-term-identifier>`
 :courses: list of :ref:`6-digit unique course identifier <6-digit-course-identifier>`
 :busy-times: list of <busytime> objects
+:electives: (optional) list of one-key dictionaries containing a 'courses' list
+:preferences: (optional) specify the weight of each :ref:`preference <api-preference-identifier>`. There are sensible defaults.
 
 .. _api-busytime-object:
 
@@ -320,6 +329,35 @@ See the method `TestAPI.test_generate_schedules` in `tests/angular_flask/test_ap
 :day: day(s) which are busy. Uses :ref:`day format <day-format>`
 :startTime: time the user starts being busy. Uses :ref:`time format <time-format>`
 :endTime: time the user is not busy anymore. Uses :ref:`time format <time-format>`
+
+.. _api-preference-identifier:
+
+Preferences
+-----------
+
+In `preferences`, each key's value is the preference's **weighting**.  
+Positive, negative, and zero-valued weightings are described for each preference type.
+
+Currently supported preferences:
+
+- `no-marathons`
+  - `weight > 0` -> avoid long stretches of classes in a row
+  - `weight < 0` -> prefer long stretches of classes in a row
+  - `weight = 0` -> no preference
+
+- `day-classes`
+  - `weight > 0` -> prefer daytime classes
+  - `weight < 0` -> prefer night classes (5pm and on)
+  - `weight = 0` -> no preference
+
+- `start-early`
+  - `weight > 0` -> prefer early starts
+  - `weight < 0` -> prefer late starts
+  - `weight = 0` -> no preference
+  - Note: `start-early` can be used in tandem with `busy_times` to specify exactly *how* early you want. 
+    - eg `start-early: 10, busy_times: everyday 8am-9am` gets early schedules starting at or after 9am
+
+There are sensible defaults for each preference, and all preferences are optional.
 
 Response
 ''''''''

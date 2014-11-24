@@ -37,6 +37,7 @@ def find_schedules(schedule_params, num_requested):
         logging.error("Schedule generation call did not specify <courses>")
     course_ids = schedule_params.get('courses', list())
     busy_times = schedule_params.get('busy-times', list())
+    preferences = schedule_params.get('preferences', dict())
     electives_groups = schedule_params.get('electives', list())
     for electives_group in electives_groups:
         if 'courses' not in electives_group:
@@ -44,7 +45,7 @@ def find_schedules(schedule_params, num_requested):
                 schedule_params))
 
     schedules = _generate_schedules(cal,
-        term, course_ids, busy_times, electives_groups)
+        term, course_ids, busy_times, electives_groups, preferences)
     if not schedules:
         logging.error('No schedules found for q={}'.format(
             schedule_params))
@@ -60,7 +61,7 @@ def find_schedules(schedule_params, num_requested):
             schedules[:num_requested]))
     return schedules[:num_requested]
 
-def _generate_schedules(cal, term, course_ids, busy_times, electives_groups):
+def _generate_schedules(cal, term, course_ids, busy_times, electives_groups, preferences):
     """Generate a finite number of schedules
 
     :param int num_requested: maximum number of schedules to return.
@@ -78,7 +79,7 @@ def _generate_schedules(cal, term, course_ids, busy_times, electives_groups):
             num=num,
             name=' '.join(component[0].get('asString').split()[:-1])))
 
-    candidates = [Schedule(busy_times=busy_times)]
+    candidates = [Schedule(busy_times=busy_times, preferences=preferences)]
 
     candidates = _schedule_mandatory_courses(candidates, cal,
         term, course_ids, _log_scheduling_component)

@@ -198,6 +198,30 @@ class TestAPI(object):
                             }
                         ]
                 }
+            },
+            {
+                "q": {  # 1st year engineering Fall Term 2014
+                        # preferences => start late, marathon class blocks
+                        "institution": "ualberta",
+                        "term": "1490",
+                        "courses": ["001343", # Chem 103
+                                    "004093",
+                                    "004096",
+                                    "006768",
+                                    "009019"],
+                        "electives": [
+                            {
+                                "courses": ["000268", # Anthr 101
+                                            "000269", # Anthr 110
+                                            "000270", # Anthr 150
+                                            ]
+                            }
+                        ],
+                        "preferences": {
+                            "start-early": -10,
+                            "no-marathons": -10
+                        }
+                }
             }
         ]
         for query in queries:
