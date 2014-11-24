@@ -71,35 +71,59 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         });
     }
 
-    var total_pages,
-        page = 1;
 
-    getData(page);
+    var pageListing;
+    courseFactory.getCoursesPage(1).
+        success(function (data) {
 
-    function getData(page) {
-        courseFactory.getCoursesPage(page).
-            success(function (data) {
+            pageListing = angular.fromJson(data);
 
-                var pageListing = angular.fromJson(data);
+            var total_pages = pageListing.total_pages;
 
-                if (page === 1) {
-                    total_pages = pageListing.total_pages;
-                }
+            parsePage(pageListing);
 
-                parsePage(pageListing);
+            //Get remaining pages
+            var page = 2;
 
-                //Get remaining pages
+            while (page <= total_pages) {
+                courseFactory.getCoursesPage(page).
+                    success(function (data) {
+                        pageListing = angular.fromJson(data);
+
+                        parsePage(pageListing);
+                    });
                 page = page + 1;
+            }
 
-                if (page <= total_pages) {
-                    getData(page);
-                }
+        }).
+        error(function () {
+            $window.alert("Failed to get data");
+        });
 
-            }).
-            error(function () {
-                $window.alert("Failed to get data");
-            });
-    }
+    //function getData(page) {
+    //    courseFactory.getCoursesPage(page).
+    //        success(function (data) {
+    //
+    //            var pageListing = angular.fromJson(data);
+    //
+    //            if (page === 1) {
+    //                total_pages = pageListing.total_pages;
+    //            }
+    //
+    //            parsePage(pageListing);
+    //
+    //            //Get remaining pages
+    //            page = page + 1;
+    //
+    //            if (page <= total_pages) {
+    //                getData(page);
+    //            }
+    //
+    //        }).
+    //        error(function () {
+    //            $window.alert("Failed to get data");
+    //        });
+    //}
 
     // Read in courses from factory, courseFactory.js ////////////
     /////////////////////////////////////////////////////////////
