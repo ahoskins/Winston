@@ -219,12 +219,13 @@ class Schedule(object):
         elif len(self.sections) < len(other.sections):
             return Schedule.SELF_IS_WORSE
 
-        this_score = self.scorer.read('overall')
-        other_score = other.scorer.read('overall')
-        if this_score < other_score:
+        if self.overall_score() < other.overall_score():
             return Schedule.SELF_IS_WORSE
         else:
             return Schedule.SELF_IS_BETTER
+
+    def overall_score(self):
+        return self.scorer.read('overall')
 
     @staticmethod
     def _timestr_to_blocknum(time):
@@ -285,7 +286,7 @@ class ScheduleScorer(object):
                 'function': self._day_classes
             },
             'start-early': {
-                'weight': -1,
+                'weight': 1,
                 'function': self._start_early
             }
         }
