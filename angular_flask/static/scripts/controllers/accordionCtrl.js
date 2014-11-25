@@ -27,7 +27,9 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 //             courses: [{<course-object>},...]
 //          }]
 //    }];
-    
+
+    $rootScope.doNotFilter = true;
+
     $scope.subjectBin = [];
 
     // Request /api/courses-min
@@ -51,6 +53,12 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
                         pageListing = angular.fromJson(data);
 
                         parsePage(pageListing);
+
+                        // Tell the filter that all the courses are received
+                        if (pageListing.page === total_pages) {
+                            $rootScope.doNotFilter = false;
+                        }
+
                     });
                 page = page + 1;
             }
@@ -84,6 +92,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 
         // Case 2: create new faculty and insert
         if (!inserted) {
+            console.log("created new faculty");
             var subjects = [];
             SFacultyGroup.subjects.forEach(function (subject) {
                 subjects.push(subject);
