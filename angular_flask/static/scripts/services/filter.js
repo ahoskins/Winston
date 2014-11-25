@@ -34,10 +34,10 @@ coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', '$rootScop
              */
             var facultyObj = null;
             var subjectObj = null;
-            if (result.length > 0 && result[result.length-1].faculty == faculty) {
+            if (result.length > 0 && result[result.length-1].faculty === faculty) {
                 facultyObj = result[result.length-1]
                 facultySubjects = facultyObj.subjects
-                if (facultySubjects[facultySubjects.length-1] == subject) {
+                if (facultySubjects[facultySubjects.length-1] === subject) {
                     subjectObj = facultySubjects[facultySubjects.length-1]
                     subjectObj.courses.push(courseObject);
                 }
