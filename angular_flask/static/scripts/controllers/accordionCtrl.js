@@ -92,7 +92,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 
         // Case 2: create new faculty and insert
         if (!inserted) {
-            console.log("created new faculty");
+            //console.log("created new faculty");
             var subjects = [];
             SFacultyGroup.subjects.forEach(function (subject) {
                 subjects.push(subject);

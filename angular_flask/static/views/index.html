@@ -38,24 +38,6 @@
             </accordion-group>
         </accordion>
 
-        <!--<accordion>-->
-            <!--<accordion-group class="faculty-accordion animate-if" id="{{ facultyName }}" heading="{{ facultyName }}" data-ng-repeat="(facultyName, facultyObject) in subjectBin | courseFilter:filterText" scroll-smooth>-->
-                <!--<accordion>-->
-                    <!--<accordion-group class="subject-accordion animate-if" id="{{ subjectName }}" heading="{{ subjectName }}" ng-click="renderCourses(subjectName)" data-ng-repeat="(subjectName, subjectObject) in facultyObject" scroll-smooth>-->
-                        <!--<accordion>-->
-                            <!--<accordion-group class="course-accordion animate-if" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectName]" data-ng-repeat="singleCourse in subjectObject" scroll-smooth>-->
-                                <!--<div class="animate-if">-->
-                                    <!--<a><i class="foundicon-plus" ng-click="addToSchedule(singleCourse)"> Add</i></a>-->
-                                    <!--<br>-->
-                                    <!--{{ description[singleCourse.course] }}-->
-                                <!--</div>-->
-                            <!--</accordion-group>-->
-                        <!--</accordion>-->
-                    <!--</accordion-group>-->
-                <!--</accordion>-->
-            <!--</accordion-group>-->
-        <!--</accordion>-->
-
 	</div>
 
     <!--Schedule: controlled by scheduleCtrl.js-->
@@ -121,6 +103,7 @@
 
     <!--Directive-->
     <script type="text/javascript" src="/static/scripts/services/scrollSmooth.js"></script>
+    <script type="text/javascript" src="/static/scripts/services/noBubble.js"></script>
 
 	</body>
 </html>

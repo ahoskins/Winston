@@ -17,9 +17,11 @@ coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', '$rootScop
     //
     return stabilize(function(subjectBin, field) {
 
-        if ($rootScope.doNotFilter) {
-            return;
-        }
+        // Performance is much better with this commented out
+
+        //if ($rootScope.doNotFilter) {
+        //    return;
+        //}
 
         console.log("filter");
 
