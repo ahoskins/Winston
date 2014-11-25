@@ -27,7 +27,38 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 //             courses: [{<course-object>},...]
 //          }]
 //    }];
+    
     $scope.subjectBin = [];
+
+    // Request /api/courses-min
+    var pageListing;
+    courseFactory.getCoursesPage(1).
+        success(function (data) {
+
+            pageListing = angular.fromJson(data);
+
+            var total_pages = pageListing.total_pages;
+
+            parsePage(pageListing);
+
+            //Get remaining pages
+            var page = 2;
+
+            // Asynchronously request the rest of the pages
+            while (page <= total_pages) {
+                courseFactory.getCoursesPage(page).
+                    success(function (data) {
+                        pageListing = angular.fromJson(data);
+
+                        parsePage(pageListing);
+                    });
+                page = page + 1;
+            }
+
+        }).
+        error(function () {
+            $window.alert("Failed to get data");
+        });
 
     function FacultyObject(faculty, subjects) {
         this.faculty = faculty;
@@ -69,137 +100,6 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
             // Insert object into subjectBin
             insertIntoSubjectBin(SFacultyGroup);
         });
-    }
-
-
-    var pageListing;
-    courseFactory.getCoursesPage(1).
-        success(function (data) {
-
-            pageListing = angular.fromJson(data);
-
-            var total_pages = pageListing.total_pages;
-
-            parsePage(pageListing);
-
-            //Get remaining pages
-            var page = 2;
-
-            while (page <= total_pages) {
-                courseFactory.getCoursesPage(page).
-                    success(function (data) {
-                        pageListing = angular.fromJson(data);
-
-                        parsePage(pageListing);
-                    });
-                page = page + 1;
-            }
-
-        }).
-        error(function () {
-            $window.alert("Failed to get data");
-        });
-
-    //function getData(page) {
-    //    courseFactory.getCoursesPage(page).
-    //        success(function (data) {
-    //
-    //            var pageListing = angular.fromJson(data);
-    //
-    //            if (page === 1) {
-    //                total_pages = pageListing.total_pages;
-    //            }
-    //
-    //            parsePage(pageListing);
-    //
-    //            //Get remaining pages
-    //            page = page + 1;
-    //
-    //            if (page <= total_pages) {
-    //                getData(page);
-    //            }
-    //
-    //        }).
-    //        error(function () {
-    //            $window.alert("Failed to get data");
-    //        });
-    //}
-
-    // Read in courses from factory, courseFactory.js ////////////
-    /////////////////////////////////////////////////////////////
-    //
-    // @callee: on page load
-    //
-    // @returns: sorted $scope.subjectBin
-    //var tempSubjectBin = {};
-    //
-    //courseFactory.getCoursesPage(1).
-    //    success(function (data) {
-    //        // De-serialize JSON data
-    //        var pageListing = angular.fromJson(data),
-    //            total_pages = pageListing.total_pages,
-    //            page = 1;
-    //
-    //        // In these calls, actually get and arrange the data
-    //        while (page < (total_pages + 1)) {
-    //            courseFactory.getCoursesPage(page).
-    //                success(function (data) {
-    //                    // De-serialize JSON data
-    //                    pageListing = angular.fromJson(data);
-    //
-    //                    // For each course on page of results
-    //                    pageListing.objects.forEach(function (course) {
-    //                        if (tempSubjectBin.hasOwnProperty(course.faculty)) {
-    //                            // We are within an existing faculty property
-    //                            if (tempSubjectBin[course.faculty].hasOwnProperty(course.subject)) {
-    //                                tempSubjectBin[course.faculty][course.subject].push(course);
-    //
-    //                                // Sort the courses by course level number (small --> large)
-    //                                // TODO: why is this sorting after every course...only sort only all courses are added
-    //                                tempSubjectBin[course.faculty][course.subject].sort(compareByCourseNumber);
-    //                            }
-    //                            else {
-    //                                tempSubjectBin[course.faculty][course.subject] = [course];
-    //                            }
-    //                        }
-    //                        else {
-    //                            tempSubjectBin[course.faculty] = {};
-    //                            tempSubjectBin[course.faculty][course.subject] = [course];
-    //                        }
-    //                    });
-    //                }).
-    //                error(function () {
-    //                    $window.alert("Sorry, something went wrong.");
-    //                });
-    //
-    //            page = page + 1;
-    //        }
-    //        $scope.subjectBin = tempSubjectBin;
-    //    }).
-    //    error(function () {
-    //        $window.alert("Sorry, something went wrong.");
-    //    });
-
-
-    // Sort by asString property
-    //
-    // @param {Object} course object, from courses-min
-    // @param {Object} course object, from courses-min
-    //
-    // @return {int} compare result
-    function compareByCourseNumber(a, b) {
-        var aNum = a.asString.match(/\d+/);
-        var bNum = b.asString.match(/\d+/);
-
-        if (aNum < bNum) {
-            return -1;
-        }
-        else if (aNum > bNum) {
-            return 1;
-        }
-        else {
-            return 0;
-        }
     }
 
     // Performance //////////////////////////////////////
