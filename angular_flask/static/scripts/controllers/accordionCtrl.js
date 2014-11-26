@@ -2,35 +2,38 @@
 //
 
 coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope) {
+   /*
+    $scope.subjectBin = [{
+            faculty: 'Faculty of Engineering',
+            subjects: [{
+                subject: 'ECE',
+                courses: [{course-object>}...]
+            }, {
+                subject: 'MEC E',
+                courses: [{<course-object>},...]
+            }]
+     }];
+     */
 
-    // OLD $scope.subjectBin
-    // Organized course object
-    //
-    // $scope.subjectBin = {
-    //    "Faculty of Engineering": {
-    //          "ECE": [{<courses-min-object>}, {<courses-min-object>}],
-    //          "MEC E": [{<courses-min-object>}]
-    //     },
-    //    "Faculty of Science": {
-    //          "CMPUT": [{<courses-min-object}]
-    //     }
-    // }
-
-    // NEW $scope.subjectBin
-    // $scope.subjectBin = [{
-//          faculty: 'Faculty of Engineering',
-//          subjects: [{
-//             subject: 'ECE',
-//             courses: [{course-object>}...]
-//          }, {
-//             subject: 'MEC E',
-//             courses: [{<course-object>},...]
-//          }]
-//    }];
+    /*
+    ********************************************************************
+    Parse courses from /api/courses-min-structured into $scope.subjectBin
+    This is done in an asynchronous way
+    ********************************************************************
+     */
 
     $scope.subjectBin = [];
 
-    // Request /api/courses-min
+    // Class: Faculty
+    function FacultyObject(faculty, subjects) {
+        this.faculty = faculty;
+        this.subjects = subjects;
+    }
+
+    /*
+    Request /api/courses-min-structured
+    Asynchronously request each page
+     */
     var pageListing;
     courseFactory.getCoursesPage(1).
         success(function (data) {
@@ -52,10 +55,6 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 
                         parsePage(pageListing);
 
-                        if (pageListing.page === total_pages) {
-                            console.log($scope.subjectBin);
-                        }
-
                     });
                 page = page + 1;
             }
@@ -65,11 +64,19 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
             $window.alert("Failed to get data");
         });
 
-    function FacultyObject(faculty, subjects) {
-        this.faculty = faculty;
-        this.subjects = subjects;
+    /*
+    Parse each faculty on page
+     */
+    function parsePage(pageListing) {
+        pageListing.objects.forEach(function(SFacultyGroup) {
+            // Insert object into subjectBin
+            insertIntoSubjectBin(SFacultyGroup);
+        });
     }
 
+    /*
+    Insert each faculty into $scope.subjectBin
+     */
     function insertIntoSubjectBin(SFacultyGroup) {
         var inserted = false;
         var SfacultyName = SFacultyGroup.faculty;
@@ -101,19 +108,12 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         }
     }
 
-    function parsePage(pageListing) {
-        pageListing.objects.forEach(function(SFacultyGroup) {
-            // Insert object into subjectBin
-            insertIntoSubjectBin(SFacultyGroup);
-        });
-    }
 
-    // Performance //////////////////////////////////////
-    /////////////////////////////////////////////////////
-    //
-    //
-    // @callee: 1st layer of accordion
-    //
+    /*
+    ******************************
+    On-click of accordion handlers
+    ******************************
+     */
 
     // @callee: 2nd layer of accordion
     //
@@ -145,18 +145,19 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         }
     };
 
-    // Wait 0.5 seconds until displaying any courses
-    //
-    // Without this delay the courses will immediately load, freeze up for a second, and then finally finish
-    // This is hides this lag (I better come up with a better fix eventually)
+    /*
+    **************************
+    Performance related issues
+    **************************
+     */
+
+    // To hide lag, wait 1 second before displaying any courses
     $timeout(function() {
         $scope.filterText = '';
     }, 1000);
 
-    // Watcher: search box filter
-    //
-    // Sets a watch on the input search box (every 200ms)
-    // This affects the normal $digest cycle
+    // Watch the searchBox every 200ms
+    // Gives the impression of less lag
     var filterTextTimeout;
     $scope.$watch('searchBox', function(val) {
         if (!isString(val)) {
@@ -171,29 +172,30 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         }, 200);
     });
 
-    // Add to Schedule ////////////////////////////////////
-    ///////////////////////////////////////////////////////
-    //
-    // Add course to schedule
-    //
+    /*
+    **********************************************************************
+    Add to schedule
+    This is the bridge between this controller and the schedule controller
+    **********************************************************************
+     */
+
     $rootScope.addedCourses = [];
-    $rootScope.shoppingCartSize = 0;
 
     // @callee: "Add" button under 3rd layer of accordion
-    //
-    $scope.addToSchedule = function (course) {
-        // Only add if the course isn't already there
-        if ($rootScope.addedCourses.indexOf(course) === -1) {
-            $rootScope.addedCourses.push(course);
-
-            // Update view tally
-            $rootScope.shoppingCartSize = $rootScope.shoppingCartSize + 1;
+    // Only add if the course isn't already in $rootScope.addedCourses
+    $scope.addToSchedule = function (courseObject) {
+        if ($rootScope.addedCourses.indexOf(courseObject) === -1) {
+            // Add course object
+            $rootScope.addedCourses.push(courseObject);
         }
     };
 
-    // Helper functions ///////////////////////////////////
-    ///////////////////////////////////////////////////////
-    //
+
+    /*
+    ****************
+    Validation Functions
+    ****************
+     */
     var isNumber = function(val) {
         return !isNaN(parseFloat(val));
     };

@@ -5,7 +5,7 @@
 // fields of each course.  It also filters against the "key"(s) in "subjectBin"
 // All filtering is CASE IN-SENSITIVE
 
-coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', '$rootScope', function(stabilize, $window, $rootScope) {
+coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', function(stabilize, $window) {
     // Invoked from index.html accordion
     // Used filterText to trim subjectBin
     // @param {Object} $scope.subjectBin is passed in
@@ -19,30 +19,29 @@ coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', '$rootScop
 
         var result = [];
 
-        var coursesArray,
-            subObj,
-            facObj,
-            subObjArray;
-
-        // Subject Object Class
+        // Class: Subject
         function SubjectObject(courses, subject, subjectTitle) {
             this.courses = courses;
-            this.subject = subject
+            this.subject = subject;
             this.subjectTitle = subjectTitle;
         }
 
-        // Faculty Object Class
+        // Class: Faculty
         function FacultyObject(faculty, subjects) {
             this.faculty = faculty;
             this.subjects = subjects;
         }
 
-        // Take in course object and associate parameters with that course
-        // @return -1 if not added
+        var coursesArray,
+            createdSubjectObject,
+            createdFacultyObject,
+            createdSubjectObjectArray;
 
+        // Take in course object and associate parameters with that course
         function tryAddingToExistingFaculty(courseObject, faculty, subject, subjectTitle) {
 
             var inserted = false;
+
             // Check if faculty exists
            result.forEach(function (facultyObjectWithinResult) {
                 if (facultyObjectWithinResult.faculty === faculty) {
@@ -61,17 +60,17 @@ coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', '$rootScop
                         inserted = true;
 
                         coursesArray = [courseObject];
-                        subObj = new SubjectObject(coursesArray, subject, subjectTitle);
+                        createdSubjectObject = new SubjectObject(coursesArray, subject, subjectTitle);
 
                         // Push onto result
-                        facultyObjectWithinResult.subjects.push(subObj);
+                        facultyObjectWithinResult.subjects.push(createdSubjectObject);
                     }
 
                 }
             });
 
+            // Faculty does no exist. Create a new faculty
             if (!inserted) {
-                // Only executed if all fails
                 makeNewFaculty(courseObject, faculty, subject, subjectTitle);
             }
 
@@ -80,13 +79,13 @@ coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', '$rootScop
         function makeNewFaculty(courseObject, faculty, subject, subjectTitle) {
             // create subject object first
             coursesArray = [courseObject];
-            subObj = new SubjectObject(coursesArray, subject, subjectTitle);
-            subObjArray = [subObj];
+            createdSubjectObject = new SubjectObject(coursesArray, subject, subjectTitle);
+            createdSubjectObjectArray = [createdSubjectObject];
 
-            facObj = new FacultyObject(faculty, subObjArray);
+            createdFacultyObject = new FacultyObject(faculty, createdSubjectObjectArray);
 
             // Push onto result
-            result.push(facObj);
+            result.push(createdFacultyObject);
         }
 
         var faculty,
@@ -108,17 +107,12 @@ coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', '$rootScop
                         subject.toUpperCase().indexOf(field) > -1 ||
                         courseObject.asString.toUpperCase().indexOf(field) > -1) {
 
-                        console.log("before");
-
                         // Add this course to the object
                         tryAddingToExistingFaculty(courseObject, faculty, subject, subjectTitle);
                     }
                 });
             });
         });
-
-        //console.log(result);
-
 
         // Return rebuild object
         return result;
