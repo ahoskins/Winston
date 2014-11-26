@@ -8,14 +8,23 @@ coreModule.directive('scrollSmooth', ['$document', '$window', function($document
         restrict: 'A',
         link: function (scope, element) {
             element.bind('click', function (e) {
-                // Don't bubble up this event
+
+                /*
+                **************************
+                Don't bubble up this event
+                **************************
+                 */
                 e.stopPropagation();
+
+                /*
+                ***********************
+                Setup scroll parameters
+                ***********************
+                 */
 
                 // Get current position of element relative to top of the screen
                 var offsetTop = element[0].getBoundingClientRect().top;
 
-
-                // Scroll parameters
                 var duration = 500;
 
                 var easeInOutQuad = function (t) {
@@ -26,9 +35,14 @@ coreModule.directive('scrollSmooth', ['$document', '$window', function($document
                     return (t===0) ? 2 : 2 * Math.pow(2, 10 * (t/3 - 1)) + 1;
                 };
 
-                // Only scroll if element top is not within the current screen
+                /*
+                *******************************************
+                Only scroll if element is not within screen
+                Using imported scrollSmooth function
+                *******************************************
+                 */
+
                 if (offsetTop < 0) {
-                    // Scroll to element using imported scrollSmooth module function
                     $document.scrollToElement(element, 0, duration, easeInExpo());
                 }
 
