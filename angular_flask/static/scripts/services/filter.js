@@ -12,7 +12,17 @@ coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', '$rootScop
     // @param {Object} $scope.filterText is passed in
     //
     // @returns {Object} same format as $scope.subjectBin
+    // BUILD-UP METHOD
+    //
     return stabilize(function(subjectBin, field) {
+
+        var result = [];
+
+        var coursesArray,
+            subObj,
+            facObj,
+            subObjArray;
+
         // Subject Object Class
         function SubjectObject(subject, subjectTitle, courses) {
             this.courses = courses;
@@ -26,71 +36,93 @@ coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', '$rootScop
             this.subjects = subjects;
         }
 
-        // Worker function for adding a courseObject to results
-        function addCourseToResult(result, courseObject, faculty, subject, subjectTitle) {
-            /*
-             * Take advantage of the fact that course data comes from the server
-             * already sorted by FACULTY, then SUBJECT, then COURSE
-             */
-            var facultyObj = null;
-            var subjectObj = null;
-            if (result.length > 0 && result[result.length-1].faculty === faculty) {
-                facultyObj = result[result.length-1]
-                facultySubjects = facultyObj.subjects
-                if (facultySubjects[facultySubjects.length-1] === subject) {
-                    subjectObj = facultySubjects[facultySubjects.length-1]
-                    subjectObj.courses.push(courseObject);
-                }
-            }
+        // Take in course object and associate parameters with that course
+        // @return -1 if not added
 
-            if (facultyObj === null) {
-                facultyObj = new FacultyObject(faculty,
-                                               [new SubjectObject(subject, subjectTitle,
-                                                                  [courseObject])
-                                               ]);
+        function tryAddingToExistingFaculty(courseObject, faculty, subject, subjectTitle) {
 
-                // Push onto result
-                result.push(facultyObj);
+            var inserted = false;
+            // Check if faculty exists
+           result.forEach(function (facultyObjectWithinResult) {
+                if (facultyObjectWithinResult.faculty === faculty) {
 
-            } else if (subjectObj === null) {
-                // Create subject object within this faculty and insert
-                subjectObj = new SubjectObject(subject, subjectTitle,
-                                               [courseObject]);
+                    // Find the correct subject within this faculty
+                    facultyObjectWithinResult.subjects.forEach(function (subjectObject) {
+                        if (subjectObject.subject === subject) {
 
-                // Push onto result
-                facultyObj.subjects.push(subjectObj);
-            }
-        }
+                            inserted = true;
+                            subjectObject.courses.push(courseObject);
+                        }
+                    });
 
-        function addCoursesToResultIfMatching(result, subjectObject) {
-            subject = subjectObject.subject;
-            subjectTitle = subjectObject.subjectTitle;
+                    // Faculty exists, but subject does not. Create a new subject
+                    if (!inserted) {
+                        inserted = true;
 
-            subjectObject.courses.forEach(function (courseObject) {
-                if (faculty.toUpperCase().indexOf(field) > -1 ||
-                    subject.toUpperCase().indexOf(field) > -1 ||
-                    courseObject.asString.toUpperCase().indexOf(field) > -1) {
-                    // Add this course to the object
+                        coursesArray = [courseObject];
+                        subObj = new SubjectObject(coursesArray, subject, subjectTitle);
 
-                    addCourseToResult(result, courseObject, faculty, subject, subjectTitle);
+                        // Push onto result
+                        facultyObjectWithinResult.subjects.push(subObj);
+                    }
+
                 }
             });
+
+            if (!inserted) {
+                // Only executed if all fails
+                makeNewFaculty(courseObject, faculty, subject, subjectTitle);
+            }
+
         }
 
-        var result = []
-        if (typeof field === 'undefined' || field.length < 2) {
-            return subjectBin;
+        function makeNewFaculty(courseObject, faculty, subject, subjectTitle) {
+            // create subject object first
+            coursesArray = [courseObject];
+            subObj = new SubjectObject(coursesArray, subject, subjectTitle);
+            subObjArray = [subObj];
+
+            facObj = new FacultyObject(faculty, subObjArray);
+
+            // Push onto result
+            result.push(facObj);
         }
 
-        var faculty, subject, subjectTitle;
+        var faculty,
+            subject,
+            subjectTitle;
+
+        // Iterate through subjectBin, invoking tryAddingToExistingFaculty on the courses who meet the query string requirements
         subjectBin.forEach(function (facultyObject) {
+            // "Faculty of Engineering"
             faculty = facultyObject.faculty;
             facultyObject.subjects.forEach(function (subjectObject) {
-                addCoursesToResultIfMatching(result, subjectObject);
+                // "ECE"
+                subject = subjectObject.subject;
+                subjectTitle = subjectObject.subjectTitle;
+
+                // For each course, check if it should be added
+                subjectObject.courses.forEach(function (courseObject) {
+                    if (faculty.toUpperCase().indexOf(field) > -1 ||
+                        subject.toUpperCase().indexOf(field) > -1 ||
+                        courseObject.asString.toUpperCase().indexOf(field) > -1) {
+
+                        console.log("before");
+
+                        // Add this course to the object
+                        tryAddingToExistingFaculty(courseObject, faculty, subject, subjectTitle);
+                    }
+                });
             });
         });
+
+        //console.log(result);
+
+
+        // Return rebuild object
         return result;
     });
+
 }]);
 
 

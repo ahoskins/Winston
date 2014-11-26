@@ -28,8 +28,6 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 //          }]
 //    }];
 
-    $rootScope.doNotFilter = true;
-
     $scope.subjectBin = [];
 
     // Request /api/courses-min
@@ -54,9 +52,8 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 
                         parsePage(pageListing);
 
-                        // Tell the filter that all the courses are received
                         if (pageListing.page === total_pages) {
-                            $rootScope.doNotFilter = false;
+                            console.log($scope.subjectBin);
                         }
 
                     });

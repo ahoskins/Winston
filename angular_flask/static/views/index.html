@@ -21,7 +21,7 @@
 
 
         <accordion>
-            <accordion-group class="faculty-accordion animate-if" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText:doNotFilter" scroll-smooth>
+            <accordion-group class="faculty-accordion animate-if" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" scroll-smooth>
                 <accordion>
                     <accordion-group class="subject-accordion animate-if" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" data-ng-repeat="subjectObject in facultyObject.subjects" scroll-smooth>
                         <accordion>
