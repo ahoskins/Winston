@@ -34,4 +34,4 @@ When documentation is unclear, missing, or incorrect, [add an issue][issue-new] 
 Thanks
 ------
 
-[Mason Strong](https://github.com/hadacigar) ([contact](mailto:mstrong@ualberta.ca)) and [Peter Crinklaw][link-here] for ideas, advice, and for sharing their CMPUT 275 scheduling project's code as a point of reference.
+[Mason Strong](https://github.com/hadacigar) ([contact](mailto:mstrong@ualberta.ca)) and [Peter Crinklaw](http://blackacrebrewing.com/hey.swf) for ideas, advice, and for sharing the code from their Cmput 275 schedule-builder project as a point of reference.
