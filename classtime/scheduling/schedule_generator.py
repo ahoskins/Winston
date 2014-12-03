@@ -185,12 +185,14 @@ def _add_component(candidates, component, pace):
                   WORKLOAD_SIZE+1, out_q))
         procs.append(proc)
         proc.start()
+
     candidates = list()
     for _ in range(len(procs)):
         candidates.extend(out_q.get())
     candidates = candidates[:CANDIDATE_POOL_SIZE]
     for proc in procs:
         proc.join()
+
     return candidates
 
 def _add_candidates(candidates, candidate, heap_size):
@@ -202,7 +204,10 @@ def _is_hopeless(candidate, sections_chosen):
     return len(candidate.sections) < sections_chosen
 
 def _condense_schedules(schedules):
-    pass
+    bmap_schedules = sorted(schedules, key=lambda sched: sched.timetable_bitmap)
+    for schedule in bmap_schedules:
+        pass
+    return bmap_schedules
 
 # http://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks-in-python
 def _chunks(full_list, chunk_size=None):

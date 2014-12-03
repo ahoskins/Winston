@@ -27,7 +27,7 @@ class Schedule(object):
     SELF_IS_BETTER = False
     """Semantic sorting constants"""
 
-    SIMILARITY_THRESHOLD = 4
+    SIMILARITY_THRESHOLD = 3
     """Number of different blocks allowed until two schedules are
        not considered similar anymore"""
 
