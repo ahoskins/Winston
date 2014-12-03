@@ -2,102 +2,118 @@
 //
 
 coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope) {
+   /*
+    $scope.subjectBin = [{
+            faculty: 'Faculty of Engineering',
+            subjects: [{
+                subject: 'ECE',
+                courses: [{course-object>}...]
+            }, {
+                subject: 'MEC E',
+                courses: [{<course-object>},...]
+            }]
+     }];
+     */
 
-    // Organized course object
-    //
-    // $scope.subjectBin = {
-    //    "Faculty of Engineering": {
-    //          "ECE": [{<courses-min-object>}, {<courses-min-object>}],
-    //          "MEC E": [{<courses-min-object>}]
-    //     },
-    //    "Faculty of Science": {
-    //          "CMPUT": [{<courses-min-object}]
-    //     }
-    // }
-    $scope.subjectBin = {};
+    /*
+    ********************************************************************
+    Parse courses from /api/courses-min-structured into $scope.subjectBin
+    This is done in an asynchronous way
+    ********************************************************************
+     */
 
-    // Read in courses from factory, courseFactory.js ////////////
-    /////////////////////////////////////////////////////////////
-    //
-    // @callee: on page load
-    //
-    // @returns: sorted $scope.subjectBin
-    var tempSubjectBin = {};
+    $scope.subjectBin = [];
 
+    // Class: Faculty
+    function FacultyObject(faculty, subjects) {
+        this.faculty = faculty;
+        this.subjects = subjects;
+    }
+
+    /*
+    Request /api/courses-min-structured
+    Asynchronously request each page
+     */
+    var pageListing;
     courseFactory.getCoursesPage(1).
         success(function (data) {
-            // De-serialize JSON data
-            var pageListing = angular.fromJson(data),
-                total_pages = pageListing.total_pages,
-                page = 1;
 
-            // In these calls, actually get and arrange the data
-            while (page < (total_pages + 1)) {
+            pageListing = angular.fromJson(data);
+
+            var total_pages = pageListing.total_pages;
+
+            parsePage(pageListing);
+
+            //Get remaining pages
+            var page = 2;
+
+            // Asynchronously request the rest of the pages
+            while (page <= total_pages) {
                 courseFactory.getCoursesPage(page).
                     success(function (data) {
-                        // De-serialize JSON data
                         pageListing = angular.fromJson(data);
 
-                        // For each course on page of results
-                        pageListing.objects.forEach(function (course) {
-                            if (tempSubjectBin.hasOwnProperty(course.faculty)) {
-                                // We are within an existing faculty property
-                                if (tempSubjectBin[course.faculty].hasOwnProperty(course.subject)) {
-                                    tempSubjectBin[course.faculty][course.subject].push(course);
+                        parsePage(pageListing);
 
-                                    // Sort the courses by course level number (small --> large)
-                                    tempSubjectBin[course.faculty][course.subject].sort(compareByCourseNumber);
-                                }
-                                else {
-                                    tempSubjectBin[course.faculty][course.subject] = [course];
-                                }
-                            }
-                            else {
-                                tempSubjectBin[course.faculty] = {};
-                                tempSubjectBin[course.faculty][course.subject] = [course];
-                            }
-                        });
-                    }).
-                    error(function () {
-                        $window.alert("Sorry, something went wrong.");
                     });
-
                 page = page + 1;
             }
-            $scope.subjectBin = tempSubjectBin;
+
         }).
         error(function () {
-            $window.alert("Sorry, something went wrong.");
+            $window.alert("Failed to get data");
         });
 
+    /*
+    Parse each faculty on page
+     */
+    function parsePage(pageListing) {
+        pageListing.objects.forEach(function(SFacultyGroup) {
+            // Insert object into subjectBin
+            insertIntoSubjectBin(SFacultyGroup);
+        });
+    }
 
-    // Sort by asString property
-    //
-    // @param {Object} course object, from courses-min
-    // @param {Object} course object, from courses-min
-    //
-    // @return {int} compare result
-    function compareByCourseNumber(a, b) {
-        var aNum = a.asString.match(/\d+/);
-        var bNum = b.asString.match(/\d+/);
+    /*
+    Insert each faculty into $scope.subjectBin
+     */
+    function insertIntoSubjectBin(SFacultyGroup) {
+        var inserted = false;
+        var SfacultyName = SFacultyGroup.faculty;
 
-        if (aNum < bNum) {
-            return -1;
-        }
-        else if (aNum > bNum) {
-            return 1;
-        }
-        else {
-            return 0;
+        // Case 1: Insert into already existing faculty
+        $scope.subjectBin.forEach(function(subjectBinObject) {
+            if (subjectBinObject.faculty === SfacultyName) {
+
+                // faculty object already exists
+                // Push onto subjects array
+                SFacultyGroup.subjects.forEach(function(Ssubject) {
+                    subjectBinObject.subjects.push(Ssubject);
+                });
+                inserted = true;
+            }
+        });
+
+        // Case 2: create new faculty and insert
+        if (!inserted) {
+            //console.log("created new faculty");
+            var subjects = [];
+            SFacultyGroup.subjects.forEach(function (subject) {
+                subjects.push(subject);
+            });
+
+            var newObj = new FacultyObject(SfacultyName, subjects);
+
+            $scope.subjectBin.push(newObj);
         }
     }
 
-    // Performance //////////////////////////////////////
-    /////////////////////////////////////////////////////
-    //
-    //
-    // @callee: 1st layer of accordion
-    //
+
+    /*
+    ******************************
+    On-click of accordion handlers
+    ******************************
+     */
 
     // @callee: 2nd layer of accordion
     //
@@ -129,18 +145,19 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         }
     };
 
-    // Wait 0.5 seconds until displaying any courses
-    //
-    // Without this delay the courses will immediately load, freeze up for a second, and then finally finish
-    // This is hides this lag (I better come up with a better fix eventually)
+    /*
+    **************************
+    Performance related issues
+    **************************
+     */
+
+    // To hide lag, wait 1 second before displaying any courses
     $timeout(function() {
         $scope.filterText = '';
     }, 1000);
 
-    // Watcher: search box filter
-    //
-    // Sets a watch on the input search box (every 200ms)
-    // This affects the normal $digest cycle
+    // Watch the searchBox every 200ms
+    // Gives the impression of less lag
     var filterTextTimeout;
     $scope.$watch('searchBox', function(val) {
         if (!isString(val)) {
@@ -155,29 +172,30 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
         }, 200);
     });
 
-    // Add to Schedule ////////////////////////////////////
-    ///////////////////////////////////////////////////////
-    //
-    // Add course to schedule
-    //
+    /*
+    **********************************************************************
+    Add to schedule
+    This is the bridge between this controller and the schedule controller
+    **********************************************************************
+     */
+
     $rootScope.addedCourses = [];
-    $rootScope.shoppingCartSize = 0;
 
     // @callee: "Add" button under 3rd layer of accordion
-    //
-    $scope.addToSchedule = function (course) {
-        // Only add if the course isn't already there
-        if ($rootScope.addedCourses.indexOf(course) === -1) {
-            $rootScope.addedCourses.push(course);
-
-            // Update view tally
-            $rootScope.shoppingCartSize = $rootScope.shoppingCartSize + 1;
+    // Only add if the course isn't already in $rootScope.addedCourses
+    $scope.addToSchedule = function (courseObject) {
+        if ($rootScope.addedCourses.indexOf(courseObject) === -1) {
+            // Add course object
+            $rootScope.addedCourses.push(courseObject);
         }
     };
 
-    // Helper functions ///////////////////////////////////
-    ///////////////////////////////////////////////////////
-    //
+
+    /*
+    ****************
+    Validation Functions
+    ****************
+     */
     var isNumber = function(val) {
         return !isNaN(parseFloat(val));
     };

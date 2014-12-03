@@ -73,7 +73,7 @@ Available operators `listed here <http://flask-restless.readthedocs.org/en/lates
     has
     any
 
-.. _api-institutions
+.. _api-institutions:
 
 api/institutions
 ~~~~~~~~~~~~~~~~
@@ -107,11 +107,11 @@ Response
 
 :objects: list of <institution object>s
 
-.. _institution-identifier
+.. _institution-identifier:
 .. _api-institution-object:
 
 <institution object>
--------------
+--------------------
 
 :institution: variable length institution identifier
 :name: semantic institution name
@@ -312,7 +312,7 @@ Request
 
  }
 
-See the method `TestAPI.test_generate_schedules` in `tests/angular_flask/test_api.py` for concrete examples.
+See the method ``TestAPI.test_generate_schedules`` in ``tests/angular_flask/test_api.py`` for concrete examples.
 
 :institution: :ref:`unique institution identifier <institution-identifier>`
 :term: :ref:`4-digit unique term identifier <4-digit-term-identifier>`
@@ -338,26 +338,26 @@ Preferences
 In `preferences`, each key's value is the preference's **weighting**.  
 Positive, negative, and zero-valued weightings are described for each preference type.
 
+There are sensible defaults for each preference, and all preferences are optional.
+
 Currently supported preferences:
 
-- `no-marathons`
-  - `weight > 0` -> avoid long stretches of classes in a row
-  - `weight < 0` -> prefer long stretches of classes in a row
-  - `weight = 0` -> no preference
+- ``no-marathons``
+    - ``weight > 0`` = avoid long stretches of classes in a row
+    - ``weight < 0`` = prefer long stretches of classes in a row
+    - ``weight = 0`` = no preference
 
-- `day-classes`
-  - `weight > 0` -> prefer daytime classes
-  - `weight < 0` -> prefer night classes (5pm and on)
-  - `weight = 0` -> no preference
+- ``day-classes``
+    - ``weight > 0`` = prefer daytime classes
+    - ``weight < 0`` = prefer night classes (5pm and on)
+    - ``weight = 0`` = no preference
 
-- `start-early`
-  - `weight > 0` -> prefer early starts
-  - `weight < 0` -> prefer late starts
-  - `weight = 0` -> no preference
-  - Note: `start-early` can be used in tandem with `busy_times` to specify exactly *how* early you want. 
-    - eg `start-early: 10, busy_times: everyday 8am-9am` gets early schedules starting at or after 9am
+- ``start-early``
+    - ``weight > 0`` = prefer early starts
+    - ``weight < 0`` = prefer late starts
+    - ``weight = 0`` = no preference
 
-There are sensible defaults for each preference, and all preferences are optional.
+> Note: ``start-early`` can be used in tandem with ``busy_times`` to specify *how* early to start
 
 Response
 ''''''''
@@ -404,7 +404,7 @@ Response
 -----------------
 :sections: list of <section object>s
 
-.. _5-digit-section-identifier
+.. _5-digit-section-identifier:
 .. _api-section-object:
 
 <section object>

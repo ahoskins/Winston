@@ -5,10 +5,7 @@ coreModule.factory('scheduleFactory', function ($window, $http, $q) {
     var factory = {};
 
     factory.getSchedules = function (addedCourses) {
-        // It gets here...hone this out to make the api call work
 
-        // added courses is an array of course objects
-        // I only want to use the "course" property of these in the api call
         var courseIds = [];
         addedCourses.forEach(function (courseObject) {
             courseIds.push(courseObject.course);

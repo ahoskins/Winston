@@ -3,9 +3,12 @@
 
 coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', function($scope, $window, $rootScope, scheduleFactory) {
 
-    // Full Calendar Config ////////////////////////////
-    ////////////////////////////////////////////////////
-    //
+    /*
+    ********************
+    Full Calendar Config
+    ********************
+     */
+
     // Event array
     $scope.events = [ ];
 
@@ -34,26 +37,17 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         }
     };
 
-    // Get Schedules /////////////////////////////////
-    //////////////////////////////////////////////////
-    //
+    /*
+    *************************************************************
+    Generate schedules
+    Step 1: Call the schedule factory and parse the JSON
+    Step 2: Create a closure called scheduleInstance, and invoke it at the first schedule
+    *************************************************************
+     */
 
-    var scheduleInstance,
-        scheduleLength,
-        scheduleIndex = 0;
+    var scheduleInstance;
 
-
-    $scope.removeFromSchedule = function(course) {
-        var index = $scope.addedCourses.indexOf(course);
-        if (index > -1) {
-            $scope.addedCourses.splice(index, 1);
-        }
-        $rootScope.shoppingCartSize = $rootScope.shoppingCartSize - 1;
-    };
-
-
-    // Event handle for gen-sched button
-    //
+    // Event handle for "Generate Schedule" button
     $scope.getSchedules = function () {
         scheduleFactory.getSchedules($rootScope.addedCourses).
             success(function (data) {
@@ -72,45 +66,8 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
             });
     };
 
-    // Event handle for prev/next buttons
-    //
-    $scope.displayDifferentSchedule = function (forward) {
-
-        // Adjust schedule index
-        if (forward) {
-            scheduleIndex = scheduleIndex + 1;
-            if (scheduleIndex >= scheduleLength) {
-                scheduleIndex = scheduleLength - 1;
-            }
-        }
-        else {
-            scheduleIndex = scheduleIndex - 1;
-            if (scheduleIndex < 0) {
-                scheduleIndex = 0;
-            }
-        }
-
-        clearEvents();
-
-        // Invoke the closure on the new index
-        scheduleInstance(scheduleIndex);
-    };
-
-    // Event handle for clear button
-    //
-    $scope.clearAdded = function () {
-        $rootScope.addedCourses = [];
-        $rootScope.shoppingCartSize = 0;
-
-        clearEvents();
-
-        enableGenerateSchedules();
-    };
-
-
-    // @callee: $scope.getSchedules
-    //
-    // @returns: updated $scope.events
+    // This outer function serves as a wrapper for ALL the possible schedules
+    // Within this function is a closure referencing EACH schedule, depending on the argument given
     function renderSchedule (scheduleListing) {
 
         scheduleLength = scheduleListing.objects.length;
@@ -118,7 +75,6 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         // Return closure of scheduleListing
         //
         // @param {int}: schedule index within the JSON response
-        //
         // @return {void}: updates $scope.events
         return function (i) {
 
@@ -137,9 +93,11 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
                     return;
                 }
 
-                // Time //
-                //
-                //
+                /*
+                ****
+                Time
+                ****
+                 */
                 var startTimeString = classtime.startTime.match(/(\d+):(\d+)/),
                     endTimeString = classtime.endTime.match(/(\d+):(\d+)/);
 
@@ -168,9 +126,11 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
                     endHour = parseInt(endTimeString[1]);
                 }
 
-                // Color //
-                //
-                //
+                /*
+                *****
+                Color
+                *****
+                 */
                 var currentColor;
                 var foundColor = false;
 
@@ -189,24 +149,18 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
                     colorPalletIndex = colorPalletIndex + 1;
                 }
 
-                // Day //
-                //
-                //
+                /*
+                ***
+                Day
+                ***
+                 */
                 var date = new Date(),
                     d = date.getDate(),
                     m = date.getMonth(),
                     y = date.getFullYear();
 
-                // JavaScript function Date.getDay()
-                //
-                // Sunday 0
-                // Monday 1
-                // Tuesday 2
-                // Wednesday 3
-                // Thursday 4
-                // Friday 5
-                // Saturday 6
-                //
+                // Note: JavaScript function Date.getDay() returns enum of current day of the week
+
                 // @return {int} enumeration of current day of the week
                 var dayNumber = date.getDay(),
                     offset;
@@ -255,10 +209,73 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         };
     }
 
+    /*
+    **********************************************
+    Display different schedule by...
+    1. Clear current events
+    2. Re-invoke the closure with a different index
+    **********************************************
+     */
+
+    var scheduleLength,
+        scheduleIndex = 0;
+    // Event handle for prev/next buttons
+    $scope.displayDifferentSchedule = function (forward) {
+
+        // Adjust schedule index
+        if (forward) {
+            scheduleIndex = scheduleIndex + 1;
+            if (scheduleIndex >= scheduleLength) {
+                scheduleIndex = scheduleLength - 1;
+            }
+        }
+        else {
+            scheduleIndex = scheduleIndex - 1;
+            if (scheduleIndex < 0) {
+                scheduleIndex = 0;
+            }
+        }
+
+        clearEvents();
+
+        // Invoke the closure on the new index
+        scheduleInstance(scheduleIndex);
+    };
 
 
-    // Helper functions
-    //
+    /*
+    *****************************
+    Remove courses from schedule
+    *****************************
+     */
+
+    // Event handle for clear button
+    // Clears ALL added courses
+    $scope.clearAdded = function () {
+        $rootScope.addedCourses = [];
+        $rootScope.shoppingCartSize = 0;
+
+        clearEvents();
+
+        enableGenerateSchedules();
+
+        console.log($scope.subjectBin);
+    };
+
+    // Event handle for clearing single course
+    $scope.removeFromSchedule = function(course) {
+        var index = $scope.addedCourses.indexOf(course);
+        if (index > -1) {
+            $scope.addedCourses.splice(index, 1);
+        }
+    };
+
+    /*
+    ****************
+    Helper functions
+    ****************
+     */
+
     function disableGenerateSchedules() {
         // Disable
         document.getElementById('generate-button').disabled = true;
@@ -275,4 +292,5 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
             $scope.events.pop();
         }
     }
+
 }]);
