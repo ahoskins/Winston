@@ -54,11 +54,20 @@ def find_schedules(schedule_params, num_requested):
             min(num_requested, len(schedules)),
             len(schedules),
             schedule_params))
-        logging.debug('Request q={}\nResponse ({}/{}):\n{}'.format(
-            schedule_params,
-            min(num_requested, len(schedules)),
-            len(schedules),
-            schedules[:num_requested]))
+        debug_msg = 'Request q={q}\n' + \
+                    'Response: Returning {ret} schedules\n' + \
+                    '          including {ret_like} more like them\n' + \
+                    '          out of {tot} total generated\n' + \
+                    'Returning:\n{ret_schedules}'
+        logging.debug(debug_msg.format(
+            q=schedule_params,
+            ret=min(num_requested,
+                len(schedules)),
+            ret_like=sum([len(s.more_like_this)
+                          for s in schedules[:num_requested]]),
+            tot=len(schedules) + sum([len(s.more_like_this)
+                                     for s in schedules]),
+            ret_schedules=schedules[:num_requested]))
     return schedules[:num_requested]
 
 def _generate_schedules(cal, term, course_ids, busy_times, electives_groups, preferences):
@@ -86,6 +95,8 @@ def _generate_schedules(cal, term, course_ids, busy_times, electives_groups, pre
 
     candidates = _schedule_electives(candidates, cal,
         term, electives_groups, _log_scheduling_component)
+
+    candidates = _condense_schedules(candidates)
 
     return sorted(candidates,
         reverse=True,
@@ -183,12 +194,14 @@ def _add_component(candidates, component, pace):
                   WORKLOAD_SIZE+1, out_q))
         procs.append(proc)
         proc.start()
+
     candidates = list()
     for _ in range(len(procs)):
         candidates.extend(out_q.get())
     candidates = candidates[:CANDIDATE_POOL_SIZE]
     for proc in procs:
         proc.join()
+
     return candidates
 
 def _add_candidates(candidates, candidate, heap_size):
@@ -198,6 +211,23 @@ def _add_candidates(candidates, candidate, heap_size):
 
 def _is_hopeless(candidate, sections_chosen):
     return len(candidate.sections) < sections_chosen
+
+def _condense_schedules(schedules):
+    schedules = sorted(schedules,
+        key=lambda sched: (sched.overall_score(), sched.timetable_bitmap))
+
+    lag, lead = 0, 1
+    condensed_indices = list()
+    while lead < len(schedules):
+        sched, lead_sched = schedules[lag], schedules[lead]
+        if sched.is_similar(lead_sched):
+            sched.more_like_this.append(lead_sched)
+            condensed_indices.append(lead)
+        else:
+            lag = lead
+        lead += 1
+    return [sched for i, sched in enumerate(schedules)
+            if i not in condensed_indices]
 
 # http://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks-in-python
 def _chunks(full_list, chunk_size=None):

@@ -30,3 +30,8 @@ When documentation is unclear, missing, or incorrect, [add an issue][issue-new] 
 [sphinx]: http://sphinx-doc.org/
 [issue-new]: https://github.com/RossHamish/classtime/issues/new
 [milestones]: https://github.com/RossHamish/classtime/milestones
+
+Thanks
+------
+
+[Mason Strong](https://github.com/hadacigar) ([contact](mailto:mstrong@ualberta.ca)) and [Peter Crinklaw](http://blackacrebrewing.com/hey.swf) for ideas, advice, and for sharing the code from their Cmput 275 schedule-builder project as a point of reference.

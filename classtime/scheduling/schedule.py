@@ -27,6 +27,10 @@ class Schedule(object):
     SELF_IS_BETTER = False
     """Semantic sorting constants"""
 
+    SIMILARITY_THRESHOLD = 0.8
+    """Fraction which must be identical to be similar"""
+    DIFFERENCE_THRESHOLD = 1 - SIMILARITY_THRESHOLD
+
     def __init__(self, sections=None, busy_times=None, preferences=None):
         """Creates a schedule with the given initial conditions
 
@@ -45,19 +49,43 @@ class Schedule(object):
         self.scorer = ScheduleScorer(self, preferences)
         self.preferences = preferences
 
+        self.more_like_this = list()
+
         self.sections = list()
         self._add_initial_sections(sections)
         self.busy_times = list()
         self._add_initial_busy_times(busy_times)        
 
     def __repr__(self):
-        retstr = '\n   0 1 2 3 4 5 6 7 8 9 A B C 1 2 3 4 5 6 7 8 9 A B \n'
-        for daynum, blocks in enumerate(self.timetable):
-            retstr += '{}: '.format(Schedule.DAYS[daynum])
-            for block in blocks:
-                retstr += Schedule.SYMBOLS[block]
-            retstr += '\n'
-        return retstr[:-1] # remove trailing newline
+        def timetable_repr(sched, indent):
+            all_time_columns = '   0 1 2 3 4 5 6 7 8 9 A B C 1 2 3 4 5 6 7 8 9 A B '
+            time_columns = all_time_columns.replace('0 1 2 3 4 5 6 ', '')
+            block_offset = len(all_time_columns) - len(time_columns)
+
+            timetable = str()
+            timetable += ' '*indent
+            timetable += time_columns
+            for daynum, blocks in enumerate(sched.timetable):
+                timetable += '\n'
+                timetable += ' '*indent
+                timetable += '{}: '.format(Schedule.DAYS[daynum])
+                for block in blocks[block_offset:]:
+                    timetable += Schedule.SYMBOLS[block]
+            return timetable + '\n'
+        retstr = '\n\n' + \
+                 '==============\n' + \
+                 '   Schedule\n' + \
+                 '==============\n' + \
+                 timetable_repr(self, 0)
+        if self.more_like_this:
+            retstr += '--------------\n' + \
+                      'More like this\n' + \
+                      '--------------\n'
+        for like_this in self.more_like_this:
+            retstr += '\nsimilarity: {:.3f}\n'.format(
+                self._similarity(like_this))
+            retstr += timetable_repr(like_this, 0)
+        return retstr
 
     def _add_initial_sections(self, sections):
         """Add sections when building a new :py:class:`Schedule`
@@ -163,6 +191,25 @@ class Schedule(object):
                 other.get('autoEnroll')))
             return True
         return False
+
+    def is_similar(self, other):
+        return self._similarity(other) >= Schedule.SIMILARITY_THRESHOLD
+
+    def _similarity(self, other):
+        return 1 - self._difference(other)
+
+    def _difference(self, other):
+        _difference = 0.0
+        _scheduled_blocks = sum([bin(day).count('1')
+                                 for day in self.timetable_bitmap])
+        for day in range(Schedule.NUM_DAYS):
+            xordiff = other.timetable_bitmap[day] ^ self.timetable_bitmap[day]
+            # each real block difference produces two 1's in the xordiff
+            _difference += bin(xordiff).count('1') / 2.0
+        return 1.0 * _difference / _scheduled_blocks
+
+    def num_similar_schedules(self):
+        return len(self.more_like_this)
 
     def attempt_add_to_timetable(self, section, section_num):
         """Attempts to add a section to the timetable

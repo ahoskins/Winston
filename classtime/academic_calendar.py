@@ -10,10 +10,12 @@ from classtime.local_db import LocalDatabaseFactory
 class AcademicCalendar(object):
     """Manages academic calendar data for a particular institution
 
-    Internally, uses a stack-based access idiom. Usage::
+    Internally, uses a stack-based datatype access idiom. Usage::
      self.push_<datatype>()
      ... use self.cur_datatype() or self.cur_primary_key() ...
      self.pop_<datatype>()
+
+     where <datatype> is one of [terms, courses, sections, classtimes]
     """
 
     idle_workers = dict()

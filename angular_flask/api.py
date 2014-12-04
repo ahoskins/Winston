@@ -45,7 +45,7 @@ api_manager.create_api(Course,
                        methods=['GET'],
                        exclude_columns=['sections'])
 
-COURSES_PER_PAGE = 500
+COURSES_PER_PAGE = 1000
 api_manager.create_api(Course,
                        collection_name='courses-min',
                        methods=['GET'],
@@ -145,7 +145,10 @@ def find_schedules(result=None, search_params=None):
     result['objects'] = list()
     for schedule in schedules:
         result['objects'].append({
-            'sections': schedule.sections
+            'sections': schedule.sections,
+            'more_like_this': [{
+                'sections': like_this.sections
+            } for like_this in schedule.more_like_this]
         })
     return
 
