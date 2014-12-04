@@ -32,13 +32,6 @@ html {
 /**/
 /**/
 #schedule-div {
-	display: none;
-/*	left: 50%;
-	width: 50%;
-	top: 50px;
-	padding-top: 10px;
-	height: auto;
-	position: fixed;*/
 }
 
 #generate-button {
@@ -52,15 +45,13 @@ html {
 }
 
 #next {
-	position: fixed;
-	top: 5px;
-	right: 18%;
+	float: right;
+	padding-left: 10px;
 }
 
 #prev {
-	position: fixed;
-	top: 5px;
-	right: 26%;
+	float: right;
+	padding-right: 5px;
 }
 
 #clear {
@@ -104,6 +95,9 @@ a {
 	margin-right: auto;
 	text-align: center;
 	font: 800 15px/30px 'Raleway', sans-serif;
+}
+
+#list-group {
 }
 
 

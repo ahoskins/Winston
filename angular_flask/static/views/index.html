@@ -54,45 +54,33 @@
 
     <!--Schedule: controlled by scheduleCtrl.js-->
     <div data-ng-controller="scheduleCtrl" class="col-md-6">
-        <!-- <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate</button> -->
+        <!--List view -->
+        <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate</button>
+        <div ng-hide="scheduleMode">
+            <div id="added-courses">
+                <h id="added"> Added Courses: </h>
 
-        <div id="added-courses">
-            <h id="added"> Added Courses: </h>
-
-            <div class="list-group" ng-repeat="course in addedCourses">
-                <p class="list-group-item">{{ course.asString }} <a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i></a></p>
+                <div class="list-group" ng-repeat="course in addedCourses">
+                    <p class="list-group-item">{{ course.asString }} <a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i></a></p>
+                </div>
             </div>
         </div>
+        
+        <!-- Schedule view -->
+        <div id="schedule-stuff" ng-show="scheduleMode">
+            <button id="next" class="btn btn-primary" ng-click="displayDifferentSchedule(1)">Next</button>
+            <button id="prev" class="btn btn-primary" ng-click="displayDifferentSchedule(0)">Prev</button>
 
-<!--         <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate</button> -->
-
-<!--         <a class="button dropdown" id="shopping-cart" dropdown-toggle="#cart">Shopping Cart ({{ addedCourses.length }})</a> -->
-<!--         <ul id="cart" class="f-dropdown">
-            <li ng-repeat="course in addedCourses">
-                <span>{{course.asString  }}  <span><i class="foundicon-minus" ng-click="removeFromSchedule(course)"></i></span></span>
-            </li>
-        </ul> -->
-
-        <!-- <div id="shopping-cart-size">{{ shoppingCartSize }}</div> -->
-
-        <!--Clear-->
-<!--         <button id="clear" ng-click="clearAdded()">Clear</button> -->
-
-        <!--Prev/Next-->
-        <!--<button id="next" ng-click="displayDifferentSchedule(1)">Next</button>-->
-        <!--<button id="prev" ng-click="displayDifferentSchedule(0)">Prev</button>-->
-
-        <div id="schedule-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div>
+            <div id="schedule-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" ng-show="scheduleMode" calendar="weekView"></div>  
+        </div>
     </div>
-
-    <!-- LIBRARY -->
 
     <!-- jQuery -->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery-ui/ui/jquery-ui.js"></script>
 
     <!--Angular-->
-    <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular/angular.js"></script>
 
     <!-- Underscore -->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/underscore/underscore-min.js"></script>
@@ -114,8 +102,6 @@
 
     <!-- Bootstrap Angular UI -->
     <script type="text/javascript" src="/static/scripts/vendor/ui-bootstrap-tpls-0.12.0.min.js"></script>
-
-    <!--  -->
 
     <!--Module: App.js-->
 	<script type="text/javascript" src="/static/scripts/app.js"></script>

@@ -3,6 +3,8 @@
 
 coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', function($scope, $window, $rootScope, scheduleFactory) {
 
+    $scope.scheduleMode = false;
+
     /*
     ********************
     Full Calendar Config
@@ -49,17 +51,20 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
 
     // Event handle for "Generate Schedule" button
     $scope.getSchedules = function () {
+        $scope.scheduleMode = true;
         scheduleFactory.getSchedules($rootScope.addedCourses).
             success(function (data) {
-                disableGenerateSchedules();
+                //disableGenerateSchedules();
+
+                // // Set display property on calendar div
 
                 var scheduleListing = angular.fromJson(data);
 
                 // Create closure with current scheduleListing
                 scheduleInstance = renderSchedule(scheduleListing);
 
-                // Invoke the closure
                 scheduleInstance(0);
+
             }).
             error(function() {
                 $window.alert("Schedules not found.");
