@@ -2,8 +2,9 @@
 <html data-ng-app="coreModule">
 <head>
     <!--Stylesheets-->
-	<link rel="stylesheet" type="text/css" href="/static/styles/foundation.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/static/styles/stylesheets/general_foundicons.css"/>
+
+    <link rel="stylesheet" type="text/css" href="/static/styles/foundation.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/styles/style.css"/>
     <link rel="stylesheet" type="text/css" href="/static/styles/animate.css"/>
     <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.css"/>
@@ -19,7 +20,7 @@
 		</div>
 		<br>
 
-        <accordion>
+<!--         <accordion>
             <accordion-group class="faculty-accordion animate-if" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" scroll-smooth>
                 <accordion>
                     <accordion-group class="subject-accordion animate-if" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" data-ng-repeat="subjectObject in facultyObject.subjects" scroll-smooth>
@@ -35,7 +36,7 @@
                     </accordion-group>
                 </accordion>
             </accordion-group>
-        </accordion>
+        </accordion> -->
 
 	</div>
 
@@ -82,8 +83,11 @@
     <!--Smooth Scroll-->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-scroll/angular-scroll.min.js"></script>
 
-    <!--MM-Foundation-->
+     <!--MM-Foundation-->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-foundation/mm-foundation-tpls.min.js"></script>
+
+    <!-- Bootstrap Angular UI -->
+    <script type="text/javascript" src="/static/scripts/vendor/ui-bootstrap-tpls-0.12.0.min.js"></script>
 
     <!--Module: App.js-->
 	<script type="text/javascript" src="/static/scripts/app.js"></script>

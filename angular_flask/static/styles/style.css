@@ -74,3 +74,11 @@ html {
 	top: 5px;
 	right: 10%;
 }
+
+/*Something Angular UI requires to make work*/
+.nav, .pagination, .carousel, .panel-title a { 
+	cursor: pointer; 
+}
+
+
+

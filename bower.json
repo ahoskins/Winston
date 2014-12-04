@@ -5,7 +5,8 @@
     "angular-foundation": "0.4.0",
     "underscore": "latest",
     "angular-scroll": "latest",
-    "angular-animate": "latest"
+    "angular-animate": "latest",
+    "bootstrap": "latest"
   },
   "resolutions": {
     "jquery": "~2.1",

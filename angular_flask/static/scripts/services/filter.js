@@ -122,11 +122,3 @@ coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', function(s
 
 
 
-
-
-
-
-
-
-
-
