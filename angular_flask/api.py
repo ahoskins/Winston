@@ -45,7 +45,7 @@ api_manager.create_api(Course,
                        methods=['GET'],
                        exclude_columns=['sections'])
 
-COURSES_PER_PAGE = 500
+COURSES_PER_PAGE = 1000
 api_manager.create_api(Course,
                        collection_name='courses-min',
                        methods=['GET'],

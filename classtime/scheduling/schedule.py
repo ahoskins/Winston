@@ -27,7 +27,7 @@ class Schedule(object):
     SELF_IS_BETTER = False
     """Semantic sorting constants"""
 
-    SIMILARITY_THRESHOLD = 0.95
+    SIMILARITY_THRESHOLD = 0.8
     """Fraction which must be identical to be similar"""
     DIFFERENCE_THRESHOLD = 1 - SIMILARITY_THRESHOLD
 
@@ -77,14 +77,14 @@ class Schedule(object):
                  '   Schedule\n' + \
                  '==============\n' + \
                  timetable_repr(self, 0)
-        # if self.more_like_this:
-        #     retstr += '--------------\n' + \
-        #               'More like this\n' + \
-        #               '--------------\n'
-        # for like_this in self.more_like_this:
-        #     retstr += '\nsimilarity: {:.3f}\n'.format(
-        #         self._similarity(like_this))
-        #     retstr += timetable_repr(like_this, 0)
+        if self.more_like_this:
+            retstr += '--------------\n' + \
+                      'More like this\n' + \
+                      '--------------\n'
+        for like_this in self.more_like_this:
+            retstr += '\nsimilarity: {:.3f}\n'.format(
+                self._similarity(like_this))
+            retstr += timetable_repr(like_this, 0)
         return retstr
 
     def _add_initial_sections(self, sections):
@@ -193,19 +193,19 @@ class Schedule(object):
         return False
 
     def is_similar(self, other):
-        return self._difference(other) < Schedule.DIFFERENCE_THRESHOLD
+        return self._similarity(other) >= Schedule.SIMILARITY_THRESHOLD
 
     def _similarity(self, other):
         return 1 - self._difference(other)
 
     def _difference(self, other):
-        _difference = 0
+        _difference = 0.0
         _scheduled_blocks = sum([bin(day).count('1')
                                  for day in self.timetable_bitmap])
         for day in range(Schedule.NUM_DAYS):
             xordiff = other.timetable_bitmap[day] ^ self.timetable_bitmap[day]
             # each real block difference produces two 1's in the xordiff
-            _difference += bin(xordiff).count('1') / 2
+            _difference += bin(xordiff).count('1') / 2.0
         return 1.0 * _difference / _scheduled_blocks
 
     def num_similar_schedules(self):
