@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html data-ng-app="coreModule">
 <head>
-    <!--Stylesheets-->
-
-    <link rel="stylesheet" type="text/css" href="/static/styles/foundation.min.css"/>
+    <!-- Vendor -->
     <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+
+    <!-- My Style -->
 	<link rel="stylesheet" type="text/css" href="/static/styles/style.css"/>
+
+    <!-- Animations -->
     <link rel="stylesheet" type="text/css" href="/static/styles/animate.css"/>
+
+    <!-- Full Calendar -->
     <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.css"/>
+
+    <!-- Dope Ass Font! -->
+    <link href='http://fonts.googleapis.com/css?family=Raleway:200,300' rel='stylesheet' type='text/css'>
 </head>
 <body>
     <!--Accordion: controlled by accordionCtrl.js-->
@@ -16,18 +23,18 @@
 		Search By All:
 		<br>
 		<div class="search-box">
-			<input type="search" id="searchBox" data-ng-model="searchBox" />
+			<input class="form-control" type="search" id="searchBox" data-ng-model="searchBox" />
 		</div>
 		<br>
 
-<!--         <accordion>
+        <accordion>
             <accordion-group class="faculty-accordion animate-if" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" scroll-smooth>
                 <accordion>
                     <accordion-group class="subject-accordion animate-if" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" data-ng-repeat="subjectObject in facultyObject.subjects" scroll-smooth>
                         <accordion>
                             <accordion-group class="course-accordion animate-if" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" scroll-smooth>
                                 <div class="animate-if">
-                                    <a><i class="foundicon-plus" ng-click="addToSchedule(singleCourse)"> Add</i></a>
+                                    <a><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)"> Add</i></a>
                                     <br>
                                     {{ description[singleCourse.course] }}
                                 </div>
@@ -36,7 +43,7 @@
                     </accordion-group>
                 </accordion>
             </accordion-group>
-        </accordion> -->
+        </accordion>
 
 	</div>
 
@@ -56,7 +63,7 @@
         <!--Clear-->
         <button id="clear" ng-click="clearAdded()">Clear</button>
 
-        <!--<!--Prev/Next-->
+        <!--Prev/Next-->
         <!--<button id="next" ng-click="displayDifferentSchedule(1)">Next</button>-->
         <!--<button id="prev" ng-click="displayDifferentSchedule(0)">Prev</button>-->
 
@@ -64,11 +71,19 @@
 
     </div>
 
-    <!--Core Dependencies-->
+    <!-- LIBRARY -->
+
+    <!-- jQuery -->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery-ui/ui/jquery-ui.js"></script>
+
+    <!--Angular-->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular/angular.min.js"></script>
+
+    <!-- Underscore -->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/underscore/underscore-min.js"></script>
+
+    <!-- Full Calendar -->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-ui-calendar/src/calendar.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.min.js"></script>
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/fullcalendar/gcal.js"></script>
@@ -83,11 +98,10 @@
     <!--Smooth Scroll-->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-scroll/angular-scroll.min.js"></script>
 
-     <!--MM-Foundation-->
-    <script type="text/javascript" src="/static/scripts/vendor/bower_components/angular-foundation/mm-foundation-tpls.min.js"></script>
-
     <!-- Bootstrap Angular UI -->
     <script type="text/javascript" src="/static/scripts/vendor/ui-bootstrap-tpls-0.12.0.min.js"></script>
+
+    <!--  -->
 
     <!--Module: App.js-->
 	<script type="text/javascript" src="/static/scripts/app.js"></script>

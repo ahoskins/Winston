@@ -1,6 +1,7 @@
 html {
 	margin-left: 10px;
 	margin-right: 10px;
+	font: 200 27px/45px 'Raleway', sans-serif;
 }
 
 /*Accordion*/
@@ -78,6 +79,10 @@ html {
 /*Something Angular UI requires to make work*/
 .nav, .pagination, .carousel, .panel-title a { 
 	cursor: pointer; 
+}
+
+a {
+	cursor: pointer;
 }
 
 
