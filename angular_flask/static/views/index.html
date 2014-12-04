@@ -23,9 +23,9 @@
             Winston
          </h>
     </nav>
-    <!--Accordion: controlled by accordionCtrl.js-->
-	<div data-ng-controller="accordionCtrl" class="col-md-6">
 
+    <!-- The accordion...showed when the schedule is hidden -->
+	<div data-ng-controller="accordionCtrl" class="col-md-6" ng-hide="scheduleMode">
 		<div class="search-box">
                     <div id="search-by-all"> Search For Courses: </div>
 			<input class="form-control" type="search" id="searchBox" data-ng-model="searchBox" />
@@ -49,19 +49,27 @@
                 </accordion>
             </accordion-group>
         </accordion>
-
 	</div>
 
-    <!--Schedule: controlled by scheduleCtrl.js-->
-    <div data-ng-controller="scheduleCtrl" class="col-md-6">
-        <!-- Control/buttons -->
-        <div id="buttons">
-            <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate</button>
-            <button id="prev" class="btn btn-primary" ng-show="scheduleMode" ng-click="displayDifferentSchedule(0)">Previous</button>
-            <button id="next" class="btn btn-primary" ng-show="scheduleMode" ng-click="displayDifferentSchedule(1)">Next</button>
+    <div data-ng-controller="scheduleCtrl">
+        <!-- The schedule view...showed when the accordion is hidden -->
+        <div class="col-md-6" ng-show="scheduleMode">
+            <!-- Control/buttons -->
+            <div id="buttons">
+                <button id="prev" class="btn btn-primary" ng-click="displayDifferentSchedule(0)">Previous</button>
+                <button id="next" class="btn btn-primary" ng-click="displayDifferentSchedule(1)">Next</button>
+                <button id="show-accordion" class="btn btn-primary" ng-click="showAccordion()">Add More Courses</button>
+            </div>
+
+            <!-- Schedule view -->
+            <div id="schedule-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div> 
         </div>
-        <!--List view -->
-        <div ng-hide="scheduleMode">
+
+        <!-- The list of courses and options etc...this should never get hidden -->
+        <div class="col-md-6">
+            <!--List view -->
+            <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate</button>
+            
             <div id="added-courses">
                 <h id="added"> Added Courses: </h>
 
@@ -70,9 +78,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Schedule view -->
-        <div id="schedule-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" ng-show="scheduleMode" calendar="weekView"></div>  
     </div>
 
     <!-- jQuery -->

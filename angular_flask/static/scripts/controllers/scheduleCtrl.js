@@ -3,7 +3,7 @@
 
 coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', function($scope, $window, $rootScope, scheduleFactory) {
 
-    $scope.scheduleMode = false;
+    $rootScope.scheduleMode = false;
 
     /*
     ********************
@@ -11,8 +11,8 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
     ********************
      */
 
-    // Event array
-    $scope.events = [ ];
+    //Event array
+    $scope.events = [];
 
     // EventSources array
     $scope.eventSources = [$scope.events];
@@ -49,14 +49,22 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
 
     var scheduleInstance;
 
+    $scope.showAccordion = function () {
+        // switch to accordion view
+        $rootScope.scheduleMode = false;
+
+        enableGenerateSchedules();
+    }
+
     // Event handle for "Generate Schedule" button
     $scope.getSchedules = function () {
         // Show schedule view
-        $scope.scheduleMode = true;
+        $rootScope.scheduleMode = true;
+        //$scope.$apply();
 
         scheduleFactory.getSchedules($rootScope.addedCourses).
             success(function (data) {
-                //disableGenerateSchedules();
+                disableGenerateSchedules();
 
                 // // Set display property on calendar div
 
