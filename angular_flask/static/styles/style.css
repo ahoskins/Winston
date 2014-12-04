@@ -8,19 +8,19 @@ html {
 /**/
 /**/
 #searchBox {
-	width: 49%;
+/*	width: 49%;*/
 }
 
 .faculty-accordion {
-	width: 49%;
+/*	width: 49%;*/
 }
 
 .subject-accordion {
-	width: 70%;
+/*	width: 70%;*/
 }
 
 .course-accordion {
-	width: 80%;
+/*	width: 80%;*/
 }
 
 .foundicon-right-arrow {
@@ -32,18 +32,17 @@ html {
 /**/
 /**/
 #schedule-div {
-	left: 50%;
+	display: none;
+/*	left: 50%;
 	width: 50%;
 	top: 50px;
 	padding-top: 10px;
 	height: auto;
-	position: fixed;
+	position: fixed;*/
 }
 
 #generate-button {
-	position: fixed;
-	top: 5px;
-	right: 5px;
+	float: right;
 }
 
 #shopping-cart-size {
@@ -84,6 +83,30 @@ html {
 a {
 	cursor: pointer;
 }
+
+#winston {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	font: 800 27px/45px 'Raleway', sans-serif;
+}
+
+#search-by-all {
+	font: 900 15px/30px 'Raleway', sans-serif;
+/*	width: 49%;*/
+	text-align: center;
+}
+
+#added {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	font: 800 15px/30px 'Raleway', sans-serif;
+}
+
+
 
 
 
