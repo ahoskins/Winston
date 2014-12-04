@@ -31,8 +31,6 @@ html {
 /*Schedule*/
 /**/
 /**/
-#schedule-div {
-}
 
 #generate-button {
 	float: right;
@@ -45,13 +43,17 @@ html {
 }
 
 #next {
-	float: right;
+	/*float: right;*/
 	padding-left: 10px;
 }
 
 #prev {
-	float: right;
+	/*float: right;*/
 	padding-right: 5px;
+}
+
+#buttons {
+	padding-bottom: 10px;
 }
 
 #clear {
@@ -97,8 +99,9 @@ a {
 	font: 800 15px/30px 'Raleway', sans-serif;
 }
 
-#list-group {
-}
+/*.btn {
+	padding: 5px;
+}*/
 
 
 

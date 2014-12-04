@@ -51,7 +51,9 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
 
     // Event handle for "Generate Schedule" button
     $scope.getSchedules = function () {
+        // Show schedule view
         $scope.scheduleMode = true;
+
         scheduleFactory.getSchedules($rootScope.addedCourses).
             success(function (data) {
                 //disableGenerateSchedules();

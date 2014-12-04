@@ -54,8 +54,13 @@
 
     <!--Schedule: controlled by scheduleCtrl.js-->
     <div data-ng-controller="scheduleCtrl" class="col-md-6">
+        <!-- Control/buttons -->
+        <div id="buttons">
+            <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate</button>
+            <button id="prev" class="btn btn-primary" ng-show="scheduleMode" ng-click="displayDifferentSchedule(0)">Previous</button>
+            <button id="next" class="btn btn-primary" ng-show="scheduleMode" ng-click="displayDifferentSchedule(1)">Next</button>
+        </div>
         <!--List view -->
-        <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate</button>
         <div ng-hide="scheduleMode">
             <div id="added-courses">
                 <h id="added"> Added Courses: </h>
@@ -67,12 +72,7 @@
         </div>
         
         <!-- Schedule view -->
-        <div id="schedule-stuff" ng-show="scheduleMode">
-            <button id="next" class="btn btn-primary" ng-click="displayDifferentSchedule(1)">Next</button>
-            <button id="prev" class="btn btn-primary" ng-click="displayDifferentSchedule(0)">Prev</button>
-
-            <div id="schedule-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" ng-show="scheduleMode" calendar="weekView"></div>  
-        </div>
+        <div id="schedule-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" ng-show="scheduleMode" calendar="weekView"></div>  
     </div>
 
     <!-- jQuery -->
