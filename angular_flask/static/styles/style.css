@@ -22,6 +22,18 @@ Accordion/Search
 	text-align: center;
 }
 
+#add-button {
+	position: relative;
+	top: -18px;
+	float: right;
+}
+
+.ng-binding {
+	display: block;
+	padding: 10px 15px;
+    margin: -10px -15px;
+}
+
 /*
 Schedule
 */

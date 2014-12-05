@@ -35,10 +35,12 @@
                 <accordion>
                     <accordion-group class="subject-accordion animate-if" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" data-ng-repeat="subjectObject in facultyObject.subjects" scroll-smooth>
                         <accordion>
-                            <accordion-group class="course-accordion animate-if" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" heading="{{ singleCourse.asString }}" ng-if="subjects[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" scroll-smooth>
+                            <accordion-group class="course-accordion animate-if" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="subjects[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" scroll-smooth>
+                                <accordion-heading>
+                                    {{ singleCourse.asString }} 
+                                    <a id="add-button"><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)">Add</i></a>
+                                </accordion-heading>
                                 <div class="animate-if">
-                                    <a><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)"> Add</i></a>
-                                    <br>
                                     {{ description[singleCourse.course] }}
                                 </div>
                             </accordion-group>
@@ -71,7 +73,7 @@
             
             <div id="added-courses">
                 <h id="added"> Added Courses: </h>
-
+                <br>
                 <div class="list-group" ng-repeat="course in addedCourses">
                     <p class="list-group-item">{{ course.asString }} <a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i></a></p>
                 </div>
