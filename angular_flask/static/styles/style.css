@@ -85,6 +85,11 @@ Schedule
 	font: 800 15px/30px 'Raleway', sans-serif;
 }
 
+ .fc-view-agendaWeek .fc-today {
+     color:#ffffff;
+     background:#ffffff;
+  }
+
 
 /*
 List of added
