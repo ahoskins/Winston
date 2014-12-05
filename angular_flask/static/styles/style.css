@@ -4,33 +4,27 @@ html {
 	font: 200 27px/45px 'Raleway', sans-serif;
 }
 
-/*Accordion*/
-/**/
-/**/
-#searchBox {
-/*	width: 49%;*/
+#winston {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	padding-top: 5px;
+	font: 800 32px/35px 'Raleway', sans-serif;
 }
 
-.faculty-accordion {
-/*	width: 49%;*/
+/*
+Accordion/Search
+*/
+
+#search-by-all {
+	font: 900 15px/30px 'Raleway', sans-serif;
+	text-align: center;
 }
 
-.subject-accordion {
-/*	width: 70%;*/
-}
-
-.course-accordion {
-/*	width: 80%;*/
-}
-
-.foundicon-right-arrow {
-	position: relative;
-}
-
-
-/*Schedule*/
-/**/
-/**/
+/*
+Schedule
+*/
 
 #generate-button {
 	float: right;
@@ -43,16 +37,14 @@ html {
 }
 
 #next {
-	/*float: right;*/
 	padding-left: 10px;
 }
 
 #prev {
-	/*float: right;*/
 	padding-right: 5px;
 }
 
-#buttons {
+.buttons {
 	padding-bottom: 10px;
 }
 
@@ -68,28 +60,23 @@ html {
 	right: 10%;
 }
 
-/*Something Angular UI requires to make work*/
-.nav, .pagination, .carousel, .panel-title a { 
-	cursor: pointer; 
+#show-accordion {
+	float: right;
 }
 
-a {
-	cursor: pointer;
-}
 
-#winston {
+#schedules {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
-	font: 800 27px/45px 'Raleway', sans-serif;
+	font: 800 15px/30px 'Raleway', sans-serif;
 }
 
-#search-by-all {
-	font: 900 15px/30px 'Raleway', sans-serif;
-/*	width: 49%;*/
-	text-align: center;
-}
+
+/*
+List of added
+*/
 
 #added {
 	display: block;
@@ -99,9 +86,15 @@ a {
 	font: 800 15px/30px 'Raleway', sans-serif;
 }
 
-/*.btn {
-	padding: 5px;
-}*/
+/*
+Misc
+*/
+
+/*Something Angular UI requires to make work*/
+.nav, .pagination, .carousel, .panel-title, a { 
+	cursor: pointer; 
+}
+
 
 
 

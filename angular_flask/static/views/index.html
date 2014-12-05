@@ -19,9 +19,7 @@
 <body>
 
     <nav class="navbar navbar-default" role="navigation">
-        <h id="winston">
-            Winston
-         </h>
+            <p id="winston">Winston</p>
     </nav>
 
     <!-- The accordion...showed when the schedule is hidden -->
@@ -54,21 +52,22 @@
     <div data-ng-controller="scheduleCtrl">
         <!-- The schedule view...showed when the accordion is hidden -->
         <div class="col-md-6" ng-show="scheduleMode">
-            <!-- Control/buttons -->
-            <div id="buttons">
+            <div class="buttons">
                 <button id="prev" class="btn btn-primary" ng-click="displayDifferentSchedule(0)">Previous</button>
                 <button id="next" class="btn btn-primary" ng-click="displayDifferentSchedule(1)">Next</button>
                 <button id="show-accordion" class="btn btn-primary" ng-click="showAccordion()">Add More Courses</button>
             </div>
 
-            <!-- Schedule view -->
+            <h id="schedules"> Possible Schedules: ({{ scheduleIndex + 1 }}/{{ scheduleLength }}) </h>
+
             <div id="schedule-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div> 
         </div>
 
-        <!-- The list of courses and options etc...this should never get hidden -->
+        <!-- The list of courses and options etc...this will never get hidden -->
         <div class="col-md-6">
-            <!--List view -->
-            <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate</button>
+            <div class="buttons">
+                <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate</button>
+            </div>
             
             <div id="added-courses">
                 <h id="added"> Added Courses: </h>

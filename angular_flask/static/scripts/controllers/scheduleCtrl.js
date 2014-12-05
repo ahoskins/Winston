@@ -60,32 +60,51 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
     $scope.getSchedules = function () {
         // Show schedule view
         $rootScope.scheduleMode = true;
-        //$scope.$apply();
+
+        // Clear current events
+        clearEvents();
+
+        // Clear index
+        $scope.scheduleIndex = 0;
 
         scheduleFactory.getSchedules($rootScope.addedCourses).
             success(function (data) {
                 disableGenerateSchedules();
-
-                // // Set display property on calendar div
 
                 var scheduleListing = angular.fromJson(data);
 
                 // Create closure with current scheduleListing
                 scheduleInstance = renderSchedule(scheduleListing);
 
-                scheduleInstance(0);
+                // Check if no schedules were generated
+                if ($scope.scheduleLength === 0) {
+                    $rootScope.scheduleMode = false;
+                    return;
+                }
+
+                scheduleInstance(0); 
 
             }).
             error(function() {
-                $window.alert("Schedules not found.");
+                $window.alert("Server not responding.");
             });
     };
 
-    // This outer function serves as a wrapper for ALL the possible schedules
-    // Within this function is a closure referencing EACH schedule, depending on the argument given
+    /*
+    Render schedules based on a single server response
+    @param {object}: response from server
+
+    @returns {closure}: closure invokable by schedule index
+    */
     function renderSchedule (scheduleListing) {
 
-        scheduleLength = scheduleListing.objects.length;
+        $scope.scheduleLength = scheduleListing.objects.length;
+
+        // Check if there are now schedules
+        if ($scope.scheduleLength === 0) {
+            $window.alert("No schedules found.");
+            return;
+        }
 
         // Return closure of scheduleListing
         //
@@ -100,8 +119,6 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
             scheduleListing.objects[i].sections.forEach(function (classtime) {
 
                 // Null check
-                //
-                // TODO: Maybe want to flag the skipped class
                 if (classtime.startTime === null ||
                     classtime.endTime === null   ||
                     classtime.day === null         ) {
@@ -232,50 +249,31 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
     **********************************************
      */
 
-    var scheduleLength,
-        scheduleIndex = 0;
+    $scope.scheduleLength = 0;
+    $scope.scheduleIndex = 0;
     // Event handle for prev/next buttons
     $scope.displayDifferentSchedule = function (forward) {
 
         // Adjust schedule index
         if (forward) {
-            scheduleIndex = scheduleIndex + 1;
-            if (scheduleIndex >= scheduleLength) {
-                scheduleIndex = scheduleLength - 1;
+            $scope.scheduleIndex = $scope.scheduleIndex + 1;
+            if ($scope.scheduleIndex >= $scope.scheduleLength) {
+                $scope.scheduleIndex = $scope.scheduleLength - 1;
             }
         }
         else {
-            scheduleIndex = scheduleIndex - 1;
-            if (scheduleIndex < 0) {
-                scheduleIndex = 0;
+            $scope.scheduleIndex = $scope.scheduleIndex - 1;
+            if ($scope.scheduleIndex < 0) {
+                $scope.scheduleIndex = 0;
             }
         }
 
         clearEvents();
 
         // Invoke the closure on the new index
-        scheduleInstance(scheduleIndex);
+        scheduleInstance($scope.scheduleIndex);
     };
 
-
-    /*
-    *****************************
-    Remove courses from schedule
-    *****************************
-     */
-
-    // Event handle for clear button
-    // Clears ALL added courses
-    $scope.clearAdded = function () {
-        $rootScope.addedCourses = [];
-        $rootScope.shoppingCartSize = 0;
-
-        clearEvents();
-
-        enableGenerateSchedules();
-
-        console.log($scope.subjectBin);
-    };
 
     // Event handle for clearing single course
     $scope.removeFromSchedule = function(course) {
