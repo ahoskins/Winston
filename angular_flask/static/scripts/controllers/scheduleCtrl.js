@@ -58,14 +58,20 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
 
     // Event handle for "Generate Schedule" button
     $scope.getSchedules = function () {
-        // Show schedule view
-        $rootScope.scheduleMode = true;
-
         // Clear current events
         clearEvents();
 
         // Clear index
         $scope.scheduleIndex = 0;
+
+        // Make sure some courses added
+        if ($rootScope.addedCourses.length === 0) {
+            $window.alert("Add some courses first.");
+            return;
+        }
+
+        // Show schedule view
+        $rootScope.scheduleMode = true;
 
         scheduleFactory.getSchedules($rootScope.addedCourses).
             success(function (data) {
