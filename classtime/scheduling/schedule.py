@@ -27,7 +27,7 @@ class Schedule(object):
     SELF_IS_BETTER = False
     """Semantic sorting constants"""
 
-    SIMILARITY_THRESHOLD = 0.8
+    SIMILARITY_THRESHOLD = 1.00
     """Fraction which must be identical to be similar"""
     DIFFERENCE_THRESHOLD = 1 - SIMILARITY_THRESHOLD
 
