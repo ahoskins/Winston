@@ -49,11 +49,10 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
 
     var scheduleInstance;
 
+    // When click on "Add more courses" button from schedule view
     $scope.showAccordion = function () {
         // switch to accordion view
         $rootScope.scheduleMode = false;
-
-        enableGenerateSchedules();
     }
 
     // Event handle for "Generate Schedule" button
@@ -75,18 +74,19 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
 
         scheduleFactory.getSchedules($rootScope.addedCourses).
             success(function (data) {
-                disableGenerateSchedules();
 
                 var scheduleListing = angular.fromJson(data);
 
-                // Create closure with current scheduleListing
-                scheduleInstance = renderSchedule(scheduleListing);
+                $scope.scheduleLength = scheduleListing.objects.length;
 
-                // Check if no schedules were generated
                 if ($scope.scheduleLength === 0) {
                     $rootScope.scheduleMode = false;
+                    $window.alert("No schedules found.");
                     return;
                 }
+
+                // Create closure with current scheduleListing
+                scheduleInstance = renderSchedule(scheduleListing);
 
                 scheduleInstance(0); 
 
@@ -103,14 +103,12 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
     @returns {closure}: closure invokable by schedule index
     */
     function renderSchedule (scheduleListing) {
-
-        $scope.scheduleLength = scheduleListing.objects.length;
-
         // Check if there are now schedules
-        if ($scope.scheduleLength === 0) {
-            $window.alert("No schedules found.");
-            return;
-        }
+        // Alert this to the user
+        // if ($scope.scheduleLength === 0) {
+        //     $window.alert("No schedules found.");
+        //     return;
+        // }
 
         // Return closure of scheduleListing
         //
