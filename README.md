@@ -1,11 +1,8 @@
-classtime
-=========
+Find a university schedule that fits your life in less than 5 minutes
 
-Make friends with beartracks
+![](https://cloud.githubusercontent.com/assets/1527504/5326718/551e0544-7ce5-11e4-80a9-28a9ba9e2b11.png)
 
-![screenshot or image here](https://cloud.githubusercontent.com/assets/1527504/5063160/358f456e-6d98-11e4-9a65-01f91607817d.png)
-
-Documentation
+Developer Documentation
 -------------
 
 Documentation follows [reStructuredText] syntax, looks great when built with [sphinx], and is best viewed in a browser.

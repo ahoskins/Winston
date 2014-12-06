@@ -6,19 +6,41 @@ html {
 	min-height: 100%;
 }
 
-body {
-	margin-bottom: 60px;
-}
-
 #winston {
 	display: block;
+	float: center;
+	text-align: center;
+	padding-top: 8px;
+	font: 800 32px/30px 'Raleway', sans-serif;
+	color: #ffffff;
+	position: relative;
+	left: -140px;
+}
+
+.navbar-text {
+	padding-top: 0px;
+}
+
+.navbar-brand {
+	color: #ffffff;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
-	padding-top: 5px;
-	font: 800 32px/35px 'Raleway', sans-serif;
-	color: #ffffff;
 }
+
+/**/
+
+.navbar-header {
+    float: left;
+    padding: 2px;
+    text-align: center;
+    width: 100%;
+}
+.navbar-brand {
+	float:none;
+}
+
+/**/
 
 /*
 Accordion/Search
@@ -27,6 +49,7 @@ Accordion/Search
 #search-by-all {
 	font: 900 15px/30px 'Raleway', sans-serif;
 	text-align: center;
+	text-decoration: underline;
 }
 
 #add-button {
@@ -83,10 +106,6 @@ Schedule
 	float: right;
 }
 
-.accordion-side {
-	padding-bottom: 80px;
-}
-
 /*
 This is messy...
 pointer-events: none
@@ -101,6 +120,7 @@ is required so this div doesn't block the buttons underneath
 	position: relative;
 	top: -25px;
 	pointer-events: none;
+	text-decoration: underline;
 }
 
 #full-calendar-div {
@@ -123,6 +143,7 @@ List of added
 	margin-right: auto;
 	text-align: center;
 	font: 800 15px/30px 'Raleway', sans-serif;
+	text-decoration: underline;
 }
 
 /*
@@ -134,33 +155,28 @@ Misc
 	cursor: pointer; 
 }
 
-#footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 60px;
-  background-color: #25343A;
-  display: none;
-  color: #ffffff;
-}
-
-.container {
-  width: 100%;
-}
-
-#made-for {
-  float: left;
-  margin: 20px 0;
-}
-
-#developers {
-  float: right;
-  margin: 10px 0;
-}
-
 .navbar-default {
     background-color: #25343A;
     border-color: #E7E7E7;
+}
+
+#slogen {
+	display: inline-block;
+	float: left;
+	color: #ffffff;
+	margin: 20px 5px;
+}
+
+#mail {
+	display: inline-block;
+	float: right;
+	width: 100px;
+	color: #ffffff;
+	/*margin: 20px 5px;*/
+}
+
+.mail {
+	float: right;
 }
 
 
