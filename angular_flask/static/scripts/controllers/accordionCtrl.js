@@ -113,15 +113,19 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     On-click of accordion handlers
     ******************************
      */
+     $scope.subjects = [];
+     $scope.renderSubjects = function (faculty) {
+        $scope.subjects[faculty] = 1;
+     }
 
     // @callee: 2nd layer of accordion
     //
     // On click of the 2nd layer of the accordion
     // Will cause this 3rd layer to get rendered on the DOM and showed
     // Note: the courses will still be in the DOM even when the accordion is closed
-    $scope.subjects = [];
+    $scope.courses = [];
     $scope.renderCourses = function (subject) {
-        $scope.subjects[subject] = 1;
+        $scope.courses[subject] = 1;
     };
 
     // @callee: 3rd layer of accordion
@@ -154,7 +158,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     $timeout(function() {
         $scope.filterText = '';
         
-    }, 1000);
+    }, 500);
 
     // Watch the searchBox every 200ms
     // Gives the impression of less lag
