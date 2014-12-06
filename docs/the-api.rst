@@ -168,7 +168,9 @@ Response
 api/courses-min
 ~~~~~~~~~~~~~~~
 
-Quickly retrieve a list of all available courses. Each course object contains only essential information.
+Quickly retrieve a hierarchy of available courses.
+
+Each course object contains only essential information. More detailed information about a specific course is retrieved with :ref:`/api/courses <api-courses>`.
 
 Request
 '''''''
@@ -182,23 +184,48 @@ Response
 
 .. code:: javascript
 
-    {
-        "objects" : [
-            {
-                "asString": "ACCTG 300",
-                "course": "000001",
-                "faculty": "Faculty of Business",
-                "subject": "ACCTG",
-                "subjectTitle": "Accounting"
-            },
-            { <course-min object 2> },
-            ...
-            { <course-min object N> }
-        ],
+    objects = [
+        {
+            "faculty": "Faculty of Business",
+            "subjects": [
+                {
+                  "subject": "ACCTG",
+                  "subjectTitle": "Accounting",
+                  "courses": [
+                         {
+                              "course": "000001",
+                              "asString": "ACCTG 300"
+                         },
+                         { <course object> }
+                         ...
+                   ]
+               },
+               { <subject object> }
+               ...
+            ]
+        },
+        { <faculty object> }
         ...
-    }
+    ]
 
-:objects: list of <course-min object>s
+:objects: list of :ref:`faculty objects <api-faculty-object>`
+
+.. _api-faculty-object:
+
+<faculty object>
+----------------
+
+:faculty: semantic faculty name
+:subjects: list of :ref:`subject objects <api-subject-object>`
+
+.. _api-subject-object:
+
+<subject object>
+----------------
+
+:subject: variable-length subject identifier
+:subjectTitle: semantic subject name
+:courses: list of :ref:`course-min objects <api-course-min-object>`
 
 .. _api-course-min-object:
 .. _6-digit-course-identifier:
@@ -206,11 +233,8 @@ Response
 <course-min object>
 -------------------
 
-:asString: <subject> <level>
 :course: 6-digit course identifier
-:faculty: semantic faculty name
-:subject: variable-length subject identifier
-:subjectTitle: semantic subject name
+:asString: <subject> <level>
 
 .. _api-courses:
 

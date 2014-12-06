@@ -17,7 +17,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
 
     /*
     ********************************************************************
-    Parse courses from /api/courses-min-structured into $scope.subjectBin
+    Parse courses from /api/courses-min into $scope.subjectBin
     This is done in an asynchronous way
     ********************************************************************
      */
@@ -31,7 +31,7 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     }
 
     /*
-    Request /api/courses-min-structured
+    Request /api/courses-min
     Asynchronously request each page
      */
     var pageListing;
