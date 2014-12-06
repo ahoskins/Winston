@@ -35,6 +35,7 @@ Accordion/Search
 #search-by-all {
 	font: 900 15px/30px 'Raleway', sans-serif;
 	text-align: center;
+	text-decoration: underline;
 }
 
 #add-button {
@@ -105,6 +106,7 @@ is required so this div doesn't block the buttons underneath
 	position: relative;
 	top: -25px;
 	pointer-events: none;
+	text-decoration: underline;
 }
 
 #full-calendar-div {
@@ -127,6 +129,7 @@ List of added
 	margin-right: auto;
 	text-align: center;
 	font: 800 15px/30px 'Raleway', sans-serif;
+	text-decoration: underline;
 }
 
 /*
