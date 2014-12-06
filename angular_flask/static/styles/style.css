@@ -10,7 +10,7 @@ html {
 	display: block;
 	float: center;
 	text-align: center;
-	padding-top: 11px;
+	padding-top: 8px;
 	font: 800 32px/30px 'Raleway', sans-serif;
 	color: #ffffff;
 	position: relative;
@@ -18,7 +18,7 @@ html {
 }
 
 .navbar-text {
-	padding-top: 2px;
+	padding-top: 0px;
 }
 
 .navbar-brand {
@@ -27,6 +27,20 @@ html {
 	margin-right: auto;
 	text-align: center;
 }
+
+/**/
+
+.navbar-header {
+    float: left;
+    padding: 2px;
+    text-align: center;
+    width: 100%;
+}
+.navbar-brand {
+	float:none;
+}
+
+/**/
 
 /*
 Accordion/Search
