@@ -76,13 +76,25 @@ Schedule
 	float: right;
 }
 
-
-#schedules {
+/*
+This is messy...
+pointer-events: none
+is required so this div doesn't block the buttons underneath
+*/
+#schedule-header {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
 	font: 800 15px/30px 'Raleway', sans-serif;
+	position: relative;
+	top: -25px;
+	pointer-events: none;
+}
+
+#full-calendar-div {
+	position: relative;
+	top: -22px;
 }
 
  .fc-view-agendaWeek .fc-today {
@@ -90,12 +102,11 @@ Schedule
      background:#ffffff;
   }
 
-
 /*
 List of added
 */
 
-#added {
+#added-header {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;

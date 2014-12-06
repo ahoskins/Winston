@@ -60,19 +60,20 @@
                 <button id="show-accordion" class="btn btn-primary" ng-click="showAccordion()">Add More Courses</button>
             </div>
 
-            <h id="schedules"> Possible Schedules: ({{ scheduleIndex + 1 }}/{{ scheduleLength }}) </h>
+                <h id="schedule-header"> Possible Schedules: ({{ scheduleIndex + 1 }}/{{ scheduleLength }}) </h>
 
-            <div id="schedule-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div> 
+
+            <div id="full-calendar-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div> 
         </div>
 
         <!-- The list of courses and options etc...this will never get hidden -->
         <div class="col-md-6">
             <div class="buttons">
-                <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate</button>
+                <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate Schedules</button>
             </div>
             
-            <div id="added-courses">
-                <h id="added"> Added Courses: </h>
+            <div>
+                <h id="added-header"> Added Courses: </h>
                 <br>
                 <div class="list-group" ng-repeat="course in addedCourses">
                     <p class="list-group-item">{{ course.asString }} <a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i></a></p>
