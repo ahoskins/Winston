@@ -1,11 +1,8 @@
-Winston
-=========
+Find a university schedule that fits your life in less than 5 minutes
 
-Find a university schedule in less than 5 minutes
+![](https://cloud.githubusercontent.com/assets/1527504/5326718/551e0544-7ce5-11e4-80a9-28a9ba9e2b11.png)
 
-![screenshot or image here](https://cloud.githubusercontent.com/assets/1527504/5326718/551e0544-7ce5-11e4-80a9-28a9ba9e2b11.png)
-
-Documentation
+Developer Documentation
 -------------
 
 Documentation follows [reStructuredText] syntax, looks great when built with [sphinx], and is best viewed in a browser.
