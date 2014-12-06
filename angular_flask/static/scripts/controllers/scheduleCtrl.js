@@ -77,7 +77,7 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
 
                 var scheduleListing = angular.fromJson(data);
 
-                $scope.scheduleLength = scheduleListing.objects.length;
+                $scope.scheduleLength = scheduleListing.num_results;
 
                 // Check if server returned no schedules available
                 if ($scope.scheduleLength === 0) {
@@ -263,7 +263,7 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         if (forward) {
             $scope.scheduleIndex = $scope.scheduleIndex + 1;
             if ($scope.scheduleIndex >= $scope.scheduleLength) {
-                $scope.scheduleIndex = $scope.scheduleLength - 1;
+                $scope.scheduleIndex = $scope.scheduleIndex - 1;
             }
         }
         else {
