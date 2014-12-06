@@ -45,18 +45,6 @@ api_manager.create_api(Course,
                        methods=['GET'],
                        exclude_columns=['sections'])
 
-COURSES_PER_PAGE = 1000
-api_manager.create_api(Course,
-                       collection_name='courses-min',
-                       methods=['GET'],
-                       include_columns=['asString',
-                                        'faculty',
-                                        'subject',
-                                        'subjectTitle',
-                                        'course'],
-                       results_per_page=COURSES_PER_PAGE,
-                       max_results_per_page=COURSES_PER_PAGE)
-
 def courses_min_order_faculty_subject(search_params=None):
     if search_params is None:
         return
@@ -77,8 +65,10 @@ def courses_min_order_faculty_subject(search_params=None):
         }
     ])
 
-
 def courses_min_structured(result=None, search_params=None):
+    """Depends on result list being sorted by:
+    - faculty, then subject, then asString
+    """
     def new_list_and_set():
         return list(defaultdict(list)), set()
     if result is None:
@@ -111,8 +101,9 @@ def courses_min_structured(result=None, search_params=None):
     result['objects'] = faculty_list
     return
 
+COURSES_PER_PAGE = 1000
 api_manager.create_api(Course,
-                       collection_name='courses-min-structured',
+                       collection_name='courses-min',
                        methods=['GET'],
                        include_columns=['asString',
                                         'faculty',

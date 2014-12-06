@@ -9,7 +9,7 @@ Nose is included in `requirements.txt <https://pip.readthedocs.org/en/1.1/requir
 
 Otherwise::
 
-	install: $ pip install nose
+    install: $ pip install nose
 
 Test suites are in ``tests/``. Test filenames are prefixed
 with ``test_``. Test functions are prefixed with ``test_``
@@ -19,7 +19,7 @@ Run tests
 
 Run all tests ::
 
- $ cd
+ $ cd tests
  $ nosetests [options]
 
 Run tests only in a specific file ::
@@ -29,11 +29,11 @@ Run tests only in a specific file ::
 Useful options:
 
 --nocapture
-	don't capture stdout. Necessary for --pdb
+    don't capture stdout. Necessary for --pdb
 --pdb
-	drop into `pdb <https://docs.python.org/2/library/pdb.html>`__ on error or exception
+    drop into `pdb <https://docs.python.org/2/library/pdb.html>`__ on error or exception
 --nologcapture
-	output all logging during test execution
+    output all logging during test execution
 
 Get notified
 """"""""""""
@@ -42,28 +42,28 @@ Test result notification bubbles are easy no-nonsense updates.
 
 On Ubuntu, check out `nose-notify <https://github.com/passy/nose-notify>`__::
 
-	install: $ pip install nose-notify
-	use: $ nosetests --with-notify
+    install: $ pip install nose-notify
+    use: $ nosetests --with-notify
 
 On Mac, check out `nosegrowl2 <https://github.com/j4mie/nosegrowl2>`__::
 
-	install: $ pip install nosegrowl2
-	use: $ nosetests --with-growl
+    install: $ pip install nosegrowl2
+    use: $ nosetests --with-growl
 
 Let watchdog run the tests
 """"""""""""""""""""""""""
 
 `watchdog <https://github.com/gorakhargosh/watchdog`__ watches your files and lets you take action based on what changed - in this case, run tests!::
 
-	install: $ pip install watchdog
-	use: $ watchmedo shell-command --patterns="*.py" --recursive --command='nosetests --with-notify'
+    install: $ pip install watchdog
+    use: $ watchmedo shell-command --patterns="*.py" --recursive --command='nosetests --with-notify'
 
 (and let watchdog build the docs, too)
 ''''''''''''''''''''''''''''''''''''''
 ::
 
-	$ cd docs
-	$ watchmedo shell-command --patterns="*.rst" --recursive --command='make html'
+    $ cd docs
+    $ watchmedo shell-command --patterns="*.rst" --recursive --command='make html'
 
 
 Write tests
