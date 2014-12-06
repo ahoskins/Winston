@@ -154,8 +154,6 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     $timeout(function() {
         $scope.filterText = '';
         
-        // Show footer now
-        document.getElementById("footer").style.display = "inline";
     }, 1000);
 
     // Watch the searchBox every 200ms

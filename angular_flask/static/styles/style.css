@@ -6,18 +6,26 @@ html {
 	min-height: 100%;
 }
 
-body {
-	margin-bottom: 60px;
-}
-
 #winston {
 	display: block;
+	float: center;
+	text-align: center;
+	padding-top: 11px;
+	font: 800 32px/30px 'Raleway', sans-serif;
+	color: #ffffff;
+	position: relative;
+	left: -140px;
+}
+
+.navbar-text {
+	padding-top: 2px;
+}
+
+.navbar-brand {
+	color: #ffffff;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
-	padding-top: 5px;
-	font: 800 32px/35px 'Raleway', sans-serif;
-	color: #ffffff;
 }
 
 /*
@@ -83,10 +91,6 @@ Schedule
 	float: right;
 }
 
-.accordion-side {
-	padding-bottom: 80px;
-}
-
 /*
 This is messy...
 pointer-events: none
@@ -134,33 +138,28 @@ Misc
 	cursor: pointer; 
 }
 
-#footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 60px;
-  background-color: #25343A;
-  display: none;
-  color: #ffffff;
-}
-
-.container {
-  width: 100%;
-}
-
-#made-for {
-  float: left;
-  margin: 20px 0;
-}
-
-#developers {
-  float: right;
-  margin: 10px 0;
-}
-
 .navbar-default {
     background-color: #25343A;
     border-color: #E7E7E7;
+}
+
+#slogen {
+	display: inline-block;
+	float: left;
+	color: #ffffff;
+	margin: 20px 5px;
+}
+
+#mail {
+	display: inline-block;
+	float: right;
+	width: 100px;
+	color: #ffffff;
+	/*margin: 20px 5px;*/
+}
+
+.mail {
+	float: right;
 }
 
 
