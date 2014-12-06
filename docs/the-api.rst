@@ -413,7 +413,7 @@ Response
 :<course attributes>: all attributes from the parent :ref:`course <api-courses>` object
 
 :class\_: 5-digit unique section identifier
-:component: section type identifier, often 'LEC', 'LAB', 'SEM'
+:component: section type identifier, often 'LEC', 'LAB', 'SEM', 'LBL'
 :day: day(s) the section is on. Uses :ref:`day format <day-format>`
 :startTime: time the section begins. Uses :ref:`time format <time-format>`
 :endTime: time the section ends. Uses :ref:`time format <time-format>`

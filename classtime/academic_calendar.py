@@ -148,7 +148,7 @@ class AcademicCalendar(object):
         section_query = self._local_db.query(datatype='sections') \
                                       .filter_by(term=self._term, course=course)
         components = list()
-        for component in ['LEC', 'LAB', 'SEM']:
+        for component in ['LEC', 'LAB', 'SEM', 'LBL']:
             section_models = section_query \
                 .filter_by(component=component) \
                 .order_by(self._local_db.Section.day.desc()) \
