@@ -79,6 +79,7 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
 
                 $scope.scheduleLength = scheduleListing.objects.length;
 
+                // Check if server returned no schedules available
                 if ($scope.scheduleLength === 0) {
                     $rootScope.scheduleMode = false;
                     $window.alert("No schedules found.");
@@ -103,12 +104,6 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
     @returns {closure}: closure invokable by schedule index
     */
     function renderSchedule (scheduleListing) {
-        // Check if there are now schedules
-        // Alert this to the user
-        // if ($scope.scheduleLength === 0) {
-        //     $window.alert("No schedules found.");
-        //     return;
-        // }
 
         // Return closure of scheduleListing
         //
@@ -117,7 +112,13 @@ coreModule.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'sched
         return function (i) {
 
             var cachedColors = [];
-            var colorPallet = ['#443111', '#d0c8b3', '#af9b56', '#2a4560', '#83a283'];
+
+            // A brighter color scene custom made by myself!
+            //var colorPallet = ['#FF530D', '#227831', '#AFDEE8', '#2F4BE8', '#443111', '#83a283'];
+
+            // Earthy color pallet
+            var colorPallet = ['#443111', '#227831', '#af9b56', '#2a4560', '#83a283'];
+            
             var colorPalletIndex = 0;
 
             scheduleListing.objects[i].sections.forEach(function (classtime) {
