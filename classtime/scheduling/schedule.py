@@ -336,11 +336,11 @@ class ScheduleScorer(object):
                 'function': self._no_marathons
             },
             'day-classes': {
-                'weight': preferences.get('day-classes', 1),
+                'weight': preferences.get('day-classes', 0),
                 'function': self._day_classes
             },
             'start-early': {
-                'weight': preferences.get('start-early', 1),
+                'weight': preferences.get('start-early', 0),
                 'function': self._start_early
             }
         }
@@ -390,6 +390,8 @@ class ScheduleScorer(object):
         """
         info = self.score_info.get(name)
         if info is not None:
+            if info.get('weight', 0) == 0:
+                return 0
             return info.get('function', lambda: 0)()
         else:
             return 0
