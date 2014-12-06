@@ -19,11 +19,11 @@
 <body>
 
     <nav class="navbar navbar-default" role="navigation">
-            <p id="winston">Winston</p>
+        <p id="winston">Winston</p>
     </nav>
 
     <!-- The accordion...showed when the schedule is hidden -->
-	<div data-ng-controller="accordionCtrl" class="col-md-6" ng-hide="scheduleMode">
+	<div data-ng-controller="accordionCtrl" class="col-md-6 accordion-side" ng-hide="scheduleMode">
 		<div class="search-box">
                     <div id="search-by-all"> Search For Courses: </div>
 			<input class="form-control" type="search" id="searchBox" data-ng-model="searchBox" />
@@ -81,6 +81,15 @@
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+      <div class="container">
+        <p id="made-for">Made for University of Alberta students.</p>
+        <p id="developers">Developed by Ross Anderson and Andrew Hoskins<br>2014</p>
+      </div>
+    </footer>
+
 
     <!-- jQuery -->
     <script type="text/javascript" src="/static/scripts/vendor/bower_components/jquery/dist/jquery.min.js"></script>

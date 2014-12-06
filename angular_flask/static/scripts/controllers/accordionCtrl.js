@@ -58,7 +58,6 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
                     });
                 page = page + 1;
             }
-
         }).
         error(function () {
             $window.alert("Failed to get data");
@@ -154,6 +153,9 @@ coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$
     // To hide lag, wait 1 second before displaying any courses
     $timeout(function() {
         $scope.filterText = '';
+        
+        // Show footer now
+        document.getElementById("footer").style.display = "inline";
     }, 1000);
 
     // Watch the searchBox every 200ms
