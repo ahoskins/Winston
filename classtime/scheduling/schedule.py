@@ -78,13 +78,9 @@ class Schedule(object):
                  '==============\n' + \
                  timetable_repr(self, 0)
         if self.more_like_this:
-            retstr += '--------------\n' + \
-                      'More like this\n' + \
-                      '--------------\n'
-        for like_this in self.more_like_this:
-            retstr += '\nsimilarity: {:.3f}\n'.format(
-                self._similarity(like_this))
-            retstr += timetable_repr(like_this, 0)
+            retstr += 'and {} more like this (similarity >= {})'.format(
+                len(self.more_like_this),
+                Schedule.SIMILARITY_THRESHOLD)
         return retstr
 
     def _add_initial_sections(self, sections):
@@ -182,11 +178,6 @@ class Schedule(object):
             if section.get('autoEnroll') == other.get('section') \
             or section.get('section') == other.get('autoEnroll'):
                 continue
-            logging.debug('Enforced dependency {}->{}, {}->{}'.format(
-                section.get('asString'),
-                section.get('autoEnroll'),
-                other.get('asString'),
-                other.get('autoEnroll')))
             return True
         return False
 
