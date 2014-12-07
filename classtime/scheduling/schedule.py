@@ -125,8 +125,6 @@ class Schedule(object):
             self.attempt_add_to_timetable(section, len(self.sections))
         except ValueError:
             pass
-        else:
-            self.scorer.update()
         self.sections.append(section)
         return self
 
@@ -143,8 +141,8 @@ class Schedule(object):
         try:
             self.attempt_add_to_timetable(busy_time, Schedule.BUSY)
         except ValueError:
-            logging.error('Failed to schedule busy time {}'\
-                .format(busy_time))
+            logging.error('Failed to schedule busy time {}'.format(
+                busy_time))
         else:
             self.busy_times.append(busy_time)
         return self
@@ -354,12 +352,13 @@ class ScheduleScorer(object):
                          **Special value:** 'overall', which is a
                          weighted sum of all scores.
         """
+        self._update()
         if name == 'all':
             return self.score_values
         else:
             return self.score_values.get(name)
 
-    def update(self):
+    def _update(self):
         """Update all scores by calculating them individually
 
         Also calculates 'overall', which is a weighted sum of all
@@ -369,9 +368,8 @@ class ScheduleScorer(object):
             self.score_values.update({
                 name: self._weight(name) * self._score(name)
             })
-        self.score_values.update({
-            'overall': sum(self.score_values.values())
-        })
+        self.score_values['overall'] = 0
+        self.score_values['overall'] = sum(self.score_values.values())
 
     def _weight(self, name):
         """Return the weight of a particular scoring function
