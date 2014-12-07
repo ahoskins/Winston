@@ -125,8 +125,6 @@ class Schedule(object):
             self.attempt_add_to_timetable(section, len(self.sections))
         except ValueError:
             pass
-        else:
-            self.scorer.update()
         self.sections.append(section)
         return self
 
@@ -143,8 +141,8 @@ class Schedule(object):
         try:
             self.attempt_add_to_timetable(busy_time, Schedule.BUSY)
         except ValueError:
-            logging.error('Failed to schedule busy time {}'\
-                .format(busy_time))
+            logging.error('Failed to schedule busy time {}'.format(
+                busy_time))
         else:
             self.busy_times.append(busy_time)
         return self
@@ -354,12 +352,13 @@ class ScheduleScorer(object):
                          **Special value:** 'overall', which is a
                          weighted sum of all scores.
         """
+        self._update()
         if name == 'all':
             return self.score_values
         else:
             return self.score_values.get(name)
 
-    def update(self):
+    def _update(self):
         """Update all scores by calculating them individually
 
         Also calculates 'overall', which is a weighted sum of all
@@ -369,9 +368,8 @@ class ScheduleScorer(object):
             self.score_values.update({
                 name: self._weight(name) * self._score(name)
             })
-        self.score_values.update({
-            'overall': sum(self.score_values.values())
-        })
+        self.score_values['overall'] = 0
+        self.score_values['overall'] = sum(self.score_values.values())
 
     def _weight(self, name):
         """Return the weight of a particular scoring function
@@ -403,15 +401,41 @@ class ScheduleScorer(object):
         * 0 weight: -no effect-
         * - weight: clumped up. Less breaks in between classes
         """
-        total = 0
-        for day_bitmap in self.schedule.timetable_bitmap[:]:
-            max_consecutive = 0
+        _decent_average_length = 3 # 90 minutes (3 * 30 min block)
+        def average_session(day_timetable):
+            session_length = 0
+            session_lengths = 0
+            num_sessions = 0
+            for block in day_timetable:
+                if block != Schedule.OPEN:
+                    session_length += 1
+                else:
+                    session_lengths += session_length
+                    num_sessions += 1
+                    session_length = 0
+            return (1.0 * session_lengths) / num_sessions
+        _decent_sum_of_longest = 3 * 5 # 3 hours max a day, 5 days
+        def longest_session(day_bitmap):
+            longest_marathon = 0
             while day_bitmap:
                 day_bitmap &= (day_bitmap << 1)
-                max_consecutive += 1
-            total += max_consecutive
-        frac_of_nightmare = total / (5*Schedule.NUM_DAYS)
-        return -1 * 10 * frac_of_nightmare
+                longest_marathon += 1
+            return longest_marathon
+
+        maxes = [longest_session(day_bitmap)
+                 for day_bitmap in self.schedule.timetable_bitmap]
+        avges = [average_session(day_timetable)
+                 for day_timetable in self.schedule.timetable]
+
+        sum_of_longest = sum(maxes)
+        average_length = sum(avges) / len(avges)
+
+        # decent - actual, since smaller values are better
+        score = 0
+        score += _decent_sum_of_longest - sum_of_longest
+        score += _decent_average_length - average_length
+
+        return score
 
     def _day_classes(self):
         """Scores based on having day classes versus night classes
