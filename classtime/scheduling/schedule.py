@@ -331,7 +331,7 @@ class ScheduleScorer(object):
                 'function': self._day_classes
             },
             'start-early': {
-                'weight': preferences.get('start-early', 0),
+                'weight': preferences.get('start-early', 1),
                 'function': self._start_early
             }
         }
@@ -394,7 +394,7 @@ class ScheduleScorer(object):
         * 0 weight: -no effect-
         * - weight: clumped up. Less breaks in between classes
         """
-        _decent_average_length = 3 # 90 minutes (3 * 30 min block)
+        _decent_average_length = 4 # 2 blocks per hour
         def average_session(day_timetable):
             session_length = 0
             session_lengths = 0
@@ -407,7 +407,7 @@ class ScheduleScorer(object):
                     num_sessions += 1
                     session_length = 0
             return (1.0 * session_lengths) / num_sessions
-        _decent_sum_of_longest = 3 * 5 # 3 hours max a day, 5 days
+        _decent_sum_of_longest = 2 * 3 * 5 # 2block/hr, 3 hours, 5 days
         def longest_session(day_bitmap):
             longest_marathon = 0
             while day_bitmap:
@@ -428,7 +428,7 @@ class ScheduleScorer(object):
         score += _decent_sum_of_longest - sum_of_longest
         score += _decent_average_length - average_length
 
-        return score
+        return 0.5 * score
 
     def _day_classes(self):
         """Scores based on having day classes versus night classes
@@ -451,7 +451,7 @@ class ScheduleScorer(object):
         score = 0
         score += _decent_avg_night_blocks - avg_night_blocks
 
-        return score
+        return 1.5 * score
 
     def _start_early(self):
         """Scores based on starting early or late
