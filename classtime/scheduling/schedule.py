@@ -460,16 +460,25 @@ class ScheduleScorer(object):
         * 0 weight: -no effect-
         * - weight: start late
         """
+        _decent_early_start_block = 9*2 # 2 blocks per hour
+        def start_block(day_timetable):
+            for i, block in enumerate(day_timetable):
+                if block not in [Schedule.OPEN, Schedule.BUSY]:
+                    return i
+            return None
+
+        start_blocks = [start_block(day_timetable)
+                        for day_timetable in self.schedule.timetable]
+        start_blocks = [start_block for start_block in start_blocks
+                        if start_block is not None]
+
+        avg_start_block = 1.0 * sum(start_blocks) / len(start_blocks)
+
+        # decent - actual
         score = 0
-        early_block = 8*2
-        ideal_start_bitmap = (1 << (Schedule.NUM_BLOCKS - early_block -1))
-        for day_bitmap in self.schedule.timetable_bitmap[:]:
-            if day_bitmap == 0:
-                continue
-            while day_bitmap < ideal_start_bitmap:
-                day_bitmap <<= 1
-                score -= 1
-        return 1 * score
+        score += _decent_early_start_block - avg_start_block
+
+        return score
 
 # http://bytes.com/topic/python/answers/552476-why-cant-you-pickle-instancemethods#edit2155350
 def _pickle_method(method):
