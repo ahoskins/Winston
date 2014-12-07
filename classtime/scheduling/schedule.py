@@ -327,7 +327,7 @@ class ScheduleScorer(object):
                 'function': self._no_marathons
             },
             'day-classes': {
-                'weight': preferences.get('day-classes', 0),
+                'weight': preferences.get('day-classes', 1),
                 'function': self._day_classes
             },
             'start-early': {
@@ -438,13 +438,20 @@ class ScheduleScorer(object):
         * - weight: classes start at or after 5pm
         """
         #               0 1 2 3 4 5 6 7 8 9 A B C 1 2 3 4 5 6 7 8 9 A B 
-        bad_zone = int('111111111111111100000000000000000011111111111111', 2)
-        num_outside = 0
-        for day_bitmap in self.schedule.timetable_bitmap:
-            in_bad_zone = day_bitmap & bad_zone
-            num_outside += bin(in_bad_zone).count('1')
-        score = -1*num_outside
-        return 1 * 50 * score
+        night_zone = int('111111111111111100000000000000000011111111111111', 2)
+        _decent_avg_night_blocks = 0
+        def num_night_blocks(day_bitmap):
+            return bin(day_bitmap & night_zone).count('1')
+
+        night_blocks = [num_night_blocks(day_bitmap)
+                        for day_bitmap in self.schedule.timetable_bitmap]
+
+        avg_night_blocks = 1.0 * sum(night_blocks) / len(night_blocks)
+        # decent - actual, because smaller values are better
+        score = 0
+        score += _decent_avg_night_blocks - avg_night_blocks
+
+        return score
 
     def _start_early(self):
         """Scores based on starting early or late
