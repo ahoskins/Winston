@@ -64,6 +64,7 @@ class Schedule(object):
 
             timetable = str()
             timetable += ' '*indent
+            timetable += 'scores: ' + str(sched.scorer.read()) + '\n'
             timetable += time_columns
             for daynum, blocks in enumerate(sched.timetable):
                 timetable += '\n'
@@ -304,6 +305,7 @@ class Schedule(object):
         if day not in Schedule.DAYS:
             raise ValueError('day must be in "{}"'.format(Schedule.DAYS))
         return Schedule.DAYS.index(day)
+
 
 class ScheduleScorer(object):
     """Scores a schedule using a suite of scoring functions
