@@ -1,4 +1,4 @@
-coreModule.factory('detailFactory', function ($window, $http, $q) {
+winstonApp.factory('detailFactory', function ($window, $http, $q) {
 
     var factory = {};
 

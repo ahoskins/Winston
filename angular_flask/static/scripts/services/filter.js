@@ -5,7 +5,7 @@
 // fields of each course.  It also filters against the "key"(s) in "subjectBin"
 // All filtering is CASE IN-SENSITIVE
 
-coreModule.filter('courseFilter', ['pmkr.filterStabilize', '$window', function(stabilize, $window) {
+winstonApp.filter('courseFilter', ['pmkr.filterStabilize', '$window', function(stabilize, $window) {
     // Invoked from index.html accordion
     // Used filterText to trim subjectBin
     // @param {Object} $scope.subjectBin is passed in

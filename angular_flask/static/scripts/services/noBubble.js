@@ -3,7 +3,7 @@
  */
 
 // General directive to prevent event propagation (not currently used)
-coreModule.directive('noBubble', function() {
+winstonApp.directive('noBubble', function() {
     return {
         link: function (scope, element) {
             element.bind('click', function (e) {

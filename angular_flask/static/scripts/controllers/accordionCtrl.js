@@ -1,7 +1,7 @@
 // Accordion Controller
 //
 
-coreModule.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope) {
+winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope) {
    /*
     $scope.subjectBin = [{
             faculty: 'Faculty of Engineering',

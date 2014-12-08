@@ -1,7 +1,7 @@
 /**
  * Created by Andrew on 14-11-09.
  */
-coreModule.factory('scheduleFactory', function ($window, $http, $q) {
+winstonApp.factory('scheduleFactory', function ($window, $http, $q) {
     var factory = {};
 
     factory.getSchedules = function (addedCourses) {

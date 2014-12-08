@@ -4,7 +4,9 @@
 
 // Not currently used (this worked in foundation, however doesn't seem to work properly in bootstrap)
 // I believe bootstrap's accordion has its own "smooth-scroll" type system in place...
-coreModule.directive('scrollSmooth', ['$document', '$window', function($document, $window) {
+//
+// add "duScroll" as a dependency if I ever use this again
+winstonApp.directive('scrollSmooth', ['$document', '$window', function($document, $window) {
     return {
         restrict: 'A',
         link: function (scope, element) {
