@@ -1,0 +1,14 @@
+<!-- The list of courses and options etc...this will never get hidden -->
+<div class="col-md-6">
+    <div class="buttons">
+        <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate Schedules</button>
+    </div>
+    
+    <div>
+        <h id="added-header"> Added Courses: </h>
+        <br>
+        <div class="list-group" ng-repeat="course in addedCourses">
+            <p class="list-group-item">{{ course.asString }} <a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i></a></p>
+        </div>
+    </div>
+</div>

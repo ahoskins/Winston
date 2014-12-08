@@ -1,9 +1,7 @@
 // Schedule Controller
 //
 
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', function($scope, $window, $rootScope, scheduleFactory) {
-
-    $rootScope.scheduleMode = false;
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', '$location', function($scope, $window, $rootScope, scheduleFactory, $location) {
 
     /*
     ********************
@@ -52,7 +50,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
     // When click on "Add more courses" button from schedule view
     $scope.showAccordion = function () {
         // switch to accordion view
-        $rootScope.scheduleMode = false;
+        $location.path('/find-courses');
     }
 
     // Event handle for "Generate Schedule" button
@@ -69,8 +67,8 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
             return;
         }
 
-        // Show schedule view
-        $rootScope.scheduleMode = true;
+        // Change location
+        $location.path('/schedule');
 
         scheduleFactory.getSchedules($rootScope.addedCourses).
             success(function (data) {
@@ -81,7 +79,6 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
 
                 // Check if server returned no schedules available
                 if ($scope.scheduleLength === 0) {
-                    $rootScope.scheduleMode = false;
                     $window.alert("No schedules found.");
                     return;
                 }
@@ -89,7 +86,17 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
                 // Create closure with current scheduleListing
                 scheduleInstance = renderSchedule(scheduleListing);
 
+                /*
+                ****************************************************************************************************
+                Issue here!!
+                */
+
+                // This will cause EVENTS array to get populated based on the FIRST schedule in response
+                // Events is getting populated...so it is running
                 scheduleInstance(0); 
+
+                // Correctly logs the events
+                console.log($scope.events);
 
             }).
             error(function() {
@@ -275,7 +282,10 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
 
         clearEvents();
 
-        // Invoke the closure on the new index
+        /*
+        ************************************************************************************************
+        The closure is "undefined" here for some reason
+        */
         scheduleInstance($scope.scheduleIndex);
     };
 

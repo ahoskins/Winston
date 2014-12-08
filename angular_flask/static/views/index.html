@@ -21,72 +21,18 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="navbar-header">
-            <a class="navbar-text">Made with love for University of Alberta students.</a>
-            <a class="navbar-brand" id="winstonApp">Winston</a>
-        </div>
-    </nav>
 
-    <!-- The accordion...showed when the schedule is hidden -->
-	<div data-ng-controller="accordionCtrl" class="col-md-6" ng-hide="scheduleMode">
-		<div class="search-box">
-                    <div id="search-by-all"> Search For Courses: </div>
-			<input class="form-control" type="search" id="searchBox" data-ng-model="searchBox" />
-		</div>
-		<br>
+    <!-- Header -->
+    <div ng-include="'/static/views/header.html'"></div>
 
-        <accordion close-others="false">
-            <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty) "data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText">
-                <accordion close-others="false">
-                    <accordion-group class="subject-accordion" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects">
-                        <accordion close-others="false">
-                            <accordion-group class="course-accordion" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses">
-                                <accordion-heading>
-                                    {{ singleCourse.asString }} 
-                                    <a id="add-button" no-bubble><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)"></i></a>
-                                </accordion-heading>
-                                <div class="">
-                                    {{ description[singleCourse.course] }}
-                                </div>
-                            </accordion-group>
-                        </accordion>
-                    </accordion-group>
-                </accordion>
-            </accordion-group>
-        </accordion>
-	</div>
+    <!-- Based on the $route -->
+    <div ng-view></div>
 
-    <div data-ng-controller="scheduleCtrl">
-        <!-- The schedule view...showed when the accordion is hidden -->
-        <div class="col-md-6" ng-show="scheduleMode">
-            <div class="buttons">
-                <button id="prev" class="btn btn-primary" ng-click="displayDifferentSchedule(0)">Previous</button>
-                <button id="next" class="btn btn-primary" ng-click="displayDifferentSchedule(1)">Next</button>
-                <button id="show-accordion" class="btn btn-primary" ng-click="showAccordion()">Add More Courses</button>
-            </div>
-
-                <h id="schedule-header"> Possible Schedules: ({{ scheduleIndex + 1 }}/{{ scheduleLength }}) </h>
+    <!-- Added Courses -->
+    <div ng-include="'/static/views/added.html'" ng-controller="scheduleCtrl"></div>
 
 
-            <div id="full-calendar-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div> 
-        </div>
 
-        <!-- The list of courses and options etc...this will never get hidden -->
-        <div class="col-md-6">
-            <div class="buttons">
-                <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate Schedules</button>
-            </div>
-            
-            <div>
-                <h id="added-header"> Added Courses: </h>
-                <br>
-                <div class="list-group" ng-repeat="course in addedCourses">
-                    <p class="list-group-item">{{ course.asString }} <a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i></a></p>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- jQuery -->
     <script src="/static/scripts/vendor/bower_components/jquery/dist/jquery.min.js"></script>
