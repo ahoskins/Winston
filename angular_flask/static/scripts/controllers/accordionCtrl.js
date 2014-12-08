@@ -1,7 +1,7 @@
 // Accordion Controller
 //
 
-winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'courseFactory', '$timeout', 'detailFactory', '$rootScope', function($scope, $window, courseFactory, $timeout, detailFactory, $rootScope) {
+winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', '$rootScope', 'SubjectBin', '$timeout', function($scope, $window, detailFactory, $rootScope, SubjectBin, $timeout) {
    /*
     $scope.subjectBin = [{
             faculty: 'Faculty of Engineering',
@@ -17,96 +17,13 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'courseFact
 
     /*
     ********************************************************************
-    Parse courses from /api/courses-min into $scope.subjectBin
-    This is done in an asynchronous way
+    Construct a new SubjectBin factory.  The subjectBin data structure is a member.
     ********************************************************************
      */
 
-    $scope.subjectBin = [];
+    var obj = new SubjectBin();
 
-    // Class: Faculty
-    function FacultyObject(faculty, subjects) {
-        this.faculty = faculty;
-        this.subjects = subjects;
-    }
-
-    /*
-    Request /api/courses-min
-    Asynchronously request each page
-     */
-    var pageListing;
-    courseFactory.getCoursesPage(1).
-        success(function (data) {
-
-            pageListing = angular.fromJson(data);
-
-            var total_pages = pageListing.total_pages;
-
-            parsePage(pageListing);
-
-            //Get remaining pages
-            var page = 2;
-
-            // Asynchronously request the rest of the pages
-            while (page <= total_pages) {
-                courseFactory.getCoursesPage(page).
-                    success(function (data) {
-                        pageListing = angular.fromJson(data);
-
-                        parsePage(pageListing);
-
-                    });
-                page = page + 1;
-            }
-        }).
-        error(function () {
-            $window.alert("Failed to get data");
-        });
-
-    /*
-    Parse each faculty on page
-     */
-    function parsePage(pageListing) {
-        pageListing.objects.forEach(function(SFacultyGroup) {
-            // Insert object into subjectBin
-            insertIntoSubjectBin(SFacultyGroup);
-        });
-    }
-
-    /*
-    Insert each faculty into $scope.subjectBin
-     */
-    function insertIntoSubjectBin(SFacultyGroup) {
-        var inserted = false;
-        var SfacultyName = SFacultyGroup.faculty;
-
-        // Case 1: Insert into already existing faculty
-        $scope.subjectBin.forEach(function(subjectBinObject) {
-            if (subjectBinObject.faculty === SfacultyName) {
-
-                // faculty object already exists
-                // Push onto subjects array
-                SFacultyGroup.subjects.forEach(function(Ssubject) {
-                    subjectBinObject.subjects.push(Ssubject);
-                });
-                inserted = true;
-            }
-        });
-
-        // Case 2: create new faculty and insert
-        if (!inserted) {
-            //console.log("created new faculty");
-            var subjects = [];
-            SFacultyGroup.subjects.forEach(function (subject) {
-                subjects.push(subject);
-            });
-
-            var newObj = new FacultyObject(SfacultyName, subjects);
-
-            $scope.subjectBin.push(newObj);
-        }
-    }
-
+    $scope.subjectBin = obj.bin;
 
     /*
     ******************************
