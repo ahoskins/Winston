@@ -2,7 +2,8 @@
  * Created by Andrew on 14-11-18.
  */
 
-// Attached to all three layers of accordion
+// Not currently used (this worked in foundation, however doesn't seem to work properly in bootstrap)
+// I believe bootstrap's accordion has its own "smooth-scroll" type system in place...
 coreModule.directive('scrollSmooth', ['$document', '$window', function($document, $window) {
     return {
         restrict: 'A',

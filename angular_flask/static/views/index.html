@@ -36,17 +36,17 @@
 		</div>
 		<br>
 
-        <accordion>
-            <accordion-group class="faculty-accordion animate-if" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty) "data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" scroll-smooth>
-                <accordion>
-                    <accordion-group class="subject-accordion animate-if" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" scroll-smooth>
-                        <accordion>
-                            <accordion-group class="course-accordion animate-if" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" scroll-smooth>
+        <accordion close-others="false">
+            <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty) "data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText">
+                <accordion close-others="false">
+                    <accordion-group class="subject-accordion" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects">
+                        <accordion close-others="false">
+                            <accordion-group class="course-accordion" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses">
                                 <accordion-heading>
                                     {{ singleCourse.asString }} 
-                                    <a id="add-button" no-bubble><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)">Add</i></a>
+                                    <a id="add-button" no-bubble><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)"></i></a>
                                 </accordion-heading>
-                                <div class="animate-if">
+                                <div class="">
                                     {{ description[singleCourse.course] }}
                                 </div>
                             </accordion-group>
