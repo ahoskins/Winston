@@ -44,7 +44,7 @@
                             <accordion-group class="course-accordion animate-if" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" scroll-smooth>
                                 <accordion-heading>
                                     {{ singleCourse.asString }} 
-                                    <a id="add-button"><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)">Add</i></a>
+                                    <a id="add-button" no-bubble><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)">Add</i></a>
                                 </accordion-heading>
                                 <div class="animate-if">
                                     {{ description[singleCourse.course] }}
