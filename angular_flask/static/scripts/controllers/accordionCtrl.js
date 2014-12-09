@@ -30,25 +30,29 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     On-click of accordion handlers
     ******************************
      */
+     // @callee: 1st layer of accordion (on click)
+     //
+     // When open -> logical true, when closed -> logical false
      $scope.subjects = [];
      $scope.renderSubjects = function (faculty) {
-        $scope.subjects[faculty] = 1;
+        // Invert it
+        $scope.subjects[faculty] = !$scope.subjects[faculty];
      }
 
-    // @callee: 2nd layer of accordion
+    // @callee: 2nd layer of accordion (on click)
     //
-    // On click of the 2nd layer of the accordion
-    // Will cause this 3rd layer to get rendered on the DOM and showed
-    // Note: the courses will still be in the DOM even when the accordion is closed
+    // When open -> logical true, when closed -> logical false
     $scope.courses = [];
     $scope.renderCourses = function (subject) {
-        $scope.courses[subject] = 1;
+        // Invert it
+        $scope.courses[subject] = !$scope.courses[subject];
     };
 
     // @callee: 3rd layer of accordion
     //
     // On click of 3rd layer of accordion
     // Retrieves course details and displays it
+    // Note: one it is displayed, never erased from the DOM (cut on calls to the server)
     $scope.description = {};
     $scope.showId = [];
     $scope.loadMore = function (courseIdNumber) {
@@ -67,18 +71,17 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
 
     /*
     **************************
-    Performance related issues
+    Performance related
     **************************
      */
 
-    // To hide lag, wait 1 second before displaying any courses
+    // To accordion load, wait 500 ms before displaying any courses
     $timeout(function() {
         $scope.filterText = '';
         
     }, 500);
 
     // Watch the searchBox every 200ms
-    // Gives the impression of less lag
     var filterTextTimeout;
     $scope.$watch('searchBox', function(val) {
         if (!isString(val)) {
@@ -90,7 +93,7 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
         }
         filterTextTimeout = $timeout(function() {
             $scope.filterText = val.toUpperCase();
-        }, 200);
+        }, 0);
     });
 
     /*

@@ -1,5 +1,5 @@
 <!-- The accordion...showed when the schedule is hidden -->
-<div data-ng-controller="accordionCtrl" class="col-md-6">
+<div class="col-md-6">
 	<div class="search-box">
                 <div id="search-by-all"> Search For Courses: </div>
 		<input class="form-control" type="search" id="searchBox" data-ng-model="searchBox" />
@@ -7,11 +7,11 @@
 	<br>
 
     <accordion close-others="false">
-        <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty) "data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText">
+        <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty) "data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" no-bubble>
             <accordion close-others="false">
-                <accordion-group class="subject-accordion" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects">
+                <accordion-group class="subject-accordion" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" no-bubble>
                     <accordion close-others="false">
-                        <accordion-group class="course-accordion" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses">
+                        <accordion-group class="course-accordion" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" no-bubble>
                             <accordion-heading>
                                 {{ singleCourse.asString }} 
                                 <a id="add-button" no-bubble><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)"></i></a>
