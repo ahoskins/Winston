@@ -6,7 +6,7 @@ from collections import defaultdict
 from angular_flask.logging import logging
 
 from angular_flask.core import api_manager, db
-from angular_flask.models import Institution, Term, Course, Section
+from angular_flask.models import Institution, Term, Schedule, Course, Section
 
 import classtime.institutions
 import classtime.scheduling as scheduling
@@ -39,6 +39,10 @@ api_manager.create_api(Term,
                        collection_name='terms',
                        methods=['GET'],
                        exclude_columns=['courses', 'courses.sections'])
+
+api_manager.create_api(Schedule,
+                       collection_name='schedules',
+                       methods=['GET'])
 
 api_manager.create_api(Course,
                        collection_name='courses',
@@ -137,9 +141,7 @@ def find_schedules(result=None, search_params=None):
     for schedule in schedules:
         result['objects'].append({
             'sections': schedule.sections,
-            'more_like_this': [{
-                'sections': like_this.sections
-            } for like_this in schedule.more_like_this]
+            'more_like_this': schedule.more_like_this
         })
     return
 

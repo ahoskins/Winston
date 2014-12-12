@@ -7,7 +7,7 @@ logging = logging.getLogger(__name__) # pylint: disable=C0103
 import classtime
 
 import heapq
-from .schedule import Schedule
+from classtime.scheduling.schedule import Schedule
 
 CANDIDATE_POOL_SIZE = 120
 """Number of schedules to keep in consideration at any one time"""
@@ -96,7 +96,7 @@ def _generate_schedules(cal, term, course_ids, busy_times, electives_groups, pre
     candidates = _schedule_electives(candidates, cal,
         term, electives_groups, _log_scheduling_component)
 
-    candidates = _condense_schedules(candidates)
+    candidates = _condense_schedules(cal, candidates)
 
     return sorted(candidates,
         reverse=True,
@@ -212,7 +212,7 @@ def _add_candidates(candidates, candidate, heap_size):
 def _is_hopeless(candidate, sections_chosen):
     return len(candidate.sections) < sections_chosen
 
-def _condense_schedules(schedules):
+def _condense_schedules(cal, schedules):
     schedules = sorted(schedules,
         key=lambda sched: (sched.overall_score(), sched.timetable_bitmap))
 
@@ -221,7 +221,8 @@ def _condense_schedules(schedules):
     while lead < len(schedules):
         sched, lead_sched = schedules[lag], schedules[lead]
         if sched.is_similar(lead_sched):
-            sched.more_like_this.append(lead_sched)
+            more_like_this_id = cal.get_schedule_identifier(lead_sched)
+            sched.more_like_this.append(more_like_this_id)
             condensed_indices.append(lead)
         else:
             lag = lead

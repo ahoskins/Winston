@@ -6,6 +6,7 @@ logging = logging.getLogger(__name__) # pylint: disable=C0103
 
 from classtime.remote_db import RemoteDatabaseFactory
 from classtime.local_db import LocalDatabaseFactory
+from angular_flask.models.schedule import calculate_schedule_hash
 
 class AcademicCalendar(object):
     """Manages academic calendar data for a particular institution
@@ -131,6 +132,37 @@ class AcademicCalendar(object):
         if single:
             all_components = all_components[0]
         return all_components
+
+    def get_schedule_identifier(self, schedule):
+        """
+        Returns the hash identifier of the given schedule.
+
+        If the given schedule has not been cached in the DB yet,
+        a new entry will be created for it.
+
+        :param Schedule schedule: the schedule in question
+        :returns str: the md5 hash of the schedule, whose details can
+            be found by hitting api/schedules/<md5hash>
+        """
+        if not schedule.sections:
+            return 'noschedulesections'
+        section_ids = [section.get('class')
+                       for section in schedule.sections]
+        term = schedule.sections[0].get('term')
+        institution = schedule.sections[0].get('institution')
+        hash_id = calculate_schedule_hash(section_ids, institution, term)
+
+        if not self._local_db.exists('schedule', hash_id):
+            schedule_dict = {
+                'institution': institution,
+                'term': term,
+                'sections': [self._local_db.get('section', section_id)
+                             for section_id in section_ids],
+                'hash_id': hash_id
+            }
+            self._local_db.add(schedule_dict, 'schedule')
+
+        return hash_id
 
     def _get_components_single(self, course):
         def _attach_course_info(section_dict, course_dict):

@@ -54,7 +54,7 @@ class Schedule(object):
         self.sections = list()
         self._add_initial_sections(sections)
         self.busy_times = list()
-        self._add_initial_busy_times(busy_times)        
+        self._add_initial_busy_times(busy_times)
 
     def __repr__(self):
         def timetable_repr(sched, indent):
