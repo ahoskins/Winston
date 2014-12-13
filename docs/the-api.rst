@@ -27,6 +27,8 @@ The exception is :ref:`api/courses/\<course> <api-courses>`, which returns a sin
 
 It is possible for zero ``<response object>``\ s to be returned.
 
+--------------------------------------
+
 Pagination
 ~~~~~~~~~~
 
@@ -41,6 +43,8 @@ To get the nth page, append ``?page=<n>`` to any endpoint::
 If you are using a search query, append the page number with ``&``::
 
  GET /api/courses-min?q=<search_query>&page=2
+
+--------------------------------------
 
 Search queries
 ~~~~~~~~~~~~~~
@@ -72,6 +76,39 @@ Available operators `listed here <http://flask-restless.readthedocs.org/en/lates
     like
     has
     any
+
+--------------------------------------
+
+
+Formats used in responses
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. _day-format:
+
+Day format
+''''''''''
+
+String containing one or more of the characters "MTWRF", with each
+corresponding to a day from Monday through Friday.
+
+| eg "MWF"
+| eg "TR"
+
+.. _time-format:
+
+Time format
+'''''''''''
+
+"HH:MM XM"
+
+:HH: 2-digit hour between 00 and 12
+:MM: 2-digit minute between 00 and 59
+:X: ``A`` or ``P``
+
+| eg "08:00 AM"
+| eg "09:50 PM"
+
+--------------------------------------
 
 .. _api-institutions:
 
@@ -391,7 +428,7 @@ Response
     {
         "objects": [
             {
-                "sections" : [
+                "sections": [
                     {
                         ...
                         <course attributes>
@@ -411,7 +448,8 @@ Response
                     { <section object 2> },
                     ...
                     { <section object N> }
-                ]
+                ],
+                "more_like_this": [<schedule-identifier>, <schedule-identifier>, ..]
             },
             { <schedule object 2> },
             ...
@@ -420,13 +458,14 @@ Response
         ...
     }
 
-:objects: list of <schedule object>s
+:objects: list of :ref:`schedule objects <api-schedule-object>`
 
 .. _api-schedule-object:
 
 <schedule object>
 -----------------
-:sections: list of <section object>s
+:sections: list of :ref:`section objects <api-section-object>`
+:more_like_this: list of :ref:`schedule identifiers <api-schedule-identifier>`
 
 .. _5-digit-section-identifier:
 .. _api-section-object:
@@ -448,27 +487,61 @@ Response
 :instructorUid: instructor identifier
 :location: semantic location name
 
-.. _day-format:
+.. _api-schedule-identifier:
 
-Day format
-----------
+<schedule-identifier>
+---------------------
 
-String containing one or more of the characters "MTWRF", with each
-corresponding to a day from Monday through Friday.
+:schedule-identifier: variable length unique schedule identifier. Details about the schedule
+                      can be obtained by accessing :ref:`api/schedules <api-schedules>` and
+                      passing in this identifier.
 
-| eg "MWF"
-| eg "TR"
+.. _api-schedules:
 
-.. _time-format:
+api/schedules
+~~~~~~~~~~~~~~~~~~~~~~
 
-Time format
------------      
+Request
+'''''''
 
-"HH:MM XM"
+::
 
-:HH: 2-digit hour between 00 and 12
-:MM: 2-digit minute between 00 and 59
-:X: ``A`` or ``P``
+ GET localhost:5000/api/schedules/<schedule-identifier>
 
-| eg "08:00 AM"
-| eg "09:50 PM"
+:course: :ref:`schedule identifier <api-schedule-identifier>`
+
+Response
+''''''''
+.. code:: javascript
+
+    {
+        "hash_id": "48c3df652685a23acd9a759b91f25b",
+        "institution": "ualberta",
+        "term": "1490",
+        "sections": [
+            {
+                "asString": "ENGG 100 LEC A2",
+                "autoEnroll": null,
+                "campus": "MAIN",
+                "capacity": 516,
+                "classNotes": null,
+                "classStatus": "A",
+                "classType": "E",
+                "class_": "61383",
+                "component": "LEC",
+                "course": "004093",
+                "day": "R",
+                "endTime": "01:50 PM",
+                "enrollStatus": "O",
+                "institution": "ualberta",
+                "instructorUid": null,
+                "location": "CCIS 1 430",
+                "schedule": null,
+                "section": "A2",
+                "session": "Regular Academic Session",
+                "startTime": "01:00 PM",
+                "term": "1490"
+            },
+            ... < more section objects >
+        ]
+    }
