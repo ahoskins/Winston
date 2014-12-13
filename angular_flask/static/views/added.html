@@ -1,14 +1,63 @@
 <!-- The list of courses and options etc...this will never get hidden -->
-<div class="col-md-6">
-    <div class="buttons">
+<div class="col-md-6" style="position:relative; top: 35px">
+<!--     <div class="buttons">
         <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate Schedules</button>
+    </div> -->
+    <div style="min-height:200px">
+        <md-toolbar class="md-theme-light" md-theme="blue-grey">
+            <h1 class="md-toolbar-tools" style="font-size:20px; color:#ffffff">
+                <span>added:</span>
+                <span style="position:absolute; right:5px; top: 15px">empty<a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i></a></span>
+            </h1>
+        </md-toolbar>
+        <md-content>
+            <md-list>
+                <md-item ng-repeat="course in addedCourses">
+                    <md-item-content>
+                        <div class="md-tile-content">
+                            <h3 style="font-size:20px">{{ course.asString }} <a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i></a></h3>
+                        </div>
+                    </md-item-content>
+                    <md-divider ng-if="!$last"></md-divider>
+                </md-item>
+            </md-list>
+        </md-content>
     </div>
-    
-    <div>
-        <h id="added-header"> Added Courses: </h>
-        <br>
-        <div class="list-group" ng-repeat="course in addedCourses">
-            <p class="list-group-item">{{ course.asString }} <a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i></a></p>
-        </div>
-    </div>
+
+    <!-- Preferences -->
+    <md-toolbar class="md-theme-light" md-theme="blue-grey">
+        <h1 class="md-toolbar-tools" style="font-size:20px; color:#ffffff">
+            <span>preferences:</span>
+        </h1>
+    </md-toolbar> 
+
+
+    <md-content>
+        <form style="padding: 20px;">
+            <md-content md-theme="light-blue-dark">
+                <span style="color:#ffffff; padding-left:10px; font-size:20px">day:</span>
+            </md-content>
+            <!-- Day -->
+            <br>
+            <md-button class="md-fab md-primary">M</md-button>
+            <md-button class="md-fab md-primary">T</md-button>
+            <md-button class="md-fab md-primary">W</md-button>
+            <md-button class="md-fab md-primary">R</md-button>
+            <md-button class="md-fab md-primary">F</md-button>
+            <br>
+            <br>
+
+            <md-content md-theme="light-blue-dark">
+                <span style="color:#ffffff; padding-left:10px; font-size:20px">start:</span>
+            </md-content>
+            <!-- Time -->
+            <md-slider md-discrete step="1" flex min="8" max="20" aria-label="blue-grey" id="red-slider"></md-slider>
+            <md-content md-theme="light-blue-dark">
+                <span style="color:#ffffff; padding-left:10px; font-size:20px">end:</span>
+            </md-content>
+            <md-slider md-discrete step="1" flex min="8" max="20" aria-label="blue-grey" id="red-slider"></md-slider>
+        </form>
+    </md-content>  
+
+
 </div>
