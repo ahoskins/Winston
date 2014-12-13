@@ -46,6 +46,12 @@
                        "instructorUid",
                        "asString"]
         },
+        "status" : {
+            "search_flt" : "(class=*)",
+            "attrs" : ["class",
+                       "classStatus",
+                       "enrollStatus"]
+        },
         "classtimes" : {
             "search_flt" : "(classtime=*)",
             "attrs" : ["day",

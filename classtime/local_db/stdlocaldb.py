@@ -159,7 +159,6 @@ class StandardLocalDatabase(object):
         for attr, value in model_dict.iteritems():
             setattr(db_obj, attr, value)
 
-
     def commit(self):
         """Commits the running transaction to the database
 

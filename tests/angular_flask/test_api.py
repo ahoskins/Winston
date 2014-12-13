@@ -222,6 +222,33 @@ class TestAPI(object):
                             "no-marathons": -10
                         }
                 }
+            },
+            {
+                "q": {  # 1st year engineering Fall Term 2014
+                        # get realtime open/closed & active/cancelled status
+                        # obey open/closed & active/cancelled status
+                        "institution": "ualberta",
+                        "term": "1490",
+                        "courses": ["001343", # Chem 103
+                                    "004093",
+                                    "004096",
+                                    "006768",
+                                    "009019"],
+                        "electives": [
+                            {
+                                "courses": ["000268", # Anthr 101
+                                            "000269", # Anthr 110
+                                            "000270", # Anthr 150
+                                            ]
+                            }
+                        ],
+                        "preferences": {
+                            "start-early": -10,
+                            "no-marathons": -10,
+                            "current-status": True, # 'true' in javascript
+                            "obey-status": True # 'true' in javascript
+                        }
+                }
             }
         ]
         for query in queries:

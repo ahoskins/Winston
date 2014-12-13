@@ -368,7 +368,10 @@ Request
         "preferences": {
             "start-early": <integer>,
             "no-marathons": <integer>,
-            "day-classes": <integer>
+            "day-classes": <integer>,
+
+            "current-status": <boolean>,
+            "obey-status": <boolean>
         }
 
  }
@@ -419,6 +422,16 @@ Currently supported preferences:
     - ``weight = 0`` = no preference
 
 > Note: ``start-early`` can be used in tandem with ``busy_times`` to specify *how* early to start
+
+There is also:
+
+- ``current-status``
+    - a boolean: ``true`` or ``false``
+    - specifies whether the open/closed and active/cancelled status of sections should be updated
+- ``obey-status``
+    - a boolean: ``true`` or ``false``
+    - specifies whether the open/closed and active/cancelled status of sections should be respected when scheduling
+    - if true, closed or cancelled sections will not be scheduled
 
 Response
 ''''''''
