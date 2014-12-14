@@ -6,15 +6,15 @@
 	</div> -->
 
     <md-text-float label="search for a course" style="font-size:25px" data-ng-model="searchBox"> </md-text-float>
-    <md-button class="md-raised md-primary" md-theme="blue-grey" style="float:right; position:relative; top:-55px; color:#ffffff; height: 50px; padding: 0px 10px">generate schedules</md-button>
+    <md-button class="md-raised md-primary" md-theme="amber" style="float:right; position:relative; top:-55px; color:#000000; height: 50px; padding: 0px 10px" ng-click="promptSchedules()">generate schedules</md-button>
 	<br>
 
     <accordion close-others="false">
-        <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty) "data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" no-bubble>
+        <accordion-group class="faculty-accordion material-look" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty) "data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" no-bubble>
             <accordion close-others="false">
-                <accordion-group class="subject-accordion" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" no-bubble>
+                <accordion-group class="subject-accordion material-look" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" no-bubble>
                     <accordion close-others="false">
-                        <accordion-group class="course-accordion" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" no-bubble>
+                        <accordion-group class="course-accordion material-look" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" no-bubble>
                             <accordion-heading>
                                 {{ singleCourse.asString }} 
                                 <a id="add-button" no-bubble><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)"></i></a>

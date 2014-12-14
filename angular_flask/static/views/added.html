@@ -7,15 +7,15 @@
         <md-toolbar class="md-theme-light" md-theme="light-blue-dark" style="border-radius:3px">
             <h1 class="md-toolbar-tools" style="font-size:20px; color:#ffffff">
                 <span style="color:#000000; font-size:25px">added:</span>
-                <span style="position:absolute; right:5px; top: 15px; background:#e13329; border-radius:3px; padding: 5px 5px"><a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i><i class="fa fa-shopping-cart"></i> all</a></span>
+                <span style="position:absolute; right:5px; top: 15px; background:#e13329; border-radius:3px; padding: 5px 5px" ng-click="removeAll()"><a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i><i class="fa fa-shopping-cart"></i> all</a></span>
             </h1>
         </md-toolbar>
         <md-content style="box-shadow: 5px 5px 5px #888888">
             <md-list>
-                <md-item ng-repeat="course in addedCourses">
+                <md-item ng-repeat="course in added">
                     <md-item-content>
                             <div class="md-tile-content">
-                                <span style="font-size:20px">{{ course.asString }}</span>
+                                <span style="font-size:20px; font-weight:bold">{{ course.asString }}</span>
                                 <a style="position:absolute; right:10px; top: 10px; background:#e13329; border-radius:3px; padding: 5px 5px; color:#ffffff"><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i></a>
                             </div>
                     </md-item-content>

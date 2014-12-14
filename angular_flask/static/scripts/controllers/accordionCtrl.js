@@ -1,7 +1,7 @@
 // Accordion Controller
 //
 
-winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', '$rootScope', 'SubjectBin', '$timeout', function($scope, $window, detailFactory, $rootScope, SubjectBin, $timeout) {
+winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', '$rootScope', 'SubjectBin', '$timeout', '$location', 'addedCourses', function($scope, $window, detailFactory, $rootScope, SubjectBin, $timeout, $location, addedCourses) {
    /*
     $scope.subjectBin = [{
             faculty: 'Faculty of Engineering',
@@ -103,17 +103,26 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     **********************************************************************
      */
 
-    $rootScope.addedCourses = [];
-
+     $rootScope.added = [];
     // @callee: "Add" button under 3rd layer of accordion
     // Only add if the course isn't already in $rootScope.addedCourses
     $scope.addToSchedule = function (courseObject) {
-        if ($rootScope.addedCourses.indexOf(courseObject) === -1) {
-            // Add course object
-            $rootScope.addedCourses.push(courseObject);
+        if (addedCourses.data.indexOf(courseObject) === -1) {
+            addedCourses.data.push(courseObject);
+            //console.log(addedCourses.data);
+            $rootScope.added = addedCourses.data;
         }
     };
 
+    /*
+    Tell schedule controller that the button was pressed
+    */
+    var readyMade = [];
+    $scope.promptSchedules = function() {
+        // Get the service to generate schedules
+        $location.path('/schedule');
+        //$scope.$emit('generate');
+    };
 
     /*
     ****************

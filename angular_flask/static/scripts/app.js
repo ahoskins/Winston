@@ -12,7 +12,12 @@ winstonApp.config(['$routeProvider', function($routeProvider) {
 	  }).
 	  when('/schedule', {
 	  	templateUrl: '/static/views/schedule.html',
-	  	controller: 'scheduleCtrl'
+	  	controller: 'scheduleCtrl',
+	  	resolve: {
+	  		'theData': function(ScheduleObject) {
+	  			return ScheduleObject.promise;
+	  		}
+	  	}
 	  }).
 	  otherwise({
 	  	redirectTo: '/find-courses'

@@ -13,9 +13,12 @@
 
     <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/angular-material/themes/blue-grey-theme.css"/>
     <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/angular-material/themes/light-blue-dark-theme.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/angular-material/themes/amber-theme.css"/>
 
     <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/angular-material/modules/js/slider/slider.css"/>
 
+    <!-- Paper collapse -->
+    <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/paper-collapse.css"/>    
 
     <!-- My Style -->
 	<link rel="stylesheet" type="text/css" href="/static/styles/style.css"/>
@@ -82,7 +85,7 @@
     <div ng-view></div>
 
     <!-- Added Courses -->
-    <div ng-include="'/static/views/added.html'" ng-controller="scheduleCtrl"></div>
+    <div ng-include="'/static/views/added.html'" ng-controller="addedCtrl"></div>
 
 
 
@@ -122,6 +125,8 @@
 
     <script src="/static/scripts/vendor/bower_components/angular-aria/angular-aria.js"></script>
 
+    <script src="/static/scripts/vendor/paper-collapse.js"></script>
+
 
     <!-- Bootstrap Angular UI -->
     <script src="/static/scripts/vendor/ui-bootstrap-tpls-0.12.0.min.js"></script>
@@ -134,10 +139,13 @@
     <script src="/static/scripts/services/detailFactory.js"></script>
     <script src="/static/scripts/services/scheduleFactory.js"></script>
     <script src="/static/scripts/services/SubjectBin.js"></script>
+    <script src="/static/scripts/services/ScheduleObject.js"></script>
+    <script src="/static/scripts/services/addedCourses.js"></script>
 
     <!--Controllers-->
 	<script src="/static/scripts/controllers/accordionCtrl.js"></script>
     <script src="/static/scripts/controllers/scheduleCtrl.js"></script>
+    <script src="/static/scripts/controllers/addedCtrl.js"></script>
 
     <!--Filters-->
 	<script src="/static/scripts/services/filter.js"></script>

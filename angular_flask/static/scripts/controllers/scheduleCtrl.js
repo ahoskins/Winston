@@ -1,19 +1,12 @@
 // Schedule Controller
 //
-
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', '$location', function($scope, $window, $rootScope, scheduleFactory, $location) {
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', '$location', 'ScheduleObject', 'uiCalendarConfig', '$timeout', function($scope, $window, $rootScope, scheduleFactory, $location, ScheduleObject, uiCalendarConfig, $timeout) {
 
     /*
     ********************
     Full Calendar Config
     ********************
      */
-
-    //Event array
-    $scope.events = [];
-
-    // EventSources array
-    $scope.eventSources = [$scope.events];
 
     // General calendar config
     // Note: It is displaying the current week (with the day number hidden)
@@ -37,15 +30,41 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
         }
     };
 
-    /*
-    *************************************************************
-    Generate schedules
-    Step 1: Call the schedule factory and parse the JSON
-    Step 2: Create a closure called scheduleInstance, and invoke it at the first schedule
-    *************************************************************
+    $scope.refresh = true;
+     /*
+    THE VERSION ON BOWER IS DATED!!! MY VERSION OF CALENDAR.JS IS STRAIGHT FROM THE REPO.  MAKE SURE ROSS DOES THIS TOO.
+    APPARENTLY BOWER WILL GET UPDATE WITH THE CORRECT VERSION SOON.
      */
 
-    var scheduleInstance;
+     // The problem is that this is being init before the events are set. So the solution to is to re-init it each time the events change
+
+    // The big chunk of data
+    var arrayOfArrays = ScheduleObject.getData();
+
+     // Bounds
+    $scope.scheduleLength = arrayOfArrays.length;
+    $scope.scheduleIndex = 0;
+
+
+    //$scope.events = arrayOfArrays[$scope.scheduleIndex];
+
+    // EventSources array
+    $scope.eventSources = [arrayOfArrays[$scope.scheduleIndex]];
+    // console.dir($scope.eventSources);
+
+
+
+    //console.log($scope.eventSources);
+
+
+    // Watch for it to change, then progress with this script
+    // $scope.$watch('uiCalendarConfig', function() {
+    //     var string = JSON.stringify(uiCalendarConfig);
+    //     console.log(string);
+    // });
+
+    // console.log(uiCalendarConfig);
+    // uiCalendarConfig.calendars[0].fullCalendar('render');
 
     // When click on "Add more courses" button from schedule view
     $scope.showAccordion = function () {
@@ -53,216 +72,8 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
         $location.path('/find-courses');
     }
 
-    // Event handle for "Generate Schedule" button
-    $scope.getSchedules = function () {
-        // Clear current events
-        clearEvents();
 
-        // Clear index
-        $scope.scheduleIndex = 0;
 
-        // Make sure some courses added
-        if ($rootScope.addedCourses.length === 0) {
-            $window.alert("Add some courses first.");
-            return;
-        }
-
-        // Change location
-        $location.path('/schedule');
-
-        scheduleFactory.getSchedules($rootScope.addedCourses).
-            success(function (data) {
-
-                var scheduleListing = angular.fromJson(data);
-
-                $scope.scheduleLength = scheduleListing.num_results;
-
-                // Check if server returned no schedules available
-                if ($scope.scheduleLength === 0) {
-                    $window.alert("No schedules found.");
-                    return;
-                }
-
-                // Create closure with current scheduleListing
-                scheduleInstance = renderSchedule(scheduleListing);
-
-                /*
-                ****************************************************************************************************
-                Issue here!!
-                */
-
-                // This will cause EVENTS array to get populated based on the FIRST schedule in response
-                // Events is getting populated...so it is running
-                scheduleInstance(0); 
-
-                // Correctly logs the events
-                console.log($scope.events);
-
-            }).
-            error(function() {
-                $window.alert("Server not responding.");
-            });
-    };
-
-    /*
-    Render schedules based on a single server response
-    @param {object}: response from server
-
-    @returns {closure}: closure invokable by schedule index
-    */
-    function renderSchedule (scheduleListing) {
-
-        // Return closure of scheduleListing
-        //
-        // @param {int}: schedule index within the JSON response
-        // @return {void}: updates $scope.events
-        return function (i) {
-
-            var cachedColors = [];
-
-            // A brighter color scene custom made by myself!
-            //var colorPallet = ['#FF530D', '#227831', '#AFDEE8', '#2F4BE8', '#443111', '#83a283'];
-
-            // Earthy color pallet
-            var colorPallet = ['#443111', '#227831', '#af9b56', '#2a4560', '#83a283'];
-            
-            var colorPalletIndex = 0;
-
-            scheduleListing.objects[i].sections.forEach(function (classtime) {
-
-                // Null check
-                if (classtime.startTime === null ||
-                    classtime.endTime === null   ||
-                    classtime.day === null         ) {
-                    return;
-                }
-
-                /*
-                ****
-                Time
-                ****
-                 */
-                var startTimeString = classtime.startTime.match(/(\d+):(\d+)/),
-                    endTimeString = classtime.endTime.match(/(\d+):(\d+)/);
-
-                // Minute
-                var startMinute = parseInt(startTimeString[2]),
-                    endMinute = parseInt(endTimeString[2]);
-
-                // Hour
-                var startHour;
-                if (classtime.startTime.match(/PM/) && startTimeString[1] != 12) {
-                    // PM
-                    startHour = parseInt(startTimeString[1]) + 12;
-                }
-                else {
-                    // AM
-                    startHour = parseInt(startTimeString[1]);
-                }
-
-                var endHour;
-                if (classtime.endTime.match(/PM/) && endTimeString[1] != 12) {
-                    // PM
-                    endHour = parseInt(endTimeString[1]) + 12;
-                }
-                else {
-                    // AM
-                    endHour = parseInt(endTimeString[1]);
-                }
-
-                /*
-                *****
-                Color
-                *****
-                 */
-                var currentColor;
-                var foundColor = false;
-
-                cachedColors.forEach(function (cachedCourse) {
-                    // Already in cached colors
-                    if (cachedCourse.name === classtime.course) {
-                        currentColor = cachedCourse.color;
-                        foundColor = true;
-                    }
-                });
-
-                // Not already in cache
-                if (!foundColor) {
-                    currentColor = colorPallet[colorPalletIndex];
-                    cachedColors.push({name: classtime.course, color: currentColor});
-                    colorPalletIndex = colorPalletIndex + 1;
-                }
-
-                /*
-                ***
-                Day
-                ***
-                 */
-                var date = new Date(),
-                    d = date.getDate(),
-                    m = date.getMonth(),
-                    y = date.getFullYear();
-
-                // Note: JavaScript function Date.getDay() returns enum of current day of the week
-
-                // @return {int} enumeration of current day of the week
-                var dayNumber = date.getDay(),
-                    offset;
-
-                // Use the current day {int:0:6} of the week
-                // Enumerate each day of the week {int:0:6}
-                // and find the offset {int:0:6}
-                // Use this offset to find calendar day number  {int:0:31}
-                if (classtime.day.match(/M/)) {
-                    offset = 1 - dayNumber;
-                    addEvent();
-                }
-
-                if (classtime.day.match(/T/)) {
-                    offset = 2 - dayNumber;
-                    addEvent();
-                }
-
-                if (classtime.day.match(/W/)) {
-                    offset = 3 - dayNumber;
-                    addEvent();
-                }
-
-                if (classtime.day.match(/R/)) {
-                    offset = 4 - dayNumber;
-                    addEvent();
-                }
-
-                if (classtime.day.match(/F/)) {
-                    offset = 5 - dayNumber;
-                    addEvent();
-                }
-
-                // Add event //
-                //
-                function addEvent() {
-                    $scope.events.push({
-                        title: classtime.asString,
-                        start: new Date(y, m, d + offset, startHour, startMinute),
-                        end: new Date(y, m, d + offset, endHour, endMinute),
-                        color: currentColor
-                    });
-                }
-
-            });
-        };
-    }
-
-    /*
-    **********************************************
-    Display different schedule by...
-    1. Clear current events
-    2. Re-invoke the closure with a different index
-    **********************************************
-     */
-
-    $scope.scheduleLength = 0;
-    $scope.scheduleIndex = 0;
     // Event handle for prev/next buttons
     $scope.displayDifferentSchedule = function (forward) {
 
@@ -280,23 +91,24 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
             }
         }
 
-        clearEvents();
+        //$scope.events = arrayOfArrays[$scope.scheduleIndex];
+        //console.log($scope.events);
 
-        /*
-        ************************************************************************************************
-        The closure is "undefined" here for some reason
-        */
-        scheduleInstance($scope.scheduleIndex);
+        // This is needed or else $scope.eventSources is not getting updated...stupid me
+        // So how it is now, event sources is correctly changing each time
+        //$scope.eventSources = null;
+
+        uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
+
+        //$scope.eventSources = [arrayOfArrays[$scope.scheduleIndex]];
+        $scope.events = arrayOfArrays[$scope.scheduleIndex];
+        // var string = JSON.stringify($scope.eventSources);
+        // console.log(string);
+
+        uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
+
     };
 
-
-    // Event handle for clearing single course
-    $scope.removeFromSchedule = function(course) {
-        var index = $scope.addedCourses.indexOf(course);
-        if (index > -1) {
-            $scope.addedCourses.splice(index, 1);
-        }
-    };
 
     /*
     ****************
