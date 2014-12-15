@@ -93,7 +93,7 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
         }
         filterTextTimeout = $timeout(function() {
             $scope.filterText = val.toUpperCase();
-        }, 0);
+        }, 200);
     });
 
     /*
@@ -103,13 +103,12 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     **********************************************************************
      */
 
-    //$rootScope.added = [];
     // @callee: "Add" button under 3rd layer of accordion
     // Only add if the course isn't already in $rootScope.addedCourses
     $scope.addToSchedule = function (courseObject) {
         if (addedCourses.data.indexOf(courseObject) === -1) {
             addedCourses.data.push(courseObject);
-            //console.log(addedCourses.data);
+
             $rootScope.added = addedCourses.data;
         }
     };

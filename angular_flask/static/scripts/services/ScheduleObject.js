@@ -175,30 +175,44 @@ winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCou
  //            });
 	// }
 
-
+	var fact = {};
 	// Pass rootscope in here somehow...its undefined right now
 	//
-	var readyMadeSchedules = null;
+	fact.readyMadeSchedules = null;
 
-	var promise = scheduleFactory.getSchedules(addedCourses.data).
-            		success(function (data) {
-	            		// Assign schedule response to member
-	               		var scheduleResponse = angular.fromJson(data);
+	fact.getData = function() {
+		return readyMadeSchedules;
+	}
 
-	                	// Build the schedules event objects
-	               		readyMadeSchedules = buildSchedules(scheduleResponse);
-            		}).
-            		error(function() {
-                		$window.alert("Server not responding.");
-            		});
+	// var promise = scheduleFactory.getSchedules(addedCourses.data).
+ //            		success(function (data) {
+	//             		// Assign schedule response to member
+	//                		var scheduleResponse = angular.fromJson(data);
+
+	//                 	// Build the schedules event objects
+	//                		readyMadeSchedules = buildSchedules(scheduleResponse);
+ //            		}).
+ //            		error(function() {
+ //                		$window.alert("Server not responding.");
+ //            		});
 
 
-	return {
-		promise: promise,
-		getData: function() {
-			return readyMadeSchedules;
-		}
-	};
+    fact.getUpdated = function() {
+		return ( scheduleFactory.getSchedules(addedCourses.data).
+			success(function (data) {
+	    		// Assign schedule response to member
+	       		var scheduleResponse = angular.fromJson(data);
+
+	        	// Build the schedules event objects
+	       		readyMadeSchedules = buildSchedules(scheduleResponse);
+			}).
+			error(function() {
+	    		$window.alert("Server not responding.");
+			}) );
+    }
+
+
+    return fact;
 
 }])
 

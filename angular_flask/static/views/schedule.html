@@ -1,11 +1,11 @@
-<div class="col-md-6">
-    <div class="buttons">
-        <button id="prev" class="btn btn-primary" ng-click="displayDifferentSchedule(0)">Previous</button>
-        <button id="next" class="btn btn-primary" ng-click="displayDifferentSchedule(1)">Next</button>
-        <button id="show-accordion" class="btn btn-primary" ng-click="showAccordion()">Add More Courses</button>
+<div class="col-md-6" id="schedule">
+    <div class="buttons" style="padding-botton: 5px">
+    	<md-button class="md-raised md-primary" md-theme="amber" id="prev" ng-click="displayDifferentSchedule(0)">Previous</md-button>
+    	<md-button class="md-raised md-primary" md-theme="amber" id="next" ng-click="displayDifferentSchedule(1)">Next</md-button>
+        <md-button class="md-raised md-primary" md-theme="amber" id="show-accordion" ng-click="showAccordion()" style="height:50px; padding 0px 10px">Add More Courses</md-button>
     </div>
 
-        <h id="schedule-header"> Possible Schedules: ({{ scheduleIndex + 1 }}/{{ scheduleLength }}) </h>
+        <h id="schedule-header"> {{ scheduleIndex + 1 }}/{{ scheduleLength }} </h>
 
     <div id="full-calendar-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div> 
 </div>

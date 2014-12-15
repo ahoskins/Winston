@@ -116,16 +116,16 @@ is required so this div doesn't block the buttons underneath
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
-	font: 800 15px/30px 'Raleway', sans-serif;
+	font: 800 25px/30px 'Raleway', sans-serif;
 	position: relative;
 	top: -25px;
+	left: 40px;
 	pointer-events: none;
-	text-decoration: underline;
 }
 
 #full-calendar-div {
 	position: relative;
-	top: -22px;
+	top: -10px;
 }
 
  .fc-view-agendaWeek .fc-today {
@@ -233,7 +233,9 @@ font-size: 14px; }
 	height: 20px
 }
 
-
+#schedule {
+	padding-top: 32px;
+}
 
 
 

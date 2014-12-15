@@ -2,7 +2,7 @@
 //
 winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', '$location', 'ScheduleObject', 'uiCalendarConfig', '$timeout', function($scope, $window, $rootScope, scheduleFactory, $location, ScheduleObject, uiCalendarConfig, $timeout) {
 
-    /*
+    /* 
     ********************
     Full Calendar Config
     ********************
@@ -31,12 +31,6 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
     };
 
     $scope.refresh = true;
-     /*
-    THE VERSION ON BOWER IS DATED!!! MY VERSION OF CALENDAR.JS IS STRAIGHT FROM THE REPO.  MAKE SURE ROSS DOES THIS TOO.
-    APPARENTLY BOWER WILL GET UPDATE WITH THE CORRECT VERSION SOON.
-     */
-
-     // The problem is that this is being init before the events are set. So the solution to is to re-init it each time the events change
 
     // The big chunk of data
     var arrayOfArrays = ScheduleObject.getData();
@@ -45,17 +39,8 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
     $scope.scheduleLength = arrayOfArrays.length;
     $scope.scheduleIndex = 0;
 
-
     // EventSources array
     $scope.eventSources = [arrayOfArrays[$scope.scheduleIndex]];
-    // console.dir($scope.eventSources);
-
-    // When click on "Add more courses" button from schedule view
-    $scope.showAccordion = function () {
-        // switch to accordion view
-        $location.path('/find-courses');
-    }
-
 
     // Event handle for prev/next buttons
     $scope.displayDifferentSchedule = function (forward) {
@@ -74,13 +59,6 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
             }
         }
 
-        //$scope.events = arrayOfArrays[$scope.scheduleIndex];
-        //console.log($scope.events);
-
-        // This is needed or else $scope.eventSources is not getting updated...stupid me
-        // So how it is now, event sources is correctly changing each time
-        //$scope.eventSources = null;
-
         uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
 
         $scope.events = arrayOfArrays[$scope.scheduleIndex];
@@ -88,6 +66,12 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
         uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
 
     };
+
+    // Click on "Add more courses" button from schedule view
+    $scope.showAccordion = function () {
+        // switch to accordion view
+        $location.path('/find-courses');
+    }
 
 
     /*
