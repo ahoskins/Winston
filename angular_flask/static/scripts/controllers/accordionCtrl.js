@@ -103,7 +103,7 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     **********************************************************************
      */
 
-     $rootScope.added = [];
+    //$rootScope.added = [];
     // @callee: "Add" button under 3rd layer of accordion
     // Only add if the course isn't already in $rootScope.addedCourses
     $scope.addToSchedule = function (courseObject) {

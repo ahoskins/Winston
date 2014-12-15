@@ -180,10 +180,6 @@ winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCou
 	//
 	var readyMadeSchedules = null;
 
-
-	console.log(addedCourses);
-
-
 	var promise = scheduleFactory.getSchedules(addedCourses.data).
             		success(function (data) {
 	            		// Assign schedule response to member
@@ -193,7 +189,7 @@ winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCou
 	               		readyMadeSchedules = buildSchedules(scheduleResponse);
             		}).
             		error(function() {
-                		//$window.alert("Server not responding.");
+                		$window.alert("Server not responding.");
             		});
 
 

@@ -46,32 +46,15 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
     $scope.scheduleIndex = 0;
 
 
-    //$scope.events = arrayOfArrays[$scope.scheduleIndex];
-
     // EventSources array
     $scope.eventSources = [arrayOfArrays[$scope.scheduleIndex]];
     // console.dir($scope.eventSources);
-
-
-
-    //console.log($scope.eventSources);
-
-
-    // Watch for it to change, then progress with this script
-    // $scope.$watch('uiCalendarConfig', function() {
-    //     var string = JSON.stringify(uiCalendarConfig);
-    //     console.log(string);
-    // });
-
-    // console.log(uiCalendarConfig);
-    // uiCalendarConfig.calendars[0].fullCalendar('render');
 
     // When click on "Add more courses" button from schedule view
     $scope.showAccordion = function () {
         // switch to accordion view
         $location.path('/find-courses');
     }
-
 
 
     // Event handle for prev/next buttons
@@ -100,10 +83,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
 
         uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
 
-        //$scope.eventSources = [arrayOfArrays[$scope.scheduleIndex]];
         $scope.events = arrayOfArrays[$scope.scheduleIndex];
-        // var string = JSON.stringify($scope.eventSources);
-        // console.log(string);
 
         uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
 
