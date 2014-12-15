@@ -19,8 +19,10 @@ winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCou
         // A brighter color scene custom made by myself!
         //var colorPallet = ['#FF530D', '#227831', '#AFDEE8', '#2F4BE8', '#443111', '#83a283'];
 
+        var colorPallet = ['#F44336', '#673AB7', '#2196F3', '#009688', '#607D8B', '#FF9800']
+
         // Earthy color pallet
-        var colorPallet = ['#443111', '#227831', '#af9b56', '#2a4560', '#83a283'];
+        //var colorPallet = ['#443111', '#227831', '#af9b56', '#2a4560', '#83a283'];
         
         var colorPalletIndex = 0;
 
