@@ -19,6 +19,10 @@ winstonApp.config(['$routeProvider', function($routeProvider) {
 	  		}
 	  	}
 	  }).
+	  when('/about', {
+	  	templateUrl: '/static/views/about.html',
+	  	controller: 'headerCtrl'
+	  }).
 	  otherwise({
 	  	redirectTo: '/find-courses'
 	  });

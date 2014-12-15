@@ -34,49 +34,8 @@
 </head>
 <body>
 
-<!--   <md-content>
-    <section layout="row" layout-sm="column" layout-align="center center">
-      <md-button>{{title1}}</md-button>
-      <md-button md-no-ink class="md-primary">Primary (md-noink)</md-button>
-      <md-button ng-disabled="isDisabled" class="md-primary">Disabled</md-button>
-      <md-button class="md-warn" ng-click="isDisabled = !isDisabled">{{title4}}</md-button>
-    </section>
-    <section layout="row" layout-sm="column" layout-align="center center">
-      <md-button class="md-raised">Button</md-button>
-      <md-button class="md-raised md-primary">Primary</md-button>
-      <md-button ng-disabled="true" class="md-raised md-primary">Disabled</md-button>
-      <md-button class="md-raised md-warn">Warn</md-button>
-      <div class="label">raised</div>
-    </section>
-    <section layout="row" layout-sm="column" layout-align="center center">
-        <md-button class="md-fab" aria-label="Time">
-            <md-icon icon="/img/icons/ic_access_time_24px.svg" style="width: 24px; height: 24px;"></md-icon>
-        </md-button>
-      <md-button class="md-fab" aria-label="New document">
-        <md-icon icon="/img/icons/ic_insert_drive_file_24px.svg" style="width: 24px; height: 24px;"></md-icon>
-      </md-button>
-        <md-button class="md-fab" ng-disabled="true" aria-label="Comment">
-            <md-icon icon="/img/icons/ic_comment_24px.svg" style="width: 24px; height: 24px;"></md-icon>
-        </md-button>
-        <md-button class="md-fab md-primary" md-theme="cyan" aria-label="Profile">
-            <md-icon icon="/img/icons/ic_people_24px.svg" style="width: 24px; height: 24px;"></md-icon>
-        </md-button>
-      <div class="label">FAB</div>
-    </section>
-    <section layout="row" layout-sm="column" layout-align="center center">
-        <md-button ng-href="{{googleUrl}}" target="_blank">Go to Google</md-button>
-        <md-button>RSVP</md-button>
-    </section>
-    <section layout="row" layout-sm="column" layout-align="center center">
-      <md-button class="md-primary" md-theme="green">Button</md-button>
-      <md-button class="md-primary md-raised" md-theme="indigo">Button</md-button>
-      <md-button class="md-primary md-raised" md-theme="orange">Button</md-button>
-      <md-button class="md-primary" md-theme="cyan">Button</md-button>
-      <div class="label">Themed</div>
-    </section>
-  </md-content> -->
     <!-- Header -->
-    <div ng-include="'/static/views/header.html'"></div>
+    <div ng-include="'/static/views/header.html'" ng-controller="headerCtrl"></div>
 
     <!-- Based on the $route -->
     <div ng-view></div>
@@ -141,6 +100,7 @@
 	<script src="/static/scripts/controllers/accordionCtrl.js"></script>
     <script src="/static/scripts/controllers/scheduleCtrl.js"></script>
     <script src="/static/scripts/controllers/addedCtrl.js"></script>
+    <script src="/static/scripts/controllers/headerCtrl.js"></script>
 
     <!--Filters-->
 	<script src="/static/scripts/services/filter.js"></script>
