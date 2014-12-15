@@ -1,4 +1,4 @@
-winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCourses', function(scheduleFactory, $window, $rootScope, addedCourses){
+winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCourses', '$window', function(scheduleFactory, $rootScope, addedCourses, $window){
 
     /*
     Render schedules based on a single server response
@@ -180,11 +180,11 @@ winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCou
 	//
 	var readyMadeSchedules = null;
 
-	//console.log($rootScope);
-	//console.log(addedCourses.data);
+
+	console.log(addedCourses);
 
 
-	var promise = scheduleFactory.getSchedules($rootScope.data).
+	var promise = scheduleFactory.getSchedules(addedCourses.data).
             		success(function (data) {
 	            		// Assign schedule response to member
 	               		var scheduleResponse = angular.fromJson(data);
