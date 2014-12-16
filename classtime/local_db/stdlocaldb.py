@@ -3,10 +3,11 @@ from angular_flask.logging import logging
 logging = logging.getLogger(__name__) #pylint: disable=C0103
 
 from angular_flask.core import db
-from angular_flask.models import Term, Course, Section
+from angular_flask.models import Term, Schedule, Course, Section
 
 MODEL_PRIMARY_KEY_MAP = {
     Term: 'term',
+    Schedule: 'hash_id',
     Course: 'course',
     Section: 'class_'
 }
@@ -27,6 +28,7 @@ class StandardLocalDatabase(object):
         self._model_stack = list()
 
         self.Term = Term
+        self.Schedule = Schedule
         self.Course = Course
         self.Section = Section
 
@@ -39,6 +41,8 @@ class StandardLocalDatabase(object):
         datatype = datatype.lower()
         if 'term' in datatype:
             self.push_terms()
+        elif 'schedule' in datatype:
+            self.push_schedules()
         elif 'course' in datatype:
             self.push_courses()
         elif 'section' in datatype:
@@ -55,6 +59,16 @@ class StandardLocalDatabase(object):
         :rtype: StandardLocalDatabase
         """
         self._model_stack.append(Term)
+        return self
+
+    def push_schedules(self):
+        """Filter all requests to Schedule objects only. Returns self,
+        so this method should be chained with other methods.
+
+        :returns: self
+        :rtype: StandardLocalDatabase
+        """
+        self._model_stack.append(Schedule)
         return self
 
     def push_courses(self):
@@ -144,7 +158,6 @@ class StandardLocalDatabase(object):
                           identifier=identifier)
         for attr, value in model_dict.iteritems():
             setattr(db_obj, attr, value)
-
 
     def commit(self):
         """Commits the running transaction to the database

@@ -7,7 +7,7 @@ logging = logging.getLogger(__name__) # pylint: disable=C0103
 import classtime
 
 import heapq
-from .schedule import Schedule
+from classtime.scheduling.schedule import Schedule
 
 CANDIDATE_POOL_SIZE = 120
 """Number of schedules to keep in consideration at any one time"""
@@ -90,33 +90,40 @@ def _generate_schedules(cal, term, course_ids, busy_times, electives_groups, pre
 
     candidates = [Schedule(busy_times=busy_times, preferences=preferences)]
 
+    current_status = preferences.get('current-status', False)
+    obey_status = preferences.get('obey-status', False)
+
     candidates = _schedule_mandatory_courses(candidates, cal,
-        term, course_ids, _log_scheduling_component)
+        term, course_ids, current_status, obey_status,
+        _log_scheduling_component)
 
     candidates = _schedule_electives(candidates, cal,
-        term, electives_groups, _log_scheduling_component)
+        term, electives_groups, current_status, obey_status,
+        _log_scheduling_component)
 
-    candidates = _condense_schedules(candidates)
+    candidates = _condense_schedules(cal, candidates)
 
     return sorted(candidates,
         reverse=True,
         key=lambda sched: sched.overall_score())
 
-def _schedule_mandatory_courses(candidates, cal, term, course_ids, _log):
-    courses = sorted(cal.course_components(term, course_ids), key=len)
+def _schedule_mandatory_courses(candidates, cal, term, course_ids, current_status, obey_status, _log):
+    courses_components = cal.course_components(term, course_ids,
+        current_status=current_status)
+    courses_components = sorted(courses_components, key=len)
     total_components = sum([len(components)
-                            for components in courses])
+                            for components in courses_components])
 
     pace = 0
-    for course in courses:
+    for course in courses_components:
         for component in course:
             _log(total_components, component, pace)
-            candidates = _add_component(candidates, component, pace)
+            candidates = _add_component(candidates, component, pace, obey_status)
             pace += 1
     return [candidate for candidate in candidates
             if len(candidate.sections) == pace]
 
-def _schedule_electives(base_candidates, cal, term, electives_groups, _log):
+def _schedule_electives(base_candidates, cal, term, electives_groups, current_status, obey_status, _log):
     if base_candidates:
         base_pace = len(base_candidates[0].sections)
     else:
@@ -132,16 +139,17 @@ def _schedule_electives(base_candidates, cal, term, electives_groups, _log):
         for course in course_list:
             candidates = base_candidates[:]
             pace = base_pace
-            for component in cal.course_components(term, course, single=True):
+            for component in cal.course_components(term, course,
+                                 single=True, current_status=current_status):
                 _log(base_pace, component, pace)
-                candidates = _add_component(candidates, component, pace)
+                candidates = _add_component(candidates, component, pace, obey_status)
                 pace += 1
             candidates = [candidate for candidate in candidates
                           if len(candidate.sections) == pace]
             completed_schedules += candidates
     return completed_schedules
 
-def _add_component(candidates, component, pace):
+def _add_component(candidates, component, pace, obey_status):
     """
     Schedule generation algorithm
     1. Pick a schedule candidate from the list.
@@ -155,8 +163,11 @@ def _add_component(candidates, component, pace):
 
     7. Add the next component using (1->6).
     8. Repeat until all courses are scheduled.
+
+    :param boolean obey_status: if True, do not schedule closed or cancelled
+        sections
     """
-    def _candidate_battle_royale(candidates, component, pace, heap_size, out_q):
+    def _candidate_battle_royale(candidates, component, pace, obey_status, heap_size, out_q):
         """Put the `heap_size` best candidates onto the `out_q`
 
         :param list candidates: candidate schedules
@@ -177,6 +188,10 @@ def _add_component(candidates, component, pace):
             if _is_hopeless(candidate, pace):
                 continue
             for section in component:
+                if obey_status and section.get('classStatus', 'X') == 'X':
+                    continue
+                if obey_status and section.get('enrollStatus', 'C') == 'C':
+                    continue
                 if candidate.conflicts(section):
                     continue
                 _add_candidates(candidates,
@@ -190,7 +205,7 @@ def _add_component(candidates, component, pace):
     for chunk in _chunks(candidates):
         proc = multiprocessing.Process(
             target=_candidate_battle_royale,
-            args=(chunk, component, pace,
+            args=(chunk, component, pace, obey_status,
                   WORKLOAD_SIZE+1, out_q))
         procs.append(proc)
         proc.start()
@@ -212,7 +227,7 @@ def _add_candidates(candidates, candidate, heap_size):
 def _is_hopeless(candidate, sections_chosen):
     return len(candidate.sections) < sections_chosen
 
-def _condense_schedules(schedules):
+def _condense_schedules(cal, schedules):
     schedules = sorted(schedules,
         key=lambda sched: (sched.overall_score(), sched.timetable_bitmap))
 
@@ -221,7 +236,8 @@ def _condense_schedules(schedules):
     while lead < len(schedules):
         sched, lead_sched = schedules[lag], schedules[lead]
         if sched.is_similar(lead_sched):
-            sched.more_like_this.append(lead_sched)
+            more_like_this_id = cal.get_schedule_identifier(lead_sched)
+            sched.more_like_this.append(more_like_this_id)
             condensed_indices.append(lead)
         else:
             lag = lead

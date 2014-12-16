@@ -6,6 +6,7 @@ logging = logging.getLogger(__name__) # pylint: disable=C0103
 
 from classtime.remote_db import RemoteDatabaseFactory
 from classtime.local_db import LocalDatabaseFactory
+from angular_flask.models.schedule import calculate_schedule_hash
 
 class AcademicCalendar(object):
     """Manages academic calendar data for a particular institution
@@ -113,16 +114,12 @@ class AcademicCalendar(object):
             courses = self._fetch(datatype='courses', term=self._term)
             self._save(courses, datatype='courses')
 
-    def course_components(self, term, courses, single=False):
+    def course_components(self, term, courses, single=False, current_status=False):
         self.select_active_term(term)
         if single:
             courses = [courses]
-        for course in courses:
-            if self.doesnt_know_about(datatype='sections',
-                                      term=self._term, course=course):
-                sections = self._fetch(datatype='sections',
-                    term=self._term, course=course)
-                self._save(sections, datatype='sections')
+
+        self._get_sections_if_necessary(courses, current_status)
 
         all_components = list()
         for course in courses:
@@ -131,6 +128,63 @@ class AcademicCalendar(object):
         if single:
             all_components = all_components[0]
         return all_components
+
+    def _get_sections_if_necessary(self, courses, current_status=False):
+        fetch_fully = [course for course in courses
+                       if self.doesnt_know_about(datatype='sections',
+                                                 term=self._term,
+                                                 course=course)]
+        if fetch_fully:
+            identifiers = [{
+                'term': self._term,
+                'course': course
+            } for course in fetch_fully]
+            sections_of_each = self._fetch_multiple(datatype='sections',
+                identifiers=identifiers)
+            for sections in sections_of_each:
+                self._save(sections, datatype='sections')
+
+        fetch_status = list(set(courses) - set(fetch_fully))
+        if current_status and len(fetch_status) > 0:
+            identifiers = [{
+                'term': self._term,
+                'course': course
+            } for course in fetch_status]
+            status_of_each = self._fetch_multiple(datatype='status',
+                identifiers=identifiers)
+            for status in status_of_each:
+                self._save(status, datatype='sections', should_update=True)
+
+    def get_schedule_identifier(self, schedule):
+        """
+        Returns the hash identifier of the given schedule.
+
+        If the given schedule has not been cached in the DB yet,
+        a new entry will be created for it.
+
+        :param Schedule schedule: the schedule in question
+        :returns str: the md5 hash of the schedule, whose details can
+            be found by hitting api/schedules/<md5hash>
+        """
+        if not schedule.sections:
+            return 'noschedulesections'
+        section_ids = [section.get('class')
+                       for section in schedule.sections]
+        term = schedule.sections[0].get('term')
+        institution = schedule.sections[0].get('institution')
+        hash_id = calculate_schedule_hash(section_ids, institution, term)
+
+        if not self._local_db.exists('schedule', hash_id):
+            schedule_dict = {
+                'institution': institution,
+                'term': term,
+                'sections': [self._local_db.get('section', section_id)
+                             for section_id in section_ids],
+                'hash_id': hash_id
+            }
+            self._local_db.add(schedule_dict, 'schedule')
+
+        return hash_id
 
     def _get_components_single(self, course):
         def _attach_course_info(section_dict, course_dict):
@@ -189,13 +243,14 @@ class AcademicCalendar(object):
             logging.debug("Fetching <{}> <{}> <{}> from remote db".format(
                 len(identifiers), self._institution, datatype))
 
-            results = self._remote_db.search_multiple(
+            multiple_results = self._remote_db.search_multiple(
                 [datatype] * len(identifiers),
                 identifiers)
 
             if 'section' in datatype.lower():
-                results = self._attach_classtimes(results)
-        return results
+                multiple_results = [self._attach_classtimes(results)
+                                    for results in multiple_results]
+        return multiple_results
 
     def _attach_classtimes(self, sections):
         def _attach_classtimes_single(section, classtimes):
@@ -253,8 +308,9 @@ class AcademicCalendar(object):
             logging.error("Failed to save <{}> <{}> to local_db".format(
                 self._institution, self.cur_datatype()))
         else:
-            logging.debug("Saved some <{}> <{}> to local_db".format(
-                self._institution, self.cur_datatype()))
+            verb = "Updated" if should_update else "Saved"
+            logging.debug("{} some <{}> <{}> to local_db".format(
+                verb, self._institution, self.cur_datatype()))
 
         self.pop_datatype()
 
@@ -263,6 +319,9 @@ class AcademicCalendar(object):
                                            identifier=identifier,
                                            **kwargs)
         return retval
+
+    def knows_about(self, datatype, identifier=None, **kwargs):
+        return not self.doesnt_know_about(datatype, identifier, **kwargs)
 
     def push_datatype(self, datatype):
         """ONLY for use with unknown datatypes coming from an outside source.
@@ -278,6 +337,8 @@ class AcademicCalendar(object):
             self.push_courses()
         elif 'section' in datatype:
             self.push_sections()
+        elif 'status' in datatype:
+            self.push_status()
         elif 'classtime' in datatype:
             self.push_classtimes()
         else:
@@ -306,6 +367,11 @@ class AcademicCalendar(object):
 
     def push_sections(self):
         self._datatype_stack.append('sections')
+        self._primary_key_stack.append('class')
+        return self
+
+    def push_status(self):
+        self._datatype_stack.append('status')
         self._primary_key_stack.append('class')
         return self
 

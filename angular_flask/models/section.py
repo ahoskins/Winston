@@ -35,6 +35,8 @@ class Section(db.Model):
     endTime = db.Column(db.String(30))
     location = db.Column(db.String(30))
 
+    schedule = db.Column(db.String(30), db.ForeignKey('schedule.hash_id'))
+
     def __init__(self, jsonobj):
         for key, value in jsonobj.items():
             if key == 'class':
