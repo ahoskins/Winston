@@ -1,12 +1,27 @@
 /*
-This factory is a middle-man between courseFactory.js (the connection to API) and the accordionCtrl
+This service works as an OBJECT CONSTUCTOR
+
+It is the middle-man between courseFactory.js (the connection to API) and the accordionCtrl
 
 This is ultimately just abstracting away the SubjectBin creation from the controller.  It saves the accordionCtrl from being bloated.
 
 Note: the calls to the API are done in an asynchronious way
+
+Structure of SubjectBin object: 
+
+    $scope.subjectBin = [{
+            faculty: 'Faculty of Engineering',
+            subjects: [{
+                subject: 'ECE',
+                courses: [{course-object>}...]
+            }, {
+                subject: 'MEC E',
+                courses: [{<course-object>},...]
+            }]
+     }];
 */
 
-winstonApp.factory('SubjectBin', ['courseFactory', function(courseFactory, $window){
+winstonApp.factory('SubjectBin', ['courseFactory', '$window', function(courseFactory, $window){
 
 	// Class: Faculty
     function FacultyObject(faculty, subjects) {
@@ -14,9 +29,7 @@ winstonApp.factory('SubjectBin', ['courseFactory', function(courseFactory, $wind
         this.subjects = subjects;
     }
 
-	/*
-    Parse each faculty on page
-    */
+    // Parse each faculty on the page
     function parsePage(pageListing, self) {
         pageListing.objects.forEach(function(SFacultyGroup) {
             // Insert object into subjectBin
@@ -99,7 +112,7 @@ winstonApp.factory('SubjectBin', ['courseFactory', function(courseFactory, $wind
 	var SubjectBin = function() {
 		this.bin = [];
 
-		// Preserve the proper "this"
+		// Preserve the proper "this" for use above
 		var self = this;
 
 		this.initialize = function() {
@@ -109,8 +122,7 @@ winstonApp.factory('SubjectBin', ['courseFactory', function(courseFactory, $wind
 		this.initialize();
 	}
 
-
-	// Return the above object
+	// Expose the constructor
 	return SubjectBin;
 	
 }])

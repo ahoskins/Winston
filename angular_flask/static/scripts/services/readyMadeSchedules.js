@@ -1,16 +1,9 @@
-winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCourses', '$window', function(scheduleFactory, $rootScope, addedCourses, $window){
+winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', function(scheduleFactory, addedCourses, $window){
+	/*
+	Worked function the created readyMadeSchedules
 
-    /*
-    Render schedules based on a single server response
-    @param {object}: response from server
-
-    @returns {closure}: closure invokable by schedule index
-    */
-
-        // Return closure of scheduleListing
-        //
-        // @param {int}: schedule index within the JSON response
-        // @return {void}: updates $scope.events
+	readyMadeSchedules is an array with each index being a single schedule in the correct format for Andrew Shaw's Full Calendar
+	*/
 
     function buildSchedules(scheduleListing) {
 
@@ -19,6 +12,7 @@ winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCou
         // A brighter color scene custom made by myself!
         //var colorPallet = ['#FF530D', '#227831', '#AFDEE8', '#2F4BE8', '#443111', '#83a283'];
 
+        // A material design-ish color pallet
         var colorPallet = ['#F44336', '#673AB7', '#2196F3', '#009688', '#607D8B', '#FF9800']
 
         // Earthy color pallet
@@ -143,8 +137,9 @@ winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCou
 	                addEvent();
 	            }
 
-	            // Add event //
-	            //
+	            /*
+				Add event to singleReadyMade
+	            */
 	            function addEvent() {
 	                singleReadyMade.push({
 	                    title: classtime.asString,
@@ -155,51 +150,31 @@ winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCou
 	            }
 
         	}); // END iterate through class object
-
+	
+			/*
+			Form an array of singleReadyMade
+			*/
 			readyMadeSchedules.push(singleReadyMade);
-        }); // END iteratate through possible schedules
-		
-		return readyMadeSchedules;
 
+        }); // END iteratate through possible schedules
+			
+		// Return this array of arrays
+		return readyMadeSchedules;
     };
 
-	// function invokeAPI(self) {
-	// 	scheduleFactory.getSchedules(self.added).
- //            success(function (data) {
- //            	// Assign schedule response to member
- //                var scheduleResponse = angular.fromJson(data);
+    /*
+	Return a an object with some data, a getter and a function returning a promise who's goal is to get the up to date data
+    */
 
- //                // Build the schedules event objects
- //               	self.readyMadeSchedules = buildSchedules(scheduleResponse);
- //            }).
- //            error(function() {
- //                $window.alert("Server not responding.");
- //            });
-	// }
+	var factory = {};
 
-	var fact = {};
-	// Pass rootscope in here somehow...its undefined right now
-	//
-	fact.readyMadeSchedules = null;
+	factory.readyMadeSchedules = null;
 
-	fact.getData = function() {
+	factory.getReadyMadeSchedules = function() {
 		return readyMadeSchedules;
 	}
 
-	// var promise = scheduleFactory.getSchedules(addedCourses.data).
- //            		success(function (data) {
-	//             		// Assign schedule response to member
-	//                		var scheduleResponse = angular.fromJson(data);
-
-	//                 	// Build the schedules event objects
-	//                		readyMadeSchedules = buildSchedules(scheduleResponse);
- //            		}).
- //            		error(function() {
- //                		$window.alert("Server not responding.");
- //            		});
-
-
-    fact.getUpdated = function() {
+    factory.getSchedulesPromise = function() {
 		return ( scheduleFactory.getSchedules(addedCourses.data).
 			success(function (data) {
 	    		// Assign schedule response to member
@@ -214,7 +189,7 @@ winstonApp.factory('ScheduleObject', ['scheduleFactory', '$rootScope', 'addedCou
     }
 
 
-    return fact;
+    return factory;
 
 }])
 

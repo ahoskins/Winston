@@ -26,7 +26,7 @@
     <!-- Full Calendar -->
     <link rel="stylesheet" type="text/css" href="/static/scripts/vendor/bower_components/fullcalendar/fullcalendar.css"/>
 
-    <!-- Dope Ass Font! -->
+    <!-- Raleway font! -->
     <link href='http://fonts.googleapis.com/css?family=Raleway:200,300' rel='stylesheet' type='text/css'>
 
     <!-- Ross is an artist -->
@@ -34,17 +34,19 @@
 </head>
 <body>
 
-    <!-- Header -->
+    <!--************* Content ************* -->
+
+    <!-- Header - always there -->
     <div ng-include="'/static/views/header.html'" ng-controller="headerCtrl"></div>
 
-    <!-- Based on the $route -->
+    <!-- Based on the $routeProvider -->
     <div ng-view></div>
 
-    <!-- Added Courses -->
+    <!-- Added Courses - always there -->
     <div ng-include="'/static/views/added.html'" ng-controller="addedCtrl"></div>
 
 
-
+    <!--************* Scripts ************* -->
 
     <!-- jQuery -->
     <script src="/static/scripts/vendor/bower_components/jquery/dist/jquery.min.js"></script>
@@ -69,8 +71,6 @@
     <script src="/static/scripts/vendor/memoize.js"></script>
     <script src="/static/scripts/vendor/filterStabilize.js"></script>
 
-    <!--Smooth Scroll-->
-    <script src="/static/scripts/vendor/bower_components/angular-scroll/angular-scroll.min.js"></script>
 
     <!-- Material -->
     <script src="/static/scripts/vendor/bower_components/angular-material/angular-material.js"></script>
@@ -78,9 +78,7 @@
     <script src="/static/scripts/vendor/bower_components/hammerjs/hammer.js"></script>
     <script src="/static/scripts/vendor/bower_components/angular-material/modules/js/toolbar/toolbar.js"></script>
     <script src="/static/scripts/vendor/bower_components/angular-material/modules/js/slider/slider.js"></script>
-
     <script src="/static/scripts/vendor/bower_components/angular-aria/angular-aria.js"></script>
-
 
     <!-- Bootstrap Angular UI -->
     <script src="/static/scripts/vendor/ui-bootstrap-tpls-0.12.0.min.js"></script>
@@ -93,7 +91,7 @@
     <script src="/static/scripts/services/detailFactory.js"></script>
     <script src="/static/scripts/services/scheduleFactory.js"></script>
     <script src="/static/scripts/services/SubjectBin.js"></script>
-    <script src="/static/scripts/services/ScheduleObject.js"></script>
+    <script src="/static/scripts/services/readyMadeSchedules.js"></script>
     <script src="/static/scripts/services/addedCourses.js"></script>
 
     <!--Controllers-->
@@ -109,6 +107,6 @@
     <script src="/static/scripts/services/scrollSmooth.js"></script>
     <script src="/static/scripts/services/noBubble.js"></script>
 
-	</body>
+</body>
 </html>
 

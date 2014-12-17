@@ -1,20 +1,7 @@
 // Accordion Controller
 //
 
-winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', '$rootScope', 'SubjectBin', '$timeout', '$location', 'addedCourses', function($scope, $window, detailFactory, $rootScope, SubjectBin, $timeout, $location, addedCourses) {
-   /*
-    $scope.subjectBin = [{
-            faculty: 'Faculty of Engineering',
-            subjects: [{
-                subject: 'ECE',
-                courses: [{course-object>}...]
-            }, {
-                subject: 'MEC E',
-                courses: [{<course-object>},...]
-            }]
-     }];
-     */
-
+winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'SubjectBin', '$timeout', '$location', 'addedCourses', function($scope, $window, detailFactory, SubjectBin, $timeout, $location, addedCourses) {
     /*
     ********************************************************************
     Construct a new SubjectBin factory.  The subjectBin data structure is a member.
@@ -104,17 +91,16 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
      */
 
     // @callee: "Add" button under 3rd layer of accordion
-    // Only add if the course isn't already in $rootScope.addedCourses
+    // Only add if the course isn't already in addedCourses
     $scope.addToSchedule = function (courseObject) {
         if (addedCourses.data.indexOf(courseObject) === -1) {
             addedCourses.data.push(courseObject);
-
-            $rootScope.added = addedCourses.data;
         }
     };
 
     /*
-    Tell schedule controller that the button was pressed
+    @callee: "Generate Schedule" button
+    Switch to the other view and controller
     */
     var readyMade = [];
     $scope.promptSchedules = function() {

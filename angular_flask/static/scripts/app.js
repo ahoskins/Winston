@@ -14,8 +14,8 @@ winstonApp.config(['$routeProvider', function($routeProvider) {
 	  	templateUrl: '/static/views/schedule.html',
 	  	controller: 'scheduleCtrl',
 	  	resolve: {
-	  		theData: function(ScheduleObject) {
-	  			return ScheduleObject.getUpdated();
+	  		theData: function(readyMadeSchedules) {
+	  			return readyMadeSchedules.getSchedulesPromise();
 	  		}
 	  	}
 	  }).

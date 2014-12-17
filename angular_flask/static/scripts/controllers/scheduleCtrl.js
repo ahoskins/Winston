@@ -1,6 +1,9 @@
-// Schedule Controller
-//
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope', 'scheduleFactory', '$location', 'ScheduleObject', 'uiCalendarConfig', '$timeout', function($scope, $window, $rootScope, scheduleFactory, $location, ScheduleObject, uiCalendarConfig, $timeout) {
+/*
+Controller for schedule
+
+Includes Full Calendar config, prev/next buttons, and add more courses button
+*/
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFactory', '$location', 'readyMadeSchedules', 'uiCalendarConfig', '$timeout', function($scope, $window, scheduleFactory, $location, readyMadeSchedules, uiCalendarConfig, $timeout) {
 
     /* 
     ********************
@@ -30,17 +33,28 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
         }
     };
 
-    $scope.refresh = true;
+    /*
+    *********************
+    Use the readyMadeSchedules service to get the schedule data
+    Put this data into $scope.eventSources
+    *********************
+    */
 
-    // The big chunk of data
-    var arrayOfArrays = ScheduleObject.getData();
+    // Array of ready to go schedules in Full Calendar format
+    var arrayOfArrays = readyMadeSchedules.getReadyMadeSchedules();
 
-     // Bounds
+     // Schedule bounds based on length
     $scope.scheduleLength = arrayOfArrays.length;
     $scope.scheduleIndex = 0;
 
-    // EventSources array
+    // Put the data into the eventSources array
     $scope.eventSources = [arrayOfArrays[$scope.scheduleIndex]];
+
+    /*
+    ***********************
+    Handle clicks on buttons
+    ***********************
+    */
 
     // Event handle for prev/next buttons
     $scope.displayDifferentSchedule = function (forward) {
@@ -59,42 +73,20 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$rootScope'
             }
         }
 
-        uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
-
         $scope.events = arrayOfArrays[$scope.scheduleIndex];
 
+        /*
+        Full Calendar is very finicky and sometimes won't render the new events
+        For this reason, clear all the events first, then add the new events to the fresh event sources
+        */
+        uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
         uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
-
     };
 
-    // Click on "Add more courses" button from schedule view
+    // Event hanlde for add more courses button
     $scope.showAccordion = function () {
         // switch to accordion view
         $location.path('/find-courses');
-    }
-
-
-    /*
-    ****************
-    Helper functions
-    ****************
-     */
-
-    function disableGenerateSchedules() {
-        // Disable
-        document.getElementById('generate-button').disabled = true;
-    }
-
-    function enableGenerateSchedules() {
-        // Enable
-        document.getElementById('generate-button').disabled = false;
-    }
-
-    function clearEvents() {
-        // Clear current events
-        while ($scope.events.length > 0) {
-            $scope.events.pop();
-        }
     }
 
 }]);

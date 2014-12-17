@@ -1,5 +1,5 @@
 /**
- * Created by Andrew on 14-11-09.
+Call the API /generate-schedules
  */
 winstonApp.factory('scheduleFactory', function ($window, $http, $q) {
     var factory = {};
