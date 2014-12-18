@@ -1,26 +1,30 @@
-<!-- The accordion...showed when the schedule is hidden -->
-<div class="col-md-6">
-    <md-text-float label="search for a course" style="font-size:25px; font-weight: bold" data-ng-model="searchBox"> </md-text-float>
-    <md-button class="md-raised md-primary" md-theme="amber" style="float:right; position:relative; top:-55px; color:#000000; height: 50px; padding: 0px 10px" ng-click="promptSchedules()">generate schedules</md-button>
-	<br>
+<div class="col-md-6" id="accordion-section">
+    <md-content md-theme="light-blue-dark" class="section-heading">
+        <input type="text" class="form-control courses-search" placeholder="Search for Courses" data-ng-model="searchBox">
+        <md-button class="md-raised md-primary generate-schedules-button" md-theme="blue-grey" ng-click="promptSchedules()">
+            Generate Schedules
+        </md-button>
+    </md-content>
 
-    <accordion close-others="false">
-        <accordion-group class="faculty-accordion material-look" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty) "data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" no-bubble>
-            <accordion close-others="false">
-                <accordion-group class="subject-accordion material-look" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" no-bubble>
-                    <accordion close-others="false">
-                        <accordion-group class="course-accordion material-look" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" no-bubble>
-                            <accordion-heading>
-                                {{ singleCourse.asString }} 
-                                <a id="add-button" no-bubble><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)"></i></a>
-                            </accordion-heading>
-                            <div class="">
-                                {{ description[singleCourse.course] }}
-                            </div>
-                        </accordion-group>
-                    </accordion>
-                </accordion-group>
-            </accordion>
-        </accordion-group>
-    </accordion>
+    <md-content class="accordion-body">
+        <accordion close-others="false">
+            <accordion-group class="faculty-accordion material-look" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty) "data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" no-bubble>
+                <accordion close-others="false">
+                    <accordion-group class="subject-accordion material-look" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" no-bubble>
+                        <accordion close-others="false">
+                            <accordion-group class="course-accordion material-look" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" no-bubble>
+                                <accordion-heading>
+                                    {{ singleCourse.asString }} 
+                                    <a id="add-button" no-bubble><i class="glyphicon glyphicon-plus" ng-click="addToSchedule(singleCourse)"></i></a>
+                                </accordion-heading>
+                                <div class="">
+                                    {{ description[singleCourse.course] }}
+                                </div>
+                            </accordion-group>
+                        </accordion>
+                    </accordion-group>
+                </accordion>
+            </accordion-group>
+        </accordion>
+    </md-content>
 </div>

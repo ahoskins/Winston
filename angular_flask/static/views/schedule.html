@@ -1,11 +1,12 @@
-<div class="col-md-6" id="schedule">
-    <div class="buttons" style="padding-botton: 5px">
-    	<md-button class="md-raised md-primary" md-theme="amber" id="prev" ng-click="displayDifferentSchedule(0)">Previous</md-button>
-    	<md-button class="md-raised md-primary" md-theme="amber" id="next" ng-click="displayDifferentSchedule(1)">Next</md-button>
-        <md-button class="md-raised md-primary" md-theme="amber" id="show-accordion" ng-click="showAccordion()" style="height:50px; padding 0px 10px">Add More Courses</md-button>
-    </div>
+<div class="col-md-6" id="schedule-section">
+    <md-content md-theme="light-blue-dark" class="section-heading-big">
+		<p class="text-header"> Schedules ({{ scheduleIndex + 1 }}/{{ scheduleLength }}): </p>
 
-        <h id="schedule-header"> {{ scheduleIndex + 1 }}/{{ scheduleLength }} </h>
+    	<md-button class="md-raised md-primary prev-next-button" md-theme="blue-grey" id="prev" ng-click="displayDifferentSchedule(0)">Previous</md-button>
+    	<md-button class="md-raised md-primary prev-next-button" md-theme="blue-grey" id="next" ng-click="displayDifferentSchedule(1)">Next</md-button>
+        <md-button class="md-raised md-primary main-button go-right" md-theme="blue-grey" id="show-accordion" ng-click="showAccordion()">Add More Courses</md-button>
+        <br>
+    </md-content>
 
     <div id="full-calendar-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div> 
 </div>

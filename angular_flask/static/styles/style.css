@@ -40,17 +40,9 @@ html {
 	float:none;
 }
 
-/**/
-
 /*
-Accordion/Search
+Accordion
 */
-
-#search-by-all {
-	font: 900 15px/30px 'Raleway', sans-serif;
-	text-align: center;
-	text-decoration: underline;
-}
 
 #add-button {
 	position: relative;
@@ -64,78 +56,89 @@ Accordion/Search
     margin: -10px -15px;
 }
 
+#accordion-section {
+	padding-top: 20px;
+}
+
+.courses-search {
+	padding-top: 5px;
+	font-size: 22px;
+	width: 50%;
+	font-weight: bold;
+}
+
+.generate-schedules-button {
+	border-radius: 3px;
+	padding: 5px 5px;
+	position: absolute;
+	top: 9px;
+	right: 13px;
+	color: #ffffff;
+	height: 40px;
+}
+
+.accordion-body {
+	padding-top: 10px;
+}
+
 /*
 Schedule
 */
 
-#generate-button {
-	float: right;
+#schedule-section {
+	padding-top: 20px;
 }
 
-#shopping-cart-size {
-	position: fixed;
-	top: 5px;
-	right: 20px;
-}
-
-#next {
-	padding-left: 10px;
-}
-
-#prev {
-	padding-right: 5px;
-}
-
-.buttons {
-	padding-bottom: 10px;
-}
-
-#clear {
-	position: fixed;
-	top: 5px;
-	right: 34%;
-}
-
-#shopping-cart {
-	position: fixed;
-	top: 5px;
-	right: 10%;
-}
-
-#show-accordion {
-	float: right;
-}
-
-/*
-This is messy...
-pointer-events: none
-is required so this div doesn't block the buttons underneath
-*/
-#schedule-header {
+.text-header {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
 	font: 800 25px/30px 'Raleway', sans-serif;
-	position: relative;
-	top: -25px;
-	left: 40px;
-	pointer-events: none;
+	color: #ffffff;
 }
 
 #full-calendar-div {
-	position: relative;
-	top: -10px;
+	padding-top: 10px;
+}
+
+.prev-next-button {
+	height: 40px;
+	width: 85px;
+}
+
+.go-right {
+	float: right;
+}
+
+.main-button {
+	height: 40px;
+}
+
+.section-heading {
+	border-radius: 3px;
+	padding: 10px 10px;
+	height: 60px;
+}
+
+.section-heading-big {
+	border-radius: 3px;
+	padding: 10px 10px;
+	/*height: 60px;*/
 }
 
  .fc-view-agendaWeek .fc-today {
-     color:#ffffff;
-     background:#ffffff;
+     color: #ffffff;
+     background: #ffffff;
   }
 
 /*
 List of added
 */
+
+#added-section {
+	padding-top: 20px;
+}
 
 #added-header {
 	display: block;
@@ -144,6 +147,16 @@ List of added
 	text-align: center;
 	font: 800 15px/30px 'Raleway', sans-serif;
 	text-decoration: underline;
+}
+
+.remove-icon {
+	border-radius: 3px;
+	padding: 5px 5px;
+	position: absolute;
+	top: 13px;
+	right: 13px;
+	color: #ffffff;
+	font-size: 15px;
 }
 
 /*
@@ -172,7 +185,6 @@ Misc
 	float: right;
 	width: 100px;
 	color: #ffffff;
-	/*margin: 20px 5px;*/
 }
 
 .mail {
@@ -229,18 +241,10 @@ font-size: 14px; }
 	color: #151515;
 }
 
-#smallish {
-	height: 20px
-}
-
-#schedule {
-	padding-top: 32px;
-}
 
 .fc-event-inner {
 	color: black;
 }
-
 
 
 

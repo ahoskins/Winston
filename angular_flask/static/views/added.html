@@ -1,63 +1,24 @@
-<!-- The list of courses and options etc...this will never get hidden -->
-<div class="col-md-6" style="position:relative; top: 35px">
-<!--     <div class="buttons">
-        <button id="generate-button" class="btn btn-primary" ng-click="getSchedules()">Generate Schedules</button>
-    </div> -->
-    <div style="min-height:200px">
-        <md-toolbar class="md-theme-light" md-theme="light-blue-dark" style="border-radius:3px">
-            <h1 class="md-toolbar-tools" style="font-size:20px; color:#ffffff">
-                <span style="color:#000000; font-size:25px">added:</span>
-                <span style="position:absolute; right:5px; top: 15px; background:#e13329; border-radius:3px; padding: 5px 5px" ng-click="removeAll()"><a><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i><i class="fa fa-shopping-cart"></i> all</a></span>
-            </h1>
-        </md-toolbar>
-        <md-content style="box-shadow: 5px 5px 5px #888888">
-            <md-list>
-                <md-item ng-repeat="course in added">
-                    <md-item-content>
-                            <div class="md-tile-content">
-                                <span style="font-size:20px; font-weight:bold">{{ course.asString }}</span>
-                                <a style="position:absolute; right:10px; top: 10px; background:#e13329; border-radius:3px; padding: 5px 5px; color:#ffffff"><i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i></a>
-                            </div>
-                    </md-item-content>
-                </md-item>
-            </md-list>
-        </md-content>
-    </div>
-
-
-<!--     <md-toolbar class="md-theme-light" md-theme="blue-grey">
-        <h1 class="md-toolbar-tools" style="font-size:20px; color:#ffffff">
-            <span>preferences:</span>
-        </h1>
-    </md-toolbar> 
-
+<div class="col-md-6" id="added-section">
+    <md-content md-theme="light-blue-dark" class="section-heading">
+        <p class="text-header">Added:</p>  
+        <md-button class="md-raised md-primary remove-icon" md-theme="red" ng-click="removeAll()">
+            <i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i> Remove All 
+        </md-button>
+    </md-content>
 
     <md-content>
-        <form style="padding: 20px;">
-            <md-content md-theme="light-blue-dark">
-                <span style="color:#ffffff; padding-left:10px; font-size:20px">day:</span>
-            </md-content>
-
-            <br>
-            <md-button class="md-fab md-primary">M</md-button>
-            <md-button class="md-fab md-primary">T</md-button>
-            <md-button class="md-fab md-primary">W</md-button>
-            <md-button class="md-fab md-primary">R</md-button>
-            <md-button class="md-fab md-primary">F</md-button>
-            <br>
-            <br>
-
-            <md-content md-theme="light-blue-dark">
-                <span style="color:#ffffff; padding-left:10px; font-size:20px">start:</span>
-            </md-content>
-           
-            <md-slider md-discrete step="1" flex min="8" max="20" aria-label="blue-grey" id="red-slider"></md-slider>
-            <md-content md-theme="light-blue-dark">
-                <span style="color:#ffffff; padding-left:10px; font-size:20px">end:</span>
-            </md-content>
-            <md-slider md-discrete step="1" flex min="8" max="20" aria-label="blue-grey" id="red-slider"></md-slider>
-        </form>
-    </md-content>   -->
-
-
+        <md-list>
+            <md-item ng-repeat="course in added">
+                <md-item-content>
+                    <div class="md-tile-content">
+                        <span style="font-size:20px; font-weight:bold">{{ course.asString }}</span>
+                        <md-button class="md-raised md-primary remove-icon" md-theme="red" ng-click="removeFromSchedule(course)">
+                            <i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i> Remove
+                        </md-button>
+                    </div>
+                </md-item-content>
+                <md-divider ng-if="!$last"></md-divider>
+            </md-item>
+        </md-list>
+    </md-content>
 </div>
