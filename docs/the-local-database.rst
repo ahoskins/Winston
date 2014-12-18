@@ -1,10 +1,16 @@
 ==================
-The local database
+The Local Database
 ==================
 
 The local database is used as a cache for the remote database. Schedule
-generation requests will fetch section data from the remote server, but
-terms and courses must be manually seeded.
+generation requests will fetch section data from the remote server when
+necessary, but terms and courses must be manually seeded.
+
+If the server is run without arguments :code:`$ python runserver.py`, 
+term and course data will be downloaded in the background.
+
+If the server is run with an argument :code:`$ python runserver.py nofetch`,
+then this lazy background data fetching will be disabled.
 
 .. _`seed-db`:
 
