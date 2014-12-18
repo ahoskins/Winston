@@ -1,6 +1,8 @@
 Find a university schedule that fits your life in less than 5 minutes
 
-![](https://cloud.githubusercontent.com/assets/1527504/5326718/551e0544-7ce5-11e4-80a9-28a9ba9e2b11.png)
+![pick some courses](https://cloud.githubusercontent.com/assets/1522678/5492679/bbaec766-86a0-11e4-85ad-ef605e7fed47.png)
+
+![find a schedule](https://cloud.githubusercontent.com/assets/1522678/5492696/e549fca8-86a0-11e4-8069-d4c7785cf950.png)
 
 Developer Documentation
 -------------
