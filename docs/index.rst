@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-classtime
-=====================================
+Winston
+=======
 
 Build a university schedule that fits your life in less than five minutes
 
@@ -22,12 +22,3 @@ Documentation:
    profiling
 
    contributing
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-

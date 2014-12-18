@@ -2,7 +2,7 @@
 Tests
 =====
 
-Core functionality is tested with
+Core backend functionality is tested with
 `Nose <https://nose.readthedocs.org/en/latest/>`__
 
 Nose is included in `requirements.txt <https://pip.readthedocs.org/en/1.1/requirements.html>`__, so if you ran ``$ pip install -r requirements.txt``, it is already installed.
@@ -70,4 +70,3 @@ Write tests
 ~~~~~~~~~~~
 
 Check out `"writing tests" <https://nose.readthedocs.org/en/latest/writing_tests.html>`__ in the `nose documentation <https://nose.readthedocs.org/en/latest/>`__.
-
