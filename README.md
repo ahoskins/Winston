@@ -48,7 +48,6 @@ With inspiration from
 - [Uberi's 'COURSERATOR3000' for the University of Waterloo](https://github.com/Uberi/COURSERATOR3000)
 - [scott113341's 'SCUclasses' for Santa Clara University](https://github.com/scott113341/SCUclasses), demo: http://scuclasses.com
 - [adicu's 'Courses' for Columbia University](https://github.com/adi-archive/Schedule-Builder), demo: http://courses.adicu.com
-- [adiciu's course data API for Columbia Universtiy](https://github.com/adicu/data.adicu.com)
+- [adiciu's course data API for Columbia University](https://github.com/adicu/data.adicu.com)
 - [arxanas's 'schedumich' for the University of Michigan](https://github.com/arxanas/schedumich)
-
 - [and others](https://github.com/search?o=desc&q=university+scheduling&ref=searchresults&s=stars&type=Repositories&utf8=%E2%9C%93)
