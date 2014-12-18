@@ -1,4 +1,4 @@
-winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', function(scheduleFactory, addedCourses, $window){
+winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', '$location', function(scheduleFactory, addedCourses, $window, $location){
 	/*
 	Worked function the created readyMadeSchedules
 
@@ -175,6 +175,13 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	}
 
     factory.getSchedulesPromise = function() {
+    	
+    	if (addedCourses.data.length === 0) {
+    		$window.alert("Add some courses first...");
+    		$location.path('/find-courses');
+    		return;
+    	}
+
 		return ( scheduleFactory.getSchedules(addedCourses.data).
 			success(function (data) {
 	    		// Assign schedule response to member
@@ -184,7 +191,8 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	       		readyMadeSchedules = buildSchedules(scheduleResponse);
 			}).
 			error(function() {
-	    		$window.alert("Server not responding.");
+	    		$window.alert("Server not responding...");
+	    		$location.path('/find-courses');
 			}) );
     }
 
