@@ -44,10 +44,14 @@ html {
 Accordion
 */
 
-#add-button {
+.add-button {
 	position: relative;
 	top: -18px;
 	float: right;
+}
+
+#add-up {
+	font-size: 22px;
 }
 
 .ng-binding {
@@ -61,8 +65,8 @@ Accordion
 }
 
 .courses-search {
-	padding-top: 5px;
-	font-size: 22px;
+	padding-top: 4px;
+	font-size: 18px;
 	width: 50%;
 	font-weight: bold;
 }
@@ -75,10 +79,24 @@ Accordion
 	right: 13px;
 	color: #ffffff;
 	height: 40px;
+
+}
+
+#generate-schedules-button {
+	background-color: #00aeca;
 }
 
 .accordion-body {
 	padding-top: 10px;
+}
+
+.panel-default > .panel-heading {
+	background-color: #CFD8DC;
+	outline: none;
+}
+
+.course-description {
+	font-weight: bold;
 }
 
 /*
@@ -94,8 +112,9 @@ Schedule
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
-	font: 800 25px/30px 'Raleway', sans-serif;
+	font: 800 25px/25px 'Raleway', sans-serif;
 	color: #ffffff;
+	padding-top: 7px;
 }
 
 #full-calendar-div {
@@ -118,7 +137,7 @@ Schedule
 	left: 40px;
 }
 
-#prev-caret:focus, #next-caret:focus {
+#prev-caret:focus, #next-caret:focus, .accordion-body:focus {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -150,6 +169,10 @@ Schedule
  .fc-view-agendaWeek .fc-today {
      color: #ffffff;
      background: #ffffff;
+  }
+
+  #show-accordion {
+  	background-color: #00aeca;
   }
 
 /*
@@ -245,7 +268,8 @@ font-size: 14px; }
 #tagline {
 	color: #000000;
 	padding-left: 70px;
-	font: 400 15px/15px 'Raleway', sans-serif;
+	font: 400 20px/15px 'Raleway', sans-serif;
+	font-weight: bold;
 }
 
 #logo {
@@ -265,6 +289,9 @@ font-size: 14px; }
 .fc-event-inner {
 	color: black;
 }
+
+/*Accordion*/
+
 
 
 

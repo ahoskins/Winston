@@ -8,12 +8,14 @@ winstonControllers.controller('addedCtrl', ['$scope', '$location', 'addedCourses
         var index = addedCourses.data.indexOf(course);
         if (index > -1) {
             addedCourses.data.splice(index, 1);
+            addedCourses.courseAdded[course.asString] = 0;
         }
     };
 
     // Event handle for clearing ALL courses
     $scope.removeAll = function() {
         addedCourses.data = [];
+        addedCourses.courseAdded = {};
         $scope.added = addedCourses.data;
     }
 
