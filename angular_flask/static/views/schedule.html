@@ -1,10 +1,12 @@
 <div class="col-md-6" id="schedule-section">
-    <md-content md-theme="light-blue-dark" class="section-heading-big">
+    <md-content md-theme="light-blue-dark" class="section-heading">
 		<p class="text-header"> Schedules ({{ scheduleIndex + 1 }}/{{ scheduleLength }}): </p>
 
-    	<md-button class="md-raised md-primary prev-next-button" md-theme="blue-grey" id="prev" ng-click="displayDifferentSchedule(0)">Previous</md-button>
-    	<md-button class="md-raised md-primary prev-next-button" md-theme="blue-grey" id="next" ng-click="displayDifferentSchedule(1)">Next</md-button>
-        <md-button class="md-raised md-primary main-button go-right" md-theme="blue-grey" id="show-accordion" ng-click="showAccordion()">Add More Courses</md-button>
+		<a><i class="fa fa-caret-left" id="prev-caret" ng-click="displayDifferentSchedule(0)"></i></a>
+		<a><i class="fa fa-caret-right" id="next-caret" ng-click="displayDifferentSchedule(1)"></i></a>
+<!--     	<md-button class="md-raised md-primary prev-button" md-theme="blue-grey" id="prev" ng-click="displayDifferentSchedule(0)">Previous</md-button>
+    	<md-button class="md-raised md-primary next-button" md-theme="blue-grey" id="next" ng-click="displayDifferentSchedule(1)">Next</md-button> -->
+        <md-button class="md-raised md-primary add-courses-button" md-theme="blue-grey" id="show-accordion" ng-click="showAccordion()">Add More Courses</md-button>
         <br>
     </md-content>
 

@@ -175,7 +175,7 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	}
 
     factory.getSchedulesPromise = function() {
-    	
+
     	if (addedCourses.data.length === 0) {
     		$window.alert("Add some courses first...");
     		$location.path('/find-courses');

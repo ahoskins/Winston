@@ -102,17 +102,37 @@ Schedule
 	padding-top: 10px;
 }
 
-.prev-next-button {
-	height: 40px;
-	width: 85px;
+#prev-caret {
+	color: #ffffff;
+	font-size: 50px;
+	position: absolute;
+	top: 6px;
+	left: 13px;
 }
 
-.go-right {
-	float: right;
+#next-caret {
+	color: #ffffff;
+	font-size: 50px;
+	position: absolute;
+	top: 6px;
+	left: 40px;
 }
 
-.main-button {
+#prev-caret:focus, #next-caret:focus {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline-style:none;/*IE*/
+}
+
+.add-courses-button {
 	height: 40px;
+	position: absolute;
+	top: 10px;
+	right: 13px;
 }
 
 .section-heading {
