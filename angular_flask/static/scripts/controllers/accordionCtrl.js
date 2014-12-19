@@ -2,6 +2,7 @@
 //
 
 winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'SubjectBin', '$timeout', '$location', 'addedCourses', function($scope, $window, detailFactory, SubjectBin, $timeout, $location, addedCourses) {
+
     /*
     ********************************************************************
     Construct a new SubjectBin factory.  The subjectBin data structure is a member.
@@ -17,6 +18,7 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     On-click of accordion handlers
     ******************************
      */
+
      // @callee: 1st layer of accordion (on click)
      //
      // When open -> logical true, when closed -> logical false
@@ -89,12 +91,13 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     This is the bridge between this controller and the schedule controller
     **********************************************************************
      */
-
+     $scope.added = addedCourses.courseAdded;
     // @callee: "Add" button under 3rd layer of accordion
     // Only add if the course isn't already in addedCourses
     $scope.addToSchedule = function (courseObject) {
         if (addedCourses.data.indexOf(courseObject) === -1) {
             addedCourses.data.push(courseObject);
+            addedCourses.courseAdded[courseObject.asString] = 1;
         }
     };
 

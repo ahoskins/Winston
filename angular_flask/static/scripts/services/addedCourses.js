@@ -7,5 +7,7 @@ winstonApp.factory('addedCourses', function() {
 
 	factory.data = [];
 
+	factory.courseAdded = {};
+
 	return factory;
 });
