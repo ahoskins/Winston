@@ -23,16 +23,26 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
      //
      // When open -> logical true, when closed -> logical false
      $scope.subjects = [];
-     $scope.renderSubjects = function (faculty) {
+     // $window.alert(opened);
+     $scope.renderSubjects = function (faculty, $event) {
+        // Make sure accordion will either open or close as a result of this click
+        // To the ensure the $scope.subjects[faculty] MATCHES open state of accordion
+        if ($event.target.className !== "ng-binding") {
+            return;
+        }
         // Invert it
         $scope.subjects[faculty] = !$scope.subjects[faculty];
      }
+
 
     // @callee: 2nd layer of accordion (on click)
     //
     // When open -> logical true, when closed -> logical false
     $scope.courses = [];
-    $scope.renderCourses = function (subject) {
+    $scope.renderCourses = function (subject, $event) {
+        if ($event.target.className !== "ng-binding") {
+            return;
+        }
         // Invert it
         $scope.courses[subject] = !$scope.courses[subject];
     };
