@@ -14,9 +14,13 @@ winstonControllers.controller('addedCtrl', ['$scope', '$location', 'addedCourses
 
     // Event handle for clearing ALL courses
     $scope.removeAll = function() {
-        addedCourses.data = [];
-        addedCourses.courseAdded = {};
-        $scope.added = addedCourses.data;
+        while (addedCourses.data.length > 0) {
+            addedCourses.data.pop();
+        }
+
+        for (key in addedCourses.courseAdded) {
+            delete addedCourses.courseAdded[key];
+        }
     }
 
 }]);
