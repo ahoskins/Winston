@@ -83,16 +83,27 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     // Watch the searchBox every 200ms
     var filterTextTimeout;
     $scope.$watch('searchBox', function(val) {
+        // Suppress type warnings
         if (!isString(val)) {
             return;
         }
 
+        // Start a press 200ms timeout
         if (filterTextTimeout) {
             $timeout.cancel(filterTextTimeout);
         }
         filterTextTimeout = $timeout(function() {
             $scope.filterText = val.toUpperCase();
         }, 200);
+
+        // Make all ng-if's false
+        for (index in $scope.subjects) {
+            $scope.subjects[index] = 0;
+        }
+        for (index in $scope.courses) {
+            $scope.courses[index] = 0;
+        }
+
     });
 
     /*
