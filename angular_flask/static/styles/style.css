@@ -6,6 +6,10 @@ html {
 	min-height: 100%;
 }
 
+html, body {
+	background-color: #f2f2f2 !important;
+}
+
 #winstonApp {
 	display: block;
 	float: center;
@@ -52,6 +56,7 @@ Accordion
 
 #add-up {
 	font-size: 22px;
+	color: #262626;
 }
 
 .ng-binding {
@@ -91,8 +96,25 @@ Accordion
 }
 
 .panel-default > .panel-heading {
-	background-color: #CFD8DC;
+	background-color: #90CAF9;
 	outline: none;
+}
+
+.panel-group .panel {
+	border-color: black;
+	border-width: 2px;
+}
+
+div.panel-body {
+	background-color: #BBDEFB !important;
+}
+
+div.panel-collapse {
+	background-color: #BBDEFB !important;
+}
+
+div.panel-group {
+	background-color: #BBDEFB;
 }
 
 .course-description {
@@ -298,7 +320,8 @@ font-size: 14px; }
 	color: black;
 }
 
-/*Accordion*/
+
+
 
 
 
