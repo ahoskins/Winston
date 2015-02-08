@@ -116,6 +116,20 @@ winstonApp.factory('SubjectBin', ['courseFactory', '$window', function(courseFac
         invokeAPI();
     }
 
+    fact.searchById = function(id) {
+        var result = {};
+        fact.bin.forEach(function(facultyObject) {
+            facultyObject.subjects.forEach(function(subjectObject) {
+                subjectObject.courses.forEach(function(courseObject) {
+                    if (courseObject.course === id) {
+                        result = courseObject;
+                    }
+                })
+            })
+        })
+        return result;
+    }
+
 	// Expose the service
 	return fact;
 	

@@ -10,15 +10,18 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFac
     Drag and drop
     */
     $scope.onDrop = function(e) {
-        console.log(e);
         // Send a broadcast asking for the info for the id
         var courseId = e.toElement.offsetParent.id;
+        var courseObj = SubjectBin.searchById(courseId);
 
-        // Query the singleone subjectBin for that id...that is what we want
-        // Convert the constructor into a singleton which is resolved at page load
-        console.dir(SubjectBin.bin);
-
+        updateAddedCourses(courseObj);
     }
+
+    $scope.added = [];
+    var updateAddedCourses = function(courseObj) {
+        $scope.added.push(courseObj);
+    }
+
 
     /* 
     ********************
@@ -100,10 +103,10 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFac
         uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
     };
 
-    // Event hanlde for add more courses button
-    $scope.showAccordion = function () {
-        // switch to accordion view
-        $location.path('/find-courses');
-    }
+    // // Event hanlde for add more courses button
+    // $scope.showAccordion = function () {
+    //     // switch to accordion view
+    //     $location.path('/find-courses');
+    // }
 
 }]);
