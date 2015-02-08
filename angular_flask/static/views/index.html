@@ -44,7 +44,9 @@
     <div ng-view></div>
 
     <!-- Added Courses - always there -->
-    <div ng-include="'/static/views/added.html'" ng-controller="addedCtrl"></div>
+    <div ng-include="'/static/views/schedule.html'" ng-controller="scheduleCtrl"></div>
+
+    <div ng-include="'/static/views/footer.html'"></div>
 
 
     <!--************* Scripts ************* -->
@@ -79,7 +81,6 @@
     <script src="/static/scripts/vendor/bower_components/hammerjs/hammer.js"></script>
     <script src="/static/scripts/vendor/bower_components/angular-material/modules/js/toolbar/toolbar.js"></script>
     <script src="/static/scripts/vendor/bower_components/angular-material/modules/js/slider/slider.js"></script>
-    <script src="/static/scripts/vendor/bower_components/angular-aria/angular-aria.js"></script>
 
     <!-- Bootstrap Angular UI -->
     <script src="/static/scripts/vendor/ui-bootstrap-tpls-0.12.0.min.js"></script>

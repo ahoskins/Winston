@@ -8,17 +8,7 @@ html {
 
 html, body {
 	background-color: #f2f2f2 !important;
-}
-
-#winstonApp {
-	display: block;
-	float: center;
-	text-align: center;
-	padding-top: 8px;
-	font: 800 32px/30px 'Raleway', sans-serif;
-	color: #ffffff;
-	position: relative;
-	left: -140px;
+	padding: 0px !important;
 }
 
 .navbar-text {
@@ -67,6 +57,7 @@ Accordion
 
 #accordion-section {
 	padding-top: 20px;
+	padding-bottom: 20px;
 }
 
 .courses-search {
@@ -97,16 +88,19 @@ Accordion
 
 .panel-default > .panel-heading {
 	background-color: #90CAF9;
-	outline: none;
+	border-radius: 0px;
 }
 
+/*Single panel*/
 .panel-group .panel {
 	border-color: black;
 	border-width: 2px;
+	border-radius: 0px;
 }
 
 div.panel-body {
 	background-color: #BBDEFB !important;
+	border-radius: 0px;
 }
 
 div.panel-collapse {
@@ -114,7 +108,11 @@ div.panel-collapse {
 }
 
 div.panel-group {
-	background-color: #BBDEFB;
+	background-color: black;
+	z-index:1;
+	border-color: red !important;
+	border-width: 2px !important;
+	padding: 0px -1px;
 }
 
 .course-description {
@@ -137,10 +135,6 @@ Schedule
 	font: 800 25px/25px 'Raleway', sans-serif;
 	color: #ffffff;
 	padding-top: 9px;
-}
-
-#full-calendar-div {
-	padding-top: 10px;
 }
 
 #prev-caret {
@@ -177,7 +171,6 @@ Schedule
 }
 
 .section-heading {
-	border-radius: 3px;
 	padding: 10px 10px;
 	height: 60px;
 }
@@ -319,6 +312,69 @@ font-size: 14px; }
 .fc-event-inner {
 	color: black;
 }
+
+div.fc-view {
+	background-color: #D3D3D3;
+}
+
+.schedule-box {
+	/*height: 100vh;*/
+	padding: 15px 15px;
+	border-radius: 15px;
+}
+
+md-input-group, .md-input-group {
+	margin: 0px;
+	font-weight: bold;
+	font-size: 20px;
+	display: inline;
+}
+
+.search-header {
+	padding: 0px 10px;
+	height: 60px;
+}
+
+.class-search-label {
+	display: inline;
+}
+
+md-input-group input[type="text"], md-input-group label {
+	margin-top: -17px !important;
+}
+
+div.header-element {
+	height: 40px;
+	background-color: #4CAF50;
+	min-width: 100vw!important;
+	float: left !important;
+}
+
+.md-toolbar-tools {
+	border-bottom:1px solid #D3D3D3;
+	min-height: 52px !important;
+	max-height: 52px !important;
+}
+
+.go-left {
+	float: left;
+}
+
+.go-right {
+	float: right !important;
+	right: 0px;
+}
+
+.footer-bit {
+	padding-top: 5px;
+	min-height: 30px !important;
+	max-height: 30px !important;
+}
+
+
+
+
+
 
 
 

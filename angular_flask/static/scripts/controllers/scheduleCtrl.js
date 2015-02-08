@@ -41,14 +41,14 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFac
     */
 
     // Array of ready to go schedules in Full Calendar format
-    var arrayOfArrays = readyMadeSchedules.getReadyMadeSchedules();
+    // var arrayOfArrays = readyMadeSchedules.getReadyMadeSchedules();
 
-     // Schedule bounds based on length
-    $scope.scheduleLength = arrayOfArrays.length;
-    $scope.scheduleIndex = 0;
+    //  // Schedule bounds based on length
+    // $scope.scheduleLength = arrayOfArrays.length;
+    // $scope.scheduleIndex = 0;
 
-    // Put the data into the eventSources array
-    $scope.eventSources = [arrayOfArrays[$scope.scheduleIndex]];
+    // // Put the data into the eventSources array
+    // $scope.eventSources = [arrayOfArrays[$scope.scheduleIndex]];
 
     /*
     ***********************
