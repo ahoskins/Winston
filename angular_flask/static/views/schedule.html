@@ -1,5 +1,5 @@
 <div class="col-xs-6" id="schedule-section">
-    <md-content md-theme="light-blue-dark" class="schedule-box" data-drop="true" data-jqyoui-options jqyoui-droppable="{onDrop: tellMe}">
+    <md-content md-theme="light-blue-dark" class="schedule-box" data-drop="true" data-jqyoui-options jqyoui-droppable="{onDrop: 'tellMe'}">
     	<div class="section-heading">
 			<p class="text-header"> Schedules ({{ scheduleIndex + 1 }}/{{ scheduleLength }}): </p>
 
@@ -22,7 +22,7 @@
 
 		    <md-content>
 		        <md-list>
-		            <md-item ng-sortable="{ group: 'todo', animation: 150 }" ng-repeat="course in added">
+		            <md-item ng-repeat="course in added">
 <!-- 		                <md-item-content>
 		                    <div class="md-tile-content">
 		                        <span style="font-size:20px; font-weight:bold">{{ course.asString }}</span>

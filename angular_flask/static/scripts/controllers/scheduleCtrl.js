@@ -5,6 +5,7 @@ Includes Full Calendar config, prev/next buttons, and add more courses button
 */
 winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFactory', '$location', 'readyMadeSchedules', 'uiCalendarConfig', '$timeout', function($scope, $window, scheduleFactory, $location, readyMadeSchedules, uiCalendarConfig, $timeout) {
 
+
     /* 
     ********************
     Full Calendar Config
@@ -33,9 +34,12 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFac
         }
     };
 
-    $scope.onDrop = function() {
-        $window.alert("droppp da base");
+    $scope.tellMe = function(e) {
+        var id = e.toElement.offsetParent.id;
+        $window.alert(id);
     }
+
+
 
     /*
     *********************
