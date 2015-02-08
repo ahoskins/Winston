@@ -41,7 +41,8 @@
     <div ng-include="'/static/views/header.html'" ng-controller="headerCtrl"></div>
 
     <!-- Based on the $routeProvider -->
-    <div ng-view></div>
+<!--     <div ng-view></div> -->
+    <div ng-include="'/static/views/find-courses.html'" ng-controller="accordionCtrl"></div>
 
     <!-- Added Courses - always there -->
     <div ng-include="'/static/views/schedule.html'" ng-controller="scheduleCtrl"></div>
@@ -81,6 +82,8 @@
     <script src="/static/scripts/vendor/bower_components/hammerjs/hammer.js"></script>
     <script src="/static/scripts/vendor/bower_components/angular-material/modules/js/toolbar/toolbar.js"></script>
     <script src="/static/scripts/vendor/bower_components/angular-material/modules/js/slider/slider.js"></script>
+    
+    <script src="/static/scripts/vendor/bower_components/angular-dragdrop/src/angular-dragdrop.js"></script>
 
     <!-- Bootstrap Angular UI -->
     <script src="/static/scripts/vendor/ui-bootstrap-tpls-0.12.0.min.js"></script>

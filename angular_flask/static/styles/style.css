@@ -309,13 +309,13 @@ font-size: 14px; }
 }
 
 div.fc-view {
-	background-color: #D3D3D3;
+	background-color: #EFEFEF;
 }
 
 .schedule-box {
-	/*height: 100vh;*/
 	padding: 15px 15px;
 	border-radius: 15px;
+	background-color: #262626;
 }
 
 md-input-group, .md-input-group {

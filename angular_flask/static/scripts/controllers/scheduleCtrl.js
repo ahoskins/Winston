@@ -33,6 +33,10 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFac
         }
     };
 
+    $scope.onDrop = function() {
+        $window.alert("droppp da base");
+    }
+
     /*
     *********************
     Use the readyMadeSchedules service to get the schedule data
