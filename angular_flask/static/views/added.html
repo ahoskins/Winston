@@ -1,4 +1,4 @@
-<div class="col-xs-6" id="added-section">
+<div id="added-section">
     <md-content md-theme="light-blue-dark" class="section-heading">
         <p class="text-header">Added Courses:</p>  
         <md-button class="md-raised md-primary remove-icon" md-theme="red" ng-click="removeAll()">
@@ -9,15 +9,7 @@
     <md-content>
         <md-list>
             <md-item ng-repeat="course in added">
-                <md-item-content>
-                    <div class="md-tile-content">
-                        <span style="font-size:20px; font-weight:bold">{{ course.asString }}</span>
-                        <md-button class="md-raised md-primary remove-icon" md-theme="red" ng-click="removeFromSchedule(course)">
-                            <i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i> Remove
-                        </md-button>
-                    </div>
-                </md-item-content>
-                <md-divider ng-if="!$last"></md-divider>
+                {{ course.asString }}
             </md-item>
         </md-list>
     </md-content>

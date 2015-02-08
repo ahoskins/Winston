@@ -349,6 +349,7 @@ div.header-element {
 	border-bottom:1px solid #D3D3D3;
 	min-height: 52px !important;
 	max-height: 52px !important;
+	padding: 0vw 10vw;
 }
 
 .go-left {
