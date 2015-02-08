@@ -3,8 +3,22 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFactory', '$location', 'readyMadeSchedules', 'uiCalendarConfig', '$timeout', function($scope, $window, scheduleFactory, $location, readyMadeSchedules, uiCalendarConfig, $timeout) {
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFactory', '$location', 'readyMadeSchedules', 'uiCalendarConfig', '$timeout', 'SubjectBin', function($scope, $window, scheduleFactory, $location, readyMadeSchedules, uiCalendarConfig, $timeout, SubjectBin) {
 
+
+    /**
+    Drag and drop
+    */
+    $scope.onDrop = function(e) {
+        console.log(e);
+        // Send a broadcast asking for the info for the id
+        var courseId = e.toElement.offsetParent.id;
+
+        // Query the singleone subjectBin for that id...that is what we want
+        // Convert the constructor into a singleton which is resolved at page load
+        console.dir(SubjectBin.bin);
+
+    }
 
     /* 
     ********************
@@ -33,11 +47,6 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFac
             //timezoneParam: 'local'
         }
     };
-
-    $scope.tellMe = function(e) {
-        var id = e.toElement.offsetParent.id;
-        $window.alert(id);
-    }
 
 
 

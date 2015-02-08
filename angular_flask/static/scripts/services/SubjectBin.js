@@ -30,22 +30,22 @@ winstonApp.factory('SubjectBin', ['courseFactory', '$window', function(courseFac
     }
 
     // Parse each faculty on the page
-    function parsePage(pageListing, self) {
+    function parsePage(pageListing) {
         pageListing.objects.forEach(function(SFacultyGroup) {
             // Insert object into subjectBin
-            insertIntoSubjectBin(SFacultyGroup, self);
+            insertIntoSubjectBin(SFacultyGroup);
         });
     }
 
 	/*
     Insert each faculty into self.bin
     */
-    function insertIntoSubjectBin(SFacultyGroup, self) {
+    function insertIntoSubjectBin(SFacultyGroup) {
         var inserted = false;
         var SfacultyName = SFacultyGroup.faculty;
 
         // Case 1: Insert into already existing faculty
-        self.bin.forEach(function(subjectBinObject) {
+        fact.bin.forEach(function(subjectBinObject) {
             if (subjectBinObject.faculty === SfacultyName) {
 
                 // faculty object already exists
@@ -67,11 +67,11 @@ winstonApp.factory('SubjectBin', ['courseFactory', '$window', function(courseFac
 
             var newObj = new FacultyObject(SfacultyName, subjects);
 
-            self.bin.push(newObj);
+            fact.bin.push(newObj);
         }
     }
 
-    function invokeAPI(self) {
+    function invokeAPI() {
 	    /*
 	    Request /api/courses-min
 	    Asynchronously request each page
@@ -84,7 +84,7 @@ winstonApp.factory('SubjectBin', ['courseFactory', '$window', function(courseFac
 
 	            var total_pages = pageListing.total_pages;
 
-	            parsePage(pageListing, self);
+	            parsePage(pageListing);
 
 	            //Get remaining pages
 	            var page = 2;
@@ -95,7 +95,7 @@ winstonApp.factory('SubjectBin', ['courseFactory', '$window', function(courseFac
 	                    success(function (data) {
 	                        pageListing = angular.fromJson(data);
 
-	                        parsePage(pageListing, self);
+	                        parsePage(pageListing);
 
 	                    });
 	                page = page + 1;
@@ -106,23 +106,17 @@ winstonApp.factory('SubjectBin', ['courseFactory', '$window', function(courseFac
 	        });
     }
 
-    /*
-	This is the object holding the hash-table-array-big-object-thingy, aka subjectBin 
-    */
-	var SubjectBin = function() {
-		this.bin = [];
 
-		// Preserve the proper "this" for use above
-		var self = this;
+    var fact = {};
 
-		this.initialize = function() {
-			invokeAPI(self);
-		}
+    fact.bin = [];
 
-		this.initialize();
-	}
+    fact.populate = function() {
+        // Asynchroniously fetch course results and put them into fact.bin
+        invokeAPI();
+    }
 
-	// Expose the constructor
-	return SubjectBin;
+	// Expose the service
+	return fact;
 	
 }])

@@ -3,19 +3,15 @@
 
 winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'SubjectBin', '$timeout', '$location', 'addedCourses', function($scope, $window, detailFactory, SubjectBin, $timeout, $location, addedCourses) {
 
-    $scope.startedDrag = function(e) {
-        //$window.alert("started drag");
-    }
-
     /*
     ********************************************************************
     Construct a new SubjectBin factory.  The subjectBin data structure is a member.
     ********************************************************************
      */
 
-    var obj = new SubjectBin();
+    SubjectBin.populate();
 
-    $scope.subjectBin = obj.bin;
+    $scope.subjectBin = SubjectBin.bin;
 
     /*
     ******************************
