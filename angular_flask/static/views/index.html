@@ -37,30 +37,21 @@
 
     <!--************* Content ************* -->
 
-    <!-- Header - always there -->
     <div ng-include="'/static/views/header.html'" ng-controller="headerCtrl"></div>
 
     <div class="col-md-1"></div>
-    <div class="col-md-10">
-        <div class="row">
 
-            <div class="col-md-5">
-                <div ng-include="'/static/views/find-courses.html'" ng-controller="accordionCtrl"></div>
-            </div>
-            <div class="col-md-7">
-                <div class="row col-md-12">
-                    <div ng-include="'/static/views/added.html'" ng-controller="addedCtrl"></div>
-                </div>
-                <div class="row col-md-12">
-                    <div ng-include="'/static/views/schedule.html'" ng-controller="scheduleCtrl"></div>
-                </div>
-            </div>
+    <div class="col-md-5">
+        <div ng-include="'/static/views/find-courses.html'" ng-controller="accordionCtrl"></div>
+    </div>
 
-        </div>
-    <div>
+    <div class="col-md-5">
+        <div ng-include="'/static/views/added.html'" ng-controller="addedCtrl"></div>
+    </div>
+
     <div class="col-md-1"></div>
 
-    <div ng-include="'/static/views/footer.html'"></div>
+<!--     <div ng-include="'/static/views/footer.html'"></div> -->
 
 
     <!--************* Scripts ************* -->

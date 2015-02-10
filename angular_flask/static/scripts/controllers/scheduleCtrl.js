@@ -9,18 +9,18 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFac
     /**
     Drag and drop
     */
-    $scope.onDrop = function(e) {
-        // Send a broadcast asking for the info for the id
-        var courseId = e.toElement.offsetParent.id;
-        var courseObj = SubjectBin.searchById(courseId);
+    // $scope.onDrop = function(e) {
+    //     // Send a broadcast asking for the info for the id
+    //     var courseId = e.toElement.offsetParent.id;
+    //     var courseObj = SubjectBin.searchById(courseId);
 
-        updateAddedCourses(courseObj);
-    }
+    //     updateAddedCourses(courseObj);
+    // }
 
-    $scope.added = [];
-    var updateAddedCourses = function(courseObj) {
-        $scope.added.push(courseObj);
-    }
+    // $scope.added = [];
+    // var updateAddedCourses = function(courseObj) {
+    //     $scope.added.push(courseObj);
+    // }
 
 
     /* 
