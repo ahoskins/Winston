@@ -6,8 +6,6 @@ html, body {
 	font: 200 27px/45px 'Raleway', sans-serif;
 	position: relative;
 	background-color: #f2f2f2;
-	margin: 0px;
-	padding: 0px;
 }
 
 .go-left {
@@ -175,6 +173,7 @@ div.panel-collapse {
 .added-container {
 	position: fixed;
 	top: 75px;
+	width: 30vw;
 }
 
 .remove-icon {
@@ -204,11 +203,18 @@ div.panel-collapse {
 
 .md-toolbar-tools {
 	background-color: #D4CCC5;
-	opacity: 0.80;
-	/*border-bottom:1px solid #D3D3D3;*/
 	min-height: 52px !important;
 	max-height: 52px !important;
 	padding: 0vw 10vw;
+
+	position: fixed;
+	top: 0px;
+	width: 100vw;
+	z-index: 1;
+
+	-moz-box-shadow: 1px 2px 3px rgba(0,0,0,.5);
+	-webkit-box-shadow: 1px 2px 3px rgba(0,0,0,.5);
+	box-shadow: 1px 2px 3px rgba(0,0,0,.5);
 }
 
 #logo {
