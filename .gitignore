@@ -10,8 +10,8 @@ ScheduleAlgorithm.docx
 # nose-cprof output
 stats.dat
 
-# bower components
-/angular_flask/static/scripts/vendor/bower_components
+# vendor
+/public/js/lib
 
 # sphinx (docs) build folder
 _build
@@ -20,3 +20,5 @@ _build
 .coverage
 cover/*
 _site/
+
+
