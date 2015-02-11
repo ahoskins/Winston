@@ -16,6 +16,11 @@ winstonApp.filter('courseFilter', ['pmkr.filterStabilize', '$window', function(s
     //
     return stabilize(function(subjectBin, field) {
 
+        // // Ensure its a string
+        if (typeof field !== "string") {
+            return;
+        }
+
         var result = [];
 
         // Class: Subject
@@ -92,6 +97,11 @@ winstonApp.filter('courseFilter', ['pmkr.filterStabilize', '$window', function(s
             subject,
             subjectTitle;
 
+        // Motherfucking fuzzysets
+        var f = FuzzySet();
+        var s = FuzzySet();
+        var c = FuzzySet();
+
         // Iterate through subjectBin, invoking tryAddingToExistingFaculty on the courses who meet the query string requirements
         subjectBin.forEach(function (facultyObject) {
             // "Faculty of Engineering"
@@ -103,13 +113,32 @@ winstonApp.filter('courseFilter', ['pmkr.filterStabilize', '$window', function(s
 
                 // For each course, check if it should be added
                 subjectObject.courses.forEach(function (courseObject) {
-                    if (faculty.toUpperCase().indexOf(field) > -1 ||
-                        subject.toUpperCase().indexOf(field) > -1 ||
-                        courseObject.asString.toUpperCase().indexOf(field) > -1) {
+                    // if (faculty.toUpperCase().indexOf(field) > -1 ||
+                    //     subject.toUpperCase().indexOf(field) > -1 ||
+                    //     courseObject.asString.toUpperCase().indexOf(field) > -1) {
 
-                        // Add this course to the object
+                    //     // Add this course to the object
+                    //     tryAddingToExistingFaculty(courseObject, faculty, subject, subjectTitle);
+                    // }
+
+                    /*
+                    ******************
+                    FUZZZZZZZZZY SEARCH PLAYGROUND
+                    ******************
+                    */
+                    f.add(faculty);
+                    var fobj = f.get(field);
+
+                    s.add(subject);
+                    var sobj = s.get(field);
+
+                    c.add(courseObject.asString);
+                    var cobj = c.get(field);
+
+                    if ((fobj !== null && fobj[0][0] > 0.7) || (sobj !== null && sobj[0][0] > 0.7) || (cobj !== null && cobj[0][0] > 0.7)) {
                         tryAddingToExistingFaculty(courseObject, faculty, subject, subjectTitle);
                     }
+
                 });
             });
         });
