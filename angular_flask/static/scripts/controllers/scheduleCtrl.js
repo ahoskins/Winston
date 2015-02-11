@@ -3,7 +3,25 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFactory', '$location', 'readyMadeSchedules', 'uiCalendarConfig', '$timeout', function($scope, $window, scheduleFactory, $location, readyMadeSchedules, uiCalendarConfig, $timeout) {
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFactory', '$location', 'readyMadeSchedules', 'uiCalendarConfig', '$timeout', 'SubjectBin', function($scope, $window, scheduleFactory, $location, readyMadeSchedules, uiCalendarConfig, $timeout, SubjectBin) {
+
+
+    /**
+    Drag and drop
+    */
+    // $scope.onDrop = function(e) {
+    //     // Send a broadcast asking for the info for the id
+    //     var courseId = e.toElement.offsetParent.id;
+    //     var courseObj = SubjectBin.searchById(courseId);
+
+    //     updateAddedCourses(courseObj);
+    // }
+
+    // $scope.added = [];
+    // var updateAddedCourses = function(courseObj) {
+    //     $scope.added.push(courseObj);
+    // }
+
 
     /* 
     ********************
@@ -33,6 +51,8 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFac
         }
     };
 
+
+
     /*
     *********************
     Use the readyMadeSchedules service to get the schedule data
@@ -41,14 +61,14 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFac
     */
 
     // Array of ready to go schedules in Full Calendar format
-    var arrayOfArrays = readyMadeSchedules.getReadyMadeSchedules();
+    // var arrayOfArrays = readyMadeSchedules.getReadyMadeSchedules();
 
-     // Schedule bounds based on length
-    $scope.scheduleLength = arrayOfArrays.length;
-    $scope.scheduleIndex = 0;
+    //  // Schedule bounds based on length
+    // $scope.scheduleLength = arrayOfArrays.length;
+    // $scope.scheduleIndex = 0;
 
-    // Put the data into the eventSources array
-    $scope.eventSources = [arrayOfArrays[$scope.scheduleIndex]];
+    // // Put the data into the eventSources array
+    // $scope.eventSources = [arrayOfArrays[$scope.scheduleIndex]];
 
     /*
     ***********************
@@ -83,10 +103,10 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', 'scheduleFac
         uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
     };
 
-    // Event hanlde for add more courses button
-    $scope.showAccordion = function () {
-        // switch to accordion view
-        $location.path('/find-courses');
-    }
+    // // Event hanlde for add more courses button
+    // $scope.showAccordion = function () {
+    //     // switch to accordion view
+    //     $location.path('/find-courses');
+    // }
 
 }]);

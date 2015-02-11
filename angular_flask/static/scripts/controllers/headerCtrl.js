@@ -12,4 +12,6 @@ winstonControllers.controller('headerCtrl', ['$scope', '$location', function($sc
 		$location.path('/find-courses');
 	}
 
+	$scope.atTop = false;
+
 }])

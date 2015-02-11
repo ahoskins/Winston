@@ -9,9 +9,9 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     ********************************************************************
      */
 
-    var obj = new SubjectBin();
+    SubjectBin.populate();
 
-    $scope.subjectBin = obj.bin;
+    $scope.subjectBin = SubjectBin.bin;
 
     /*
     ******************************

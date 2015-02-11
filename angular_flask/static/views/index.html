@@ -37,14 +37,23 @@
 
     <!--************* Content ************* -->
 
-    <!-- Header - always there -->
     <div ng-include="'/static/views/header.html'" ng-controller="headerCtrl"></div>
 
-    <!-- Based on the $routeProvider -->
-    <div ng-view></div>
+    <div class="col-md-1"></div>
 
-    <!-- Added Courses - always there -->
-    <div ng-include="'/static/views/added.html'" ng-controller="addedCtrl"></div>
+    <div class="col-md-5">
+        <div ng-include="'/static/views/find-courses.html'" ng-controller="accordionCtrl"></div>
+    </div>
+
+    <div class="col-md-1"></div>
+
+    <div class="col-md-4">
+        <div ng-include="'/static/views/added.html'" ng-controller="addedCtrl"></div>
+    </div>
+
+    <div class="col-md-1"></div>
+
+<!--     <div ng-include="'/static/views/footer.html'"></div> -->
 
 
     <!--************* Scripts ************* -->
@@ -79,7 +88,8 @@
     <script src="/static/scripts/vendor/bower_components/hammerjs/hammer.js"></script>
     <script src="/static/scripts/vendor/bower_components/angular-material/modules/js/toolbar/toolbar.js"></script>
     <script src="/static/scripts/vendor/bower_components/angular-material/modules/js/slider/slider.js"></script>
-    <script src="/static/scripts/vendor/bower_components/angular-aria/angular-aria.js"></script>
+    
+    <script src="/static/scripts/vendor/bower_components/angular-dragdrop/src/angular-dragdrop.js"></script>
 
     <script src="/static/scripts/vendor/fuzzyset.js"></script>
 

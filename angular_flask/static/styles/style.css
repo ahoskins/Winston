@@ -1,132 +1,40 @@
-html {
-	margin-left: 10px;
-	margin-right: 10px;
-	font: 200 27px/45px 'Raleway', sans-serif;
-	position: relative;
-	min-height: 100%;
-}
+/************************
+        Utility
+************************/
 
 html, body {
-	background-color: #f2f2f2 !important;
-}
-
-#winstonApp {
-	display: block;
-	float: center;
-	text-align: center;
-	padding-top: 8px;
-	font: 800 32px/30px 'Raleway', sans-serif;
-	color: #ffffff;
+	font: 200 27px/45px 'Raleway', sans-serif;
 	position: relative;
-	left: -140px;
+	background-color: #f2f2f2;
 }
 
-.navbar-text {
-	padding-top: 0px;
+.go-left {
+	float: left !important;
 }
 
-.navbar-brand {
-	color: #ffffff;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
+.go-right {
+	float: right !important;
 }
 
-/**/
-
-.navbar-header {
-    float: left;
-    padding: 2px;
-    text-align: center;
-    width: 100%;
-}
-.navbar-brand {
-	float:none;
+.section-container {
+	padding: 15px 15px;
+	border-radius: 15px;
+	background-color: #323232;
 }
 
-/*
-Accordion
-*/
-
-.add-button {
-	position: relative;
-	top: -18px;
-	float: right;
+.nav, .pagination, .carousel, .panel-title, a { 
+	cursor: pointer; 
 }
 
-#add-up {
-	font-size: 22px;
-	color: #262626;
+.section-heading {
+	padding: 10px 10px;
+	height: 60px;
 }
 
 .ng-binding {
 	display: block;
 	padding: 10px 15px;
     margin: -10px -15px;
-}
-
-#accordion-section {
-	padding-top: 20px;
-}
-
-.courses-search {
-	padding-top: 4px;
-	font-size: 18px;
-	width: 50%;
-	font-weight: bold;
-}
-
-.generate-schedules-button {
-	border-radius: 3px;
-	padding: 5px 5px;
-	position: absolute;
-	top: 9px;
-	right: 13px;
-	color: #ffffff;
-	height: 40px;
-
-}
-
-#generate-schedules-button {
-	background-color: #00aeca;
-}
-
-.accordion-body {
-	padding-top: 10px;
-}
-
-.panel-default > .panel-heading {
-	background-color: #90CAF9;
-	outline: none;
-}
-
-.panel-group .panel {
-	border-color: black;
-	border-width: 2px;
-}
-
-div.panel-body {
-	background-color: #BBDEFB !important;
-}
-
-div.panel-collapse {
-	background-color: #BBDEFB !important;
-}
-
-div.panel-group {
-	background-color: #BBDEFB;
-}
-
-.course-description {
-	font-weight: bold;
-}
-
-/*
-Schedule
-*/
-
-#schedule-section {
-	padding-top: 20px;
 }
 
 .text-header {
@@ -139,11 +47,33 @@ Schedule
 	padding-top: 9px;
 }
 
-#full-calendar-div {
-	padding-top: 10px;
+
+/************************
+         Schedule
+*************************/
+
+div.fc-view {
+	background-color: #EFEFEF;
 }
 
-#prev-caret {
+.fc-event-title {
+	font-weight: bold;
+}
+
+.fc-event-time {
+	font-weight: bold;
+}
+
+.fc-event-inner {
+	color: black;
+}
+
+.fc-view-agendaWeek .fc-today {
+     color: #ffffff;
+     background: #ffffff;
+ }
+
+ #prev-caret {
 	color: #ffffff;
 	font-size: 50px;
 	position: absolute;
@@ -159,16 +89,6 @@ Schedule
 	left: 40px;
 }
 
-#prev-caret:focus, #next-caret:focus, .accordion-body:focus {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    outline-style:none;/*IE*/
-}
-
 .add-courses-button {
 	height: 40px;
 	position: absolute;
@@ -176,42 +96,84 @@ Schedule
 	right: 13px;
 }
 
-.section-heading {
-	border-radius: 3px;
-	padding: 10px 10px;
-	height: 60px;
+/************************
+        Accordion
+*************************/
+
+.accordion-container {
+	margin-top: 75px;
+	margin-bottom: 20px;
+
 }
 
-.section-heading-big {
-	border-radius: 3px;
-	padding: 10px 10px;
-	/*height: 60px;*/
+md-input-group, .md-input-group {
+	margin: 0px;
+	font-weight: bold;
+	font-size: 20px;
+	display: inline;
 }
 
- .fc-view-agendaWeek .fc-today {
-     color: #ffffff;
-     background: #ffffff;
-  }
-
-  #show-accordion {
-  	background-color: #00aeca;
-  }
-
-/*
-List of added
-*/
-
-#added-section {
-	padding-top: 20px;
+md-input-group input[type="text"], md-input-group label {
+	margin-top: -17px !important;
 }
 
-#added-header {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-	font: 800 15px/30px 'Raleway', sans-serif;
-	text-decoration: underline;
+.add-button {
+	position: relative;
+	top: -18px;
+	float: right;
+}
+
+#add-up {
+	font-size: 22px;
+	color: #262626;
+}
+
+.panel-default > .panel-heading {
+	background-color: #90CAF9;
+	border-radius: 0px;
+}
+
+/*Single panel*/
+.panel-group .panel {
+	border-color: black;
+	border-width: 2px;
+	border-radius: 0px;
+}
+
+div.panel-body {
+	background-color: #BBDEFB !important;
+	border-radius: 0px;
+	min-width: 100%;
+}
+
+div.panel-collapse {
+	background-color: #BBDEFB !important;
+}
+
+.course-description {
+	font-weight: bold;
+	min-width: 100%;
+	margin: 0px !important;
+}
+
+
+/***********************
+      Added List
+************************/
+
+.added-list {
+	background-color: #efefef;
+}
+
+.added-box {
+	padding: 15px 15px;
+	border-radius: 15px;
+}
+
+.added-container {
+	position: fixed;
+	top: 75px;
+	width: 30vw;
 }
 
 .remove-icon {
@@ -224,59 +186,41 @@ List of added
 	font-size: 15px;
 }
 
-/*
-Misc
-*/
-
-/*Something Angular UI requires to make work*/
-.nav, .pagination, .carousel, .panel-title, a { 
-	cursor: pointer; 
-}
-
-.navbar-default {
-    background-color: #25343A;
-    border-color: #E7E7E7;
-}
-
-#slogen {
-	display: inline-block;
-	float: left;
+.generate-schedules-button {
+	border-radius: 3px;
+	padding: 5px 5px;
+	position: absolute;
+	top: 9px;
+	right: 13px;
 	color: #ffffff;
-	margin: 20px 5px;
+	height: 40px;
 }
 
-#mail {
-	display: inline-block;
-	float: right;
-	width: 100px;
-	color: #ffffff;
+
+/************************
+          Header
+*************************/
+
+.md-toolbar-tools {
+	background-color: #D4CCC5;
+	min-height: 52px !important;
+	max-height: 52px !important;
+	padding: 0vw 10vw;
+
+	position: fixed;
+	top: 0px;
+	width: 100vw;
+	z-index: 1;
+
+	-moz-box-shadow: 1px 2px 3px rgba(0,0,0,.5);
+	-webkit-box-shadow: 1px 2px 3px rgba(0,0,0,.5);
+	box-shadow: 1px 2px 3px rgba(0,0,0,.5);
 }
 
-.mail {
-	float: right;
+#logo {
+	padding-top: 13px;
+	padding-left: 15px;
 }
-
-.buttondemoBasicUsage section {
-background: #f7f7f7;
-border-radius: 3px;
-text-align: center;
-margin: 1em;
-position: relative !important;
-padding-bottom: 10px; }
-.buttondemoBasicUsage md-content {
-margin-right: 7px; }
-.buttondemoBasicUsage section .md-button:not(.md-fab) {
-min-width: 10em; }
-.buttondemoBasicUsage section .md-button {
-display: block;
-margin: 1em;
-line-height: 25px; }
-.buttondemoBasicUsage .label {
-position: absolute;
-bottom: 5px;
-left: 7px;
-color: #ccc;
-font-size: 14px; }
 
 .title {
 	color: #000000;
@@ -294,31 +238,29 @@ font-size: 14px; }
 	font-weight: bold;
 }
 
-#logo {
-	padding-top: 13px;
-	padding-left: 15px;
+.header {
+	position: fixed;
+	top: 0px;
+	width: 100vw;
+	z-index: 1;
 }
 
-#grey {
-	color: #3f3f3f;
-}
+/************************
+          Footer
+*************************/
 
-#black {
-	color: #151515;
-}
-
-.fc-event-title {
-	font-weight: bold;
-}
-
-.fc-event-time {
-	font-weight: bold;
+.footer-bit {
+	padding-top: 5px;
+	min-height: 30px !important;
+	max-height: 30px !important;
 }
 
 
-.fc-event-inner {
-	color: black;
-}
+
+
+
+
+
 
 
 

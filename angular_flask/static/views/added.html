@@ -1,24 +1,21 @@
-<div class="col-xs-6" id="added-section">
-    <md-content md-theme="light-blue-dark" class="section-heading">
-        <p class="text-header">Added Courses:</p>  
-        <md-button class="md-raised md-primary remove-icon" md-theme="red" ng-click="removeAll()">
-            <i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i> Remove All 
-        </md-button>
-    </md-content>
+<div class="section-container added-container">
+    <md-content md-theme="light-blue-dark" class="added-box" data-drop="true" data-jqyoui-options jqyoui-droppable="{onDrop: 'onDrop'}">
+        <md-content md-theme="light-blue-dark" class="section-heading">
+            <p class="text-header">Added Courses:</p>  
+<!--             <md-button class="md-raised md-primary remove-icon" md-theme="red" ng-click="removeAll()">
+                <i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i> Remove All 
+            </md-button> -->
+            <md-button class="md-raised md-primary generate-schedules-button" id="generate-schedules-button" ng-click="promptSchedules()">
+                Generate Schedules
+            </md-button>
+        </md-content>
 
-    <md-content>
-        <md-list>
-            <md-item ng-repeat="course in added">
-                <md-item-content>
-                    <div class="md-tile-content">
-                        <span style="font-size:20px; font-weight:bold">{{ course.asString }}</span>
-                        <md-button class="md-raised md-primary remove-icon" md-theme="red" ng-click="removeFromSchedule(course)">
-                            <i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i> Remove
-                        </md-button>
-                    </div>
-                </md-item-content>
-                <md-divider ng-if="!$last"></md-divider>
-            </md-item>
-        </md-list>
+        <div class="added-list">
+            <md-list>
+                <md-item ng-repeat="course in added">
+                    {{ course.asString }}
+                </md-item>
+            </md-list>
+        </div>
     </md-content>
 </div>
