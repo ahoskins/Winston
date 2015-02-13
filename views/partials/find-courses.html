@@ -1,0 +1,30 @@
+<div class="section-container accordion-container" ng-controller="accordionCtrl">
+    <div class="search-header">
+        <md-text-float label="search:" data-ng-model="searchBox"></md-text-float>
+
+    </div>
+
+    <accordion close-others="false">
+        <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty, $event)" data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" no-bubble>
+            <accordion close-others="false">
+                <accordion-group class="subject-accordion" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject, $event)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" no-bubble>
+                    <accordion close-others="false">
+                        <accordion-group class="course-accordion" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="{revert: 'invalid'}" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" no-bubble>
+                            <accordion-heading>
+                                {{ singleCourse.asString }} 
+                                <a class="add-button" no-bubble><i class="fa fa-plus" id="add-up" ng-show="!added[singleCourse.asString]" ng-click="addToSchedule(singleCourse)"></i></a>
+                            </accordion-heading>
+                            <div class="course-description">
+                                {{ description[singleCourse.course] }}
+                            </div>
+                        </accordion-group>
+                    </accordion>
+                </accordion-group>
+            </accordion>
+        </accordion-group>
+    </accordion>
+</div>
+
+
+
+
