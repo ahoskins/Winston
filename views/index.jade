@@ -4,17 +4,14 @@ block body
 
   include partials/header.html
 
-  div(class='col-md-1')
+  div(class='container')
+    div(class='row')
 
-  div(class='col-md-5')
-    include partials/find-courses.html
+      div(class='col-sm-7')
+        include partials/find-courses.html
 
-  div(class='col-md-1')
-
-  div(class='col-md-4')
-    include partials/added.html
-
-  div(class='col-md-1')
+      div(class='col-sm-5')
+        include partials/added.html
 
 
   script(src='js/lib/vendor/bower_components/jquery/dist/jquery.min.js')
@@ -36,7 +33,7 @@ block body
   script(src='js/lib/vendor/bower_components/hammerjs/hammer.js')
   script(src='js/lib/vendor/fuzzyset.js')
   script(src='js/lib/vendor/ui-bootstrap-tpls-0.12.0.min.js')
-  script(src='js/lib/vendor/bower_components/bootstrap/dist/js/bootstrap.js')  
+  script(src='js/lib/vendor/bower_components/bootstrap/dist/js/bootstrap.js')   
   script(src='js/lib/vendor/bower_components/bootstrap-material-design/dist/js/material.js')
   script(src='js/lib/vendor/bower_components/bootstrap-material-design/dist/js/ripples.js')
 
