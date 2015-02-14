@@ -1,24 +1,13 @@
-*.pyc
-venv
-*~
 .DS_Store
 ignore
 *.swp
-ScheduleAlgorithm.docx
 .idea
 
-# nose-cprof output
-stats.dat
-
-# vendor
+# front-end
 /public/js/lib
 
-# sphinx (docs) build folder
-_build
+# middleware/node
+/node_modules
 
-# nose coverage output
-.coverage
-cover/*
-_site/
 
 

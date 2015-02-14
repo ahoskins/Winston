@@ -10,7 +10,8 @@
     "angular-route": "latest",
     "angular-aria": "latest",
     "hammerjs": "latest", 
-    "angular-dragdrop": "latest"
+    "angular-dragdrop": "latest",
+    "bootstrap-material-design": "latest"
   },
   "resolutions": {
     "jquery": "~2.1",

@@ -9,10 +9,10 @@ var express = require('express'),
   errorHandler = require('errorhandler'),
   morgan = require('morgan'),
   routes = require('./routes'),
-  api = require('./routes/api'),
   http = require('http'),
   path = require('path');
 
+// module.exports is what other files get if they require() this...so all of 'app' is exposed
 var app = module.exports = express();
 
 
@@ -49,12 +49,8 @@ if (env === 'production') {
  * Routes
  */
 
-// serve index and view partials
+// serve index
 app.get('/', routes.index);
-app.get('/partials/:name', routes.partials);
-
-// JSON API
-app.get('/api/name', api.name);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);

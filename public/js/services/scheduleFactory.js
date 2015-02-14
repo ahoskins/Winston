@@ -17,7 +17,8 @@ winstonApp.factory('scheduleFactory', function ($window, $http, $q) {
         requestParams["term"] = "1490";
         requestParams["courses"] = courseIds;
 
-        return( $http({method: 'GET', url: '/api/generate-schedules?q=' + angular.toJson(requestParams) }) );
+        // return( $http({method: 'GET', url: 'https://classtime-alpha-000.herokuapp.com/api/generate-schedules?q=' + angular.toJson(requestParams) }) );
+        return ( $http.jsonp('https://classtime-alpha-000.herokuapp.com/api/generate-schedules?q=' + angular.toJson(requestParams)), method: 'GET' );
 
     };
 

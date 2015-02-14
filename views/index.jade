@@ -2,17 +2,17 @@ extends layout
 
 block body
 
-  include header.html
+  include partials/header.html
 
   div(class='col-md-1')
 
   div(class='col-md-5')
-    include find-courses.html
+    include partials/find-courses.html
 
   div(class='col-md-1')
 
   div(class='col-md-4')
-    include added.html
+    include partials/added.html
 
   div(class='col-md-1')
 
@@ -21,20 +21,25 @@ block body
   script(src='js/lib/vendor/bower_components/jquery-ui/ui/jquery-ui.js')
   script(src='js/lib/vendor/bower_components/angular/angular.js')
   script(src='js/lib/vendor/bower_components/angular-route/angular-route.js')
+  script(src='js/lib/vendor/bower_components/angular-animate/angular-animate.js')
+  script(src='js/lib/vendor/bower_components/angular-material/angular-material.js')
+  script(src='js/lib/vendor/bower_components/angular-dragdrop/src/angular-dragdrop.js')
+  script(src='js/lib/vendor/bower_components/angular-aria/angular-aria.js')
+  script(src='js/lib/vendor/bower_components/angular-material/modules/js/toolbar/toolbar.js')
+  script(src='js/lib/vendor/bower_components/angular-material/modules/js/slider/slider.js')
+
   script(src='js/lib/vendor/bower_components/angular-ui-calendar/src/calendar.js')
   script(src='js/lib/vendor/bower_components/fullcalendar/fullcalendar.min.js')
   script(src='js/lib/vendor/bower_components/fullcalendar/gcal.js')
-  script(src='js/lib/vendor/bower_components/angular-animate/angular-animate.js')
   script(src='js/lib/vendor/memoize.js')
   script(src='js/lib/vendor/filterStabilize.js')
-  script(src='js/lib/vendor/bower_components/angular-material/angular-material.js')
-  script(src='js/lib/vendor/bower_components/angular-aria/angular-aria.js')
   script(src='js/lib/vendor/bower_components/hammerjs/hammer.js')
-  script(src='js/lib/vendor/bower_components/angular-material/modules/js/toolbar/toolbar.js')
-  script(src='js/lib/vendor/bower_components/angular-material/modules/js/slider/slider.js')
-  script(src='js/lib/vendor/bower_components/angular-dragdrop/src/angular-dragdrop.js')
   script(src='js/lib/vendor/fuzzyset.js')
   script(src='js/lib/vendor/ui-bootstrap-tpls-0.12.0.min.js')
+  script(src='js/lib/vendor/bower_components/bootstrap/dist/js/bootstrap.js')  
+  script(src='js/lib/vendor/bower_components/bootstrap-material-design/dist/js/material.js')
+  script(src='js/lib/vendor/bower_components/bootstrap-material-design/dist/js/ripples.js')
+
   script(src='js/app.js')
   script(src='js/services/courseFactory.js')
   script(src='js/services/detailFactory.js')
