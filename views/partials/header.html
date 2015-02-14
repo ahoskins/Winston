@@ -13,21 +13,16 @@
   <span><a href="https://github.com/rosshamish/classtime" target="_blank"> <i class="fa fa-github" style="font-size:30px; color:#000000"></i></a></span> 
 </div> -->
 
-<div class="navbar navbar-default">
+<div class="navbar navbar-default" ng-controller="headerCtrl">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".modal">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" ng-click="open()">
         <span>Added<i class="caret"></i></span>
     </button>
-<!--     <button type="button" class="navbar-toggle compressed-added" data-toggle="collapse">
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button> -->
     <a class="navbar-brand" href="javascript:void(0)">Winston: A UAlberta Schedule Builder</a>
   </div>
   <div class="navbar-collapse collapse navbar-responsive-collapse">
@@ -38,24 +33,22 @@
     </ul>
   </div>
 
-<div class="modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">Modal title</h4>
-            </div>
-            <div class="modal-body">
-                <p>One fine body…</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+  <script type="text/ng-template" id="addedModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">I'm a modal!</h3>
         </div>
-    </div>
-</div>
-
+        <div class="modal-body">
+            <ul>
+                <li ng-repeat="course in added">
+                    <span>{{ item }}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
 </div>
 
 

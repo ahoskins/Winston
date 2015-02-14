@@ -9,6 +9,10 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     ********************************************************************
      */
 
+     $scope.dooo = function() {
+        $window.alert("hii");
+     }
+
     SubjectBin.populate();
 
     $scope.subjectBin = SubjectBin.bin;
