@@ -2,7 +2,7 @@
 The only purpose of this controller is to route the about button
 */
 
-winstonControllers.controller('headerCtrl', ['$scope', '$location', '$modal', 'SubjectBin', function($scope, $location, $modal, SubjectBin) {
+winstonControllers.controller('headerCtrl', ['$scope', '$location', '$modal', 'SubjectBin', '$window', function($scope, $location, $modal, SubjectBin, $window) {
 
 	// $scope.showAbout = function() {
 	// 	$location.path('/about');
@@ -13,7 +13,6 @@ winstonControllers.controller('headerCtrl', ['$scope', '$location', '$modal', 'S
 	// }
 
 	// $scope.atTop = false;
-
 	SubjectBin.populate();
 
   $scope.open = function () {

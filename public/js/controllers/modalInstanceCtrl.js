@@ -1,4 +1,9 @@
-winstonControllers.controller('modalInstanceCtrl', ['$scope', '$modalInstance', 'addedCourses', function($scope, $modalInstance, addedCourses){
+winstonControllers.controller('modalInstanceCtrl', ['$scope', '$modalInstance', 'addedCourses', '$window', function($scope, $modalInstance, addedCourses, $window){
+	
+	$scope.added = addedCourses.data;
+
+	$window.alert($scope.added.length);
+
 	$scope.cancel = function() {
 		$modalInstance.dismiss()
 	}
@@ -6,7 +11,5 @@ winstonControllers.controller('modalInstanceCtrl', ['$scope', '$modalInstance', 
 	$scope.ok = function() {
 		$modalInstance.dismiss()
 	}
-
-	$scope.added = addedCourses.data;
 
 }]);

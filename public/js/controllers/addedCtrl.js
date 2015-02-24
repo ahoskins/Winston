@@ -1,4 +1,4 @@
-winstonControllers.controller('addedCtrl', ['$scope', '$location', 'addedCourses', 'SubjectBin', function($scope, $location, addedCourses, SubjectBin){
+winstonControllers.controller('addedCtrl', ['$scope', '$location', 'addedCourses', 'SubjectBin', '$window', function($scope, $location, addedCourses, SubjectBin, $window){
     
     // Mirror the addedCourses service
     $scope.added = addedCourses.data;
@@ -22,18 +22,4 @@ winstonControllers.controller('addedCtrl', ['$scope', '$location', 'addedCourses
     //         delete addedCourses.courseAdded[key];
     //     }
     // }
-
-    $scope.onDrop = function(e) {
-        // Send a broadcast asking for the info for the id
-        var courseId = e.toElement.offsetParent.id;
-        var courseObj = SubjectBin.searchById(courseId);
-
-        updateAddedCourses(courseObj);
-    }
-
-    $scope.added = [];
-    var updateAddedCourses = function(courseObj) {
-        $scope.added.push(courseObj);
-    }
-
 }]);
