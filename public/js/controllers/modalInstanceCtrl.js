@@ -8,4 +8,5 @@ winstonControllers.controller('modalInstanceCtrl', ['$scope', '$modalInstance', 
 	}
 
 	$scope.added = addedCourses.data;
+
 }]);

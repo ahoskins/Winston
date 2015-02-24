@@ -3,7 +3,6 @@
 ************************/
 
 html, body {
-	font: 200 27px/45px 'Raleway', sans-serif;
 	position: relative;
 	background-color: #f2f2f2;
 }
@@ -19,7 +18,8 @@ html, body {
 .section-container {
 	padding: 15px 15px;
 	border-radius: 15px;
-	background-color: #323232;
+/*	background-color: #323232;*/
+	background-color: white;
 }
 
 .nav, .pagination, .carousel, .panel-title, a { 
@@ -105,16 +105,10 @@ div.fc-view {
 	margin-bottom: 20px;
 }
 
-md-input-group, .md-input-group {
-	margin: 0px;
-	font-weight: bold;
-	font-size: 20px;
-	display: inline;
+.search-header {
+
 }
 
-md-input-group input[type="text"], md-input-group label {
-	margin-top: -17px !important;
-}
 
 .add-button {
 	position: relative;
@@ -150,6 +144,7 @@ div.panel-collapse {
 }
 
 .course-description {
+	font-size: 16px;
 	font-weight: bold;
 	min-width: 100%;
 	margin: 0px !important;
@@ -171,17 +166,12 @@ div.panel-collapse {
 
 @media (max-width: 768px) {
 	.added-container {
-		position: static !important;
-	}
-	.navbar-collapse.collapse.navbar-added-collapse {
-		display: inline;
+		display: none !important;
 	}
 }
 
 @media (min-width: 768px) {
-	.navbar-collapse.collapse.navbar-added-collapse {
-		display: none !important;
-	}
+
 }
 
 .added-container {
@@ -189,7 +179,6 @@ div.panel-collapse {
 	top: 100px;
 	width: 32vw;
 }
-
 
 .remove-icon {
 	border-radius: 3px;

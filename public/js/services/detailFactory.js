@@ -15,7 +15,7 @@ winstonApp.factory('detailFactory', function ($window, $http, $q) {
         // Pad course number to 6 characters
         var paddedNum = pad(num, 6);
 
-        return( $http({method: 'GET', url: 'https://classtime-alpha-000.herokuapp.com/api/courses/' + paddedNum}) );
+        return( $http({method: 'GET', url: 'https://classtime.herokuapp.com/api/courses/' + paddedNum}) );
     };
 
     return factory;

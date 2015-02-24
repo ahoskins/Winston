@@ -1,7 +1,9 @@
 <div class="section-container accordion-container" ng-controller="accordionCtrl">
-    <div class="search-header">
-        <md-text-float label="search:" data-ng-model="searchBox"></md-text-float>
-    </div>
+
+<!--     <div class="form-group">
+        <input class="form-control" id="focusedInput" type="text" data-ng-model="searchBox" placeholder="Search for courses...">
+    </div> -->
+    <input type="text" ng-model="searchBox"></input>
 
     <accordion close-others="false">
         <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty, $event)" data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" no-bubble>
@@ -22,6 +24,7 @@
             </accordion>
         </accordion-group>
     </accordion>
+    
 </div>
 
 

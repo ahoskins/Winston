@@ -2,19 +2,12 @@
 //
 
 winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'SubjectBin', '$timeout', '$location', 'addedCourses', function($scope, $window, detailFactory, SubjectBin, $timeout, $location, addedCourses) {
-
+    $.material.init();
     /*
     ********************************************************************
     Construct a new SubjectBin factory.  The subjectBin data structure is a member.
     ********************************************************************
      */
-
-     $scope.dooo = function() {
-        $window.alert("hii");
-     }
-
-    SubjectBin.populate();
-
     $scope.subjectBin = SubjectBin.bin;
 
     /*
@@ -92,13 +85,15 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
             return;
         }
 
-        // Start a press 200ms timeout
-        if (filterTextTimeout) {
-            $timeout.cancel(filterTextTimeout);
-        }
-        filterTextTimeout = $timeout(function() {
-            $scope.filterText = val.toUpperCase();
-        }, 200);
+        $scope.filterText = val.toUpperCase();
+
+        // // Start a press 200ms timeout
+        // if (filterTextTimeout) {
+        //     $timeout.cancel(filterTextTimeout);
+        // }
+        // filterTextTimeout = $timeout(function() {
+        //     $scope.filterText = val.toUpperCase();
+        // }, 200);
 
         // Make all ng-if's false
         for (index in $scope.subjects) {

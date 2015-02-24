@@ -21,9 +21,9 @@
       <span class="icon-bar"></span>
     </button>
     <button type="button" class="navbar-toggle" data-toggle="collapse" ng-click="open()">
-        <span>Added<i class="caret"></i></span>
+      <span>Added<i class="caret"></i></span>
     </button>
-    <a class="navbar-brand" href="javascript:void(0)">Winston: A UAlberta Schedule Builder</a>
+    <a class="navbar-brand" href="javascript:void(0)">Winston</a>
   </div>
   <div class="navbar-collapse collapse navbar-responsive-collapse">
     <ul class="nav navbar-nav navbar-right">
@@ -34,21 +34,21 @@
   </div>
 
   <script type="text/ng-template" id="addedModal.html">
-        <div class="modal-header">
-            <h3 class="modal-title">I'm a modal!</h3>
-        </div>
-        <div class="modal-body">
-            <ul>
-                <li ng-repeat="course in added">
-                    <span>{{ item }}</span>
-                </li>
-            </ul>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-        </div>
-    </script>
+    <div class="modal-header">
+      <h3 class="modal-title">I'm a modal!</h3>
+    </div>
+    <div class="modal-body">
+      <ul>
+        <li ng-repeat="course in added">
+          <span>{{ item }}</span>
+        </li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="ok()">OK</button>
+      <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+  </script>
 </div>
 
 
