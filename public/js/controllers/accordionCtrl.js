@@ -2,7 +2,6 @@
 //
 
 winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'SubjectBin', '$timeout', '$location', 'addedCourses', function($scope, $window, detailFactory, SubjectBin, $timeout, $location, addedCourses) {
-    $.material.init();
     /*
     ********************************************************************
     Construct a new SubjectBin factory.  The subjectBin data structure is a member.

@@ -2,8 +2,6 @@ winstonControllers.controller('modalInstanceCtrl', ['$scope', '$modalInstance', 
 	
 	$scope.added = addedCourses.data;
 
-	$window.alert($scope.added.length);
-
 	$scope.cancel = function() {
 		$modalInstance.dismiss()
 	}

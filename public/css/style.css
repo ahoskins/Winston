@@ -4,7 +4,7 @@
 
 html, body {
 	position: relative;
-	background-color: #f2f2f2;
+	background-color: #B2DFDB;
 }
 
 .go-left {
@@ -16,19 +16,22 @@ html, body {
 }
 
 .section-container {
-	padding: 15px 15px;
-	border-radius: 15px;
-/*	background-color: #323232;*/
-	background-color: white;
+	border-radius: 15px !important;
+	background-color: #f2f2f2;
+	margin-top: 100px;
+	margin-bottom: 20px;
 }
 
 .nav, .pagination, .carousel, .panel-title, a { 
 	cursor: pointer; 
 }
 
-.section-heading {
-	padding: 10px 10px;
+.section-header {
+	border-radius: 15px 15px 0px 0px;
+	padding: 0px 10px;
 	height: 60px;
+	line-height: 60px;
+	background-color: #D3D3D3;
 }
 
 .ng-binding {
@@ -37,14 +40,20 @@ html, body {
     margin: -10px -15px;
 }
 
-.text-header {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
+.section-text {
+	padding-left: 10px;
+	font-style: italic;
+	font-weight: lighter;
+	display: inline;
 	text-align: center;
-	font: 800 25px/25px 'Raleway', sans-serif;
-	color: #000;
-	padding-top: 9px;
+}
+
+.big-size {
+	font-size: 20px;
+}
+
+.regular-size {
+	font-size: 16px;
 }
 
 
@@ -101,12 +110,22 @@ div.fc-view {
 *************************/
 
 .accordion-container {
-	margin-top: 100px;
-	margin-bottom: 20px;
+	padding: 15px;
 }
 
-.search-header {
+button.dropdown-toggle {
+	font-size: 18px;
+	font-style: italic;
+}
 
+span.dropdown-toggle {
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #000000;
+}
+
+.course-search {
+	padding-left: 10px;
 }
 
 
@@ -176,8 +195,8 @@ div.panel-collapse {
 
 .added-container {
 	position: fixed;
-	top: 100px;
 	width: 32vw;
+	min-height: 200px;
 }
 
 .remove-icon {
@@ -198,6 +217,14 @@ div.panel-collapse {
 	right: 13px;
 	color: #ffffff;
 	height: 40px;
+}
+
+/*************************
+           Modal
+**************************/
+
+div.modal-content {
+	border-radius: 15px;
 }
 
 /************************
@@ -241,7 +268,7 @@ div.panel-collapse {
 	font-weight: bold;
 }*/
 
-.navbar {
+.navbar.navbar-default {
 	position: fixed !important;
 	top: 0px;
 	width: 100vw;
@@ -257,7 +284,6 @@ div.panel-collapse {
 	min-height: 30px !important;
 	max-height: 30px !important;
 }
-
 
 
 
