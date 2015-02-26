@@ -12,10 +12,12 @@
     </md-button> -->
 
     <div class="added-list">
-        <ul>
-            <li ng-repeat="course in added">
-                {{ course.asString }}
-            </li>
-        </ul>
+        <span class="list-group-item" ng-repeat="course in added">
+            {{ course.asString }}
+        </span>
+    </div>
+
+    <div class="bottom-container">
+        <button class="btn btn-default go-right">View Schedules</button>
     </div>
 </div>

@@ -2,16 +2,10 @@
   "name": "classtime",
   "dependencies": {
     "angular-ui-calendar": "latest",
-    "angular-foundation": "0.4.0",
-    "angular-scroll": "latest",
-    "angular-animate": "latest",
     "bootstrap": "latest",
-    "angular-material": "latest",
     "angular-route": "latest",
     "angular-aria": "latest",
-    "hammerjs": "latest", 
-    "angular-dragdrop": "latest",
-    "bootstrap-material-design": "latest"
+    "normalize.css": "~3.0.2"
   },
   "resolutions": {
     "jquery": "~2.1",

@@ -37,7 +37,6 @@ html, body {
 .ng-binding {
 	display: block;
 	padding: 10px 15px;
-    margin: -10px -15px;
 }
 
 .section-text {
@@ -46,6 +45,13 @@ html, body {
 	font-weight: lighter;
 	display: inline;
 	text-align: center;
+}
+
+.bottom-container {
+	position: absolute;
+	bottom: 0px;
+	padding: 10px 10px;
+	width: 100%;
 }
 
 .big-size {
@@ -116,6 +122,8 @@ div.fc-view {
 button.dropdown-toggle {
 	font-size: 18px;
 	font-style: italic;
+	display: inline-block;
+	margin-top: 0px;
 }
 
 span.dropdown-toggle {
@@ -124,10 +132,21 @@ span.dropdown-toggle {
     border-top: 5px solid #000000;
 }
 
-.course-search {
-	padding-left: 10px;
+div.dropdown {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
 }
 
+div.course-search {
+	padding-top: 10px;
+	padding-left: 14px;
+	width: 100%;
+}
+
+input.course-search {
+	padding-left: 5px;
+}
 
 .add-button {
 	position: relative;
@@ -176,10 +195,17 @@ div.panel-collapse {
 
 .added-list {
 	background-color: #efefef;
+	left: 0px;
+	padding-left: 0px;
+}
+
+li.list-group-item {
+	padding-left: 0px !important;
+	left: 0px !important;
 }
 
 .added-box {
-	padding: 15px 15px;
+	/*padding: 15px 15px;*/
 	border-radius: 15px;
 }
 
@@ -196,7 +222,7 @@ div.panel-collapse {
 .added-container {
 	position: fixed;
 	width: 32vw;
-	min-height: 200px;
+	min-height: 350px;
 }
 
 .remove-icon {
@@ -225,6 +251,11 @@ div.panel-collapse {
 
 div.modal-content {
 	border-radius: 15px;
+	position: relative;
+}
+
+.modal-container {
+
 }
 
 /************************
