@@ -126,12 +126,6 @@ button.dropdown-toggle {
 	margin-top: 0px;
 }
 
-span.dropdown-toggle {
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 5px solid #000000;
-}
-
 div.dropdown {
 	display: table-cell;
 	vertical-align: middle;
@@ -199,24 +193,10 @@ div.panel-collapse {
 	padding-left: 0px;
 }
 
-li.list-group-item {
-	padding-left: 0px !important;
-	left: 0px !important;
-}
-
-.added-box {
-	/*padding: 15px 15px;*/
-	border-radius: 15px;
-}
-
 @media (max-width: 768px) {
 	.added-container {
 		display: none !important;
 	}
-}
-
-@media (min-width: 768px) {
-
 }
 
 .added-container {
@@ -254,50 +234,9 @@ div.modal-content {
 	position: relative;
 }
 
-.modal-container {
-
-}
-
 /************************
           Header
 *************************/
-
-/*.md-toolbar-tools {
-	background-color: #D4CCC5;
-	min-height: 52px !important;
-	max-height: 52px !important;
-	padding: 0vw 10vw;
-
-	position: fixed;
-	top: 0px;
-	width: 100vw;
-	z-index: 1;
-
-	-moz-box-shadow: 1px 2px 3px rgba(0,0,0,.5);
-	-webkit-box-shadow: 1px 2px 3px rgba(0,0,0,.5);
-	box-shadow: 1px 2px 3px rgba(0,0,0,.5);
-}*/
-
-/*#logo {
-	padding-top: 13px;
-	padding-left: 15px;
-}*/
-
-/*.title {
-	color: #000000;
-	font: 800 32px/30px 'Raleway', sans-serif;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-	padding-left: 10px;
-}*/
-
-/*#tagline {
-	color: #000000;
-	padding-left: 70px;
-	font: 400 20px/15px 'Raleway', sans-serif;
-	font-weight: bold;
-}*/
 
 .navbar.navbar-default {
 	position: fixed !important;
@@ -315,16 +254,6 @@ div.modal-content {
 	min-height: 30px !important;
 	max-height: 30px !important;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
