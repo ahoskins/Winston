@@ -6,25 +6,20 @@ var winstonControllers = angular.module('winstonControllers', ['ui.calendar', 'p
 
 winstonApp.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
-	  when('/find-courses', {
-	  	templateUrl: '/static/views/find-courses.html',
-	  	controller: 'accordionCtrl'
+	  when('/browse', {
+	  	templateUrl: 'partials/browse.jade'
 	  }).
 	  when('/schedule', {
-	  	templateUrl: '/static/views/schedule.html',
-	  	controller: 'scheduleCtrl',
-	  	resolve: {
-	  		theData: function(readyMadeSchedules) {
-	  			return readyMadeSchedules.getSchedulesPromise();
-	  		}
-	  	}
-	  }).
-	  when('/about', {
-	  	templateUrl: '/static/views/about.html',
-	  	controller: 'headerCtrl'
+	  	templateUrl: 'partials/schedule.jade',
+	  	controller: 'scheduleCtrl'
+	  	// resolve: {
+	  	// 	theData: function(readyMadeSchedules) {
+	  	// 		return readyMadeSchedules.getSchedulesPromise();
+	  	// 	}
+	  	// }
 	  }).
 	  otherwise({
-	  	redirectTo: '/find-courses'
+	  	redirectTo: '/browse'
 	  });
 }])
 

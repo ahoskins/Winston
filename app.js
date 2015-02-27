@@ -46,13 +46,16 @@ if (env === 'production') {
 
 
 /**
- * Routes
+* Routes
+* /
+
+/**
+* Always render index.jade initially
+* $routeProvider will fill the ng-view with appropriate jade partial
+* partials/:name is required to know how to serve these
  */
-
-// serve index
 app.get('/', routes.index);
-
-// redirect all others to the index (HTML5 history)
+app.get('/partials/:name', routes.partials);
 app.get('*', routes.index);
 
 
