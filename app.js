@@ -50,13 +50,13 @@ if (env === 'production') {
 * /
 
 /**
-* Always render index.jade initially
-* $routeProvider will fill the ng-view with appropriate jade partial
-* partials/:name is required to know how to serve these
+* Bare domain, render index.jada
+* Render the partials received from $routeProvider
+* Any other domain render 404.html
  */
 app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
-app.get('*', routes.index);
+app.use(routes.error);
 
 
 /**
