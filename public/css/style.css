@@ -135,8 +135,9 @@ div.dropdown {
 
 div.course-search {
 	padding-top: 10px;
-	padding-left: 14px;
+	padding-left: 16px;
 	width: 100%;
+	font-size: 20px;
 }
 
 input.course-search {

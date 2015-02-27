@@ -5,7 +5,8 @@
     "bootstrap": "latest",
     "angular-route": "latest",
     "angular-aria": "latest",
-    "normalize.css": "~3.0.2"
+    "normalize.css": "~3.0.2",
+    "angular-material": "latest"
   },
   "resolutions": {
     "jquery": "~2.1",

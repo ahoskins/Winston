@@ -11,7 +11,7 @@ winstonControllers.controller('headerCtrl', ['$scope', '$location', '$modal', 'S
 	// $scope.goBack = function() {
 	// 	$location.path('/find-courses');
 	// }
-	    $.material.init();
+	    // $.material.init();
 
 	// $scope.atTop = false;
 	SubjectBin.populate();
