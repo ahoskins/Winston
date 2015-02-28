@@ -60,16 +60,16 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
         // Adjust schedule index
         if (forward) {
-            $scope.scheduleIndex = $scope.scheduleIndex + 1;
-            if ($scope.scheduleIndex >= $scope.scheduleLength) {
-                $scope.scheduleIndex = $scope.scheduleIndex - 1;
+            if ($scope.scheduleIndex == $scope.scheduleLength - 1) {
+                return;
             }
+            $scope.scheduleIndex ++;
         }
         else {
-            $scope.scheduleIndex = $scope.scheduleIndex - 1;
-            if ($scope.scheduleIndex < 0) {
-                $scope.scheduleIndex = 0;
+            if ($scope.scheduleIndex == 0) {
+                return;
             }
+            $scope.scheduleIndex --;
         }
 
         $scope.events = arrayOfSchedules[$scope.scheduleIndex];

@@ -19,8 +19,16 @@ html, body {
 .section-container {
 	border-radius: 15px !important;
 	background-color: #f2f2f2;
-	margin-top: 100px;
-	margin-bottom: 20px;
+}
+
+.nav-container {
+	border-radius: 15px;
+	background-color: #f2f2f2;
+	height: 60px;
+	margin-top: 70px;
+	margin-bottom: 10px;
+	padding: 0px 10px;
+	line-height: 60px;
 }
 
 .nav, .pagination, .carousel, .panel-title, a { 
@@ -61,6 +69,16 @@ html, body {
 
 .regular-size {
 	font-size: 16px;
+}
+
+.normal-padding {
+	padding: 10px 10px;
+}
+
+@media (max-width: 600px) {
+	.desktop-only {
+		display: none !important;
+	}
 }
 
 
@@ -105,11 +123,22 @@ div.fc-view {
 	left: 40px;
 }
 
+.toggle-caret {
+	color: #ffffff;
+	font-size: 50px;
+
+}
+
 .add-courses-button {
 	height: 40px;
 	position: absolute;
 	top: 10px;
 	right: 13px;
+}
+
+#full-calendar-div {
+/*	z-index: -10;
+	position: relative;*/
 }
 
 /************************
@@ -202,6 +231,11 @@ div.panel-collapse {
 }
 
 .added-container {
+	border-radius: 15px !important;
+	background-color: #f2f2f2;
+	margin-top: 70px;
+	margin-bottom: 20px;
+
 	position: fixed;
 	width: 32vw;
 	min-height: 350px;
@@ -244,7 +278,7 @@ div.modal-content {
 	position: fixed !important;
 	top: 0px;
 	width: 100vw;
-	z-index: 1;
+	z-index: 100;
 }
 
 /************************

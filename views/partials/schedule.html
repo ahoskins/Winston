@@ -1,44 +1,34 @@
-<div id="schedule-section">
-<!--     <md-content md-theme="light-blue-dark" class="schedule-box" data-drop="true" data-jqyoui-options jqyoui-droppable="{onDrop: 'onDrop'}">
-    	<div class="section-heading">
-			<p class="text-header"> Schedules ({{ scheduleIndex + 1 }}/{{ scheduleLength }}): </p>
+<div ng-controller="scheduleCtrl">
+	<div class="nav-container">
+		<button class="btn btn-default" ng-click="backToBrowse()">Back to Browse</button>
 
-			<a><i class="fa fa-caret-left" id="prev-caret" ng-click="displayDifferentSchedule(0)"></i></a>
-			<a><i class="fa fa-caret-right" id="next-caret" ng-click="displayDifferentSchedule(1)"></i></a>
+		<div class="dropdown go-right">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+            <p class="section-text regular-size">Share to...</p> <span class="caret dropdown-toggle"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Facebook</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Twitter</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Email</a></li>
+            </ul>
+        </div>
 
-<!	        <md-button class="md-raised md-primary add-courses-button" id="show-accordion" ng-click="showAccordion()">Add More Courses</md-button> -->
-<!--     	</div> -->
+        <button class="btn btn-default go-right desktop-only">Print</button>
+        <button class="btn btn-default go-right desktop-only">Save as PDF</button>
 
-        <div id="full-calendar-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div> 
+	</div>
 
-<!--         <div class="added-tray">
+	<div class="section-container">
 
-		    <md-content class="section-heading">
-		        <p class="text-header">Added Courses:</p>  
-		        <md-button class="md-raised md-primary remove-icon" md-theme="red" ng-click="removeAll()">
-		            <i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i> Remove All 
-		        </md-button>
-		    </md-content>
+	    <div class="section-header">
+	   		<button class="btn btn-default">Busy Time</button>
 
-		    <md-content>
-		        <md-list>
-		            <md-item ng-repeat="course in added">
-		                <md-item-content>
-		                    <div class="md-tile-content">
-		                        <span style="font-size:20px; font-weight:bold">{{ course.asString }}</span>
-		                        <md-button class="md-raised md-primary remove-icon" md-theme="red" ng-click="removeFromSchedule(course)">
-		                            <i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i> Remove
-		                        </md-button>
-		                    </div>
-		                </md-item-content>
-		                <md-divider ng-if="!$last"></md-divider>
-		                {{ course.asString }}
-		            </md-item>
-		        </md-list>
-		    </md-content>
+			<a class="go-right normal-padding"><i class="fa fa-caret-right toggle-caret" ng-click="displayDifferentSchedule(1)"></i></a>
+			<span class="go-right">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
+			<a class="go-right normal-padding"><i class="fa fa-caret-left toggle-caret" ng-click="displayDifferentSchedule(0)"></i></a>
+	    </div>
 
-        </div> -->
+	    <div id="full-calendar-div" ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="weekView"></div> 
 
-<!--     </md-content> -->
-
+	</div>
 </div>
