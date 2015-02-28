@@ -178,7 +178,7 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 
     	if (addedCourses.data.length === 0) {
     		$window.alert("Add some courses first...");
-    		$location.path('/find-courses');
+    		$location.path('/browse');
     		return;
     	}
 
@@ -192,7 +192,7 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 			}).
 			error(function() {
 	    		$window.alert("Server not responding...");
-	    		$location.path('/find-courses');
+	    		$location.path('/browse');
 			}) );
     }
 

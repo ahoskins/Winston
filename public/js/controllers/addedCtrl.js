@@ -22,4 +22,8 @@ winstonControllers.controller('addedCtrl', ['$scope', '$location', 'addedCourses
     //         delete addedCourses.courseAdded[key];
     //     }
     // }
+
+    $scope.viewSchedules = function() {
+        $location.path('/schedule');
+    }
 }]);

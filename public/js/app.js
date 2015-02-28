@@ -11,12 +11,12 @@ winstonApp.config(['$routeProvider', function($routeProvider) {
 	  }).
 	  when('/schedule', {
 	  	templateUrl: 'partials/schedule.jade',
-	  	controller: 'scheduleCtrl'
-	  	// resolve: {
-	  	// 	theData: function(readyMadeSchedules) {
-	  	// 		return readyMadeSchedules.getSchedulesPromise();
-	  	// 	}
-	  	// }
+	  	controller: 'scheduleCtrl',
+	  	resolve: {
+	  		theData: function(readyMadeSchedules) {
+	  			return readyMadeSchedules.getSchedulesPromise();
+	  		}
+	  	}
 	  }).
 	  otherwise({
 	  	redirectTo: '/browse'

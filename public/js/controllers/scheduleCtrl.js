@@ -3,33 +3,14 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin) {
-
-
-    /**
-    Drag and drop
-    */
-    // $scope.onDrop = function(e) {
-    //     // Send a broadcast asking for the info for the id
-    //     var courseId = e.toElement.offsetParent.id;
-    //     var courseObj = SubjectBin.searchById(courseId);
-
-    //     updateAddedCourses(courseObj);
-    // }
-
-    // $scope.added = [];
-    // var updateAddedCourses = function(courseObj) {
-    //     $scope.added.push(courseObj);
-    // }
-
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', 'readyMadeSchedules', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin, readyMadeSchedules) {
 
     /* 
-    ********************
+    ***************************************
     Full Calendar Config
-    ********************
+    ***************************************
      */
 
-    // General calendar config
     // Note: It is displaying the current week (with the day number hidden)
     $scope.uiConfig = {
         calendar: {
@@ -37,7 +18,6 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             //editable: true,
             header: false,
 
-            // Format
             defaultView: 'agendaWeek',
             columnFormat: "dddd",
             hiddenDays: [0,6],
@@ -51,24 +31,23 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         }
     };
 
-
-
     /*
-    *********************
-    Use the readyMadeSchedules service to get the schedule data
-    Put this data into $scope.eventSources
-    *********************
+    ******************************************************
+    Get the schedule data from readyMadeSchedules service
+    ******************************************************
     */
 
     // Array of ready to go schedules in Full Calendar format
-    // var arrayOfArrays = readyMadeSchedules.getReadyMadeSchedules();
+    var arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();
 
-    //  // Schedule bounds based on length
-    // $scope.scheduleLength = arrayOfArrays.length;
-    // $scope.scheduleIndex = 0;
+    var schedules = JSON.stringify(arrayOfSchedules);
+    console.log(schedules);
 
-    // // Put the data into the eventSources array
-    // $scope.eventSources = [arrayOfArrays[$scope.scheduleIndex]];
+    $scope.scheduleLength = arrayOfSchedules.length;
+    $scope.scheduleIndex = 0;
+
+    // eventSources is a single, complete schedule
+    $scope.eventSources = [arrayOfSchedules[0]];
 
     /*
     ***********************
@@ -93,7 +72,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             }
         }
 
-        $scope.events = arrayOfArrays[$scope.scheduleIndex];
+        $scope.events = arrayOfSchedules[$scope.scheduleIndex];
 
         /*
         Full Calendar is very finicky and sometimes won't render the new events
