@@ -145,7 +145,8 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	                    title: classtime.asString,
 	                    start: new Date(y, m, d + offset, startHour, startMinute),
 	                    end: new Date(y, m, d + offset, endHour, endMinute),
-	                    color: currentColor
+	                    color: currentColor,
+	                    description: classtime.courseDescription
 	                });
 	            }
 

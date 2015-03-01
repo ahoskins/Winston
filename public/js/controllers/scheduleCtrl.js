@@ -62,8 +62,10 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                 });
             },
             eventClick: function(calEvent, jsEvent, view) {
+                console.log(calEvent);
                 // Only allowed to delete busy times
                 if (calEvent.title !== 'Busy Time') {
+                    $window.alert(calEvent.description);
                     return;
                 }
 
@@ -75,6 +77,13 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                     uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
                     uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
                 });
+            },
+
+            eventRender: function(event, element) {
+                element.addClass('tooltip');
+                element.prop('title', event.description);
+
+                $('.tooltip').tooltipster();
             },
 
             defaultView: 'agendaWeek',
