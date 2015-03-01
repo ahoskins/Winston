@@ -47,6 +47,11 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             selectable: true,
             // selectHelper: true,
             select: function(start, end) {
+
+                if (!$scope.showAlert) {
+                    return;
+                }
+                
                 $scope.$apply(function(){
 
                     $scope.events.push({
@@ -62,10 +67,9 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                 });
             },
             eventClick: function(calEvent, jsEvent, view) {
-                console.log(calEvent);
+
                 // Only allowed to delete busy times
                 if (calEvent.title !== 'Busy Time') {
-                    $window.alert(calEvent.description);
                     return;
                 }
 
@@ -134,6 +138,18 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
     $scope.backToBrowse = function() {
         $location.path('/browse');
+    }
+
+    $scope.busyTimeButtonText = "Add Busy Time";
+    $scope.showAlert = false;
+
+    $scope.open = function() {
+        $scope.showAlert = !$scope.showAlert;
+        if ($scope.showAlert) {
+            $scope.busyTimeButtonText = "Done"
+        } else {
+            $scope.busyTimeButtonText = "Add Busy Time";
+        }
     }
 
 }]);

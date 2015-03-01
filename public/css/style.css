@@ -71,14 +71,18 @@ html, body {
 	font-size: 16px;
 }
 
-.normal-padding {
-	padding: 10px 10px;
+.small-padding {
+	padding: 5px 5px;
 }
 
 @media (max-width: 600px) {
 	.desktop-only {
 		display: none !important;
 	}
+}
+
+.inline-display {
+	display: inline !important;
 }
 
 
@@ -136,9 +140,14 @@ div.fc-view {
 	right: 13px;
 }
 
-#full-calendar-div {
-/*	z-index: -10;
-	position: relative;*/
+.top-right {
+	position: absolute;
+	top: 5px !important;
+	right: 5px !important;
+}
+
+.instructions {
+	position: relative !important;
 }
 
 /************************

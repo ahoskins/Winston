@@ -21,14 +21,23 @@
 	<div class="section-container">
 
 	    <div class="section-header">
-	   		<button class="btn btn-default">Busy Time</button>
+	   		<button class="btn btn-default inline-display" ng-click="open()">{{ busyTimeButtonText }}</button>
 
-			<a class="go-right normal-padding"><i class="fa fa-caret-right toggle-caret" ng-click="displayDifferentSchedule(1)"></i></a>
+			<a class="go-right small-padding"><i class="fa fa-caret-right toggle-caret" ng-click="displayDifferentSchedule(1)"></i></a>
 			<span class="go-right">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
-			<a class="go-right normal-padding"><i class="fa fa-caret-left toggle-caret" ng-click="displayDifferentSchedule(0)"></i></a>
+			<a class="go-right small-padding"><i class="fa fa-caret-left toggle-caret" ng-click="displayDifferentSchedule(0)"></i></a>
 	    </div>
+
+	   	<div class="alert alert-info alert-dismissible instructions" ng-show="showAlert" role="alert">
+	   		<div class="top-right">
+  				<button type="button" class="close top-right" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  			</div>
+  			Click the time slots where you are <strong>busy and don't want class class.</strong>You can resize these time slots to fill as much time as you'd like.
+  			Once you are done, click the "Done" button.  The schedules will be regenerated to work around your preferences.  
+		</div>
 
 	    <div id="full-calendar-div" ui-calendar="uiConfig.calendar" ng-model="events" calendar="weekView"></div> 
 
 	</div>
+
 </div>
