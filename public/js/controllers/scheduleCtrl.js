@@ -20,12 +20,12 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     var coursesTimes;
     var busyTimes = [];
 
-    coursesTimes = arrayOfSchedules[0]
+    coursesTimes = arrayOfSchedules[0];
     $scope.events = coursesTimes;
 
     $timeout(function() {
         refreshCalendar();
-    }, 500);
+    }, 0);
 
     /* 
     ***************************************
@@ -41,7 +41,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
             // buttons on events of probably this: http://fullcalendar.io/docs/views/Custom_Views/
 
-            height: 1000,
+            height: "auto",
             header: false,
 
             selectable: true,
@@ -86,17 +86,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                 refreshCalendar();
             },
 
-            eventRender: function(event, element) {
-                if (element.hasClass('tooltip')) {
-                    return;
-                }
-
-                element.addClass('tooltip');
-                element.prop('title', event.description);
-
-                // This is causing (non-critical) errors in the console, fix this eventually 
-                $('.tooltip').tooltipster();
-            },
+            // eventMouseover to do the tooltip if the other one drives me crazy
 
             defaultView: 'agendaWeek',
             columnFormat: "dddd",
@@ -147,10 +137,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     var createBusyObject = function(event) {
         var busyObject = {};
 
-        // Use these methods to parse out all the parts!
-        console.dir(event.start);
-
-        switch(event.start.getDay()) {
+        switch(event.start.day()) {
             case 1:
                 busyObject.day = 'M';
                 break;
@@ -170,7 +157,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
 
         // Start
-        var hour = event.start.getHours();
+        var hour = event.start.hour();
         var side = 'AM';
         if (hour > 12) {
             hour = hour - 12;
@@ -178,14 +165,14 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         } 
         hour = ("0" + hour).slice(-2); 
 
-        var minute = event.start.getMinutes();
+        var minute = event.start.minute();
         minute = ("0" + minute).slice(-2);
 
         busyObject.startTime = hour + ':' + minute + ' ' + side;
 
 
         // End
-        var hour = event.end.getHours();
+        var hour = event.end.hour();
         var side = 'AM';
         if (hour > 12) {
             hour = hour - 12;
@@ -193,7 +180,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         }  
         hour = ("0" + hour).slice(-2);
 
-        var minute = event.end.getMinutes();
+        var minute = event.end.minute();
         minute = ("0" + minute).slice(-2);
 
         busyObject.endTime = hour + ':' + minute + ' ' + side;
@@ -206,6 +193,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         var apiBusyTimes = [];
         busyTimes.forEach(function(event) {
             if (event.title === 'Busy Time') {
+                console.dir(event);
                 apiBusyTimes.push(createBusyObject(event));
             }
         });
