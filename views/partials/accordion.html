@@ -1,51 +1,59 @@
 <div ng-controller="accordionCtrl">
 
-    <div class="nav-container">
-
-    </div>
-    <div class="section-container">
-        <div class="section-header">
-            <p class="section-text big-size">Browse Courses:</p> 
-
-            <div class="dropdown go-right">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                <p class="section-text regular-size">Fall 2014</p> <span class="caret dropdown-toggle"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Fall 2014</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Winter 2015</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Spring 2015</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Fall 2015</a></li>
-                </ul>
+    <div class="column-container">
+        <div class="alert alert-info alert-dismissible instructions" id="welcome-banner" role="alert">
+            <div class="top-right">
+                <button type="button" class="close top-right" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
+            Welcome to Winston.  All the courses offered at the University of Alberta this term are shown below - you can browse through, or search by keywords.  Add the courses, you are interested in taking, and click the "View Schedule" button to check out your options! 
         </div>
 
-        <div class="course-search">
-            <b>Search:</b> <input type="text" class="course-search" ng-model="model.searchBox" placeholder=""></input>
+        <div class="floating-container">
+
+            <div class="section-header">
+                <p class="section-text big-size">Browse Courses:</p> 
+
+                <div class="dropdown go-right">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                    <p class="section-text regular-size">Fall 2014</p> <span class="caret dropdown-toggle"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Fall 2014</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Winter 2015</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Spring 2015</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Fall 2015</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="course-search">
+                <b>Search:</b> <input type="text" class="course-search" ng-model="model.searchBox" placeholder=""></input>
+            </div>
+
+            <div class="normal-padding">
+                <accordion close-others="false">
+                    <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty, $event)" data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" no-bubble>
+                        <accordion close-others="false">
+                            <accordion-group class="subject-accordion" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject, $event)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" no-bubble>
+                                <accordion close-others="false">
+                                    <accordion-group class="course-accordion" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="{revert: 'invalid'}" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" no-bubble>
+                                        <accordion-heading>
+                                            {{ singleCourse.asString }} 
+                                            <a class="add-button" no-bubble><i class="fa fa-plus" id="add-up" ng-show="!added[singleCourse.asString]" ng-click="addToSchedule(singleCourse)"></i></a>
+                                        </accordion-heading>
+                                        <div class="course-description">
+                                            {{ description[singleCourse.course] }}
+                                        </div>
+                                    </accordion-group>
+                                </accordion>
+                            </accordion-group>
+                        </accordion>
+                    </accordion-group>
+                </accordion>
+            </div>
+            
         </div>
 
-        <div class="accordion-container">
-            <accordion close-others="false">
-                <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty, $event)" data-ng-repeat="facultyObject in subjectBin | courseFilter:filterText" no-bubble>
-                    <accordion close-others="false">
-                        <accordion-group class="subject-accordion" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject, $event)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" no-bubble>
-                            <accordion close-others="false">
-                                <accordion-group class="course-accordion" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="{revert: 'invalid'}" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" no-bubble>
-                                    <accordion-heading>
-                                        {{ singleCourse.asString }} 
-                                        <a class="add-button" no-bubble><i class="fa fa-plus" id="add-up" ng-show="!added[singleCourse.asString]" ng-click="addToSchedule(singleCourse)"></i></a>
-                                    </accordion-heading>
-                                    <div class="course-description">
-                                        {{ description[singleCourse.course] }}
-                                    </div>
-                                </accordion-group>
-                            </accordion>
-                        </accordion-group>
-                    </accordion>
-                </accordion-group>
-            </accordion>
-        </div>
-        
     </div>
 
 </div>

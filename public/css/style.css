@@ -16,7 +16,11 @@ html, body {
 	float: right !important;
 }
 
-.section-container {
+.column-container {
+	margin-top: 70px;
+}
+
+.floating-container {
 	border-radius: 15px !important;
 	background-color: #f2f2f2;
 }
@@ -72,7 +76,11 @@ html, body {
 }
 
 .small-padding {
-	padding: 5px 5px;
+	padding: 5px;
+}
+
+.normal-padding {
+	padding: 15px;
 }
 
 @media (max-width: 600px) {
@@ -154,10 +162,6 @@ div.fc-view {
         Accordion
 *************************/
 
-.accordion-container {
-	padding: 15px;
-}
-
 button.dropdown-toggle {
 	font-size: 18px;
 	font-style: italic;
@@ -222,6 +226,11 @@ div.panel-collapse {
 	margin: 0px !important;
 }
 
+/*#welcome-banner {
+	margin-top: 70px;
+	border-radius: 15px;
+}*/
+
 
 /***********************
       Added List
@@ -240,11 +249,7 @@ div.panel-collapse {
 }
 
 .added-container {
-	border-radius: 15px !important;
-	background-color: #f2f2f2;
-	margin-top: 70px;
 	margin-bottom: 20px;
-
 	position: fixed;
 	width: 32vw;
 	min-height: 350px;
