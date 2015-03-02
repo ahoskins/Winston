@@ -34,21 +34,18 @@
   </div>
 
   <script type="text/ng-template" id="addedModal.html">
-    <div class="modal-container">
+    <div class="modal-container floating-container">
       <div class="section-header">
         <p class="section-text big-size">Added Courses:</p>
-        <button class="btn btn-default section-text regular-size go-right">Empty All</button>
+        <button class="btn btn-default section-text regular-size go-right" ng-click="emptyAll()">Empty All</button>
       </div>
-      <div class="modal-body">
-        <div class="added-list">
-            <span class="list-group-item" ng-repeat="course in added">
-                {{ course.asString }}
-            </span>
-        </div>
+      <div class="added-list">
+          <span class="list-group-item" ng-repeat="course in added">
+              {{ course.asString }}
+          </span>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-default" ng-click="ok()">Dismiss</button>        
-        <button class="btn btn-default" ng-click="ok()">Generate Schedules</button>
+      <div class="modal-footer">      
+        <button class="btn btn-default" ng-click="viewSchedules()">View Schedules</button>
       </div>
     </div>
   </script>

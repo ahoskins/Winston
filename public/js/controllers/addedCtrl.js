@@ -23,6 +23,10 @@ winstonControllers.controller('addedCtrl', ['$scope', '$location', 'addedCourses
     //     }
     // }
 
+    $scope.emptyAll = function() {
+        addedCourses.data.length = 0;
+    }
+
     $scope.viewSchedules = function() {
         $location.path('/schedule');
     }
