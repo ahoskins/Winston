@@ -5,8 +5,6 @@ Includes Full Calendar config, prev/next buttons, and add more courses button
 */
 winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', 'readyMadeSchedules', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin, readyMadeSchedules) {
 
-    // click each calendar events causes dialog box with course info
-
     /*
     ******************************************************
     Get the schedule data from readyMadeSchedules service
@@ -19,12 +17,14 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     $scope.scheduleLength = arrayOfSchedules.length;
     $scope.scheduleIndex = 0;
 
-    $scope.events = arrayOfSchedules[0];
+    var coursesTimes;
+    var busyTimes = [];
 
-    // For some reason, uiCalendarConfig is not populated right when the page loads
+    coursesTimes = arrayOfSchedules[0]
+    $scope.events = coursesTimes;
+
     $timeout(function() {
-        uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
-        uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
+        refreshCalendar();
     }, 500);
 
     /* 
@@ -46,26 +46,31 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
             selectable: true,
             // selectHelper: true,
+
+            /**
+            On click of empty space on calendar...add as busy time if in "edit busy time" mode
+            */
             select: function(start, end) {
 
-                if (!$scope.showAlert) {
+                if (!$scope.editableMode) {
                     return;
                 }
 
-                $scope.$apply(function(){
-
-                    $scope.events.push({
-                        durationEditable: true,
-                        title: 'Busy Time',
-                        start: start,
-                        end: end,
-                        color: '#EF9A9A'
-                    });
-
-                    uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
-                    uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
+                busyTimes.push({
+                    durationEditable: true,
+                    title: 'Busy Time',
+                    start: start,
+                    end: end,
+                    color: '#EF9A9A'
                 });
+
+                $scope.events = busyTimes;
+                refreshCalendar();
             },
+
+            /**
+            On click of event on calendar...delete event if this event is busy time and "edit busy time" mode
+            */
             eventClick: function(calEvent, jsEvent, view) {
 
                 // Only allowed to delete busy times
@@ -74,19 +79,22 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                 }
 
                 // Delete the event
-                var index = $scope.events.indexOf(calEvent);
-                $scope.$apply(function() {
-                    $scope.events.splice(index, 1);
+                var index = busyTimes.indexOf(calEvent);
+                busyTimes.splice(index, 1);
 
-                    uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
-                    uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
-                });
+                $scope.events = busyTimes.concat(coursesTimes);
+                refreshCalendar();
             },
 
             eventRender: function(event, element) {
+                if (element.hasClass('tooltip')) {
+                    return;
+                }
+
                 element.addClass('tooltip');
                 element.prop('title', event.description);
 
+                // This is causing (non-critical) errors in the console, fix this eventually 
                 $('.tooltip').tooltipster();
             },
 
@@ -126,14 +134,10 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             $scope.scheduleIndex --;
         }
 
-        $scope.events = arrayOfSchedules[$scope.scheduleIndex];
+        coursesTimes = arrayOfSchedules[$scope.scheduleIndex];
 
-        /*
-        Full Calendar is very finicky and sometimes won't render the new events
-        For this reason, clear all the events first, then add the new events to the fresh event sources
-        */
-        uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
-        uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
+        $scope.events = busyTimes.concat(coursesTimes);
+        refreshCalendar();
     };
 
     $scope.backToBrowse = function() {
@@ -198,47 +202,62 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         return busyObject;
     }
 
-    var generateBusyTimes = function() {
-        var busyTimes = [];
-        $scope.events.forEach(function(event) {
+    var generateApiBusyTimes = function() {
+        var apiBusyTimes = [];
+        busyTimes.forEach(function(event) {
             if (event.title === 'Busy Time') {
-                var busyObject = createBusyObject(event);
-                busyTimes.push(busyObject);
+                apiBusyTimes.push(createBusyObject(event));
             }
         });
 
-        return busyTimes;
+        return apiBusyTimes;
     }
 
     $scope.busyTimeButtonText = "Add Busy Time";
-    $scope.showAlert = false;
+    $scope.editableMode = false;
 
     $scope.open = function() {
-        $scope.showAlert = !$scope.showAlert;
-        if ($scope.showAlert) {
+        $scope.editableMode = !$scope.editableMode;
+        if ($scope.editableMode) {
+
             $scope.busyTimeButtonText = "Done"
+
+            // Allow busy time to be added anywhere
+            $scope.events = busyTimes;
+            refreshCalendar();
+
         } else {
             $scope.busyTimeButtonText = "Add Busy Time";
 
             console.log($scope.events);
 
-            var busyTimes = generateBusyTimes();
+            var apiBusyTimes = generateApiBusyTimes();
 
-            console.dir(busyTimes);
+            console.dir(apiBusyTimes);
 
             // Regenerate the schedule!
-            readyMadeSchedules.getSchedulesPromise(busyTimes).then(function() {
+            readyMadeSchedules.getSchedulesPromise(apiBusyTimes).then(function() {
                 arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();
 
                 $scope.scheduleLength = arrayOfSchedules.length;
                 $scope.scheduleIndex = 0;
 
-                $scope.events = arrayOfSchedules[0];
+                coursesTimes = arrayOfSchedules[0];
 
-                uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
-                uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
+                $scope.events = busyTimes.concat(coursesTimes);
+                refreshCalendar();
             });
         }
+    }
+
+    /*
+    ************
+    Utility
+    ************
+    */
+    function refreshCalendar() {
+        uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
+        uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
     }
 
 }]);
