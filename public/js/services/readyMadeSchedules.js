@@ -175,7 +175,7 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 		return readyMadeSchedules;
 	}
 
-    factory.getSchedulesPromise = function() {
+    factory.getSchedulesPromise = function(busyTimes) {
 
     	if (addedCourses.data.length === 0) {
     		$window.alert("Add some courses first...");
@@ -183,7 +183,7 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
     		return;
     	}
 
-		return ( scheduleFactory.getSchedules(addedCourses.data).
+		return ( scheduleFactory.getSchedules(addedCourses.data, busyTimes).
 			success(function (data) {
 	    		// Assign schedule response to member
 	       		var scheduleResponse = angular.fromJson(data);

@@ -51,7 +51,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                 if (!$scope.showAlert) {
                     return;
                 }
-                
+
                 $scope.$apply(function(){
 
                     $scope.events.push({
@@ -140,6 +140,76 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         $location.path('/browse');
     }
 
+    var createBusyObject = function(event) {
+        var busyObject = {};
+
+        // Use these methods to parse out all the parts!
+        console.dir(event.start);
+
+        switch(event.start.getDay()) {
+            case 1:
+                busyObject.day = 'M';
+                break;
+            case 2:
+                busyObject.day = 'T';
+                break;
+            case 3:
+                busyObject.day = 'W';
+                break;
+            case 4:
+                busyObject.day = 'R';
+                break;
+            case 5:
+                busyObject.day = 'F';
+                break;
+        }
+
+
+        // Start
+        var hour = event.start.getHours();
+        var side = 'AM';
+        if (hour > 12) {
+            hour = hour - 12;
+            side = 'PM';
+        } 
+        hour = ("0" + hour).slice(-2); 
+
+        var minute = event.start.getMinutes();
+        minute = ("0" + minute).slice(-2);
+
+        busyObject.startTime = hour + ':' + minute + ' ' + side;
+
+
+        // End
+        var hour = event.end.getHours();
+        var side = 'AM';
+        if (hour > 12) {
+            hour = hour - 12;
+            side = 'PM';
+        }  
+        hour = ("0" + hour).slice(-2);
+
+        var minute = event.end.getMinutes();
+        minute = ("0" + minute).slice(-2);
+
+        busyObject.endTime = hour + ':' + minute + ' ' + side;
+
+
+        return busyObject;
+    }
+
+    var generateBusyTimes = function() {
+        var busyTimes = [];
+        $scope.events.forEach(function(event) {
+            if (event.title === 'Busy Time') {
+                var busyObject = createBusyObject(event);
+                busyTimes.push(busyObject);
+            }
+        });
+
+        return busyTimes;
+    }
+
     $scope.busyTimeButtonText = "Add Busy Time";
     $scope.showAlert = false;
 
@@ -149,6 +219,25 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             $scope.busyTimeButtonText = "Done"
         } else {
             $scope.busyTimeButtonText = "Add Busy Time";
+
+            console.log($scope.events);
+
+            var busyTimes = generateBusyTimes();
+
+            console.dir(busyTimes);
+
+            // Regenerate the schedule!
+            readyMadeSchedules.getSchedulesPromise(busyTimes).then(function() {
+                arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();
+
+                $scope.scheduleLength = arrayOfSchedules.length;
+                $scope.scheduleIndex = 0;
+
+                $scope.events = arrayOfSchedules[0];
+
+                uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
+                uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
+            });
         }
     }
 
