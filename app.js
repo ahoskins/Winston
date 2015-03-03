@@ -47,7 +47,8 @@ if (env === 'production') {
 
 /**
 * Routes
-* /
+**/
+
 
 /**
 * Bare domain, render index.jada
@@ -59,10 +60,11 @@ app.get('/partials/:name', routes.partials);
 app.use(routes.error);
 
 
+
 /**
  * Start Server
  */
 
-http.createServer(app).listen(app.get('port'), function () {
+http.createServer(app).listen(app.get('port'), function (req, resp) {
   console.log('Express server listening on port ' + app.get('port'));
 });

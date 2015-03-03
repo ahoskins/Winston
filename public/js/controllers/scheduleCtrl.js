@@ -3,7 +3,7 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', 'readyMadeSchedules', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin, readyMadeSchedules) {
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', 'readyMadeSchedules', '$facebook', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin, readyMadeSchedules, $facebook) {
 
     /*
     ******************************************************
@@ -236,6 +236,20 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                 refreshCalendar();
             });
         }
+    }
+
+    /*
+    *********************************
+    Facebook intagration (sharing)
+    *********************************
+    */
+
+    $scope.share = function() {
+        $facebook.ui(
+         {
+          method: 'share',
+          href: 'thewinston.herokuapp.com/'
+        });
     }
 
     /*

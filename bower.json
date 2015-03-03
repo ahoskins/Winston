@@ -12,7 +12,8 @@
     "normalize.css": "~3.0.2",
     "angular-material": "0.6.0",
     "tooltipster": "3.3.0",
-    "angular-bootstrap": "0.12.1"
+    "angular-bootstrap": "0.12.1",
+    "ng-facebook": "0.1.6"
   },
    "resolutions": {
     "angular": "~1.3.x",
