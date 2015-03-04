@@ -25,12 +25,13 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
     $timeout(function() {
         refreshCalendar();
+        captureCalendarCanvas();
     }, 0);
 
     /* 
-    ***************************************
+    ***********************************************
     Full Calendar Config
-    ***************************************
+    ***********************************************
      */
 
     // Note: It is displaying the current week (with the day number hidden)
@@ -128,6 +129,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
         $scope.events = busyTimes.concat(coursesTimes);
         refreshCalendar();
+        captureCalendarCanvas();
     };
 
     $scope.backToBrowse = function() {
@@ -240,7 +242,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
     /*
     *********************************
-    Facebook intagration (sharing)
+    Facebook integration (open graph)
     *********************************
     */
 
@@ -253,13 +255,34 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     }
 
     /*
-    ************
-    Utility
-    ************
+    *********************************************************************
+    Open calendar as png in new tab/window (seems to depend on browser)
+    *********************************************************************
     */
+
+    $scope.open = function() {
+        $window.open(calendarCanvas.toDataURL('image/png'));
+    }
+
+    /*
+    ************************************
+    Utility
+    ************************************
+    */
+
     function refreshCalendar() {
         uiCalendarConfig.calendars.weekView.fullCalendar('removeEvents');
         uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
+    }
+
+    var calendarCanvas;
+
+    function captureCalendarCanvas() {
+        html2canvas(document.getElementById('full-calendar-div'), {
+            onrendered: function(canvas) {
+                calendarCanvas = canvas;
+            }
+        });
     }
 
 }]);
