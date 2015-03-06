@@ -215,7 +215,8 @@ div.course-search {
 }
 
 div.course-search > input.course-search.form-control {
-	border-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
 	font-size: 20px;
 }
 
