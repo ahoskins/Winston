@@ -1,10 +1,10 @@
 <div ng-controller="scheduleCtrl">
 	<div class="column-container floating-container nav-container">
-		<button class="btn btn-default" ng-click="backToBrowse()">Back to Browse</button>
+		<button class="btn btn-default back-to-browse" ng-click="backToBrowse()">Browse Courses</button>
 
-		<div class="dropdown go-right">
+		<div class="dropdown go-right share-dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-            <p class="section-text regular-size">Share to...</p> <span class="caret dropdown-toggle"></span>
+            <p class="section-text regular-size">Share</p> <span class="caret dropdown-toggle"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                 <li role="presentation" ng-click="share()"><a role="menuitem" tabindex="-1" href="#">Facebook</a></li>

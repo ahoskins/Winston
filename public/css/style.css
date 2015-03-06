@@ -2,6 +2,10 @@
         Utility
 ************************/
 
+* {
+	box-sizing: border-box;
+}
+
 html, body {
 	position: relative;
 	background-color: #B2DFDB;
@@ -26,11 +30,28 @@ html, body {
 }
 
 .nav-container {
+	display: flex;
+	flex-align: right;
+	align-items: center;
 	height: 60px;
 	margin-bottom: 10px;
 	padding: 0px 10px;
 	line-height: 60px;
 }
+
+.nav-container > * {
+	margin-right: 10px;
+	height: 41px;
+}
+.nav-container > .back-to-browse {
+	margin-right: auto;
+}
+.nav-container > .share-dropdown {
+	line-height: 0px;
+}
+	.nav-container > .share-dropdown p {
+		font-style: normal;
+	}
 
 .nav, .pagination, .carousel, .panel-title, a { 
 	cursor: pointer; 
