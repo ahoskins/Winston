@@ -6,13 +6,19 @@
             <div class="top-right">
                 <button type="button" class="close top-right" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
-            Welcome to Winston.  All the courses offered at the University of Alberta this term are shown below - you can browse through, or search by keywords.  Add the courses, you are interested in taking, and click the "View Schedule" button to check out your options! 
+            Welcome to Winston, a schedule-planning companion for University of Alberta students.
+            <ul>
+                <li>Curious about a course? Browse the catalog with realtime search</li>
+                <li>Got a busy semester? Block off your commitments and Winston will work around them</li>
+                <li>Like to sleep in? Block off your mornings</li>
+            </ul>
+            Winston is <strong>not</strong> official University of Alberta software. Enjoy.
         </div>
 
         <div class="floating-container">
 
             <div class="section-header">
-                <p class="section-text big-size">Browse Courses:</p> 
+                <p class="section-text big-size">University of Alberta Catalog</p> 
 
                 <div class="dropdown go-right">
                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
@@ -27,8 +33,8 @@
                 </div>
             </div>
 
-            <div class="course-search">
-                <b>Search:</b> <input type="text" class="course-search" ng-model="model.searchBox" placeholder=""></input>
+            <div class="input-group course-search">
+                <input type="text" class="course-search" ng-model="model.searchBox" placeholder="bio, biol 1, biol 107" />
             </div>
 
             <div class="normal-padding">

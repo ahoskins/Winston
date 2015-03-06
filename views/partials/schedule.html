@@ -1,10 +1,10 @@
 <div ng-controller="scheduleCtrl">
 	<div class="column-container floating-container nav-container">
-		<button class="btn btn-default" ng-click="backToBrowse()">Back to Browse</button>
+		<button class="btn btn-default back-to-browse" ng-click="backToBrowse()">Browse Courses</button>
 
-		<div class="dropdown go-right">
+		<div class="dropdown go-right share-dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-            <p class="section-text regular-size">Share to...</p> <span class="caret dropdown-toggle"></span>
+            <p class="section-text regular-size">Share</p> <span class="caret dropdown-toggle"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                 <li role="presentation" ng-click="share()"><a role="menuitem" tabindex="-1" href="#">Facebook</a></li>
@@ -22,9 +22,9 @@
 	    <div class="section-header">
 	   		<button class="btn btn-default inline-display" ng-click="open()">{{ busyTimeButtonText }}</button>
 
-			<a class="go-right small-padding"><i class="fa fa-caret-right toggle-caret" ng-click="displayDifferentSchedule(1)"></i></a>
-			<span class="go-right">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
-			<a class="go-right small-padding"><i class="fa fa-caret-left toggle-caret" ng-click="displayDifferentSchedule(0)"></i></a>
+			<i class="fa fa-caret-right toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(1)"></i>
+			<span class="go-right schedule-number">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
+			<i class="fa fa-caret-left toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(0)"></i>
 	    </div>
 
 	   	<div class="alert alert-info alert-dismissible instructions" ng-show="editableMode" role="alert">

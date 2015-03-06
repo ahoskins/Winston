@@ -2,6 +2,10 @@
         Utility
 ************************/
 
+* {
+	box-sizing: border-box;
+}
+
 html, body {
 	position: relative;
 	background-color: #B2DFDB;
@@ -26,11 +30,28 @@ html, body {
 }
 
 .nav-container {
+	display: flex;
+	flex-align: right;
+	align-items: center;
 	height: 60px;
 	margin-bottom: 10px;
 	padding: 0px 10px;
 	line-height: 60px;
 }
+
+.nav-container > * {
+	margin-right: 10px;
+	height: 41px;
+}
+.nav-container > .back-to-browse {
+	margin-right: auto;
+}
+.nav-container > .share-dropdown {
+	line-height: 0px;
+}
+	.nav-container > .share-dropdown p {
+		font-style: normal;
+	}
 
 .nav, .pagination, .carousel, .panel-title, a { 
 	cursor: pointer; 
@@ -51,10 +72,13 @@ html, body {
 
 .section-text {
 	padding-left: 10px;
-	font-style: italic;
 	font-weight: lighter;
 	display: inline;
 	text-align: center;
+}
+
+.dropdown .section-text {
+	padding-left: 0px;
 }
 
 .bottom-container {
@@ -127,10 +151,15 @@ div.fc-view, .fc-today {
 	left: 40px;
 }
 
+.schedule-number {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
 .toggle-caret {
 	color: #ffffff;
 	font-size: 50px;
-
+	cursor: pointer;
 }
 
 .add-courses-button {
@@ -156,7 +185,6 @@ div.fc-view, .fc-today {
 
 button.dropdown-toggle {
 	font-size: 18px;
-	font-style: italic;
 	display: inline-block;
 	margin-top: 0px;
 }
@@ -170,12 +198,14 @@ div.dropdown {
 div.course-search {
 	padding-top: 10px;
 	padding-left: 16px;
+	padding-right: 16px;
 	width: 100%;
 	font-size: 20px;
 }
 
 input.course-search {
 	padding-left: 5px;
+	width: 100%;
 }
 
 .add-button {
@@ -247,6 +277,12 @@ div.panel-collapse {
 	min-height: 350px;
 }
 
+	.empty-all {
+		margin-top: 8px;
+		margin-bottom: 8px;
+		height: 41px;
+	}
+
 .remove-icon {
 	border-radius: 3px;
 	padding: 5px 5px;
@@ -285,6 +321,10 @@ div.modal-content {
 	top: 0px;
 	width: 100vw;
 	z-index: 100;
+}
+
+.navbar .navbar-right {
+	margin-right: 0px;
 }
 
 /************************

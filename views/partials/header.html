@@ -27,17 +27,16 @@
   </div>
   <div class="navbar-collapse collapse navbar-responsive-collapse">
     <ul class="nav navbar-nav navbar-right">
-      <li><a ng-click="showAbout()">About</a></li>
+      <!--<li><a ng-click="showAbout()">About</a></li>-->
       <li><a href="mailto:arhoskin@ualberta.ca">Contact</a></li>
-      <li><a href="https://github.com/rosshamish/classtime">Github</a></li>
     </ul>
   </div>
 
   <script type="text/ng-template" id="addedModal.html">
     <div class="modal-container floating-container">
       <div class="section-header">
-        <p class="section-text big-size">Added Courses:</p>
-        <button class="btn btn-default section-text regular-size go-right" ng-click="emptyAll()">Empty All</button>
+        <p class="section-text big-size">My Courses</p>
+        <button class="btn btn-default section-text regular-size go-right empty-all" ng-click="emptyAll()">Empty All</button>
       </div>
       <div class="added-list">
           <span class="list-group-item" ng-repeat="course in added">
