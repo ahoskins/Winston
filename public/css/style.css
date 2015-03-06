@@ -72,10 +72,13 @@ html, body {
 
 .section-text {
 	padding-left: 10px;
-	font-style: italic;
 	font-weight: lighter;
 	display: inline;
 	text-align: center;
+}
+
+.dropdown .section-text {
+	padding-left: 0px;
 }
 
 .bottom-container {
@@ -182,7 +185,6 @@ div.fc-view, .fc-today {
 
 button.dropdown-toggle {
 	font-size: 18px;
-	font-style: italic;
 	display: inline-block;
 	margin-top: 0px;
 }
@@ -272,6 +274,12 @@ div.panel-collapse {
 	width: 32vw;
 	min-height: 350px;
 }
+
+	.empty-all {
+		margin-top: 8px;
+		margin-bottom: 8px;
+		height: 41px;
+	}
 
 .remove-icon {
 	border-radius: 3px;

@@ -2,7 +2,7 @@
     <div class="section-header">
         <div class="section-text big-size">Added Courses:</div>
 
-        <button class="btn btn-default section-text regular-size go-right" ng-click="emptyAll()">Empty All</button>
+        <button class="btn btn-default section-text regular-size go-right empty-all" ng-click="emptyAll()">Empty All</button>
     </div>
 <!--             <md-button class="md-raised md-primary remove-icon" md-theme="red" ng-click="removeAll()">
         <i class="glyphicon glyphicon-minus" ng-click="removeFromSchedule(course)"></i> Remove All 
@@ -10,7 +10,6 @@
 <!--     <md-button class="md-raised md-primary generate-schedules-button" id="generate-schedules-button" ng-click="promptSchedules()">
         Generate Schedules
     </md-button> -->
-
     <div class="added-list">
         <span class="list-group-item" ng-repeat="course in added">
             {{ course.asString }}
