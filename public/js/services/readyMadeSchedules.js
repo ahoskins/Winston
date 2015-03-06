@@ -190,6 +190,10 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 
 	        	// Build the schedules event objects
 	       		readyMadeSchedules = buildSchedules(scheduleResponse);
+
+	       		if (readyMadeSchedules.length === 0) {
+	       			
+	       		}
 			}).
 			error(function() {
 	    		$window.alert("Server not responding...");

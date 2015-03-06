@@ -15,6 +15,11 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     var arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();
 
     $scope.scheduleLength = arrayOfSchedules.length;
+    if ($scope.scheduleLength === 0) {
+        // Alert custom dialog
+    }
+
+
     $scope.scheduleIndex = 0;
 
     var coursesTimes;
@@ -27,6 +32,8 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         refreshCalendar();
         captureCalendarCanvas();
     }, 0);
+
+    var id = 0;
 
     /* 
     ***********************************************
@@ -85,7 +92,8 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                     title: 'Busy Time',
                     start: start,
                     end: end,
-                    color: '#EF9A9A'
+                    color: '#EF9A9A',
+                    id: id++
                 });
                 refreshCalendar();
             },
@@ -104,8 +112,11 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                     return;
                 }
 
-                var index = $scope.events.indexOf(calEvent);
-                $scope.events.splice(index, 1);
+                $scope.events.forEach(function(ev) {
+                    if (ev.id === calEvent.id) {
+                        $scope.events.splice($scope.events.indexOf(ev), 1);
+                    }
+                });
 
                 refreshCalendar();
             },  
@@ -116,11 +127,10 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             eventResizeStop: function(calEvent, jsEvent, ui, view) {
 
                 $scope.events.forEach(function(ev) {
-                    if (ev.start.day === calEvent.start.day && ev.start.hour === calEvent.start.hour && ev.start.minute === calEvent.start.minute) {
-                        $scope.events.splice($scope.events.indexOf(ev), 1);
-                        $scope.events.push(calEvent);
+                    if (ev.id === calEvent.id) {
+                        $scope.events[$scope.events.indexOf(ev)] = calEvent;
                     }
-                }); 
+                })
             }
         }
     };
