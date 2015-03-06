@@ -48,44 +48,6 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             selectable: true,
             // selectHelper: true,
 
-            /**
-            On click of empty space on calendar...add as busy time if in "edit busy time" mode
-            */
-            select: function(start, end) {
-
-                if (!$scope.editableMode) {
-                    return;
-                }
-
-                busyTimes.push({
-                    durationEditable: true,
-                    title: 'Busy Time',
-                    start: start,
-                    end: end,
-                    color: '#EF9A9A'
-                });
-
-                $scope.events = busyTimes;
-                refreshCalendar();
-            },
-
-            /**
-            On click of event on calendar...delete event if this event is busy time and "edit busy time" mode
-            */
-            eventClick: function(calEvent, jsEvent, view) {
-
-                // Only allowed to delete busy times
-                if (calEvent.title !== 'Busy Time') {
-                    return;
-                }
-
-                // Delete the event
-                var index = busyTimes.indexOf(calEvent);
-                busyTimes.splice(index, 1);
-
-                $scope.events = busyTimes.concat(coursesTimes);
-                refreshCalendar();
-            },
 
             // eventMouseover to do the tooltip if the other one drives me crazy
 
@@ -97,8 +59,69 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             allDaySlot: false,
 
             // Event settings
-            allDayDefault: false
+            allDayDefault: false,
             //timezoneParam: 'local'
+
+            /*
+            *********************************************************************************************************
+            The following events are for edit mode only
+
+            They operate directly on $scope.events because this is the calendars perspective of events.  
+            Once edit mode is done, $scope.events is assigned to busyTimes.
+            **********************************************************************************************************
+            */
+
+            /**
+            On click of empty space on calendar add this as busytime to $scope.events
+            */
+            select: function(start, end) {
+
+                if (!$scope.editableMode) {
+                    return;
+                }
+
+                $scope.events.push({
+                    durationEditable: true,
+                    title: 'Busy Time',
+                    start: start,
+                    end: end,
+                    color: '#EF9A9A'
+                });
+                refreshCalendar();
+            },
+
+            /**
+            On click of busytime on calendar delete from $scope.events
+            */
+            eventClick: function(calEvent, jsEvent, view) {
+
+                // Only allowed to delete busy times
+                if (calEvent.title !== 'Busy Time') {
+                    return;
+                }
+
+                if (calEvent.durationEditable === false) {
+                    return;
+                }
+
+                var index = $scope.events.indexOf(calEvent);
+                $scope.events.splice(index, 1);
+
+                refreshCalendar();
+            },  
+
+            /*
+            On resize of busy time replace old busytime with new in $scope.events
+            */
+            eventResizeStop: function(calEvent, jsEvent, ui, view) {
+
+                $scope.events.forEach(function(ev) {
+                    if (ev.start.day === calEvent.start.day && ev.start.hour === calEvent.start.hour && ev.start.minute === calEvent.start.minute) {
+                        $scope.events.splice($scope.events.indexOf(ev), 1);
+                        $scope.events.push(calEvent);
+                    }
+                }); 
+            }
         }
     };
 
@@ -208,24 +231,31 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
     $scope.open = function() {
         $scope.editableMode = !$scope.editableMode;
+
+        // Editable state
         if ($scope.editableMode) {
 
             $scope.busyTimeButtonText = "Done"
 
+            // Allow edit previous busy times
+            allowEditAllBusyTime();
+
             // Allow busy time to be added anywhere
             $scope.events = busyTimes;
             refreshCalendar();
+        } 
+        // View state
+        else {
+            // busytimes is all the newly created/modified events
+            busyTimes = $scope.events;
 
-        } else {
+            // Can't edit now that we aren't in edit mode anymore
+            disallowEditAllBusyTime();
+
             $scope.busyTimeButtonText = "Add Busy Time";
 
-            console.log($scope.events);
-
+            // Regenerate the schedules
             var apiBusyTimes = generateApiBusyTimes();
-
-            console.dir(apiBusyTimes);
-
-            // Regenerate the schedule!
             readyMadeSchedules.getSchedulesPromise(apiBusyTimes).then(function() {
                 arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();
 
@@ -260,7 +290,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     *********************************************************************
     */
 
-    $scope.open = function() {
+    $scope.image = function() {
         $window.open(calendarCanvas.toDataURL('image/png'));
     }
 
@@ -283,6 +313,19 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                 calendarCanvas = canvas;
             }
         });
+    }
+
+    function allowEditAllBusyTime() {
+        busyTimes.forEach(function(busyTime) {
+            busyTime.durationEditable = true;
+        });
+    }
+
+    function disallowEditAllBusyTime() {
+        busyTimes.forEach(function(busyTime) {
+            busyTime.durationEditable = false;
+        });
+        console.dir(busyTimes);
     }
 
 }]);
