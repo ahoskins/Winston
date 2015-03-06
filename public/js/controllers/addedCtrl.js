@@ -23,6 +23,12 @@ winstonControllers.controller('addedCtrl', ['$scope', '$location', 'addedCourses
     //     }
     // }
 
+    $scope.emptyCourse = function(course) {
+        var index = addedCourses.data.indexOf(course);
+        addedCourses.data.splice(index, 1);
+        addedCourses.courseAdded[course.asString] = 0;
+    }
+
     $scope.emptyAll = function() {
         addedCourses.data.length = 0;
     }

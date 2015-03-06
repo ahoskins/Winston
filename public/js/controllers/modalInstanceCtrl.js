@@ -11,4 +11,10 @@ winstonControllers.controller('modalInstanceCtrl', ['$scope', '$modalInstance', 
         addedCourses.data.length = 0;
     }
 
+    $scope.emptyCourse = function(course) {
+        var index = addedCourses.data.indexOf(course);
+        addedCourses.data.splice(index, 1);
+        addedCourses.courseAdded[course.asString] = 0;
+    }
+
 }]);
