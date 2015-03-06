@@ -285,23 +285,21 @@ div.panel-collapse {
       Added List
 ************************/
 
-.added-list {
-	background-color: #efefef;
-	left: 0px;
-	padding-left: 0px;
-}
-
 @media (max-width: 768px) {
 	.added-container {
 		display: none !important;
 	}
 }
 
+.floating-container {
+	overflow: hidden;
+}
+
 .added-container {
 	margin-bottom: 20px;
 	position: fixed;
 	width: 32vw;
-	min-height: 350px;
+	overflow: hidden;
 }
 
 	.view-schedules {
@@ -309,6 +307,30 @@ div.panel-collapse {
 		margin-bottom: 8px;
 		height: 41px;
 	}
+
+.added-list {
+	display: flex;
+	flex-direction: column;
+	min-height: 73px;
+	background-color: white;
+	left: 0px;
+	padding-left: 0px;
+	overflow: hidden;
+}
+
+.added-list .list-group-item {
+	border-radius: 0px;
+	border: none;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+}
+
+.added-footer {
+	margin-top: auto;
+	padding: 15px;
+	border: 1px solid white;
+	border-radius: 0px 0px 15px 15px;
+}
 
 .remove-icon {
 	border-radius: 3px;
