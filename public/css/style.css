@@ -313,6 +313,10 @@ div.modal-content {
 	z-index: 100;
 }
 
+.navbar .navbar-right {
+	margin-right: 0px;
+}
+
 /************************
           Footer
 *************************/
