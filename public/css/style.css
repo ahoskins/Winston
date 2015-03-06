@@ -200,50 +200,64 @@ div.course-search {
 	padding-left: 16px;
 	padding-right: 16px;
 	width: 100%;
+}
+
+div.course-search > input.course-search.form-control {
+	border-radius: 5px;
 	font-size: 20px;
 }
 
-input.course-search {
-	padding-left: 5px;
-	width: 100%;
+h4.panel-title {
+	position: relative;
 }
 
 .add-button {
-	position: relative;
-	top: -18px;
-	float: right;
-}
-
-#add-up {
+	position: absolute;
+	top: 3px;
+	right: 5px;
+	padding: 10px;
 	font-size: 22px;
 	color: #262626;
 }
 
 .panel-default > .panel-heading {
-	background-color: #90CAF9;
+	background-color: #BBDEFB;
 	border-radius: 0px;
+	padding: 0px;
+}
+
+.panel-default > .panel-heading .accordion-toggle > span {
+	padding: 15px 15px;
 }
 
 /*Single panel*/
 .panel-group .panel {
 	border-color: black;
-	border-width: 2px;
-	border-radius: 0px;
+	border-width: 1px;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+
+.panel-group {
+	margin-bottom: 0px; /* override bootstrap 20px */
+}
+.panel-group + .panel-group {
+	margin-top: 20px;
 }
 
 div.panel-body {
-	background-color: #BBDEFB !important;
+	background-color: #E9EFF9 !important;
 	border-radius: 0px;
 	min-width: 100%;
 }
 
 div.panel-collapse {
-	background-color: #BBDEFB !important;
+	background-color: #E9EFF9 !important;
 }
 
 .course-description {
 	font-size: 16px;
-	font-weight: bold;
 	min-width: 100%;
 	margin: 0px !important;
 }
