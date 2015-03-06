@@ -70,6 +70,14 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             //timezoneParam: 'local'
 
             /*
+            Tooltip with the desciption on all courses
+            */
+            eventRender: function(event, element) {
+                $(element).attr("title", event.description);
+                $(element).tooltip({ container: "body"})
+            },
+
+            /*
             *********************************************************************************************************
             The following events are for edit mode only
 

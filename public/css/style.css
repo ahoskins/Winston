@@ -147,6 +147,22 @@ div.fc-view, .fc-today {
 	color: black;
 }
 
+.fc-title {
+	white-space:nowrap;
+	text-overflow:ellipsis !important;
+	overflow: hidden;
+	width: 100%;
+}
+
+@media(max-width: 500px) {
+	.fc-day-header {
+		font-size: 10px !important;
+	}
+	.fc-title {
+		font-size: 10px !important;
+	}
+}
+
 #prev-caret {
 	color: #ffffff;
 	font-size: 50px;
