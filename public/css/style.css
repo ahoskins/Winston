@@ -46,12 +46,6 @@ html, body {
 .nav-container > .back-to-browse {
 	margin-right: auto;
 }
-.nav-container > .share-dropdown {
-	line-height: 0px;
-}
-	.nav-container > .share-dropdown p {
-		font-style: normal;
-	}
 
 .nav, .pagination, .carousel, .panel-title, a { 
 	cursor: pointer; 
@@ -118,6 +112,24 @@ html, body {
 /************************
          Schedule
 *************************/
+
+/* Header */
+
+.social-icons {
+	display: flex;
+	align-items: center;
+}
+.social-icons a+a {
+	margin-left: 20px;
+}
+.social-icons i {
+	color: black;
+}
+	.social-icons i:hover {
+		color: #337ab7;
+	}
+
+/* Schedule */
 
 div.fc-view, .fc-today {
 	background-color: #EFEFEF !important;
