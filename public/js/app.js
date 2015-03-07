@@ -1,6 +1,6 @@
 // Module
 //
-var winstonApp = angular.module('winstonApp', ['winstonControllers', 'ui.calendar', 'pmkr.filterStabilize', 'ui.bootstrap', 'ngRoute', 'ngFacebook']);
+var winstonApp = angular.module('winstonApp', ['winstonControllers', 'ui.calendar', 'pmkr.filterStabilize', 'ui.bootstrap', 'ngRoute', 'ngFacebook', 'ngProgressLite']);
 
 var winstonControllers = angular.module('winstonControllers', ['ui.calendar', 'pmkr.filterStabilize']);
 

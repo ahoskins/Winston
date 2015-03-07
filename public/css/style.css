@@ -246,7 +246,16 @@ h4.panel-title {
 	right: 5px;
 	padding: 10px;
 	font-size: 22px;
+}
+
+.add-button > .add {
 	color: #262626;
+}
+.add-button > .add:hover {
+	color: green;
+}
+.add-button > .added {
+	color: green;
 }
 
 .panel-default > .panel-heading {
@@ -318,7 +327,13 @@ div.panel-collapse {
 	overflow: hidden;
 }
 
+.added-container .section-header {
+	display: flex;
+	flex-align: center;
+}
+
 	.view-schedules {
+		margin-left: auto;
 		margin-top: 8px;
 		margin-bottom: 8px;
 		height: 41px;

@@ -47,7 +47,14 @@
                                     <accordion-group class="course-accordion" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="{revert: 'invalid'}" id="{{ singleCourse.course }}" ng-click="loadMore(singleCourse.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="singleCourse in subjectObject.courses" no-bubble>
                                         <accordion-heading>
                                             {{ singleCourse.asString }}
-                                            <a class="add-button" no-bubble><i class="fa fa-plus" ng-show="!added[singleCourse.asString]" ng-click="addToSchedule(singleCourse)"></i></a>
+                                            <a class="add-button" no-bubble>
+                                                <i class="fa fa-plus add" 
+                                                ng-show="!added[singleCourse.asString]" 
+                                                ng-click="addToSchedule(singleCourse)"></i>
+                                                <i class="fa fa-check added" 
+                                                ng-show="added[singleCourse.asString]" 
+                                                ng-click="addToSchedule(singleCourse)"></i>
+                                            </a>
                                         </accordion-heading>
                                         <div class="course-description">
                                             {{ description[singleCourse.course] }}

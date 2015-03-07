@@ -1,4 +1,4 @@
-winstonControllers.controller('addedCtrl', ['$scope', '$location', 'addedCourses', 'SubjectBin', '$window', function($scope, $location, addedCourses, SubjectBin, $window){
+winstonControllers.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', 'SubjectBin', '$window', function($scope, $location, $interval, ngProgressLite, addedCourses, SubjectBin, $window){
     
     // Mirror the addedCourses service
     $scope.added = addedCourses.data;
@@ -34,6 +34,7 @@ winstonControllers.controller('addedCtrl', ['$scope', '$location', 'addedCourses
     }
 
     $scope.viewSchedules = function() {
+        ngProgressLite.start();
         $location.path('/schedule');
     }
 }]);
