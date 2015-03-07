@@ -179,18 +179,11 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
     factory.getSchedulesPromise = function(callingFromScheduleView) {
 
     	if (addedCourses.data.length === 0) {
-    		$location.path('/browse');
-    		$route.reload();
-
-			var modalInstance = $modal.open({
-  					templateUrl: 'noAddedCoursesModal.html',
-  					controller: 'noAddedCoursesModalCtrl'
-			});
-
+    		factory.readyMadeSchedules = null;
 			ngProgressLite.done();
-
 			return;
     	}
+
     	addedBusyTime.generateApiFormattedBusyTimes();
 
     	ngProgressLite.set(0.6);

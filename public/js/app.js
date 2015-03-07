@@ -4,7 +4,8 @@ var winstonApp = angular.module('winstonApp', ['winstonControllers', 'ui.calenda
 
 var winstonControllers = angular.module('winstonControllers', ['ui.calendar', 'pmkr.filterStabilize']);
 
-winstonApp.config(['$routeProvider', '$facebookProvider', function($routeProvider, $facebookProvider) {
+winstonApp.config(['$routeProvider', '$facebookProvider', '$locationProvider', function($routeProvider, $facebookProvider, $locationProvider) {
+
 	$routeProvider.
 	  when('/browse', {
 	  	templateUrl: 'partials/browse.jade'
