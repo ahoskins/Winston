@@ -431,6 +431,10 @@ img.navbar-brand-image {
 	margin-right: 10px;
 }
 
+.navbar-toggle.nav-dropdown {
+	height: 40px;
+}
+
 /************************
           Footer
 *************************/
