@@ -93,12 +93,18 @@ html, body {
 
 /* Header */
 
+.schedule-header {
+	display: flex;
+	align-items: center;
+}
+
 .social-icons {
+	float: right;
 	display: flex;
 	align-items: center;
 }
 .social-icons a+a {
-	margin-left: 20px;
+	margin-left: 10px;
 }
 .social-icons i {
 	color: black;
