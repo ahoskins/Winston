@@ -1,4 +1,4 @@
-winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', '$location', function(scheduleFactory, addedCourses, $window, $location){
+winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', 'ngProgressLite', '$window', '$location', function(scheduleFactory, addedCourses, ngProgressLite, $window, $location){
 	/*
 	Worked function the created readyMadeSchedules
 
@@ -180,8 +180,11 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
     	if (addedCourses.data.length === 0) {
     		$window.alert("Add some courses first...");
     		$location.path('/browse');
+    		ngProgressLite.done();
     		return;
     	}
+
+    	ngProgressLite.set(0.6);
 
 		return ( scheduleFactory.getSchedules(addedCourses.data, busyTimes).
 			success(function (data) {
@@ -190,6 +193,8 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 
 	        	// Build the schedules event objects
 	       		readyMadeSchedules = buildSchedules(scheduleResponse);
+
+	       		ngProgressLite.done();
 
 	       		if (readyMadeSchedules.length === 0) {
 	       			
