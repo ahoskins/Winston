@@ -20,31 +20,9 @@ html, body {
 	float: right !important;
 }
 
-.column-container {
-	margin-top: 70px;
-}
-
 .floating-container {
 	border-radius: 15px !important;
 	background-color: #f2f2f2;
-}
-
-.nav-container {
-	display: flex;
-	flex-align: right;
-	align-items: center;
-	height: 60px;
-	margin-bottom: 10px;
-	padding: 0px 10px;
-	line-height: 60px;
-}
-
-.nav-container > * {
-	margin-right: 10px;
-	height: 41px;
-}
-.nav-container > .back-to-browse {
-	margin-right: auto;
 }
 
 .nav, .pagination, .carousel, .panel-title, a { 
@@ -396,11 +374,38 @@ div.modal-content {
           Header
 *************************/
 
+.nav-container {
+	display: flex;
+	flex-align: right;
+	align-items: center;
+	height: 60px;
+	margin-bottom: 10px;
+	padding: 0px 10px;
+	line-height: 60px;
+}
+
+.nav-container > * {
+	margin-right: 10px;
+	height: 41px;
+}
+.nav-container > .back-to-browse {
+	margin-right: auto;
+}
+
 .navbar.navbar-default {
-	position: fixed !important;
-	top: 0px;
-	width: 100vw;
+	width: 100%;
 	z-index: 100;
+}
+
+@media(max-width: 768px) {
+	.navbar.navbar-default {
+		position: fixed !important;
+		top: 0px;
+	}
+
+	.column-container {
+		margin-top: 70px;
+	}
 }
 
 .navbar .navbar-right {
