@@ -9,7 +9,7 @@
 html, body {
 	position: relative;
 	background-color: #B2DFDB;
-	height: 100vh;
+	min-height: 100vh;
 }
 
 .go-left {
@@ -278,6 +278,10 @@ div.panel-collapse {
 	margin: 0px !important;
 }
 
+.courses-accordion {
+	margin-bottom: 20px;
+}
+
 /*#welcome-banner {
 	margin-top: 70px;
 	border-radius: 15px;
@@ -395,6 +399,7 @@ div.modal-content {
 .navbar.navbar-default {
 	width: 100%;
 	z-index: 100;
+	background-color: #e7e7e7;
 }
 
 @media(max-width: 768px) {
@@ -426,11 +431,19 @@ div.modal-content {
 	margin: 0 auto -4em;
 }
 
+.footer-bit {
+	display: flex;
+	align-items: center;
+	background-color: #e7e7e7;
+	padding: 20px;
+	border-radius: 5px;
+	border: 1px solid #e7e7e7;
+}
 
+.footer-bit i {
+	color: black;
+}
 
-
-
-
-
-
-
+.footer-bit i:hover {
+	color: #337ab7;
+}
