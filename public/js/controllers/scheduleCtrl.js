@@ -3,7 +3,7 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', 'readyMadeSchedules', '$facebook', 'addedBusyTime', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin, readyMadeSchedules, $facebook, addedBusyTime) {
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', 'readyMadeSchedules', '$facebook', 'addedBusyTime', '$modal', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin, readyMadeSchedules, $facebook, addedBusyTime, $modal) {
 
     /*
     ******************************************************
@@ -14,17 +14,11 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     // Array of ready to go schedules in Full Calendar format
     var arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();
 
-    $scope.scheduleLength = arrayOfSchedules.length;
-    if ($scope.scheduleLength === 0) {
-        // Alert custom dialog
-    }
-
-
     $scope.scheduleIndex = 0;
 
-    var coursesTimes;
+    $scope.scheduleLength = arrayOfSchedules.length;
 
-    coursesTimes = arrayOfSchedules[0];
+    var coursesTimes = arrayOfSchedules[0];
     $scope.events = coursesTimes.concat(addedBusyTime.data);
 
     $timeout(function() {
@@ -33,6 +27,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     }, 0);
 
     var id = 0;
+
 
     /* 
     ***********************************************
@@ -179,43 +174,60 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     $scope.busyTimeButtonText = "Add Busy Time";
     $scope.editableMode = false;
 
+    function startEditableMode() {
+        $scope.editableMode = true;
+        $scope.busyTimeButtonText = "Done"
+
+        allowEditAllBusyTime();
+
+        // Allow busy time to be added anywhere
+        $scope.events = addedBusyTime.data;
+        refreshCalendar();
+    }
+
+    function startViewMode() {
+        addedBusyTime.data = $scope.events;
+
+        disallowEditAllBusyTime();
+
+        $scope.busyTimeButtonText = "Add Busy Time";
+
+        // Regenerate the schedules
+        readyMadeSchedules.getSchedulesPromise(true).then(function() {
+            arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();
+
+            $scope.scheduleLength = arrayOfSchedules.length;
+            if ($scope.scheduleLength === 0) {
+
+                var modalInstance = $modal.open({
+                    templateUrl: 'addLessBusyTimeModal.html',
+                    controller: 'addLessBusyTimeModalCtrl'
+                });
+
+                startEditableMode();
+
+                return;
+            }
+
+            $scope.scheduleIndex = 0;
+
+            coursesTimes = arrayOfSchedules[0];
+
+            $scope.events = addedBusyTime.data.concat(coursesTimes);
+            refreshCalendar();
+        });
+    }
+
     $scope.open = function() {
         $scope.editableMode = !$scope.editableMode;
 
-        // Editable state
+        // Editable mode
         if ($scope.editableMode) {
-
-            $scope.busyTimeButtonText = "Done"
-
-            // Allow edit previous busy times
-            allowEditAllBusyTime();
-
-            // Allow busy time to be added anywhere
-            $scope.events = addedBusyTime.data;
-            refreshCalendar();
+            startEditableMode();
         } 
-        // View state
+        // View mode
         else {
-            // addedBusyTime.data is all the newly created/modified events
-            addedBusyTime.data = $scope.events;
-
-            // Can't edit now that we aren't in edit mode anymore
-            disallowEditAllBusyTime();
-
-            $scope.busyTimeButtonText = "Add Busy Time";
-
-            // Regenerate the schedules
-            readyMadeSchedules.getSchedulesPromise().then(function() {
-                arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();
-
-                $scope.scheduleLength = arrayOfSchedules.length;
-                $scope.scheduleIndex = 0;
-
-                coursesTimes = arrayOfSchedules[0];
-
-                $scope.events = addedBusyTime.data.concat(coursesTimes);
-                refreshCalendar();
-            });
+            startViewMode();
         }
     }
 

@@ -1,4 +1,4 @@
-winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', '$location', 'addedBusyTime', function(scheduleFactory, addedCourses, $window, $location, addedBusyTime){
+winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', '$location', 'addedBusyTime', '$modal', '$timeout', '$route', function(scheduleFactory, addedCourses, $window, $location, addedBusyTime, $modal, $timeout, $route){
 	/*
 	Worked function the created readyMadeSchedules
 
@@ -172,15 +172,21 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	factory.readyMadeSchedules = null;
 
 	factory.getReadyMadeSchedules = function() {
-		return readyMadeSchedules;
+		return factory.readyMadeSchedules;
 	}
 
-    factory.getSchedulesPromise = function() {
+    factory.getSchedulesPromise = function(callingFromScheduleView) {
 
     	if (addedCourses.data.length === 0) {
-    		$window.alert("Add some courses first...");
     		$location.path('/browse');
-    		return;
+    		$route.reload();
+
+			var modalInstance = $modal.open({
+  					templateUrl: 'noAddedCoursesModal.html',
+  					controller: 'noAddedCoursesModalCtrl'
+			});
+
+			return;
     	}
     	addedBusyTime.generateApiFormattedBusyTimes();
 
@@ -190,12 +196,18 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	       		var scheduleResponse = angular.fromJson(data);
 
 	        	// Build the schedules event objects
-	       		readyMadeSchedules = buildSchedules(scheduleResponse);
+	       		factory.readyMadeSchedules = buildSchedules(scheduleResponse);
 
-	       		if (readyMadeSchedules.length === 0) {
-	       			$window.alert('No schedule available!');
+	       		if (!callingFromScheduleView && factory.readyMadeSchedules.length === 0) {
 	       			$location.path('/browse');
+	       			$route.reload();
+
+	       			var modalInstance = $modal.open({
+	  					templateUrl: 'noSchedulesModal.html',
+	  					controller: 'noSchedulesModalCtrl'
+					});
 	       		}
+
 			}).
 			error(function() {
 	    		$window.alert("Server not responding...");

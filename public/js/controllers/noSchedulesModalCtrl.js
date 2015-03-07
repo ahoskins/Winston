@@ -1,0 +1,3 @@
+winstonControllers.controller('noSchedulesModalCtrl', function(){
+	
+})
