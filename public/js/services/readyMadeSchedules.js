@@ -1,4 +1,4 @@
-winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', '$location', function(scheduleFactory, addedCourses, $window, $location){
+winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', '$location', 'addedBusyTime', function(scheduleFactory, addedCourses, $window, $location, addedBusyTime){
 	/*
 	Worked function the created readyMadeSchedules
 
@@ -175,15 +175,16 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 		return readyMadeSchedules;
 	}
 
-    factory.getSchedulesPromise = function(busyTimes) {
+    factory.getSchedulesPromise = function() {
 
     	if (addedCourses.data.length === 0) {
     		$window.alert("Add some courses first...");
     		$location.path('/browse');
     		return;
     	}
+    	addedBusyTime.generateApiFormattedBusyTimes();
 
-		return ( scheduleFactory.getSchedules(addedCourses.data, busyTimes).
+		return ( scheduleFactory.getSchedules(addedCourses.data, addedBusyTime.apiFormattedData).
 			success(function (data) {
 	    		// Assign schedule response to member
 	       		var scheduleResponse = angular.fromJson(data);
@@ -192,7 +193,8 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	       		readyMadeSchedules = buildSchedules(scheduleResponse);
 
 	       		if (readyMadeSchedules.length === 0) {
-	       			
+	       			$window.alert('No schedule available!');
+	       			$location.path('/browse');
 	       		}
 			}).
 			error(function() {

@@ -3,7 +3,7 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', 'readyMadeSchedules', '$facebook', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin, readyMadeSchedules, $facebook) {
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', 'readyMadeSchedules', '$facebook', 'addedBusyTime', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin, readyMadeSchedules, $facebook, addedBusyTime) {
 
     /*
     ******************************************************
@@ -23,10 +23,9 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     $scope.scheduleIndex = 0;
 
     var coursesTimes;
-    var busyTimes = [];
 
     coursesTimes = arrayOfSchedules[0];
-    $scope.events = coursesTimes;
+    $scope.events = coursesTimes.concat(addedBusyTime.data);
 
     $timeout(function() {
         refreshCalendar();
@@ -82,7 +81,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             The following events are for edit mode only
 
             They operate directly on $scope.events because this is the calendars perspective of events.  
-            Once edit mode is done, $scope.events is assigned to busyTimes.
+            Once edit mode is done, $scope.events is assigned to addedBusyTime.data.
             **********************************************************************************************************
             */
 
@@ -168,80 +167,13 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
         coursesTimes = arrayOfSchedules[$scope.scheduleIndex];
 
-        $scope.events = busyTimes.concat(coursesTimes);
+        $scope.events = addedBusyTime.data.concat(coursesTimes);
         refreshCalendar();
         captureCalendarCanvas();
     };
 
     $scope.backToBrowse = function() {
         $location.path('/browse');
-    }
-
-    var createBusyObject = function(event) {
-        var busyObject = {};
-
-        switch(event.start.day()) {
-            case 1:
-                busyObject.day = 'M';
-                break;
-            case 2:
-                busyObject.day = 'T';
-                break;
-            case 3:
-                busyObject.day = 'W';
-                break;
-            case 4:
-                busyObject.day = 'R';
-                break;
-            case 5:
-                busyObject.day = 'F';
-                break;
-        }
-
-
-        // Start
-        var hour = event.start.hour();
-        var side = 'AM';
-        if (hour > 12) {
-            hour = hour - 12;
-            side = 'PM';
-        } 
-        hour = ("0" + hour).slice(-2); 
-
-        var minute = event.start.minute();
-        minute = ("0" + minute).slice(-2);
-
-        busyObject.startTime = hour + ':' + minute + ' ' + side;
-
-
-        // End
-        var hour = event.end.hour();
-        var side = 'AM';
-        if (hour > 12) {
-            hour = hour - 12;
-            side = 'PM';
-        }  
-        hour = ("0" + hour).slice(-2);
-
-        var minute = event.end.minute();
-        minute = ("0" + minute).slice(-2);
-
-        busyObject.endTime = hour + ':' + minute + ' ' + side;
-
-
-        return busyObject;
-    }
-
-    var generateApiBusyTimes = function() {
-        var apiBusyTimes = [];
-        busyTimes.forEach(function(event) {
-            if (event.title === 'Busy Time') {
-                console.dir(event);
-                apiBusyTimes.push(createBusyObject(event));
-            }
-        });
-
-        return apiBusyTimes;
     }
 
     $scope.busyTimeButtonText = "Add Busy Time";
@@ -259,13 +191,13 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             allowEditAllBusyTime();
 
             // Allow busy time to be added anywhere
-            $scope.events = busyTimes;
+            $scope.events = addedBusyTime.data;
             refreshCalendar();
         } 
         // View state
         else {
-            // busytimes is all the newly created/modified events
-            busyTimes = $scope.events;
+            // addedBusyTime.data is all the newly created/modified events
+            addedBusyTime.data = $scope.events;
 
             // Can't edit now that we aren't in edit mode anymore
             disallowEditAllBusyTime();
@@ -273,8 +205,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             $scope.busyTimeButtonText = "Add Busy Time";
 
             // Regenerate the schedules
-            var apiBusyTimes = generateApiBusyTimes();
-            readyMadeSchedules.getSchedulesPromise(apiBusyTimes).then(function() {
+            readyMadeSchedules.getSchedulesPromise().then(function() {
                 arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();
 
                 $scope.scheduleLength = arrayOfSchedules.length;
@@ -282,7 +213,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
                 coursesTimes = arrayOfSchedules[0];
 
-                $scope.events = busyTimes.concat(coursesTimes);
+                $scope.events = addedBusyTime.data.concat(coursesTimes);
                 refreshCalendar();
             });
         }
@@ -334,16 +265,16 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     }
 
     function allowEditAllBusyTime() {
-        busyTimes.forEach(function(busyTime) {
+        addedBusyTime.data.forEach(function(busyTime) {
             busyTime.durationEditable = true;
         });
     }
 
     function disallowEditAllBusyTime() {
-        busyTimes.forEach(function(busyTime) {
+        addedBusyTime.data.forEach(function(busyTime) {
             busyTime.durationEditable = false;
         });
-        console.dir(busyTimes);
+        console.dir(addedBusyTime.data);
     }
 
 }]);
