@@ -384,6 +384,11 @@ div.modal-content {
 	line-height: 60px;
 }
 
+.navbar-brand {
+	display: flex;
+	align-items: center;
+}
+
 .nav-container > * {
 	margin-right: 10px;
 	height: 41px;
@@ -411,6 +416,13 @@ div.modal-content {
 
 .navbar .navbar-right {
 	margin-right: 0px;
+}
+
+img.navbar-brand-image {
+	float: left;
+	height: 30px;
+	vertical-align: middle;
+	margin-right: 10px;
 }
 
 /************************
