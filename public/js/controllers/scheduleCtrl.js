@@ -23,6 +23,8 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     if (arrayOfSchedules !== null) {
         $scope.scheduleLength = arrayOfSchedules.length;
         $scope.events = arrayOfSchedules[0].concat(addedBusyTime.data);
+    } else {
+        $scope.events = addedBusyTime.data;
     }
 
     $timeout(function() {
