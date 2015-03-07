@@ -278,10 +278,6 @@ div.panel-collapse {
 	margin: 0px !important;
 }
 
-.courses-accordion {
-	margin-bottom: 20px;
-}
-
 /*#welcome-banner {
 	margin-top: 70px;
 	border-radius: 15px;
@@ -432,6 +428,7 @@ div.modal-content {
 }
 
 .footer-bit {
+	margin-top: 80px;
 	display: flex;
 	align-items: center;
 	background-color: #e7e7e7;
