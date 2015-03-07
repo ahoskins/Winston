@@ -20,6 +20,8 @@ winstonControllers.controller('headerCtrl', ['$scope', '$location', '$modal', 'S
 	}, function() {
 		if ($location.path() == '/schedule') {
 			$scope.showAdded = false;
+		} else {
+			$scope.showAdded = true;
 		}
 	});
 

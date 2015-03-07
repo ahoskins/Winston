@@ -25,7 +25,7 @@ winstonApp.config(['$routeProvider', '$facebookProvider', function($routeProvide
 	$facebookProvider.setAppId('1605906902964485');
 }]);
 
-winstonApp.run( function( $rootScope ) {
+winstonApp.run( function($rootScope) {
   // Load the facebook SDK asynchronously
   (function(){
      // If we've already installed the SDK, we're done
@@ -44,5 +44,6 @@ winstonApp.run( function( $rootScope ) {
      // Insert the Facebook JS SDK into the DOM
      firstScriptElement.parentNode.insertBefore(facebookJS, firstScriptElement);
    }());
+
 });
 
