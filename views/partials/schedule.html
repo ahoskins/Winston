@@ -1,5 +1,5 @@
 <div ng-controller="scheduleCtrl">
-	<div class="column-container floating-container nav-container schedule-header">
+<!-- 	<div class="column-container floating-container nav-container schedule-header">
 		<button class="btn btn-primary section-text back-to-browse" ng-click="backToBrowse()">Browse Courses</button>
 
 		<div class="social-icons">
@@ -8,7 +8,53 @@
 			<a ng-click=""><i class="fa fa-envelope-o fa-lg"></i></a>
 			<a ng-click="image()"><i class="fa fa-picture-o fa-lg"></i></a>
 		</div>
+	</div> -->
+	<!-- <div class="column-container floating-container nav-container schedule-header"> -->
+		<!-- <div class="pref-container"> -->
+		<!-- <p class="section-text big-size">Preferences:</p> -->
+	<!-- <div class="row"> -->
+	<div class="column-container">
+
+	<div class="floating-container pref-group">
+
+		<div class="pref-section">
+			<div class="pref-header">Mornings?</div>
+			<div class="pref-container">
+		    	<div class="pref-label">Hate</div>
+		    	<div class="slider-container">
+			      	<md-slider flex min="0" max="255" ng-model="something" aria-label="red" class></md-slider>
+				</div>
+				<div class="pref-label">Love</div>
+			</div>
+		</div>
+
+		<div class="pref-section">
+			<div class="pref-header">Marathons?</div>
+			<div class="pref-container">
+		    	<div class="pref-label">Hate</div>
+		    	<div class="slider-container">
+			      	<md-slider flex min="0" max="255" ng-model="" aria-label="red" class></md-slider>
+				</div>
+				<div class="pref-label">Love</div>
+			</div>
+		</div>
+
+		<div class="pref-section">
+			<div class="pref-header">Night class?</div>
+			<div class="pref-container">
+		    	<div class="pref-label">Hate</div>
+		    	<div class="slider-container">
+			      	<md-slider flex min="0" max="255" ng-model="" aria-label="red" class></md-slider>
+				</div>
+				<div class="pref-label">Love</div>
+			</div>
+		</div>
+
 	</div>
+
+	<!-- </div> -->
+
+	<!-- </div> -->
 
 	<div class="floating-container">
 
@@ -29,6 +75,8 @@
 		</div>
 
 	    <div id="full-calendar-div" ui-calendar="uiConfig.calendar" ng-model="events" calendar="weekView"></div> 
+
+	</div>
 
 	</div>
 
