@@ -1,0 +1,24 @@
+<!-- Expects 'courseResult' with all properties named in this template -->
+<script type="text/ng-template" id="partials/course-tile.html">
+    <accordion-heading>
+        {{ courseResult.asString }} - {{ courseResult.courseTitle }}
+        <a class="add-button" no-bubble>
+            <i class="fa fa-plus add" 
+            ng-show="!added[courseResult.asString]" 
+            ng-click="addToSchedule(courseResult)"></i>
+            <i class="fa fa-check added" 
+            ng-show="added[courseResult.asString]" 
+            ng-click="removeFromSchedule(singleCourse)"></i>
+        </a>
+    </accordion-heading>
+    <div class="course-description">
+        {{ description[courseResult.course] }}
+    </div>
+    <div class="course-sub-info">
+        <span class="go-left">
+            <span>{{ faculty[courseResult.course] }}</span>
+            <span>{{ subjectTitle[courseResult.course] }}</span>
+        </span>
+        <span class="go-right">{{ credits[courseResult.course] }} credits</span>
+    </div>
+</script>

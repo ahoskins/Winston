@@ -1,7 +1,7 @@
 // Accordion Controller
 //
 
-winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'SubjectBin', '$timeout', '$location', 'addedCourses', function($scope, $window, detailFactory, SubjectBin, $timeout, $location, addedCourses) {
+winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'SubjectBin', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', function($scope, $window, detailFactory, SubjectBin, $timeout, $location, stabilize, addedCourses) {
 
     $location.hash('');
 
@@ -52,6 +52,9 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     // Retrieves course details and displays it
     // Note: one it is displayed, never erased from the DOM (cut on calls to the server)
     $scope.description = {};
+    $scope.credits = {};
+    $scope.faculty = {};
+    $scope.subjectTitle = {};
     $scope.showId = [];
     $scope.loadMore = function (courseIdNumber) {
         // Only call API if not yet added to $scope.description
@@ -60,6 +63,9 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
                 success(function (data) {
                     var result = angular.fromJson(data);
                     $scope.description[courseIdNumber] = result.courseDescription;
+                    $scope.credits[courseIdNumber] = result.units;
+                    $scope.faculty[courseIdNumber] = result.faculty;
+                    $scope.subjectTitle[courseIdNumber] = result.subjectTitle;
                 })
                 .error(function () {
                     $window.alert("Something fucked up.");
@@ -69,32 +75,32 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
 
     /*
     **************************
-    Performance related
+    Searching
     **************************
      */
 
     // To accordion load, wait 500 ms before displaying any courses
     $timeout(function() {
-        $scope.filterText = '';
+        $scope.searchText = '';
         
     }, 500);
 
     // Watch the searchBox every 200ms
-    var filterTextTimeout;
+    var searchTextTimeout;
     $scope.$watch('model.searchBox', function(val) {
         // Suppress type warnings
         if (!isString(val)) {
             return;
         }
 
-        // $scope.filterText = val.toUpperCase();
+        // $scope.searchText = val.toUpperCase();
 
         // // Start a press 200ms timeout
-        if (filterTextTimeout) {
-            $timeout.cancel(filterTextTimeout);
+        if (searchTextTimeout) {
+            $timeout.cancel(searchTextTimeout);
         }
-        filterTextTimeout = $timeout(function() {
-            $scope.filterText = val.toUpperCase();
+        searchTextTimeout = $timeout(function() {
+            $scope.searchText = val;
         }, 200);
 
         // Make all ng-if's false
@@ -107,6 +113,67 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
 
     });
     
+    $scope.courseSearchResults = stabilize(function (searchText) {
+        if (!_.isString(searchText)) {
+            return;
+        }
+
+        var searchableCourses = flattenCourses($scope.subjectBin);
+
+        var fuseCourseTitle = new Fuse(searchableCourses, {
+            keys: ['courseTitle'],
+            includeScore: true
+        });
+        var fuseSubjectTitle = new Fuse(searchableCourses, {
+            keys: ['subjectTitle'],
+            includeScore: true
+        });
+        var fuseClassCode = new Fuse(searchableCourses, {
+            keys: ['asString'],
+            includeScore: true
+        });
+
+        var results = [];
+        Array.prototype.push.apply(results, _.map(fuseSubjectTitle.search(searchText), function(res) {
+            return _.extend(res, { 'weight': 1});
+        }));
+        Array.prototype.push.apply(results, _.map(fuseCourseTitle.search(searchText), function(res) {
+            return _.extend(res, { 'weight': 3});
+        }));
+        Array.prototype.push.apply(results, _.map(fuseClassCode.search(searchText), function(res) { 
+            return _.extend(res, { 'weight': 5})
+        }));
+        results = _.chain(results)
+                   .sortBy(function(result) {
+                        return result.score * result.weight;
+                    })
+                   .uniq(function(result) {
+                        return result.item
+                    })
+                   .value()
+                   .slice(0, 100);
+
+        results = _.pluck(results, 'item');
+
+        return results;
+    });
+
+    function flattenCourses(facultyArr) {
+        return _.chain(facultyArr)
+            .map(function(faculty) {
+                return _.map(faculty.subjects, function(subject) {
+                    return _.map(subject.courses, function(course) {
+                        return _.extend(
+                            _.pick(faculty, 'faculty'),
+                            _.pick(subject, 'subject', 'subjectTitle'),
+                            _.pick(course, 'course', 'asString', 'courseTitle'));
+                    });
+                });
+            })
+            .flatten()
+            .value();
+    }
+    
 
     /*
     **********************************************************************
@@ -114,7 +181,7 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     This is the bridge between this controller and the schedule controller
     **********************************************************************
      */
-     $scope.added = addedCourses.courseAdded;
+    $scope.added = addedCourses.courseAdded;
     // @callee: "Add" button under 3rd layer of accordion
     // Only add if the course isn't already in addedCourses
     $scope.addToSchedule = function (courseObject) {

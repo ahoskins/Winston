@@ -18,107 +18,53 @@ winstonApp.filter('courseFilter', ['pmkr.filterStabilize', '$window', function(s
 
         var result = [];
 
-        // Class: Subject
-        function SubjectObject(courses, subject, subjectTitle) {
-
-            this.courses = courses;
-            this.subject = subject;
-            this.subjectTitle = subjectTitle;
+        if (!_.isString(field)) {
+            return;
         }
 
-        // Class: Faculty
-        function FacultyObject(faculty, subjects) {
-            this.faculty = faculty;
-            this.subjects = subjects;
-        }
-
-        var coursesArray,
-            createdSubjectObject,
-            createdFacultyObject,
-            createdSubjectObjectArray;
-
-        // Take in course object and associate parameters with that course
-        function tryAddingToExistingFaculty(courseObject, faculty, subject, subjectTitle) {
-
-            var inserted = false;
-
-            // Check if faculty exists
-           result.forEach(function (facultyObjectWithinResult) {
-                if (facultyObjectWithinResult.faculty === faculty) {
-
-                    // Find the correct subject within this faculty
-                    facultyObjectWithinResult.subjects.forEach(function (subjectObject) {
-                        if (subjectObject.subject === subject) {
-
-                            inserted = true;
-                            subjectObject.courses.push(courseObject);
-                        }
+        function flattenCourses(facultyArr) {
+            return _.chain(facultyArr)
+                .map(function(faculty) {
+                    return _.map(faculty.subjects, function(subject) {
+                        return _.map(subject.courses, function(course) {
+                            return _.extend(
+                                _.pick(faculty, 'faculty'),
+                                _.pick(subject, 'subject', 'subjectTitle'),
+                                _.pick(course, 'course', 'asString', 'courseTitle'));
+                        });
                     });
-
-                    // Faculty exists, but subject does not. Create a new subject
-                    if (!inserted) {
-                        inserted = true;
-
-                        coursesArray = [courseObject];
-                        createdSubjectObject = new SubjectObject(coursesArray, subject, subjectTitle);
-
-                        // Push onto result
-                        facultyObjectWithinResult.subjects.push(createdSubjectObject);
-                    }
-
-                }
-            });
-
-            // Faculty does no exist. Create a new faculty
-            if (!inserted) {
-                makeNewFaculty(courseObject, faculty, subject, subjectTitle);
-            }
-
+                })
+                .flatten()
+                .value();
         }
 
-        function makeNewFaculty(courseObject, faculty, subject, subjectTitle) {
-            // create subject object first
-            coursesArray = [courseObject];
-            createdSubjectObject = new SubjectObject(coursesArray, subject, subjectTitle);
-            createdSubjectObjectArray = [createdSubjectObject];
-
-            createdFacultyObject = new FacultyObject(faculty, createdSubjectObjectArray);
-
-            // Push onto result
-            result.push(createdFacultyObject);
-        }
-
-        var faculty,
-            subject,
-            subjectTitle;
-
-        // Iterate through subjectBin, invoking tryAddingToExistingFaculty on the courses who meet the query string requirements
-        subjectBin.forEach(function (facultyObject) {
-            // "Faculty of Engineering"
-            faculty = facultyObject.faculty;
-            facultyObject.subjects.forEach(function (subjectObject) {
-                // "ECE"
-                subject = subjectObject.subject;
-                subjectTitle = subjectObject.subjectTitle;
-
-                // For each course, check if it should be added
-                subjectObject.courses.forEach(function (courseObject) {
-                    if (faculty.toUpperCase().indexOf(field) > -1 ||
-                        subject.toUpperCase().indexOf(field) > -1 ||
-                        courseObject.asString.toUpperCase().indexOf(field) > -1) {
-
-                        // Add this course to the object
-                        tryAddingToExistingFaculty(courseObject, faculty, subject, subjectTitle);
-                    }
-                });
-            });
+        var searchableCourses = flattenCourses(subjectBin);
+        // console.log(subjectBin);
+        // console.log(searchableCourses);
+        var fuseCourseTitle = new Fuse(searchableCourses, {
+            keys: ['courseTitle'],
+            includeScore: true
+        });
+        var fuseSubjectTitle = new Fuse(searchableCourses, {
+            keys: ['subjectTitle'],
+            includeScore: true
+        });
+        var fuseClassCode = new Fuse(searchableCourses, {
+            keys: ['asString'],
+            includeScore: true
         });
 
-        // Return rebuild object
-        return result;
+
+        var resultsCourseTitle = fuseCourseTitle.search(field),
+            resultsSubjectTitle = fuseSubjectTitle.search(field),
+            resultsClassCode = fuseClassCode.search(field);
+        console.log(resultsCourseTitle);
+        console.log(resultsSubjectTitle);
+        console.log(resultsClassCode);
+        console.log('=============================================');
+
+        return [];
     });
 
 }]);
-
-
 

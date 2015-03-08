@@ -309,10 +309,19 @@ div.panel-collapse {
 	background-color: #E9EFF9 !important;
 }
 
+.course-sub-info {
+	font-size: 12px;
+	font-color: grey;
+	font-weight: lighter;
+}
+
+.course-sub-info span {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
 .course-description {
 	font-size: 16px;
-	min-width: 100%;
-	margin: 0px !important;
 }
 
 /*#welcome-banner {

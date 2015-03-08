@@ -13,7 +13,9 @@ block body
     include partials/footer.html
 
   include partials/dialogs.html
+  include partials/course-tile.html
 
+  script(src='js/lib/vendor/bower_components/underscore/underscore-min.js')
   script(src='js/lib/vendor/bower_components/jquery/dist/jquery.min.js')
   script(src='js/lib/vendor/bower_components/jquery-ui/ui/jquery-ui.js')
   script(src='js/lib/vendor/bower_components/angular/angular.js')
@@ -38,6 +40,7 @@ block body
 
   script(src='js/lib/memoize.js')
   script(src='js/lib/filterStabilize.js')
+  script(src='js/lib/fuse.min.js')
 
   script(src='js/app.js')
   script(src='js/services/courseFactory.js')
@@ -50,6 +53,7 @@ block body
   script(src='js/services/preferencesValues.js')
   script(src='js/services/filter.js')
   script(src='js/services/noBubble.js')
+  script(src='js/services/staticInclude.js')
   script(src='js/controllers/accordionCtrl.js')
   script(src='js/controllers/scheduleCtrl.js')
   script(src='js/controllers/addedCtrl.js')

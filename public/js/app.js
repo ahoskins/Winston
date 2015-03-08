@@ -2,7 +2,7 @@
 //
 var winstonApp = angular.module('winstonApp', ['winstonControllers', 'ui.calendar', 'pmkr.filterStabilize', 'ui.bootstrap', 'ngRoute', 'ngFacebook', 'ngProgressLite', 'ngAnimate', 'ngMaterial']);
 
-var winstonControllers = angular.module('winstonControllers', ['ui.calendar', 'pmkr.filterStabilize']);
+var winstonControllers = angular.module('winstonControllers', ['ui.calendar']);
 
 winstonApp.config(['$routeProvider', '$facebookProvider', '$locationProvider', function($routeProvider, $facebookProvider, $locationProvider) {
 
