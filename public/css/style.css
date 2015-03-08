@@ -43,7 +43,6 @@ html, body {
 }
 
 .section-text {
-	padding-left: 10px;
 	margin: 0px 10px;
 	font-weight: lighter;
 	display: inline;
@@ -295,7 +294,7 @@ div.panel-collapse {
       Added List
 ************************/
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
 	.added-container {
 		display: none !important;
 	}
@@ -317,6 +316,11 @@ div.panel-collapse {
 	flex-align: center;
 }
 
+@media (min-width: 768px) and (max-width: 910px) {
+	.added-container .section-header .big-size {
+		font-size: 1.7vw;
+	}
+}
 	.view-schedules {
 		margin-left: auto;
 		margin-top: 8px;
