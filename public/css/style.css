@@ -30,8 +30,6 @@ html, body {
 }
 
 .section-header {
-	display: flex;
-	align-items: center;
 	border-radius: 15px 15px 0px 0px;
 	padding: 0px 10px;
 	height: 60px;
@@ -437,6 +435,12 @@ img.navbar-brand-image {
 .navbar button.btn {
 	float: right;
 	margin: 8px;
+}
+
+@media(min-width: 768px) {
+	.navbar button.btn {
+		display: none;
+	}
 }
 
 /************************
