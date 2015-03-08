@@ -175,7 +175,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         $location.path('/browse');
     }
 
-    $scope.busyTimeButtonText = "Add Busy Time";
+    $scope.busyTimeButtonText = "Edit Busy Times";
     $scope.editableMode = false;
 
     function startEditableMode() {
@@ -194,7 +194,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
         disallowEditAllBusyTime();
 
-        $scope.busyTimeButtonText = "Add Busy Time";
+        $scope.busyTimeButtonText = "Edit Busy Times";
 
         // Regenerate the schedules
         if (arrayOfSchedules !== null) {
