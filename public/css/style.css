@@ -30,6 +30,8 @@ html, body {
 }
 
 .section-header {
+	display: flex;
+	align-items: center;
 	border-radius: 15px 15px 0px 0px;
 	padding: 0px 10px;
 	height: 60px;
@@ -44,6 +46,7 @@ html, body {
 
 .section-text {
 	padding-left: 10px;
+	margin: 0px 10px;
 	font-weight: lighter;
 	display: inline;
 	text-align: center;
@@ -431,8 +434,9 @@ img.navbar-brand-image {
 	margin-right: 10px;
 }
 
-.navbar-toggle.nav-dropdown {
-	height: 40px;
+.navbar button.btn {
+	float: right;
+	margin: 8px;
 }
 
 /************************
