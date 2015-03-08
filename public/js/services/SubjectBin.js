@@ -73,7 +73,7 @@ winstonApp.factory('SubjectBin', ['courseFactory', '$window', function(courseFac
 
     function invokeAPI() {
 	    /*
-	    Request /api/courses-min
+	    Request /api/v1/courses-min
 	    Asynchronously request each page
 	     */
 	    var pageListing;
