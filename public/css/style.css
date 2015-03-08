@@ -23,6 +23,8 @@ html, body {
 .floating-container {
 	border-radius: 15px !important;
 	background-color: #f2f2f2;
+	overflow: hidden;
+	margin: 5px;
 }
 
 .nav, .pagination, .carousel, .panel-title, a { 
@@ -80,11 +82,35 @@ html, body {
 	.desktop-only {
 		display: none !important;
 	}
+
+	.col-sm-12 {
+		padding-left: 3px;
+		padding-right: 3px;
+	}
 }
 
 .inline-display {
 	display: inline !important;
 }
+
+.container {
+	width: 100%;
+	padding-left: 25px;
+	padding-right: 25px;
+}
+
+@media(max-width: 978px) {
+	.container {
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+
+	.col-sm-12 {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+
 
 
 /************************
@@ -289,44 +315,66 @@ div.panel-collapse {
 	border-radius: 15px;
 }*/
 
+/*****************
+    Preferences
+******************/
+
+.pref-section {
+	width: 32%;
+	/*height: 80px;*/
+	/*display: inline-block;*/
+	/*background-color: #CFD8DC;*/
+}
+
+.pref-group {
+	display:-webkit-flex;
+	display: flex;
+	flex-direction: row;
+}
+
+.pref-container {
+	display:-webkit-flex;
+	display: flex;
+	flex-direction:row;
+	-webkit-align-items: center;
+	align-items: center;
+	justify-content: center;
+	-webbit-justify-content: center;
+	height: 50px;
+}
+
+.slider-container {
+	width: 70%;
+	padding-left: 10px;
+}
+
+
+.pref-label {
+	padding: 5px;
+}
+
+.pref-header {
+	border-radius: 15px 15px 0px 0px;
+	padding: 0px 10px;
+	height:15px;
+	text-align: center;
+}
+
+md-slider.md-default-theme.md-min .md-thumb:after {
+	background-color: #03a9f4;
+}
+
 
 /***********************
       Added List
 ************************/
 
-@media (max-width: 767px) {
-	.added-container {
-		display: none !important;
-	}
-}
-
-.floating-container {
-	overflow: hidden;
-}
-
-.added-container {
-	margin-bottom: 20px;
-	position: fixed;
-	width: 32vw;
-	overflow: hidden;
-}
-
-.added-container .section-header {
-	display: flex;
-	flex-align: center;
-}
-
-@media (min-width: 768px) and (max-width: 910px) {
-	.added-container .section-header .big-size {
-		font-size: 1.7vw;
-	}
-}
-	.view-schedules {
+.view-schedules {
 		margin-left: auto;
 		margin-top: 8px;
 		margin-bottom: 8px;
 		height: 41px;
-	}
+}
 
 .added-list {
 	display: flex;
