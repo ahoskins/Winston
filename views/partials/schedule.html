@@ -10,56 +10,86 @@
 		</div>
 	</div> -->
 	<!-- <div class="column-container floating-container nav-container schedule-header"> -->
-		<!-- <div class="pref-container"> -->
+		<!-- <div class="flex-container-item"> -->
 		<!-- <p class="section-text big-size">Preferences:</p> -->
 	<!-- <div class="row"> -->
 	<div class="column-container">
 
-	<div class="floating-container pref-group">
+	<div class="floating-container table-container">
 
-		<div class="pref-section">
-			<div class="pref-header">Mornings?</div>
-			<div class="pref-container">
-		    	<div class="pref-label">Hate</div>
-		    	<div class="slider-container">
-			      	<md-slider flex min="0" max="255" ng-model="something" aria-label="red" class></md-slider>
-				</div>
-				<div class="pref-label">Love</div>
-			</div>
+		<div class="table-cell button-container">
+			<button class="btn btn-default inline-display" ng-click="open()">{{ busyTimeButtonText }}</button>
 		</div>
 
-		<div class="pref-section">
-			<div class="pref-header">Marathons?</div>
-			<div class="pref-container">
-		    	<div class="pref-label">Hate</div>
-		    	<div class="slider-container">
-			      	<md-slider flex min="0" max="255" ng-model="" aria-label="red" class></md-slider>
-				</div>
-				<div class="pref-label">Love</div>
-			</div>
-		</div>
+		<div class="flex-container">
 
-		<div class="pref-section">
-			<div class="pref-header">Night class?</div>
-			<div class="pref-container">
-		    	<div class="pref-label">Hate</div>
-		    	<div class="slider-container">
-			      	<md-slider flex min="0" max="255" ng-model="" aria-label="red" class></md-slider>
+			<div class="divider-full-height"></div>
+
+			<div class="pref-flex-item">
+				<div class="pref-header">Mornings?</div>
+				<div class="flex-container">
+			    	<div class="pref-label">Hate</div>
+			    	<div class="slider-container">
+				      	<md-slider flex min="0" max="255" ng-model="something" aria-label="red" class></md-slider>
+					</div>
+					<div class="pref-label">Love</div>
 				</div>
-				<div class="pref-label">Love</div>
 			</div>
+
+			<div class="divider-full-height desktop-only"></div>
+
+			<div class="pref-flex-item">
+				<div class="pref-header">Marathons?</div>
+				<div class="flex-container">
+			    	<div class="pref-label">Hate</div>
+			    	<div class="slider-container">
+				      	<md-slider flex min="0" max="255" ng-model="" aria-label="red" class></md-slider>
+					</div>
+					<div class="pref-label">Love</div>
+				</div>
+			</div>
+
+			<div class="divider-full-height desktop-only"></div>
+
+			<div class="pref-flex-item">
+				<div class="pref-header">Night class?</div>
+				<div class="flex-container">
+			    	<div class="pref-label">Hate</div>
+			    	<div class="slider-container">
+				      	<md-slider flex min="0" max="255" ng-model="" aria-label="red" class></md-slider>
+					</div>
+					<div class="pref-label">Love</div>
+				</div>
+			</div>
+
+
+			<div class="pref-flex-item-mobile">
+				<div class="pref-header">Night class?</div>
+				<div class="flex-container">
+					<i class="fa fa-caret-left toggle-caret horiz-padding" ng-click="displayDifferentSchedule(1)"></i>
+			    	<div class="pref-label">Hate</div>
+			    	<div class="slider-container">
+				      	<md-slider flex min="0" max="255" ng-model="" aria-label="red" class></md-slider>
+					</div>
+					<div class="pref-label">Love</div>
+					<i class="fa fa-caret-right toggle-caret horiz-padding" ng-click="displayDifferentSchedule(1)"></i>
+				</div>
+			</div>
+
 		</div>
 
 	</div>
 
-	<!-- </div> -->
-
-	<!-- </div> -->
-
 	<div class="floating-container">
 
 	    <div class="section-header">
-	   		<button class="btn btn-default inline-display" ng-click="open()">{{ busyTimeButtonText }}</button>
+
+	    	<div class="social-icons go-left">
+				<a ng-click="share()"><i class="fa fa-facebook-square fa-lg"></i></a>
+<!-- 				<a ng-click=""><i class="fa fa-twitter-square fa-lg"></i></a> -->
+				<a ng-click=""><i class="fa fa-envelope-o fa-lg"></i></a>
+				<a ng-click="image()"><i class="fa fa-picture-o fa-lg"></i></a>
+			</div>
 
 			<i class="fa fa-caret-right toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(1)"></i>
 			<span class="go-right schedule-number">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
