@@ -124,6 +124,14 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
         }
     };
 
+    $scope.removeFromSchedule = function(courseObject) {
+        var index = addedCourses.data.indexOf(courseObject);
+        if (index !== -1) {
+            addedCourses.data.splice(index, 1);
+            addedCourses.courseAdded[courseObject.asString] = 0;
+        }
+    }
+
     /*
     @callee: "Generate Schedule" button
     Switch to the other view and controller
