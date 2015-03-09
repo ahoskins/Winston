@@ -355,10 +355,6 @@ div.panel-collapse {
 	margin: 0 auto;
 }
 
-md-slider.md-default-theme.md-min .md-thumb:after {
-	background-color: #03a9f4;
-}
-
 .divider-full-height {
 	border-left:1px solid #D3D3D3;
 	top: 0px;

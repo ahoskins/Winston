@@ -4,7 +4,7 @@ Call the API /generate-schedules
 winstonApp.factory('scheduleFactory', function ($window, $http, $q) {
     var factory = {};
 
-    factory.getSchedules = function (addedCourses, busyTimes) {
+    factory.getSchedules = function (addedCourses, busyTimes, preferencesArray) {
 
         var courseIds = [];
         addedCourses.forEach(function (courseObject) {
@@ -19,6 +19,18 @@ winstonApp.factory('scheduleFactory', function ($window, $http, $q) {
 
         if (typeof busyTimes !== 'undefined') {
             requestParams["busy-times"] = busyTimes;
+        }
+
+        if (typeof preferencesArray !== 'undefined') {
+            var obj = {};
+            obj["start-early"] = preferencesArray[0];
+            obj["no-marathons"] = - preferencesArray[1];
+            obj["day-classes"] = - preferencesArray[2];
+            
+            obj["current-status"] = false;
+            obj["obey-status"] = false;
+
+            requestParams["preferences"] = obj;
         }
 
         // return( $http({method: 'GET', url: 'https://classtime-alpha-000.herokuapp.com/api/generate-schedules?q=' + angular.toJson(requestParams) }) );

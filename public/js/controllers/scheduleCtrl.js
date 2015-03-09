@@ -3,7 +3,7 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', 'readyMadeSchedules', '$facebook', 'addedBusyTime', '$modal', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin, readyMadeSchedules, $facebook, addedBusyTime, $modal) {
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', 'readyMadeSchedules', '$facebook', 'addedBusyTime', '$modal', 'preferencesValues', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin, readyMadeSchedules, $facebook, addedBusyTime, $modal, preferencesValues) {
 
     /*
     ******************************************************
@@ -175,12 +175,12 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         $location.path('/browse');
     }
 
-    $scope.busyTimeButtonText = "Edit Busy Times";
+    $scope.busyTimeButtonText = "Edit Preferences";
     $scope.editableMode = false;
 
     function startEditableMode() {
         $scope.editableMode = true;
-        $scope.busyTimeButtonText = "Done"
+        $scope.busyTimeButtonText = "Save Preferences"
 
         allowEditAllBusyTime();
 
@@ -191,10 +191,11 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
     function startViewMode() {
         addedBusyTime.data = $scope.events;
+        preferencesValues.data = [$scope.morningPref, $scope.marathonPref, $scope.nightPref];
 
         disallowEditAllBusyTime();
 
-        $scope.busyTimeButtonText = "Edit Busy Times";
+        $scope.busyTimeButtonText = "Edit Preferences";
 
         // Regenerate the schedules
         if (arrayOfSchedules !== null) {
@@ -238,6 +239,18 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             startViewMode();
         }
     }
+
+    /*
+    **********************************
+    Preferences
+    **********************************
+    */
+
+    $scope.morningPref = null;
+    $scope.marathonPref = null;
+    $scope.nightPref = null;
+
+
 
     /*
     *********************************
