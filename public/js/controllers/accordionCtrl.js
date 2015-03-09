@@ -112,10 +112,40 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
         }
 
     });
-    
+
+    function breakAtIndex(index, string) {
+        return string.substring(0, index + 1) + ' ' + string.substring(index + 1);
+    }
+
+    function inSubjects(searchText, subjects) {
+        var match = false
+        subjects.forEach(function(subject) {
+            if(subject === searchText.toUpperCase()) {
+                match = true;
+            }
+        });
+        return match;
+    }
+
     $scope.courseSearchResults = stabilize(function (searchText) {
         if (!_.isString(searchText)) {
             return;
+        }  
+
+        // This is insanely wasteful to be doing every time.  
+        // It will be changed once I make a small change to the way this object is resolved in this controller
+        var subjects = flattenSubjects($scope.subjectBin);
+
+        // This will find and correct spacing mistakes in the search string
+        var matches = false;
+        if (!inSubjects(searchText, subjects)) {
+            for (var i = 0; i < searchText.length - 1; i++) {
+                var string = breakAtIndex(i, searchText);
+                if (inSubjects(string, subjects)) {
+                    searchText = string;
+                    break;
+                }
+            }
         }
 
         var searchableCourses = flattenCourses($scope.subjectBin);
@@ -177,6 +207,18 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
                             _.pick(course, 'course', 'asString', 'courseTitle', 'number'));
                     });
                 });
+            })
+            .flatten()
+            .value();
+    }
+
+    function flattenSubjects(facultyArr) {
+        return _.chain(facultyArr)
+            .map(function(faculty) {
+                return _.map(faculty.subjects, function(subject) {
+                    return _.values(_.extend(
+                        _.pick(subject, 'subject')));
+                })
             })
             .flatten()
             .value();
