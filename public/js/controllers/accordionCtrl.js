@@ -101,7 +101,7 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
         }
         searchTextTimeout = $timeout(function() {
             $scope.searchText = val;
-        }, 200);
+        }, 500);
 
         // Make all ng-if's false
         for (index in $scope.subjects) {
@@ -132,6 +132,10 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
             keys: ['asString'],
             includeScore: true
         });
+        var fuseClassNumber = new Fuse(searchableCourses, {
+            keys: ['number'],
+            includeScore: true
+        });
 
         var results = [];
         Array.prototype.push.apply(results, _.map(fuseSubjectTitle.search(searchText), function(res) {
@@ -142,6 +146,9 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
         }));
         Array.prototype.push.apply(results, _.map(fuseClassCode.search(searchText), function(res) { 
             return _.extend(res, { 'weight': 5})
+        }));
+        Array.prototype.push.apply(results, _.map(fuseClassNumber.search(searchText), function(res) {
+            return _.extend(res, { 'weight': 0.1})
         }));
         results = _.chain(results)
                    .sortBy(function(result) {
@@ -163,10 +170,11 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
             .map(function(faculty) {
                 return _.map(faculty.subjects, function(subject) {
                     return _.map(subject.courses, function(course) {
+                        course['number'] = new RegExp('[0-9]+').exec(course.asString).join();
                         return _.extend(
                             _.pick(faculty, 'faculty'),
                             _.pick(subject, 'subject', 'subjectTitle'),
-                            _.pick(course, 'course', 'asString', 'courseTitle'));
+                            _.pick(course, 'course', 'asString', 'courseTitle', 'number'));
                     });
                 });
             })
