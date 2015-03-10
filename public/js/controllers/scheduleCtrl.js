@@ -72,7 +72,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             */
             eventRender: function(event, element) {
                 $(element).attr("title", event.description);
-                $(element).tooltip({ container: "body"})
+                $(element).tooltip({ container: "body"});
             },
 
             /*
@@ -250,7 +250,8 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     $scope.marathonPref = null;
     $scope.nightPref = null;
 
-
+    $('#help-button').attr("data-title", "The generated schedules will be swayed to favour your preferences.  If you don't care just keep the sliders in the middle!");
+    $('#help-button').tooltip({ item: "help-button[data-title]"});
 
     /*
     *********************************
