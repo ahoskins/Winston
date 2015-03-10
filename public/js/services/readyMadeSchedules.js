@@ -197,8 +197,6 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	        	// Build the schedules event objects
 	       		factory.readyMadeSchedules = buildSchedules(scheduleResponse);
 
-	       		ngProgressLite.done();
-
 	       		if (!callingFromScheduleView && factory.readyMadeSchedules.length === 0) {
 
 	       			$location.path('/browse');
@@ -213,6 +211,9 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 			error(function() {
 	    		$window.alert("Server not responding...");
 	    		$location.path('/browse');
+			}).
+			finally(function() {
+				ngProgressLite.done();
 			}) );
     }
 
