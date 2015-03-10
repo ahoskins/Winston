@@ -1,17 +1,3 @@
 <div class="column-container floating-container" ng-controller="addedCtrl">
-    <div class="section-header">
-        <div class="section-text big-size">My Courses</div>
-
-        <button class="btn btn-success section-text go-right view-schedules" ng-click="viewSchedules()">View Schedules</button>
-    </div>
-
-    <div class="added-list">
-        <span class="list-group-item" ng-repeat="course in added">
-            {{ course.asString }}
-            <a class="go-right" ng-click="emptyCourse(course)">
-                Remove
-            </a>
-        </span>
-        <div class="added-footer"><!--For spacing purposes--></div>
-    </div>
+    <div static-include="partials/my-courses.html"></div>
 </div>
