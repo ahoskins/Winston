@@ -485,6 +485,14 @@ div.modal-content {
 	position: relative;
 }
 
+.modal-container {
+	margin: 0px !important;
+}
+
+.sad-dialog {
+	padding: 5px 5px;
+}
+
 /************************
           Header
 *************************/

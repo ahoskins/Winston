@@ -1,4 +1,4 @@
-winstonControllers.controller('modalInstanceCtrl', ['$scope', '$modalInstance', 'addedCourses', '$window', '$location', function($scope, $modalInstance, addedCourses, $window, $location){
+winstonControllers.controller('addedCoursesModalCtrl', ['$scope', '$modalInstance', 'addedCourses', '$window', '$location', function($scope, $modalInstance, addedCourses, $window, $location){
 	
 	$scope.added = addedCourses.data;
 

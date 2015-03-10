@@ -8,8 +8,8 @@ winstonControllers.controller('headerCtrl', ['$scope', '$location', '$modal', 'S
 
 	$scope.open = function() {
 		var modalInstance = $modal.open({
-	  		templateUrl: 'addedModal.html',
-	  		controller: 'modalInstanceCtrl'
+	  		templateUrl: 'addedCoursesModal.html',
+	  		controller: 'addedCoursesModalCtrl'
 		});
 	}
 
