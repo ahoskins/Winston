@@ -17,13 +17,13 @@
 
 	<div class="floating-container table-container">
 
-		<div class="table-cell button-container">
-			<button class="btn btn-default inline-display" ng-click="open()">{{ busyTimeButtonText }}</button>
+		<div class="table-cell button-container desktop-only">
+			<button class="btn btn-success section-text bold-text inline-display" ng-click="backToBrowse()">Back to Browse</button>
 		</div>
 
 		<div class="flex-container">
 
-			<div class="divider-full-height"></div>
+			<div class="divider-full-height desktop-only"></div>
 
 			<div class="pref-flex-item">
 				<div class="pref-header">Mornings?</div>
@@ -76,6 +76,12 @@
 				</div>
 			</div>
 
+			<div class="divider-full-height"></div>
+
+		</div>
+
+		<div class="table-cell button-container">
+			<button class="btn btn-default inline-display" ng-click="open()">{{ busyTimeButtonText }}</button>
 		</div>
 
 	</div>

@@ -82,6 +82,10 @@ html, body {
 	margin: 0 auto;
 }
 
+.bold-text {
+	font-weight: bold;
+}
+
 @media (max-width: 600px) {
 	.desktop-only {
 		display: none !important;

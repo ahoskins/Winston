@@ -276,6 +276,10 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         $window.open(calendarCanvas.toDataURL('image/png'));
     }
 
+    $scope.backToBrowse = function() {
+        $location.path('/browse');
+    }
+
     /*
     ************************************
     Utility

@@ -13,15 +13,22 @@ winstonControllers.controller('headerCtrl', ['$scope', '$location', '$modal', 'S
 		});
 	}
 
+	$scope.back = function() {
+		$location.path('/browse');
+	}
+
 	$scope.showAdded = true;
+	$scope.showBackToBrowse = false;
 
 	$scope.$watch(function() {
 		return $location.path();
 	}, function() {
 		if ($location.path() == '/schedule') {
 			$scope.showAdded = false;
+			$scope.showBackToBrowse = true;
 		} else {
 			$scope.showAdded = true;
+			$scope.showBackToBrowse = false;
 		}
 	});
 
