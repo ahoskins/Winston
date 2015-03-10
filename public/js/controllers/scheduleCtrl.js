@@ -11,7 +11,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     ******************************************************
     */
 
-    $location.hash('top');
+    $window.scrollTo(0,0);
 
     // Array of ready to go schedules in Full Calendar format
     var arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();

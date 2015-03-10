@@ -3,8 +3,6 @@
 
 winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'SubjectBin', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', function($scope, $window, detailFactory, SubjectBin, $timeout, $location, stabilize, addedCourses) {
 
-    $location.hash('');
-
     /*
     ********************************************************************
     Construct a new SubjectBin factory.  The subjectBin data structure is a member.
