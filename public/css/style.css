@@ -78,6 +78,10 @@ html, body {
 	padding: 15px;
 }
 
+.center-it {
+	margin: 0 auto;
+}
+
 @media (max-width: 600px) {
 	.desktop-only {
 		display: none !important;
