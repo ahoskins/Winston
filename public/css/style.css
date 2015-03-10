@@ -443,11 +443,27 @@ div.panel-collapse {
 }
 
 .added-list .list-group-item {
+	display: flex;
+	align-items: center;
+	font-size: 1.5em;
 	border-radius: 0px;
+	padding: 0;
 	border: none;
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
 }
+
+.added-list .list-group-item .course-asString {
+	margin-right: auto;
+}
+
+.added-list .list-group-item i.fa {
+	margin-right: 20px;
+	color: black;
+}
+	.added-list .list-group-item i.fa:hover {
+		color: #8c001a;
+	}
 
 .added-footer {
 	margin-top: auto;

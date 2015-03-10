@@ -1,13 +1,13 @@
 <script type="text/ng-template" id="partials/my-courses.html">
 	<div class="section-header">
-	    <p class="section-text big-size">My Courses</p>
+	    <div class="section-text big-size">My Courses</div>
 	    <button class="btn btn-success section-text go-right view-schedules" ng-click="viewSchedules()">View Schedules</button>
 	</div>
 	<div class="added-list">
 	    <span class="list-group-item" ng-repeat="course in added">
-	        {{ course.asString }}
+	    	<span class="course-asString">{{ course.asString }}</span>
 	        <a class="go-right" ng-click="emptyCourse(course)">
-	          Remove
+	        <i class="fa fa-trash-o fa-lg"></i>
 	        </a>
 	    </span>
 	    <div class="added-footer"><!--For spacing purposes--></div>
