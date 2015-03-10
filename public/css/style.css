@@ -492,6 +492,18 @@ div.panel-collapse {
 	height: 40px;
 }
 
+.added-container {
+	position: fixed;
+	/*top: 70px;*/
+	width: 36%;
+}
+
+@media (max-width: 768px) {
+	.added-container {
+		display: none !important;
+	}
+}
+
 /*************************
            Modal
 **************************/
@@ -514,10 +526,9 @@ div.modal-content {
 *************************/
 
 .nav-container {
-	display: flex;
-	flex-align: right;
-	align-items: center;
-	height: 60px;
+	position: fixed;
+	top: 0px;
+	height: 55px;
 	margin-bottom: 10px;
 	padding: 0px 10px;
 	line-height: 60px;
@@ -540,6 +551,7 @@ div.modal-content {
 	width: 100%;
 	z-index: 100;
 	background-color: #e7e7e7;
+	border-bottom: 1px solid gray;
 }
 
 @media(max-width: 768px) {
@@ -551,6 +563,10 @@ div.modal-content {
 	.column-container {
 		margin-top: 70px;
 	}
+}
+
+.column-container {
+	margin-top: 70px;
 }
 
 .navbar .navbar-right {
