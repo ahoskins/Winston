@@ -469,6 +469,7 @@ div.panel-collapse {
 
 .added-list .list-group-item .course-asString {
 	margin-right: auto;
+	padding: 10px 15px;
 }
 
 .added-list .list-group-item i.fa {
