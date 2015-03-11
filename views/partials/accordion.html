@@ -41,7 +41,7 @@
             <div class="normal-padding">
                 <div class="accordion" ng-hide="searchText">
                     <accordion close-others="false">
-                        <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty, $event)" data-ng-repeat="facultyObject in subjectBin" no-bubble>
+                        <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty, $event)" data-ng-repeat="facultyObject in courseData" no-bubble>
                             <accordion close-others="false">
                                 <accordion-group class="subject-accordion" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject, $event)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" no-bubble>
                                     <accordion close-others="false">

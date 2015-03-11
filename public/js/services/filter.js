@@ -1,20 +1,20 @@
 // Filter the list of courses
 //
 //
-// Filter the "subjectBin" object against the "subjectTitle" and "asString"
-// fields of each course.  It also filters against the "key"(s) in "subjectBin"
+// Filter the "courseData" object against the "subjectTitle" and "asString"
+// fields of each course.  It also filters against the "key"(s) in "courseData"
 // All filtering is CASE IN-SENSITIVE
 
 winstonApp.filter('courseFilter', ['pmkr.filterStabilize', '$window', function(stabilize, $window) {
     // Invoked from index.html accordion
-    // Used filterText to trim subjectBin
-    // @param {Object} $scope.subjectBin is passed in
+    // Used filterText to trim courseData
+    // @param {Object} $scope.courseData is passed in
     // @param {Object} $scope.filterText is passed in
     //
-    // @returns {Object} same format as $scope.subjectBin
+    // @returns {Object} same format as $scope.courseData
     // BUILD-UP METHOD
     //
-    return stabilize(function(subjectBin, field) {
+    return stabilize(function(courseData, field) {
 
         var result = [];
 
@@ -38,8 +38,8 @@ winstonApp.filter('courseFilter', ['pmkr.filterStabilize', '$window', function(s
                 .value();
         }
 
-        var searchableCourses = flattenCourses(subjectBin);
-        // console.log(subjectBin);
+        var searchableCourses = flattenCourses(courseData);
+        // console.log(courseData);
         // console.log(searchableCourses);
         var fuseCourseTitle = new Fuse(searchableCourses, {
             keys: ['courseTitle'],

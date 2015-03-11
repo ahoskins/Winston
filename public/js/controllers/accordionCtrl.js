@@ -8,7 +8,7 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     Get the courses data from the pre-resolved service
     ********************************************************************
      */
-    $scope.subjectBin = courseDataMaker.data;
+    $scope.courseData = courseDataMaker.data;
 
     /*
     ******************************
@@ -132,7 +132,7 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
 
         // This is insanely wasteful to be doing every time.  
         // It will be changed once I make a small change to the way this object is resolved in this controller
-        var subjects = flattenSubjects($scope.subjectBin);
+        var subjects = flattenSubjects($scope.courseData);
 
         // This will find and correct spacing mistakes in the search string
         var matches = false;
@@ -146,7 +146,7 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
             }
         }
 
-        var searchableCourses = flattenCourses($scope.subjectBin);
+        var searchableCourses = flattenCourses($scope.courseData);
 
         var fuseCourseTitle = new Fuse(searchableCourses, {
             keys: ['courseTitle'],
