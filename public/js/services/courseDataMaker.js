@@ -1,9 +1,9 @@
 /*
 Note: the calls to the API are done in an asynchronious way
 
-Structure of SubjectBin object: 
+Structure of courseData object: 
 
-    $scope.subjectBin = [{
+    $scope.courseData = [{
             faculty: 'Faculty of Engineering',
             subjects: [{
                 subject: 'ECE',
@@ -22,31 +22,32 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
         this.subjects = subjects;
     }
 
-    function pushNewFaculty(facultyObject) {
-        var s = [];
-        facultyObject.subjects.forEach(function(subject) {
-            s.push(subject);
-        });
-        factory.data.push(new FacultyObject(facultyObject.faculty, s));
-    }
+    function insertIntoSubjectBin(facultyObject) {
+        var inserted = false;
 
-    function facultyExists(facultyObject) {
-        for (f in factory.data) {
-            if (f.faculty === facultyObject.faculty) {
-                facultyObject.subjects.forEach(function(subject) {
-                    f.subjects.push(subject);
+        // Case 1: Insert into already existing faculty
+        factory.data.forEach(function(subjectBinObject) {
+            if (subjectBinObject.faculty === facultyObject.faculty) {
+                facultyObject.subjects.forEach(function(Ssubject) {
+                    subjectBinObject.subjects.push(Ssubject);
                 });
-                return true;
-            }   
+                inserted = true;
+            }
+        });
+
+        // Case 2: create new faculty and insert
+        if (!inserted) {
+            var s = [];
+            facultyObject.subjects.forEach(function (subject) {
+                s.push(subject);
+            });
+            factory.data.push(new FacultyObject(facultyObject.faculty, s));
         }
-        return false;
     }
 
     function parsePage(pageListing) {
         pageListing.objects.forEach(function(facultyObject) {
-            if (!facultyExists(facultyObject)) {
-                pushNewFaculty(facultyObject);
-            }
+            insertIntoSubjectBin(facultyObject);
         });
     }
 
