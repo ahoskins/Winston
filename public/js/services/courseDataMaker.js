@@ -21,7 +21,7 @@ Structure of SubjectBin object:
      }];
 */
 
-winstonApp.factory('SubjectBin', ['courseFactory', '$window', function(courseFactory, $window){
+winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(courseFactory, $window){
 
 	// Class: Faculty
     function FacultyObject(faculty, subjects) {
@@ -38,14 +38,14 @@ winstonApp.factory('SubjectBin', ['courseFactory', '$window', function(courseFac
     }
 
 	/*
-    Insert each faculty into self.bin
+    Insert each faculty into self.data
     */
     function insertIntoSubjectBin(SFacultyGroup) {
         var inserted = false;
         var SfacultyName = SFacultyGroup.faculty;
 
         // Case 1: Insert into already existing faculty
-        fact.bin.forEach(function(subjectBinObject) {
+        factory.data.forEach(function(subjectBinObject) {
             if (subjectBinObject.faculty === SfacultyName) {
 
                 // faculty object already exists
@@ -67,70 +67,43 @@ winstonApp.factory('SubjectBin', ['courseFactory', '$window', function(courseFac
 
             var newObj = new FacultyObject(SfacultyName, subjects);
 
-            fact.bin.push(newObj);
+            factory.data.push(newObj);
         }
     }
 
-    function invokeAPI() {
-	    /*
-	    Request /api/v1/courses-min
-	    Asynchronously request each page
-	     */
-	    var pageListing;
-	    courseFactory.getCoursesPage(1).
-	        success(function (data) {
+    var factory = {};
 
-	            pageListing = angular.fromJson(data);
+    factory.data = [];
 
-	            var total_pages = pageListing.total_pages;
+    // Function which returns a promise that $routeProvider can deal with
+    factory.getCoursesDataPromise = function() {
+        return (
+            courseFactory.getCoursesPage(1).
+                success(function(data) {
+                    pageListing = angular.fromJson(data);
+                    var total_pages = pageListing.total_pages;
 
-	            parsePage(pageListing);
+                    parsePage(pageListing);
 
-	            //Get remaining pages
-	            var page = 2;
-
-	            // Asynchronously request the rest of the pages
-	            while (page <= total_pages) {
-	                courseFactory.getCoursesPage(page).
-	                    success(function (data) {
-	                        pageListing = angular.fromJson(data);
-
-	                        parsePage(pageListing);
-
-	                    });
-	                page = page + 1;
-	            }
-	        }).
-	        error(function () {
-	            $window.alert("Failed to get data");
-	        });
-    }
-
-
-    var fact = {};
-
-    fact.bin = [];
-
-    fact.populate = function() {
-        // Asynchroniously fetch course results and put them into fact.bin
-        invokeAPI();
-    }
-
-    fact.searchById = function(id) {
-        var result = {};
-        fact.bin.forEach(function(facultyObject) {
-            facultyObject.subjects.forEach(function(subjectObject) {
-                subjectObject.courses.forEach(function(courseObject) {
-                    if (courseObject.course === id) {
-                        result = courseObject;
+                    var page = 2;
+                    while (page <= total_pages) {
+                        courseFactory.getCoursesPage(page).
+                            success(function(data) {
+                                parsePage(angular.fromJson(data));
+                            }).
+                            error(function(data) {
+                                $window.alert("Server not responding.  All we can say is, try again later.");
+                            })
+                        page = page + 1;
                     }
+                }).
+                error(function() {
+                    $window.alert("Server not responding.  All we can say is, try again later.");
                 })
-            })
-        })
-        return result;
+        )
     }
 
 	// Expose the service
-	return fact;
+	return factory;
 	
 }])

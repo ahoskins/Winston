@@ -1,4 +1,4 @@
-winstonControllers.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', 'SubjectBin', '$window', function($scope, $location, $interval, ngProgressLite, addedCourses, SubjectBin, $window){
+winstonControllers.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', function($scope, $location, $interval, ngProgressLite, addedCourses, $window){
     
     // Mirror the addedCourses service
     $scope.added = addedCourses.data;

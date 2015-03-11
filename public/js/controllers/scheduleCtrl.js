@@ -3,7 +3,7 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'SubjectBin', 'readyMadeSchedules', '$facebook', 'addedBusyTime', '$modal', 'preferencesValues', function($scope, $window, $location, uiCalendarConfig, $timeout, SubjectBin, readyMadeSchedules, $facebook, addedBusyTime, $modal, preferencesValues) {
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'readyMadeSchedules', '$facebook', 'addedBusyTime', '$modal', 'preferencesValues', function($scope, $window, $location, uiCalendarConfig, $timeout, readyMadeSchedules, $facebook, addedBusyTime, $modal, preferencesValues) {
 
     /*
     ******************************************************

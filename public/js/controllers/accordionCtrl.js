@@ -1,14 +1,14 @@
 // Accordion Controller
 //
 
-winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'SubjectBin', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', function($scope, $window, detailFactory, SubjectBin, $timeout, $location, stabilize, addedCourses) {
+winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'courseDataMaker', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', function($scope, $window, detailFactory, courseDataMaker, $timeout, $location, stabilize, addedCourses) {
 
     /*
     ********************************************************************
-    Construct a new SubjectBin factory.  The subjectBin data structure is a member.
+    Get the courses data from the pre-resolved service
     ********************************************************************
      */
-    $scope.subjectBin = SubjectBin.bin;
+    $scope.subjectBin = courseDataMaker.data;
 
     /*
     ******************************

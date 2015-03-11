@@ -4,11 +4,16 @@ var winstonApp = angular.module('winstonApp', ['winstonControllers', 'ui.calenda
 
 var winstonControllers = angular.module('winstonControllers', ['ui.calendar']);
 
-winstonApp.config(['$routeProvider', '$facebookProvider', '$locationProvider', function($routeProvider, $facebookProvider, $locationProvider) {
+winstonApp.config(['$routeProvider', '$facebookProvider', function($routeProvider, $facebookProvider) {
 
 	$routeProvider.
 	  when('/browse', {
-	  	templateUrl: 'partials/browse.jade'
+	  	templateUrl: 'partials/browse.jade',
+	  	resolve: {
+	  		courseData: function(courseDataMaker) {
+	  			return courseDataMaker.getCoursesDataPromise();
+	  		}
+	  	}
 	  }).
 	  when('/schedule', {
 	  	templateUrl: 'partials/schedule.jade',
