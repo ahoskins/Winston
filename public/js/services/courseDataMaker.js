@@ -1,10 +1,4 @@
 /*
-This service works as an OBJECT CONSTUCTOR
-
-It is the middle-man between courseFactory.js (the connection to API) and the accordionCtrl
-
-This is ultimately just abstracting away the SubjectBin creation from the controller.  It saves the accordionCtrl from being bloated.
-
 Note: the calls to the API are done in an asynchronious way
 
 Structure of SubjectBin object: 
@@ -23,59 +17,43 @@ Structure of SubjectBin object:
 
 winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(courseFactory, $window){
 
-	// Class: Faculty
     function FacultyObject(faculty, subjects) {
         this.faculty = faculty;
         this.subjects = subjects;
     }
 
-    // Parse each faculty on the page
-    function parsePage(pageListing) {
-        pageListing.objects.forEach(function(SFacultyGroup) {
-            // Insert object into subjectBin
-            insertIntoSubjectBin(SFacultyGroup);
+    function pushNewFaculty(facultyObject) {
+        var s = [];
+        facultyObject.subjects.forEach(function(subject) {
+            s.push(subject);
         });
+        factory.data.push(new FacultyObject(facultyObject.faculty, s));
     }
 
-	/*
-    Insert each faculty into self.data
-    */
-    function insertIntoSubjectBin(SFacultyGroup) {
-        var inserted = false;
-        var SfacultyName = SFacultyGroup.faculty;
-
-        // Case 1: Insert into already existing faculty
-        factory.data.forEach(function(subjectBinObject) {
-            if (subjectBinObject.faculty === SfacultyName) {
-
-                // faculty object already exists
-                // Push onto subjects array
-                SFacultyGroup.subjects.forEach(function(Ssubject) {
-                    subjectBinObject.subjects.push(Ssubject);
+    function facultyExists(facultyObject) {
+        for (f in factory.data) {
+            if (f.faculty === facultyObject.faculty) {
+                facultyObject.subjects.forEach(function(subject) {
+                    f.subjects.push(subject);
                 });
-                inserted = true;
+                return true;
+            }   
+        }
+        return false;
+    }
+
+    function parsePage(pageListing) {
+        pageListing.objects.forEach(function(facultyObject) {
+            if (!facultyExists(facultyObject)) {
+                pushNewFaculty(facultyObject);
             }
         });
-
-        // Case 2: create new faculty and insert
-        if (!inserted) {
-            //console.log("created new faculty");
-            var subjects = [];
-            SFacultyGroup.subjects.forEach(function (subject) {
-                subjects.push(subject);
-            });
-
-            var newObj = new FacultyObject(SfacultyName, subjects);
-
-            factory.data.push(newObj);
-        }
     }
 
     var factory = {};
 
     factory.data = [];
 
-    // Function which returns a promise that $routeProvider can deal with
     factory.getCoursesDataPromise = function() {
         return (
             courseFactory.getCoursesPage(1).
@@ -103,7 +81,6 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
         )
     }
 
-	// Expose the service
-	return factory;
-	
-}])
+	return factory;	
+}]);
+
