@@ -128,15 +128,17 @@ html, body {
 /* Header */
 
 .schedule-header {
+	display: -webkit-flex;
 	display: flex;
+	-webkit-align-items: center;
 	align-items: center;
 }
 
 .social-icons {
-	display: flex;
 	display: -webkit-flex;
-	align-items: center;
+	display: flex;
 	-webkit-align-items: center;
+	align-items: center;
 }
 .social-icons a+a {
 	margin-left: 10px;
@@ -434,14 +436,16 @@ div.panel-collapse {
 ************************/
 
 .view-schedules {
-		margin-left: auto;
-		margin-top: 8px;
-		margin-bottom: 8px;
-		height: 41px;
+	margin-left: auto;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	height: 41px;
 }
 
 .added-list {
+	display: -webkit-flex;
 	display: flex;
+	-webkit-flex-direction: column;
 	flex-direction: column;
 	min-height: 73px;
 	background-color: white;
@@ -451,7 +455,9 @@ div.panel-collapse {
 }
 
 .added-list .list-group-item {
+	display: -webkit-flex;
 	display: flex;
+	-webkit-align-items: center;
 	align-items: center;
 	font-size: 1.5em;
 	border-radius: 0px;
@@ -463,6 +469,7 @@ div.panel-collapse {
 
 .added-list .list-group-item .course-asString {
 	margin-right: auto;
+	padding: 10px 15px;
 }
 
 .added-list .list-group-item i.fa {
@@ -543,7 +550,9 @@ div.modal-content {
 }
 
 .navbar-brand {
+	display: -webkit-flex;
 	display: flex;
+	-webkit-align-items: center;
 	align-items: center;
 }
 
@@ -614,9 +623,12 @@ img.navbar-brand-image {
 }
 
 .footer-bit {
-	margin-top: 80px;
+	display: -webkit-flex;
 	display: flex;
+	-webkit-align-items: center;
 	align-items: center;
+
+	margin-top: 80px;
 	background-color: #e7e7e7;
 	padding: 20px;
 	border-radius: 5px;
