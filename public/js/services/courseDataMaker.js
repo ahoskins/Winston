@@ -49,6 +49,8 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
         pageListing.objects.forEach(function(facultyObject) {
             saveFacultyObjectToTree(facultyObject);
         });
+        factory.flatCourses = flattenCourses(factory.treeCourses);
+        factory.flatSubjects = flattenSubjects(factory.treeCourses);
     }
 
     function flattenCourses(facultyArr) {
@@ -109,10 +111,6 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
                 }).
                 error(function() {
                     $window.alert("Server not responding.  All we can say is, try again later.");
-                }).
-                finally(function() {
-                    factory.flatCourses = flattenCourses(factory.treeCourses);
-                    factory.flatSubjects = flattenSubjects(factory.treeCourses);
                 })
         )
     }
