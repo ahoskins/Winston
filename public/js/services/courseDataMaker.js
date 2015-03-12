@@ -51,9 +51,40 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
         });
     }
 
+    function flattenCourses(facultyArr) {
+        return _.chain(facultyArr)
+            .map(function(faculty) {
+                return _.map(faculty.subjects, function(subject) {
+                    return _.map(subject.courses, function(course) {
+                        course['number'] = new RegExp('[0-9]+').exec(course.asString).join();
+                        return _.extend(
+                            _.pick(faculty, 'faculty'),
+                            _.pick(subject, 'subject', 'subjectTitle'),
+                            _.pick(course, 'course', 'asString', 'courseTitle', 'number'));
+                    });
+                });
+            })
+            .flatten()
+            .value();
+    }
+
+    function flattenSubjects(facultyArr) {
+        return _.chain(facultyArr)
+            .map(function(faculty) {
+                return _.map(faculty.subjects, function(subject) {
+                    return _.values(_.extend(
+                        _.pick(subject, 'subject')));
+                })
+            })
+            .flatten()
+            .value();
+    }
+
     var factory = {};
 
     factory.treeCourses = [];
+    factory.flatCourses = [];
+    factory.flatSubjects = [];
 
     factory.getCoursesDataPromise = function() {
         return (
@@ -78,6 +109,10 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
                 }).
                 error(function() {
                     $window.alert("Server not responding.  All we can say is, try again later.");
+                }).
+                finally(function() {
+                    factory.flatCourses = flattenCourses(factory.treeCourses);
+                    factory.flatSubjects = flattenSubjects(factory.treeCourses);
                 })
         )
     }
