@@ -49,11 +49,14 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
         pageListing.objects.forEach(function(facultyObject) {
             saveFacultyObjectToTree(facultyObject);
         });
-        factory.flatCourses = flattenCourses(factory.treeCourses);
-        factory.flatSubjects = flattenSubjects(factory.treeCourses);
+        factory.flatCourses.length = 0; // clear, keep reference
+        Array.prototype.push.apply(factory.flatCourses, flattenCourses(factory.treeCourses));
+        factory.flatSubjects.length = 0; // clear, keep reference
+        Array.prototype.push.apply(factory.flatSubjects, flattenSubjects(factory.treeCourses));
     }
 
     function flattenCourses(facultyArr) {
+        console.log('flattening');
         return _.chain(facultyArr)
             .map(function(faculty) {
                 return _.map(faculty.subjects, function(subject) {
