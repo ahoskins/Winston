@@ -8,7 +8,7 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     Get the courses data from the pre-resolved service
     ********************************************************************
      */
-    $scope.courseData = courseDataMaker.data;
+    $scope.courseData = courseDataMaker.treeCourses;
 
     /*
     ******************************

@@ -22,11 +22,11 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
         this.subjects = subjects;
     }
 
-    function insertIntoSubjectBin(facultyObject) {
+    function saveFacultyObjectToTree(facultyObject) {
         var inserted = false;
 
         // Case 1: Insert into already existing faculty
-        factory.data.forEach(function(subjectBinObject) {
+        factory.treeCourses.forEach(function(subjectBinObject) {
             if (subjectBinObject.faculty === facultyObject.faculty) {
                 facultyObject.subjects.forEach(function(Ssubject) {
                     subjectBinObject.subjects.push(Ssubject);
@@ -41,19 +41,19 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
             facultyObject.subjects.forEach(function (subject) {
                 s.push(subject);
             });
-            factory.data.push(new FacultyObject(facultyObject.faculty, s));
+            factory.treeCourses.push(new FacultyObject(facultyObject.faculty, s));
         }
     }
 
-    function parsePage(pageListing) {
+    function savePage(pageListing) {
         pageListing.objects.forEach(function(facultyObject) {
-            insertIntoSubjectBin(facultyObject);
+            saveFacultyObjectToTree(facultyObject);
         });
     }
 
     var factory = {};
 
-    factory.data = [];
+    factory.treeCourses = [];
 
     factory.getCoursesDataPromise = function() {
         return (
@@ -62,13 +62,13 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
                     pageListing = angular.fromJson(data);
                     var total_pages = pageListing.total_pages;
 
-                    parsePage(pageListing);
+                    savePage(pageListing);
 
                     var page = 2;
                     while (page <= total_pages) {
                         courseFactory.getCoursesPage(page).
                             success(function(data) {
-                                parsePage(angular.fromJson(data));
+                                savePage(angular.fromJson(data));
                             }).
                             error(function(data) {
                                 $window.alert("Server not responding.  All we can say is, try again later.");
