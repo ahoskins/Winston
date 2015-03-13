@@ -1,7 +1,7 @@
 // Accordion Controller
 //
 
-winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'courseDataMaker', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', function($scope, $window, detailFactory, courseDataMaker, $timeout, $location, stabilize, addedCourses) {
+winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'courseDataMaker', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', 'localStorageService', function($scope, $window, detailFactory, courseDataMaker, $timeout, $location, stabilize, addedCourses, localStorageService) {
 
     /*
     ********************************************************************
@@ -197,6 +197,15 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     **********************************************************************
      */
     $scope.added = addedCourses.courseAdded;
+    $scope.addedCoursesData = addedCourses.data;
+
+    $scope.$watchCollection('added', function() {
+        localStorageService.set('addedCourses.courseAdded', $scope.added);
+    });
+    $scope.$watchCollection('addedCoursesData', function() {
+        localStorageService.set('addedCourses.data', $scope.addedCoursesData);
+    });
+
     // @callee: "Add" button under 3rd layer of accordion
     // Only add if the course isn't already in addedCourses
     $scope.addToSchedule = function (courseObject) {

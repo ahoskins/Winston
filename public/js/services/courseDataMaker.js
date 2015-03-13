@@ -56,7 +56,6 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
     }
 
     function flattenCourses(facultyArr) {
-        console.log('flattening');
         return _.chain(facultyArr)
             .map(function(faculty) {
                 return _.map(faculty.subjects, function(subject) {
