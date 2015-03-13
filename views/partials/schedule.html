@@ -64,15 +64,15 @@
 
 
 			<div class="pref-flex-item-mobile">
-				<div class="pref-header">Night class?</div>
+				<div class="pref-header">{{ currentPrefName }}</div>
 				<div class="flex-container">
-					<i class="fa fa-caret-left toggle-caret horiz-padding" ng-click="displayDifferentSchedule(1)"></i>
+					<i class="fa fa-caret-left toggle-caret horiz-padding" ng-click="prevPref()"></i>
 			    	<div class="pref-label">Hate</div>
 			    	<div class="slider-container">
-				      	<md-slider flex min="0" max="255" ng-model="" aria-label="red" class></md-slider>
+				      	<md-slider flex min="-200" max="200" ng-model="currentPref" ng-disabled="!editableMode" aria-label="red" class></md-slider>
 					</div>
 					<div class="pref-label">Love</div>
-					<i class="fa fa-caret-right toggle-caret horiz-padding" ng-click="displayDifferentSchedule(1)"></i>
+					<i class="fa fa-caret-right toggle-caret horiz-padding" ng-click="nextPref()"></i>
 				</div>
 			</div>
 

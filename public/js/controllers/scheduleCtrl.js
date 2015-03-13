@@ -187,11 +187,17 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         // Allow busy time to be added anywhere
         $scope.events = addedBusyTime.data;
         refreshCalendar();
+
     }
 
     function startViewMode() {
         addedBusyTime.data = $scope.events;
-        preferencesValues.data = [$scope.morningPref, $scope.marathonPref, $scope.nightPref];
+        prefs = [$scope.morningPref, $scope.marathonPref, $scope.nightPref];
+        preferencesValues.data = prefs;
+
+        prefIndex = 0;
+        $scope.currentPref = prefs[0];
+        $scope.currentPrefName = prefNames[0];
 
         disallowEditAllBusyTime();
 
@@ -242,16 +248,71 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
     /*
     **********************************
+    Help Button
+    **********************************
+    */
+
+    $('#help-button').attr("data-title", "The generated schedules will be swayed to favour your preferences.  If you don't care just keep the sliders in the middle!");
+    $('#help-button').tooltip({ item: "help-button[data-title]"});
+
+    /*
+    **********************************
     Preferences
     **********************************
     */
 
-    $scope.morningPref = null;
-    $scope.marathonPref = null;
-    $scope.nightPref = null;
+    if (preferencesValues.data.length === 3) {
+        $scope.morningPref = preferencesValues.data[0];
+        $scope.marathonPref = preferencesValues.data[1];
+        $scope.nightPref = preferencesValues.data[2];
+    } else {
+        $scope.morningPref = null;
+        $scope.marathonPref = null;
+        $scope.nightPref = null;
+    }
 
-    $('#help-button').attr("data-title", "The generated schedules will be swayed to favour your preferences.  If you don't care just keep the sliders in the middle!");
-    $('#help-button').tooltip({ item: "help-button[data-title]"});
+    var prefNames = ['Mornings?', 'Marathons?', 'Nights?'];
+    var prefIndex = 0;
+
+    $scope.currentPref = $scope.morningPref;
+    $scope.currentPrefName = prefNames[0];
+
+    $scope.$watch('currentPref', function() {
+        switch(prefIndex) {
+            case 0:
+                $scope.morningPref = $scope.currentPref;
+                break;
+            case 1:
+                $scope.marathonPref = $scope.currentPref;
+                break;
+            case 2:
+                $scope.nightPref = $scope.currentPref;
+                break;
+        }
+        prefs = [$scope.morningPref, $scope.marathonPref, $scope.nightPref];
+    });
+
+    $scope.nextPref = function() {
+        if (!$scope.editableMode) {
+            return;
+        }
+        if (prefIndex < 2) {
+            prefIndex ++;
+            $scope.currentPref = prefs[prefIndex];
+            $scope.currentPrefName = prefNames[prefIndex];
+        }
+    }
+
+    $scope.prevPref = function() {
+        if (!$scope.editableMode) {
+            return;
+        }
+        if (prefIndex > 0) {
+            prefIndex --;
+            $scope.currentPref = prefs[prefIndex];
+            $scope.currentPrefName = prefNames[prefIndex];
+        }
+    }
 
     /*
     *********************************
@@ -312,7 +373,6 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         addedBusyTime.data.forEach(function(busyTime) {
             busyTime.durationEditable = false;
         });
-        console.dir(addedBusyTime.data);
     }
 
 }]);
