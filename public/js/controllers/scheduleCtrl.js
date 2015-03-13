@@ -31,7 +31,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
     $scope.events = [];
     $scope.scheduleIndex = 0;
-    var id = 0;
+    var id = addedBusyTime.data.length || 0;
 
     if (arrayOfSchedules !== null) {
         $scope.scheduleLength = arrayOfSchedules.length;
