@@ -15,7 +15,7 @@
 	<!-- <div class="row"> -->
 	<div class="column-container">
 
-	<div class="floating-container flex-container">
+	<div class="floating-container flex-container no-side-margin">
 
 		<div class="desktop-only">
 			<button class="btn btn-success section-text bold-text inline-display" ng-click="backToBrowse()">Back to Browse</button>
@@ -88,32 +88,34 @@
 
 	</div>
 
-	<div class="floating-container">
+	<div class="flex-container">
+		<div class="floating-container no-side-margin">
 
-	    <div class="section-header">
+		    <div class="section-header">
 
-	    	<div class="social-icons go-left">
-				<a ng-click="share()"><i class="fa fa-facebook-square fa-lg"></i></a>
-<!-- 				<a ng-click=""><i class="fa fa-twitter-square fa-lg"></i></a> -->
-				<a ng-click=""><i class="fa fa-envelope-o fa-lg"></i></a>
-				<a ng-click="image()"><i class="fa fa-picture-o fa-lg"></i></a>
+		    	<div class="social-icons go-left">
+					<a ng-click="share()"><i class="fa fa-facebook-square fa-lg"></i></a>
+	<!-- 				<a ng-click=""><i class="fa fa-twitter-square fa-lg"></i></a> -->
+					<a ng-click=""><i class="fa fa-envelope-o fa-lg"></i></a>
+					<a ng-click="image()"><i class="fa fa-picture-o fa-lg"></i></a>
+				</div>
+
+				<i class="fa fa-caret-right toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(1)"></i>
+				<span class="go-right schedule-number">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
+				<i class="fa fa-caret-left toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(0)"></i>
+		    </div>
+
+		   	<div class="alert alert-info alert-dismissible instructions" ng-show="editableMode" role="alert">
+		   		<div class="top-right">
+	  				<button type="button" class="close top-right" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	  			</div>
+	  			Click the time slots where you are <strong>busy and don't want class class.</strong>You can resize these time slots to fill as much time as you'd like.
+	  			Once you are done, click the "Done" button.  The schedules will be regenerated to work around your preferences.  
 			</div>
 
-			<i class="fa fa-caret-right toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(1)"></i>
-			<span class="go-right schedule-number">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
-			<i class="fa fa-caret-left toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(0)"></i>
-	    </div>
+		    <div id="full-calendar-div" ui-calendar="uiConfig.calendar" ng-model="events" calendar="weekView"></div> 
 
-	   	<div class="alert alert-info alert-dismissible instructions" ng-show="editableMode" role="alert">
-	   		<div class="top-right">
-  				<button type="button" class="close top-right" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  			</div>
-  			Click the time slots where you are <strong>busy and don't want class class.</strong>You can resize these time slots to fill as much time as you'd like.
-  			Once you are done, click the "Done" button.  The schedules will be regenerated to work around your preferences.  
 		</div>
-
-	    <div id="full-calendar-div" ui-calendar="uiConfig.calendar" ng-model="events" calendar="weekView"></div> 
-
 	</div>
 
 	</div>

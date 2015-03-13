@@ -55,6 +55,11 @@ html, body {
 	padding-left: 0px;
 }
 
+.no-side-margin {
+	margin-left: 0px !important;
+	margin-right: 0px !important;
+}
+
 .bottom-container {
 	position: absolute;
 	bottom: 0px;
@@ -362,6 +367,7 @@ div.panel-collapse {
 	justify-content: center;
 	-webbit-justify-content: center;
 	width: 100%;
+	float: left;
 }
 
 .two-thirds {
