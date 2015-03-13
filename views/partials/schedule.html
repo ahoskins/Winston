@@ -21,63 +21,65 @@
 			<button class="btn btn-success section-text bold-text inline-display" ng-click="backToBrowse()">Back to Browse</button>
 		</div>
 
-		<div class="flex-container">
+		<div class="">
+			<div class="flex-container">
 
-			<div class="divider-full-height desktop-only"></div>
+				<div class="divider-full-height desktop-only"></div>
 
-			<div class="pref-flex-item">
-				<div class="pref-header">Mornings?</div>
-				<div class="flex-container">
-			    	<div class="pref-label">Hate</div>
-			    	<div class="slider-container">
-				      	<md-slider flex min="-200" max="200" ng-model="morningPref" ng-disabled="!editableMode" aria-label="red" class></md-slider>
+				<div class="pref-flex-item">
+					<div class="pref-header">Mornings?</div>
+					<div class="flex-container">
+				    	<div class="pref-label">Hate</div>
+				    	<div class="slider-container">
+					      	<md-slider flex min="-200" max="200" ng-model="morningPref" ng-disabled="!editableMode" aria-label="red" class></md-slider>
+						</div>
+						<div class="pref-label">Love</div>
 					</div>
-					<div class="pref-label">Love</div>
 				</div>
-			</div>
 
-			<div class="divider-full-height desktop-only"></div>
+				<div class="divider-full-height desktop-only"></div>
 
-			<div class="pref-flex-item">
-				<div class="pref-header">Marathons?</div>
-				<div class="flex-container">
-			    	<div class="pref-label">Hate</div>
-			    	<div class="slider-container">
-				      	<md-slider flex min="-200" max="200" ng-model="marathonPref" ng-disabled="!editableMode" aria-label="red" class></md-slider>
+				<div class="pref-flex-item">
+					<div class="pref-header">Marathons?</div>
+					<div class="flex-container">
+				    	<div class="pref-label">Hate</div>
+				    	<div class="slider-container">
+					      	<md-slider flex min="-200" max="200" ng-model="marathonPref" ng-disabled="!editableMode" aria-label="red" class></md-slider>
+						</div>
+						<div class="pref-label">Love</div>
 					</div>
-					<div class="pref-label">Love</div>
 				</div>
-			</div>
 
-			<div class="divider-full-height desktop-only"></div>
+				<div class="divider-full-height desktop-only"></div>
 
-			<div class="pref-flex-item">
-				<div class="pref-header">Night class?</div>
-				<div class="flex-container">
-			    	<div class="pref-label">Hate</div>
-			    	<div class="slider-container">
-				      	<md-slider flex min="-200" max="200" ng-model="nightPref" ng-disabled="!editableMode" aria-label="red" class></md-slider>
+				<div class="pref-flex-item">
+					<div class="pref-header">Night class?</div>
+					<div class="flex-container">
+				    	<div class="pref-label">Hate</div>
+				    	<div class="slider-container">
+					      	<md-slider flex min="-200" max="200" ng-model="nightPref" ng-disabled="!editableMode" aria-label="red" class></md-slider>
+						</div>
+						<div class="pref-label">Love</div>
 					</div>
-					<div class="pref-label">Love</div>
 				</div>
-			</div>
 
 
-			<div class="pref-flex-item-mobile">
-				<div class="pref-header">{{ currentPrefName }}</div>
-				<div class="flex-container">
-					<i class="fa fa-caret-left toggle-caret horiz-padding" ng-click="prevPref()"></i>
-			    	<div class="pref-label">Hate</div>
-			    	<div class="slider-container">
-				      	<md-slider flex min="-200" max="200" ng-model="currentPref" ng-disabled="!editableMode" aria-label="red" class></md-slider>
+				<div class="pref-flex-item-mobile">
+					<div class="pref-header">{{ currentPrefName }}</div>
+					<div class="flex-container">
+						<i class="fa fa-caret-left toggle-caret horiz-padding" ng-click="prevPref()"></i>
+				    	<div class="pref-label">Hate</div>
+				    	<div class="slider-container">
+					      	<md-slider flex min="-200" max="200" ng-model="currentPref" ng-disabled="!editableMode" aria-label="red" class></md-slider>
+						</div>
+						<div class="pref-label">Love</div>
+						<i class="fa fa-caret-right toggle-caret horiz-padding" ng-click="nextPref()"></i>
 					</div>
-					<div class="pref-label">Love</div>
-					<i class="fa fa-caret-right toggle-caret horiz-padding" ng-click="nextPref()"></i>
 				</div>
+
+				<div class="divider-full-height"></div>
+
 			</div>
-
-			<div class="divider-full-height"></div>
-
 		</div>
 
 		<div class="table-cell">
@@ -90,7 +92,7 @@
 
 	</div>
 
-	<div class="floating-container">
+	<div class="floating-container table-container">
 
 	    <div class="section-header">
 

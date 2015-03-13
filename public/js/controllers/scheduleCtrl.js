@@ -19,6 +19,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     $scope.events = [];
     $scope.scheduleIndex = 0;
     var id = 0;
+    console.log(id);
 
     if (arrayOfSchedules !== null) {
         $scope.scheduleLength = arrayOfSchedules.length;
@@ -175,12 +176,12 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         $location.path('/browse');
     }
 
-    $scope.busyTimeButtonText = "Edit Preferences";
+    $scope.busyTimeButtonText = "Edit Mode";
     $scope.editableMode = false;
 
     function startEditableMode() {
         $scope.editableMode = true;
-        $scope.busyTimeButtonText = "Save Preferences"
+        $scope.busyTimeButtonText = "Save"
 
         allowEditAllBusyTime();
 
@@ -201,7 +202,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
         disallowEditAllBusyTime();
 
-        $scope.busyTimeButtonText = "Edit Preferences";
+        $scope.busyTimeButtonText = "Edit Mode";
 
         // Regenerate the schedules
         if (arrayOfSchedules !== null) {
