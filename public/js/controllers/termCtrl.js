@@ -1,7 +1,6 @@
 
 winstonControllers.controller('termCtrl', ['$scope', 'localStorageService', function($scope, localStorageService) {
 
-	$scope.term = localStorageService.get('term') || '1490';
 	$scope.termOptions = [
 		{ 
 			'name': 'Fall 2014',
@@ -28,6 +27,8 @@ winstonControllers.controller('termCtrl', ['$scope', 'localStorageService', func
 			'termId': '1540'
 		}
 	]
-	$scope.selectedTerm = $scope.termOptions[0];
+	$scope.selectedTerm = localStorageService.get('selectedTerm') || $scope.termOptions[0];
+
+	localStorageService.bind($scope, 'selectedTerm');
 
 }]);

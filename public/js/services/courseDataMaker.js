@@ -15,7 +15,7 @@ Structure of courseData object:
      }];
 */
 
-winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(courseFactory, $window){
+winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'localStorageService', function(courseFactory, $window, localStorageService){
 
     function FacultyObject(faculty, subjects) {
         this.faculty = faculty;
@@ -91,8 +91,9 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
     factory.flatSubjects = [];
 
     factory.getCoursesDataPromise = function() {
+        var selectedTermId = localStorageService.get('selectedTerm').termId || '1490';
         return (
-            courseFactory.getCoursesPage(1).
+            courseFactory.getCoursesPage(1, selectedTermId).
                 success(function(data) {
                     pageListing = angular.fromJson(data);
                     var total_pages = pageListing.total_pages;
@@ -101,7 +102,7 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
 
                     var page = 2;
                     while (page <= total_pages) {
-                        courseFactory.getCoursesPage(page).
+                        courseFactory.getCoursesPage(page, selectedTermId).
                             success(function(data) {
                                 savePage(angular.fromJson(data));
                             }).
