@@ -13,6 +13,11 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         localStorageService.set('addedBusyTime.data', $scope.addedBusyTime);
     });
 
+    $scope.preferencesValues = preferencesValues.data;
+    $scope.$watchCollection('preferencesValues', function() {
+        localStorageService.set('preferencesValues.data', $scope.preferencesValues);
+    });
+
     /*
     ******************************************************
     Get the schedule data from readyMadeSchedules service
@@ -204,7 +209,8 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         Array.prototype.push.apply(addedBusyTime.data, eventsCopy);
 
         prefs = [$scope.morningPref, $scope.marathonPref, $scope.nightPref];
-        preferencesValues.data = prefs;
+        preferencesValues.data.length = 0;
+        Array.prototype.push.apply(preferencesValues.data, prefs);
 
         prefIndex = 0;
         $scope.currentPref = prefs[0];
