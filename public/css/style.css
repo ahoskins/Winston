@@ -349,11 +349,6 @@ div.panel-collapse {
 	font-size: 16px;
 }
 
-/*#welcome-banner {
-	margin-top: 70px;
-	border-radius: 15px;
-}*/
-
 /*****************
     Preferences
 ******************/
@@ -372,6 +367,15 @@ div.panel-collapse {
 .two-thirds {
 	-webkit-flex: 2;
 	flex: 2;
+}
+
+.flex-container {
+ 	display: flex;
+ 	align-items: center;
+}
+
+.pref-button {
+	width: 110px;
 }
 
 .pref-flex-item {
@@ -402,11 +406,6 @@ div.panel-collapse {
 	top: 0px;
 	height: 60px;
 	margin: 5px;
-}
-
-.table-container {
- 	display: flex;
- 	align-items: center;
 }
 
 .table-cell {
