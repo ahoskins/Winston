@@ -22,11 +22,11 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
         this.subjects = subjects;
     }
 
-    function insertIntoSubjectBin(facultyObject) {
+    function saveFacultyObjectToTree(facultyObject) {
         var inserted = false;
 
         // Case 1: Insert into already existing faculty
-        factory.data.forEach(function(subjectBinObject) {
+        factory.treeCourses.forEach(function(subjectBinObject) {
             if (subjectBinObject.faculty === facultyObject.faculty) {
                 facultyObject.subjects.forEach(function(Ssubject) {
                     subjectBinObject.subjects.push(Ssubject);
@@ -41,19 +41,55 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
             facultyObject.subjects.forEach(function (subject) {
                 s.push(subject);
             });
-            factory.data.push(new FacultyObject(facultyObject.faculty, s));
+            factory.treeCourses.push(new FacultyObject(facultyObject.faculty, s));
         }
     }
 
-    function parsePage(pageListing) {
+    function savePage(pageListing) {
         pageListing.objects.forEach(function(facultyObject) {
-            insertIntoSubjectBin(facultyObject);
+            saveFacultyObjectToTree(facultyObject);
         });
+        factory.flatCourses.length = 0; // clear, keep reference
+        Array.prototype.push.apply(factory.flatCourses, flattenCourses(factory.treeCourses));
+        factory.flatSubjects.length = 0; // clear, keep reference
+        Array.prototype.push.apply(factory.flatSubjects, flattenSubjects(factory.treeCourses));
+    }
+
+    function flattenCourses(facultyArr) {
+        console.log('flattening');
+        return _.chain(facultyArr)
+            .map(function(faculty) {
+                return _.map(faculty.subjects, function(subject) {
+                    return _.map(subject.courses, function(course) {
+                        course['number'] = new RegExp('[0-9]+').exec(course.asString).join();
+                        return _.extend(
+                            _.pick(faculty, 'faculty'),
+                            _.pick(subject, 'subject', 'subjectTitle'),
+                            _.pick(course, 'course', 'asString', 'courseTitle', 'number'));
+                    });
+                });
+            })
+            .flatten()
+            .value();
+    }
+
+    function flattenSubjects(facultyArr) {
+        return _.chain(facultyArr)
+            .map(function(faculty) {
+                return _.map(faculty.subjects, function(subject) {
+                    return _.values(_.extend(
+                        _.pick(subject, 'subject')));
+                })
+            })
+            .flatten()
+            .value();
     }
 
     var factory = {};
 
-    factory.data = [];
+    factory.treeCourses = [];
+    factory.flatCourses = [];
+    factory.flatSubjects = [];
 
     factory.getCoursesDataPromise = function() {
         return (
@@ -62,13 +98,13 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', function(cour
                     pageListing = angular.fromJson(data);
                     var total_pages = pageListing.total_pages;
 
-                    parsePage(pageListing);
+                    savePage(pageListing);
 
                     var page = 2;
                     while (page <= total_pages) {
                         courseFactory.getCoursesPage(page).
                             success(function(data) {
-                                parsePage(angular.fromJson(data));
+                                savePage(angular.fromJson(data));
                             }).
                             error(function(data) {
                                 $window.alert("Server not responding.  All we can say is, try again later.");

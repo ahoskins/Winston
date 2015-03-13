@@ -8,7 +8,9 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     Get the courses data from the pre-resolved service
     ********************************************************************
      */
-    $scope.courseData = courseDataMaker.data;
+    $scope.courseData = courseDataMaker.treeCourses;
+    $scope.courseDataFlatCourses = courseDataMaker.flatCourses;
+    $scope.courseDataFlatSubjects = courseDataMaker.flatSubjects;
 
     /*
     ******************************
@@ -128,39 +130,33 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     $scope.courseSearchResults = stabilize(function (searchText) {
         if (!_.isString(searchText)) {
             return;
-        }  
-
-        // This is insanely wasteful to be doing every time.  
-        // It will be changed once I make a small change to the way this object is resolved in this controller
-        var subjects = flattenSubjects($scope.courseData);
+        }
 
         // This will find and correct spacing mistakes in the search string
         var matches = false;
-        if (!inSubjects(searchText, subjects)) {
+        if (!inSubjects(searchText, $scope.courseDataFlatSubjects)) {
             for (var i = 0; i < searchText.length - 1; i++) {
                 var string = breakAtIndex(i, searchText);
-                if (inSubjects(string, subjects)) {
+                if (inSubjects(string, $scope.courseDataFlatSubjects)) {
                     searchText = string;
                     break;
                 }
             }
         }
 
-        var searchableCourses = flattenCourses($scope.courseData);
-
-        var fuseCourseTitle = new Fuse(searchableCourses, {
+        var fuseCourseTitle = new Fuse($scope.courseDataFlatCourses, {
             keys: ['courseTitle'],
             includeScore: true
         });
-        var fuseSubjectTitle = new Fuse(searchableCourses, {
+        var fuseSubjectTitle = new Fuse($scope.courseDataFlatCourses, {
             keys: ['subjectTitle'],
             includeScore: true
         });
-        var fuseClassCode = new Fuse(searchableCourses, {
+        var fuseClassCode = new Fuse($scope.courseDataFlatCourses, {
             keys: ['asString'],
             includeScore: true
         });
-        var fuseClassNumber = new Fuse(searchableCourses, {
+        var fuseClassNumber = new Fuse($scope.courseDataFlatCourses, {
             keys: ['number'],
             includeScore: true
         });
@@ -192,35 +188,6 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
 
         return results;
     });
-
-    function flattenCourses(facultyArr) {
-        return _.chain(facultyArr)
-            .map(function(faculty) {
-                return _.map(faculty.subjects, function(subject) {
-                    return _.map(subject.courses, function(course) {
-                        course['number'] = new RegExp('[0-9]+').exec(course.asString).join();
-                        return _.extend(
-                            _.pick(faculty, 'faculty'),
-                            _.pick(subject, 'subject', 'subjectTitle'),
-                            _.pick(course, 'course', 'asString', 'courseTitle', 'number'));
-                    });
-                });
-            })
-            .flatten()
-            .value();
-    }
-
-    function flattenSubjects(facultyArr) {
-        return _.chain(facultyArr)
-            .map(function(faculty) {
-                return _.map(faculty.subjects, function(subject) {
-                    return _.values(_.extend(
-                        _.pick(subject, 'subject')));
-                })
-            })
-            .flatten()
-            .value();
-    }
     
 
     /*
