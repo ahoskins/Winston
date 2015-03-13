@@ -356,8 +356,12 @@ div.panel-collapse {
 	align-items: center;
 	justify-content: center;
 	-webbit-justify-content: center;
-	padding-left: 0px;
 	width: 100%;
+}
+
+.two-thirds {
+	-webkit-flex: 2;
+	flex: 2;
 }
 
 .pref-flex-item {
@@ -391,14 +395,11 @@ div.panel-collapse {
 }
 
 .table-container {
- 	display: table;
-    height: 100%;
-    width: 100%;
-    float: left;
-}
-
-.button-container {
-	padding-right: 10px;
+ 	display: flex;
+ 	align-items: center;
+    /*height: 100%;*/
+    /*width: 100%;*/
+    /*float: left;*/
 }
 
 .table-cell {
