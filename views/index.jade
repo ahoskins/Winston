@@ -4,13 +4,14 @@ block body
   
   include partials/header.html
 
-  div(class='container')
+  div(class='container wrapper')
     div(class='row-fluid')
 
       ng-view
 
-  div(class='push')
-    include partials/footer.html
+    div(class='push')
+
+  include partials/footer.html
 
   //- Angular Templates
   include partials/dialogs.html
