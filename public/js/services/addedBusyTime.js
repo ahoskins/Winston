@@ -1,7 +1,7 @@
-winstonApp.factory('addedBusyTime', function(){
+winstonApp.factory('addedBusyTime', function(localStorageService) {
 	var factory = {};
 
-	factory.data = [];
+	factory.data = localStorageService.get('addedBusyTime.data') || [];
 
 	factory.apiFormattedData = [];
 
@@ -16,6 +16,10 @@ winstonApp.factory('addedBusyTime', function(){
 
 	var createBusyObject = function(event) {
         var busyObject = {};
+
+        // localStorage stringifies the moment() objects as UTC datetime strings
+        event.start = moment.utc(event.start);
+        event.end = moment.utc(event.end);
 
         switch(event.start.day()) {
             case 1:
@@ -49,7 +53,6 @@ winstonApp.factory('addedBusyTime', function(){
 
         busyObject.startTime = hour + ':' + minute + ' ' + side;
 
-
         // End
         var hour = event.end.hour();
         var side = 'AM';
@@ -63,7 +66,6 @@ winstonApp.factory('addedBusyTime', function(){
         minute = ("0" + minute).slice(-2);
 
         busyObject.endTime = hour + ':' + minute + ' ' + side;
-
 
         return busyObject;
     }

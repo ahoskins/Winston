@@ -3,7 +3,15 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'readyMadeSchedules', '$facebook', 'addedBusyTime', '$modal', 'preferencesValues', function($scope, $window, $location, uiCalendarConfig, $timeout, readyMadeSchedules, $facebook, addedBusyTime, $modal, preferencesValues) {
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'readyMadeSchedules', '$facebook', 'addedBusyTime', '$modal', 'preferencesValues', 'localStorageService', function($scope, $window, $location, uiCalendarConfig, $timeout, readyMadeSchedules, $facebook, addedBusyTime, $modal, preferencesValues, localStorageService) {
+
+    /*
+    angular-local-storage
+    */
+    $scope.addedBusyTime = addedBusyTime.data;
+    $scope.$watchCollection('addedBusyTime', function() {
+        localStorageService.set('addedBusyTime.data', $scope.addedBusyTime);
+    });
 
     /*
     ******************************************************
@@ -191,7 +199,10 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     }
 
     function startViewMode() {
-        addedBusyTime.data = $scope.events;
+        var eventsCopy = $scope.events.slice(0);
+        addedBusyTime.data.length = 0;
+        Array.prototype.push.apply(addedBusyTime.data, eventsCopy);
+
         prefs = [$scope.morningPref, $scope.marathonPref, $scope.nightPref];
         preferencesValues.data = prefs;
 
