@@ -407,9 +407,6 @@ div.panel-collapse {
 .table-container {
  	display: flex;
  	align-items: center;
-    /*height: 100%;*/
-    /*width: 100%;*/
-    /*float: left;*/
 }
 
 .table-cell {
