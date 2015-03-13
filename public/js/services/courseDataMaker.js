@@ -91,7 +91,13 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'localStorage
     factory.flatSubjects = [];
 
     factory.getCoursesDataPromise = function() {
-        var selectedTermId = localStorageService.get('selectedTerm').termId || '1490';
+        var selectedTermId;
+        if (localStorageService.get('selectedTerm') !== null) {
+            selectedTermId = localStorageService.get('selectedTerm').termId;
+        } else {
+            selectedTermId = '1490';
+        }
+        
         return (
             courseFactory.getCoursesPage(1, selectedTermId).
                 success(function(data) {
