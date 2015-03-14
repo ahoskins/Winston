@@ -3,7 +3,7 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'readyMadeSchedules', '$facebook', 'addedBusyTime', '$modal', 'preferencesValues', 'localStorageService', function($scope, $window, $location, uiCalendarConfig, $timeout, readyMadeSchedules, $facebook, addedBusyTime, $modal, preferencesValues, localStorageService) {
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'readyMadeSchedules', 'addedBusyTime', '$modal', 'preferencesValues', 'localStorageService', function($scope, $window, $location, uiCalendarConfig, $timeout, readyMadeSchedules, addedBusyTime, $modal, preferencesValues, localStorageService) {
 
     /*
     angular-local-storage
@@ -340,20 +340,6 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             $scope.currentPref = prefs[prefIndex];
             $scope.currentPrefName = prefNames[prefIndex];
         }
-    }
-
-    /*
-    *********************************
-    Facebook integration (open graph)
-    *********************************
-    */
-
-    $scope.share = function() {
-        $facebook.ui(
-         {
-          method: 'share',
-          href: 'thewinston.herokuapp.com/'
-        });
     }
 
     /*
