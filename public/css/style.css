@@ -145,6 +145,11 @@ html, body {
 	-webkit-align-items: center;
 	align-items: center;
 }
+
+.facebookCount {
+	display: none !important;
+}
+
 .social-icons a+a {
 	margin-left: 10px;
 }
