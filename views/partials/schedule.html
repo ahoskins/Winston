@@ -95,9 +95,12 @@
 		    	<div id="fb-root"></div>
 		    	<div class="social-icons go-left">
 		    		<a facebook class="facebookShare" data-url="https://thewinston.herokuapp.com"></a>
-					<a twitter data-lang="en" data-count='none' data-url='https://thewinston.herokuapp.com' data-size="medium" data-text='Winston | A Schedule Builder for UAlberta Students' ></a>
-					<a ng-click=""><i class="fa fa-envelope-o fa-lg"></i></a>
-					<a ng-click="image()"><i class="fa fa-picture-o fa-lg"></i></a>
+		    		<div class="twitter-share small-side-padding">
+						<a twitter data-lang="en" data-count='none' data-url='https://thewinston.herokuapp.com' data-size="medium" data-text='Winston | A Schedule Builder for UAlberta Students' ></a>
+					</div>
+					<div>
+						<a ng-click="image()" class="save-image"><i class="fa fa-picture-o fa-lg"></i><span class="small-side-padding">Image</span></a>
+					</div>
 				</div>
 
 				<i class="fa fa-caret-right toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(1)"></i>

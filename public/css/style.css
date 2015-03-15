@@ -83,6 +83,10 @@ html, body {
 	padding: 15px;
 }
 
+.small-side-padding {
+	padding: 0px 5px;
+}
+
 .center-it {
 	margin: 0 auto;
 }
@@ -148,6 +152,28 @@ html, body {
 
 .facebookCount {
 	display: none !important;
+}
+
+.twitter-share {
+	height: 52px !important;
+	display: block;
+}
+
+.save-image {
+	height: 22px !important;
+	border: 1px solid black;
+	color: black;
+	background-color: white;
+	border-radius: 3px;
+}
+
+.save-image:hover {
+	background-color: #D3D3D3;
+	color: black;
+}
+
+.fa-picture-o:hover {
+	color: black !important;
 }
 
 .social-icons a+a {
