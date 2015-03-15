@@ -201,20 +201,40 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         $scope.events = addedBusyTime.data;
         refreshCalendar();
 
-        // On desktop a hover effect is best for editing coures...on mobile, either no affect or a simple background change
-        $('div.fc-time-grid-container').each(function() {
-            $(this).hover(function() {
-                this.style.setProperty('background-color', '#B0BEC5', 'important');
-                $('.fc-today').get(0).style.setProperty('background-color', '#B0BEC5', 'important');
-             }, function() {
-                this.style.setProperty('background-color', '#EFEFEF', 'important');
-                $('.fc-today').get(0).style.setProperty('background-color', '#EFEFEF', 'important');
-             });
-        });
+        enableEditModeColors();
 
     }
 
+    var baseEditColor = '#90CAF9';
+    var hoverEditColor = '#64B5F6';
+    var viewColor = '#EFEFEF';
+
+    function enableEditModeColors() {
+        $('div.fc-time-grid-container').each(function() {
+            this.style.setProperty('background-color', baseEditColor, 'important');
+            $(this).hover(function() {
+                this.style.setProperty('background-color', hoverEditColor, 'important');
+                $('.fc-today').removeClass('fc-today');
+                // $('.fc-today').get(0).style.setProperty('background-color', hoverEditColor, 'important');
+             }, function() {
+                this.style.setProperty('background-color', baseEditColor, 'important');
+                $('.fc-today').removeClass('fc-today');
+                // $('.fc-today').get(0).style.setProperty('background-color', baseEditColor, 'important');
+             });
+        });
+    }
+
+    function removeEditModeColors() {
+        $('div.fc-time-grid-container').each(function() {
+            this.style.setProperty('background-color', viewColor, 'important');
+            $(this).unbind('mouseenter mouseleave');
+        })
+    }
+
     function startViewMode() {
+
+        removeEditModeColors();
+
         var eventsCopy = $scope.events.slice(0);
         addedBusyTime.data.length = 0;
         Array.prototype.push.apply(addedBusyTime.data, eventsCopy);
