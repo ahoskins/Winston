@@ -3,7 +3,7 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'readyMadeSchedules', 'addedBusyTime', '$modal', 'preferencesValues', 'localStorageService', function($scope, $window, $location, uiCalendarConfig, $timeout, readyMadeSchedules, addedBusyTime, $modal, preferencesValues, localStorageService) {
+winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'readyMadeSchedules', 'addedBusyTime', '$modal', 'preferencesValues', 'localStorageService', '$document', function($scope, $window, $location, uiCalendarConfig, $timeout, readyMadeSchedules, addedBusyTime, $modal, preferencesValues, localStorageService, $document) {
 
     /*
     angular-local-storage
@@ -154,6 +154,23 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         }
     };
 
+    /*
+    *********************************************
+    Left right arrow key hotkeys
+    *********************************************
+    */
+    $document.bind('keydown', function(event) {
+        if ($location.path() != '/schedule' || arrayOfSchedules === null) {
+            return;
+        }
+        
+        if (event.keyCode === 39) {
+            $scope.displayDifferentSchedule(1);
+        }
+        else if (event.keyCode === 37) {
+            $scope.displayDifferentSchedule(0);
+        }
+    });
 
     /*
     ****************************************
