@@ -13,7 +13,6 @@
     "normalize.css": "~3.0.2",
     "angular-material": "0.6.0",
     "angular-bootstrap": "0.12.1",
-    "ng-facebook": "0.1.6",
     "html2canvas": "0.5.x",
     "ngprogress-lite": "~1.0.7",
     "underscore": "1.8.2",
