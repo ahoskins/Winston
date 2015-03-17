@@ -668,17 +668,18 @@ img.navbar-brand-image {
 	margin: 0 auto -4em;
 }
 
-.footer-bit {
-	display: -webkit-flex;
-	display: flex;
-	-webkit-align-items: center;
-	align-items: center;
+.table-item {
+	display: table-cell;
+}
 
+.footer-bit {
+	display: table;
 	margin-top: 80px;
 	background-color: #e7e7e7;
 	padding: 20px;
 	border-radius: 5px;
 	border: 1px solid #e7e7e7;
+	width: 100%;
 }
 
 .footer-bit i {
