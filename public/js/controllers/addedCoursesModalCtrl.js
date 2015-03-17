@@ -1,6 +1,7 @@
 winstonControllers.controller('addedCoursesModalCtrl', ['$scope', '$modalInstance', 'addedCourses', '$window', '$location', 'ngProgressLite', 'currentTerm', function($scope, $modalInstance, addedCourses, $window, $location, ngProgressLite, currentTerm) {
 	
 	$scope.added = addedCourses.data;
+	$scope.currentTerm = currentTerm;
 
 	$scope.viewSchedules = function() {
 		$location.path('/schedule');

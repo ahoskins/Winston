@@ -1,6 +1,7 @@
-winstonControllers.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', function($scope, $location, $interval, ngProgressLite, addedCourses, $window){
+winstonControllers.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', 'currentTerm', function($scope, $location, $interval, ngProgressLite, addedCourses, $window, currentTerm) {
 
     $scope.added = addedCourses.data;
+    $scope.currentTerm = currentTerm;
 
     $scope.viewSchedules = function() {
         $location.path('/schedule');

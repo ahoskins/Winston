@@ -100,7 +100,6 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm'
                     var total_pages = pageListing.total_pages;
 
                     savePage(pageListing);
-                    console.dir(pageListing);
 
                     var page = 2;
                     while (page <= total_pages) {

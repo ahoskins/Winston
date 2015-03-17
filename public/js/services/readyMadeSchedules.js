@@ -1,4 +1,4 @@
-winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', '$location', 'addedBusyTime', '$modal', '$timeout', '$route', 'ngProgressLite', 'preferencesValues', function(scheduleFactory, addedCourses, $window, $location, addedBusyTime, $modal, $timeout, $route, ngProgressLite, preferencesValues){
+winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', '$location', 'addedBusyTime', '$modal', '$timeout', '$route', 'ngProgressLite', 'preferencesValues', 'currentTerm', function(scheduleFactory, addedCourses, $window, $location, addedBusyTime, $modal, $timeout, $route, ngProgressLite, preferencesValues, currentTerm) {
 
 	/*
 	Worked function the created readyMadeSchedules
@@ -177,8 +177,10 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	}
 
     factory.getSchedulesPromise = function(callingFromScheduleView) {
-
-    	if (addedCourses.data.length === 0) {
+    	if (!addedCourses.data[currentTerm.termId]) {
+    		addedCourses.data[currentTerm.termId] = [];
+    	}
+    	if (addedCourses.data[currentTerm.termId].length === 0) {
     		factory.readyMadeSchedules = null;
 			ngProgressLite.done();
 			return;
@@ -188,7 +190,7 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 
     	ngProgressLite.set(0.6);
 
-		return (scheduleFactory.getSchedules(addedCourses.data, addedBusyTime.apiFormattedData, preferencesValues.data).
+		return (scheduleFactory.getSchedules(addedCourses.data[currentTerm.termId], addedBusyTime.apiFormattedData, preferencesValues.data).
 
 			success(function (data) {
 	    		// Assign schedule response to member

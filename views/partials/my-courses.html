@@ -4,13 +4,13 @@
 	    <button class="btn btn-success section-text bold-text go-right view-schedules" ng-click="viewSchedules()">View Schedules</button>
 	</div>
 	<div class="added-list">
-	    <span class="list-group-item" ng-repeat="course in added">
+	    <span class="list-group-item" ng-repeat="course in added[currentTerm.termId]">
 	    	<span class="course-asString">{{ course.asString }}</span>
 	        <a class="go-right" ng-click="emptyCourse(course)">
 	        <i class="fa fa-trash-o fa-lg"></i>
 	        </a>
 	    </span>
-	    <span class="list-group-item small-padding" ng-show="added.length === 0">
+	    <span class="list-group-item small-padding" ng-show="added[currentTerm.termId].length === 0">
 	    	<span class="course-asString">Add some courses</span>
 	    <div class="added-footer"><!--For spacing purposes--></div>
 	</div>

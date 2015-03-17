@@ -198,6 +198,7 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
      */
     $scope.added = addedCourses.courseAdded;
     $scope.addedCoursesData = addedCourses.data;
+    $scope.currentTerm = currentTerm;
 
     $scope.$watchCollection('added', function() {
         localStorageService.set('addedCourses.courseAdded', $scope.added);
@@ -211,6 +212,9 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     $scope.addToSchedule = function (courseObject) {
         if (!addedCourses.data[currentTerm.termId]) {
             addedCourses.data[currentTerm.termId] = [];
+        }
+        if (!addedCourses.courseAdded[currentTerm.termId]) {
+            addedCourses.courseAdded[currentTerm.termId] = {};
         }
         if (addedCourses.data[currentTerm.termId].indexOf(courseObject) === -1) {
             addedCourses.data[currentTerm.termId].push(courseObject);
