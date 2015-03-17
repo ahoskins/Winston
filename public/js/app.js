@@ -11,7 +11,7 @@ winstonApp.config(['$routeProvider', function($routeProvider) {
 	  	templateUrl: 'partials/browse.jade',
 	  	resolve: {
 	  		courseData: function(courseDataMaker) {
-	  			return courseDataMaker.getCoursesDataPromise();
+	  			return courseDataMaker.coursesDataPromise;
 	  		}
 	  	}
 	  }).

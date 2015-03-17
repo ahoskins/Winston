@@ -90,34 +90,28 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm'
     factory.flatCourses = [];
     factory.flatSubjects = [];
 
-    factory.getCoursesDataPromise = function() {
-        var selectedTermId = currentTerm.termId;
+    factory.coursesDataPromise = courseFactory.getCoursesPage(1, currentTerm.termId).
+                        success(function(data) {
+                            pageListing = angular.fromJson(data);
+                            var total_pages = pageListing.total_pages;
 
-        return (
-            courseFactory.getCoursesPage(1, selectedTermId).
-                success(function(data) {
-                    pageListing = angular.fromJson(data);
-                    var total_pages = pageListing.total_pages;
+                            savePage(pageListing);
 
-                    savePage(pageListing);
-
-                    var page = 2;
-                    while (page <= total_pages) {
-                        courseFactory.getCoursesPage(page, selectedTermId).
-                            success(function(data) {
-                                savePage(angular.fromJson(data));
-                            }).
-                            error(function(data) {
-                                $window.alert("Server not responding.  All we can say is, try again later.");
-                            })
-                        page = page + 1;
-                    }
-                }).
-                error(function() {
-                    $window.alert("Server not responding.  All we can say is, try again later.");
-                })
-        )
-    }
+                            var page = 2;
+                            while (page <= total_pages) {
+                                courseFactory.getCoursesPage(page, currentTerm.termId).
+                                    success(function(data) {
+                                        savePage(angular.fromJson(data));
+                                    }).
+                                    error(function(data) {
+                                        $window.alert("Server not responding.  All we can say is, try again later.");
+                                    })
+                                page = page + 1;
+                            }
+                        }).
+                        error(function() {
+                            $window.alert("Server not responding.  All we can say is, try again later.");
+                        })
 
 	return factory;	
 }]);
