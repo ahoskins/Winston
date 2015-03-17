@@ -43,6 +43,12 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     $timeout(function() {
         refreshCalendar();
         captureCalendarCanvas();
+
+        $('div.fc-time-grid-container').each(function() {
+            this.style.setProperty('background-color', viewColor, 'important'); 
+            $('.fc-today').removeClass('fc-today');
+        });
+
     }, 0);
 
 
@@ -111,7 +117,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                     title: 'Busy Time',
                     start: start,
                     end: end,
-                    color: '#EF9A9A',
+                    color: '#263238',
                     id: id++
                 });
                 refreshCalendar();
@@ -205,12 +211,12 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         $location.path('/browse');
     }
 
-    $scope.busyTimeButtonText = "Choose Prefs";
+    $scope.busyTimeButtonText = "Customize";
     $scope.editableMode = false;
 
     function startEditableMode() {
         $scope.editableMode = true;
-        $scope.busyTimeButtonText = "Save Prefs"
+        $scope.busyTimeButtonText = "Done";
 
         allowEditAllBusyTime();
 
@@ -231,12 +237,8 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
             this.style.setProperty('background-color', baseEditColor, 'important');
             $(this).hover(function() {
                 this.style.setProperty('background-color', hoverEditColor, 'important');
-                $('.fc-today').removeClass('fc-today');
-                // $('.fc-today').get(0).style.setProperty('background-color', hoverEditColor, 'important');
              }, function() {
                 this.style.setProperty('background-color', baseEditColor, 'important');
-                $('.fc-today').removeClass('fc-today');
-                // $('.fc-today').get(0).style.setProperty('background-color', baseEditColor, 'important');
              });
         });
     }
@@ -266,7 +268,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
 
         disallowEditAllBusyTime();
 
-        $scope.busyTimeButtonText = "Choose Prefs";
+        $scope.busyTimeButtonText = "Customize";
 
         // Regenerate the schedules
         if (arrayOfSchedules !== null) {
@@ -317,7 +319,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     **********************************
     */
 
-    $('#help-button').attr("data-title", "The generated schedules will be swayed to favour your preferences.  If you don't care just keep the sliders in the middle!");
+    $('#help-button').attr("data-title", "Adjust the sliders and draw busy time on the schedule. When you're done, the schedules will be regenerated to meet your preferences.");
     $('#help-button').tooltip({ item: "help-button[data-title]"});
 
     /*
