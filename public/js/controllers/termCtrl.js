@@ -1,7 +1,7 @@
 
-winstonControllers.controller('termCtrl', ['$scope', 'localStorageService', function($scope, localStorageService) {
+winstonControllers.controller('termCtrl', ['$scope', '$window', 'currentTerm', 'localStorageService', function($scope, $window, currentTerm, localStorageService) {
 
-	$scope.termOptions = [
+	$scope.availableTerms = [
 		{ 
 			'name': 'Fall 2014',
 			'termId': '1490'
@@ -26,9 +26,16 @@ winstonControllers.controller('termCtrl', ['$scope', 'localStorageService', func
 			'name': 'Winter 2016',
 			'termId': '1540'
 		}
-	]
-	$scope.selectedTerm = localStorageService.get('selectedTerm') || $scope.termOptions[0];
+	];
+	$scope.currentTerm = currentTerm;
 
-	localStorageService.bind($scope, 'selectedTerm');
+	$scope.changeTerm = function(term) {
+		$scope.currentTerm.name = term.name;
+		$scope.currentTerm.termId = term.termId;
+
+		currentTerm = $scope.currentTerm;
+		localStorageService.set('currentTerm', currentTerm);
+		$window.location.reload();
+	}
 
 }]);

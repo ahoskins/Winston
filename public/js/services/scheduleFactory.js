@@ -1,7 +1,7 @@
 /**
 Call the API /generate-schedules
  */
-winstonApp.factory('scheduleFactory', function ($window, $http, $q) {
+winstonApp.factory('scheduleFactory', function ($window, $http, $q, currentTerm) {
     var factory = {};
 
     factory.getSchedules = function (addedCourses, busyTimes, preferencesArray) {
@@ -14,7 +14,7 @@ winstonApp.factory('scheduleFactory', function ($window, $http, $q) {
         //$window.alert(addedCourses[0]);
         var requestParams = {};
         requestParams["institution"] = "ualberta";
-        requestParams["term"] = "1490";
+        requestParams["term"] = currentTerm.termId;
         requestParams["courses"] = courseIds;
 
         if (typeof busyTimes !== 'undefined') {

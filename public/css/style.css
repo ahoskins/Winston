@@ -295,6 +295,10 @@ div.dropdown {
 	text-align: center;
 }
 
+.active-term {
+	background-color: #FFFFE6;
+}
+
 div.course-search {
 	padding-top: 10px;
 	padding-left: 16px;
