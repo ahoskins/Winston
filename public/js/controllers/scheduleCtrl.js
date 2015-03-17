@@ -187,6 +187,10 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     // Event handle for prev/next buttons
     $scope.displayDifferentSchedule = function (forward) {
 
+        if (arrayOfSchedules === null) {
+            return;
+        }
+
         // Adjust schedule index
         if (forward) {
             if ($scope.scheduleIndex == $scope.scheduleLength - 1) {
