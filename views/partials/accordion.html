@@ -18,11 +18,16 @@
 
             <div class="section-header" ng-controller="termCtrl">
                 <p class="section-text big-size">Courses during</p>
-                  <!-- <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    Fall 2014 <span class="caret"></span>
-                  </button> -->
-                <select ng-model="selectedTerm" ng-options="term.name for term in termOptions">
-                </select>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    {{ currentTerm.name }}<span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="term in availableTerms">
+                            <a ng-click="changeTerm(term)" ng-class="{ 'active-term': term.termId == currentTerm.termId }">{{ term.name }}</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <div class="input-group course-search">

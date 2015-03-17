@@ -4,10 +4,10 @@
         {{ courseResult.asString }} - {{ courseResult.courseTitle }}
         <a class="add-button" no-bubble>
             <i class="fa fa-plus add" 
-            ng-show="!added[courseResult.asString]" 
+            ng-show="!added[currentTerm.termId][courseResult.asString]" 
             ng-click="addToSchedule(courseResult)"></i>
             <i class="fa fa-check added" 
-            ng-show="added[courseResult.asString]" 
+            ng-show="added[currentTerm.termId][courseResult.asString]" 
             ng-click="removeFromSchedule(courseResult)"></i>
         </a>
     </accordion-heading>

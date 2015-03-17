@@ -15,7 +15,7 @@ Structure of courseData object:
      }];
 */
 
-winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'localStorageService', function(courseFactory, $window, localStorageService){
+winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm', function(courseFactory, $window, currentTerm){
 
     function FacultyObject(faculty, subjects) {
         this.faculty = faculty;
@@ -91,13 +91,8 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'localStorage
     factory.flatSubjects = [];
 
     factory.getCoursesDataPromise = function() {
-        var selectedTermId;
-        if (localStorageService.get('selectedTerm') !== null) {
-            selectedTermId = localStorageService.get('selectedTerm').termId;
-        } else {
-            selectedTermId = '1490';
-        }
-        
+        var selectedTermId = currentTerm.termId;
+
         return (
             courseFactory.getCoursesPage(1, selectedTermId).
                 success(function(data) {
