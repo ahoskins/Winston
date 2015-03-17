@@ -11,7 +11,6 @@ winstonApp.factory('scheduleFactory', function ($window, $http, $q, currentTerm)
             courseIds.push(courseObject.course);
         });
 
-        //$window.alert(addedCourses[0]);
         var requestParams = {};
         requestParams["institution"] = "ualberta";
         requestParams["term"] = currentTerm.termId;

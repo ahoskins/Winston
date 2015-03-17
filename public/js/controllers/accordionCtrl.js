@@ -1,7 +1,7 @@
 // Accordion Controller
 //
 
-winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'courseDataMaker', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', 'localStorageService', function($scope, $window, detailFactory, courseDataMaker, $timeout, $location, stabilize, addedCourses, localStorageService) {
+winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'courseDataMaker', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', 'localStorageService', 'currentTerm', function($scope, $window, detailFactory, courseDataMaker, $timeout, $location, stabilize, addedCourses, localStorageService, currentTerm) {
 
     /*
     ********************************************************************
@@ -209,14 +209,20 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     // @callee: "Add" button under 3rd layer of accordion
     // Only add if the course isn't already in addedCourses
     $scope.addToSchedule = function (courseObject) {
-        if (addedCourses.data.indexOf(courseObject) === -1) {
-            addedCourses.data.push(courseObject);
-            addedCourses.courseAdded[courseObject.asString] = 1;
+        if (!addedCourses.data[currentTerm.termId]) {
+            addedCourses.data[currentTerm.termId] = [];
+        }
+        if (addedCourses.data[currentTerm.termId].indexOf(courseObject) === -1) {
+            addedCourses.data[currentTerm.termId].push(courseObject);
+            addedCourses.courseAdded[currentTerm.termId][courseObject.asString] = 1;
         }
     };
 
     $scope.removeFromSchedule = function(courseObject) {
-        var index = addedCourses.data.indexOf(courseObject);
+        if (!addedCourses.data[currentTerm.termId]) {
+            return;
+        }
+        var index = addedCourses.data[currentTerm.termId].indexOf(courseObject);
         if (index !== -1) {
             addedCourses.data.splice(index, 1);
             addedCourses.courseAdded[courseObject.asString] = 0;
