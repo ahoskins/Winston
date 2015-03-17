@@ -388,7 +388,15 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     */
 
     $scope.image = function() {
-        $window.open(calendarCanvas.toDataURL('image/png'));
+        $scope.events = arrayOfSchedules[$scope.scheduleIndex];
+        refreshCalendar();
+        captureCalendarCanvas();
+        $timeout(function() {
+            $window.open(calendarCanvas.toDataURL('image/png'));
+            $scope.events = arrayOfSchedules[$scope.scheduleIndex].concat(addedBusyTime.data);
+            refreshCalendar();
+            captureCalendarCanvas();
+        }, 500);
     }
 
     $scope.backToBrowse = function() {
