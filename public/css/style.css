@@ -585,6 +585,11 @@ div.modal-content {
 	padding: 5px 5px;
 }
 
+.no-schedules-dialog {
+	text-align: center;
+	font-weight: bold;
+}
+
 /************************
           Header
 *************************/

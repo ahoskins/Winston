@@ -27,11 +27,13 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     $window.scrollTo(0,0);
 
     // Array of ready to go schedules in Full Calendar format
-    var arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();
+    var arrayOfSchedules = readyMadeSchedules.readyMadeSchedules;
 
     $scope.events = [];
     $scope.scheduleIndex = 0;
     var id = addedBusyTime.data.length || 0;
+
+    disallowEditAllBusyTime();
 
     if (arrayOfSchedules !== null) {
         $scope.scheduleLength = arrayOfSchedules.length;
@@ -275,33 +277,19 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         $scope.busyTimeButtonText = "Customize";
 
         // Regenerate the schedules
-        if (arrayOfSchedules !== null) {
-            readyMadeSchedules.getSchedulesPromise(true).then(function() {
-                arrayOfSchedules = readyMadeSchedules.getReadyMadeSchedules();
+        readyMadeSchedules.getSchedulesPromise(true).then(function() {
+            arrayOfSchedules = readyMadeSchedules.readyMadeSchedules;
 
-                $scope.scheduleLength = arrayOfSchedules.length;
-
-                if ($scope.scheduleLength === 0) {
-
-                    var modalInstance = $modal.open({
-                        templateUrl: 'addLessBusyTimeModal.html',
-                        controller: 'addLessBusyTimeModalCtrl'
-                    });
-
-                    startEditableMode();
-
-                    return;
-                }
-
+            if (arrayOfSchedules !== null) {
                 $scope.scheduleIndex = 0;
-
+                $scope.scheduleLength = arrayOfSchedules.length;
                 $scope.events = arrayOfSchedules[0].concat(addedBusyTime.data);
+            } else {
+                $scope.events = addedBusyTime.data;
+            }
 
-                refreshCalendar();
-            });
-        } else {
             refreshCalendar();
-        }
+        });
     }
 
     $scope.open = function() {

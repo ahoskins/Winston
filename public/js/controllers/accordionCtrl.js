@@ -234,17 +234,6 @@ winstonControllers.controller('accordionCtrl', ['$scope', '$window', 'detailFact
     }
 
     /*
-    @callee: "Generate Schedule" button
-    Switch to the other view and controller
-    */
-    var readyMade = [];
-    $scope.promptSchedules = function() {
-        // Get the service to generate schedules
-        $location.path('/schedule');
-        //$scope.$emit('generate');
-    };
-
-    /*
     ****************
     Validation Functions
     ****************

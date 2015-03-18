@@ -172,14 +172,16 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 
 	factory.readyMadeSchedules = null;
 
-	factory.getReadyMadeSchedules = function() {
-		return factory.readyMadeSchedules;
-	}
+	// factory.getReadyMadeSchedules = function() {
+	// 	return factory.readyMadeSchedules;
+	// }
 
-    factory.getSchedulesPromise = function(callingFromScheduleView) {
+    factory.getSchedulesPromise = function() {
     	if (!addedCourses.data[currentTerm.termId]) {
     		addedCourses.data[currentTerm.termId] = [];
     	}
+
+    	// No courses added? Don't bother generating schedules, but stay on the schedule view
     	if (addedCourses.data[currentTerm.termId].length === 0) {
     		factory.readyMadeSchedules = null;
 			ngProgressLite.done();
@@ -199,10 +201,9 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	        	// Build the schedules event objects
 	       		factory.readyMadeSchedules = buildSchedules(scheduleResponse);
 
-	       		if (!callingFromScheduleView && factory.readyMadeSchedules.length === 0) {
-
-	       			$location.path('/browse');
-	       			$route.reload();
+	       		// No schedules available? Show a dialog alerting this, but stay on the schedule view
+	       		if (factory.readyMadeSchedules.length === 0) {
+	       			factory.readyMadeSchedules = null;
 
 	       			var modalInstance = $modal.open({
 	  					templateUrl: 'noSchedulesModal.html',
