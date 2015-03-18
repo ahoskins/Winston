@@ -90,7 +90,10 @@
 				</div>
 
 				<i class="fa fa-caret-right toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(1)"></i>
-				<span class="go-right schedule-number">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
+				<span class="go-right schedule-number">
+					<span ng-if="scheduleLength > 0" class="no-padding">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
+					<span ng-if="scheduleLength === 0" class="no-padding">None</span>
+				</span>
 				<i class="fa fa-caret-left toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(0)"></i>
 		    </div>
 

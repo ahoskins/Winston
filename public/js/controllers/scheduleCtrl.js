@@ -286,6 +286,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
                 $scope.events = arrayOfSchedules[0].concat(addedBusyTime.data);
             } else {
                 $scope.events = addedBusyTime.data;
+                $scope.scheduleLength = 0;
             }
 
             refreshCalendar();

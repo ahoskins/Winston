@@ -172,10 +172,6 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 
 	factory.readyMadeSchedules = null;
 
-	// factory.getReadyMadeSchedules = function() {
-	// 	return factory.readyMadeSchedules;
-	// }
-
     factory.getSchedulesPromise = function() {
     	if (!addedCourses.data[currentTerm.termId]) {
     		addedCourses.data[currentTerm.termId] = [];
