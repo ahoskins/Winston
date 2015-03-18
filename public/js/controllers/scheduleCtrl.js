@@ -393,7 +393,14 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     }
 
     $scope.backToBrowse = function() {
+        disableTooltips();
         $location.path('/browse');
+    }
+
+    function disableTooltips() {
+        $('.fc-time-grid-event').each(function() {
+            $(this).tooltip('disable');
+        })
     }
 
     /*
