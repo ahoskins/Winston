@@ -10,7 +10,7 @@
 	        <i class="fa fa-trash-o fa-lg"></i>
 	        </a>
 	    </span>
-	    <span class="list-group-item small-padding" ng-show="added[currentTerm.termId].length === 0">
+	    <span class="list-group-item small-padding" ng-show="!added[currentTerm.termId] || added[currentTerm.termId].length === 0">
 	    	<span class="course-asString">Add some courses</span>
 	    <div class="added-footer"><!--For spacing purposes--></div>
 	</div>
