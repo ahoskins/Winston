@@ -189,7 +189,7 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
     // Event handle for prev/next buttons
     $scope.displayDifferentSchedule = function (forward) {
 
-        if (arrayOfSchedules === null) {
+        if (arrayOfSchedules === null || $scope.editableMode) {
             return;
         }
 
