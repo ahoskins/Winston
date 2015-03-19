@@ -178,7 +178,7 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
     	}
 
     	// No courses added? Don't bother generating schedules, but stay on the schedule view
-    	if (addedCourses.data[currentTerm.termId].length === 0) {
+    	if (!addedCourses.data[currentTerm.termId] || addedCourses.data[currentTerm.termId].length === 0) {
     		factory.readyMadeSchedules = null;
 			ngProgressLite.done();
 			return;
