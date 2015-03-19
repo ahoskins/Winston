@@ -2,7 +2,7 @@
 The only purpose of this controller is to route the about button
 */
 
-winstonControllers.controller('headerCtrl', ['$scope', '$location', '$modal', '$window', function($scope, $location, $modal, $window) {
+winstonApp.controller('headerCtrl', ['$scope', '$location', '$modal', '$window', function($scope, $location, $modal, $window) {
 
 	$scope.open = function() {
 		var modalInstance = $modal.open({

@@ -9,5 +9,8 @@ ignore
 # middleware/node
 /node_modules
 
+# gulp build
+/public/js/app-min
+
 
 

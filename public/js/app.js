@@ -1,8 +1,6 @@
 // Module
 //
-var winstonApp = angular.module('winstonApp', ['winstonControllers', 'LocalStorageModule', 'ui.calendar', 'pmkr.filterStabilize', 'ui.bootstrap', 'ngRoute', 'ngProgressLite', 'ngAnimate', 'ngMaterial', 'djds4rce.angular-socialshare']);
-
-var winstonControllers = angular.module('winstonControllers', ['ui.calendar']);
+var winstonApp = angular.module('winstonApp', ['LocalStorageModule', 'ui.calendar', 'pmkr.filterStabilize', 'ui.bootstrap', 'ngRoute', 'ngProgressLite', 'ngAnimate', 'ngMaterial', 'djds4rce.angular-socialshare']);
 
 winstonApp.config(['$routeProvider', function($routeProvider) {
 
@@ -10,18 +8,18 @@ winstonApp.config(['$routeProvider', function($routeProvider) {
 	  when('/browse', {
 	  	templateUrl: 'partials/browse.jade',
 	  	resolve: {
-	  		courseData: function(courseDataMaker) {
+	  		courseData: ['courseDataMaker', function(courseDataMaker) {
 	  			return courseDataMaker.coursesDataPromise;
-	  		}
+	  		}]
 	  	}
 	  }).
 	  when('/schedule', {
 	  	templateUrl: 'partials/schedule.jade',
 	  	controller: 'scheduleCtrl',
 	  	resolve: {
-	  		theData: function(readyMadeSchedules) {
+	  		theData: ['readyMadeSchedules', function(readyMadeSchedules) {
 	  			return readyMadeSchedules.getSchedulesPromise();
-	  		}
+	  		}]
 	  	}
 	  }).
 	  otherwise({
@@ -30,7 +28,7 @@ winstonApp.config(['$routeProvider', function($routeProvider) {
 
 }]);
 
-winstonApp.run(function($FB) {
+winstonApp.run(['$FB', function($FB) {
 	$FB.init('1605906902964485');
-});
+}]);
 

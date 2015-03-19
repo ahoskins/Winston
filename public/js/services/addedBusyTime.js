@@ -1,4 +1,4 @@
-winstonApp.factory('addedBusyTime', function(localStorageService) {
+winstonApp.factory('addedBusyTime', ['localStorageService', function(localStorageService) {
 	var factory = {};
 
 	factory.data = localStorageService.get('addedBusyTime.data') || [];
@@ -72,4 +72,4 @@ winstonApp.factory('addedBusyTime', function(localStorageService) {
 
 
 	return factory;
-});
+}]);

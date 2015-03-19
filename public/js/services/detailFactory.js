@@ -1,4 +1,4 @@
-winstonApp.factory('detailFactory', function ($window, $http, $q) {
+winstonApp.factory('detailFactory', ['$window', '$http', '$q', function ($window, $http, $q) {
 
     var factory = {};
 
@@ -19,4 +19,4 @@ winstonApp.factory('detailFactory', function ($window, $http, $q) {
     };
 
     return factory;
-})
+}]);

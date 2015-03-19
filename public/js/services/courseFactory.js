@@ -1,4 +1,4 @@
-winstonApp.factory('courseFactory', function ($window, $http, $q, localStorageService) {
+winstonApp.factory('courseFactory', ['$window', '$http', '$q', 'localStorageService', function ($window, $http, $q, localStorageService) {
 	
 	var factory = {};
 
@@ -10,4 +10,4 @@ winstonApp.factory('courseFactory', function ($window, $http, $q, localStorageSe
 	};
 
     return factory;
-});
+}]);

@@ -1,4 +1,4 @@
-winstonApp.directive('staticInclude', function($http, $templateCache, $compile) {
+winstonApp.directive('staticInclude', ['$http', '$templateCache', '$compile', function($http, $templateCache, $compile) {
     return function(scope, element, attrs) {
         var templatePath = attrs.staticInclude;
         $http.get(templatePath, { cache: $templateCache }).success(function(response) {
@@ -6,4 +6,4 @@ winstonApp.directive('staticInclude', function($http, $templateCache, $compile) 
             $compile(contents)(scope);
         });
     };
-});
+}]);
