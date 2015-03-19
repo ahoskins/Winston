@@ -682,7 +682,7 @@ img.navbar-brand-image {
 }
 
 .table-item {
-	display: table-cell;
+	display: inline-table;
 }
 
 .footer-bit {
