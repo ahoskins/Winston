@@ -12,5 +12,7 @@ ignore
 # gulp build
 /public/js/app-min
 
+build
+
 
 

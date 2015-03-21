@@ -9,11 +9,11 @@ like the crawler is not using this route.  But since this is the root route, I'm
 what else the crawler could be triggering...maybe I'll get Ross to look into this one.
  */
 
-exports.index = function(req, res){
+exports.index = function(req, res, prod){
     res.render('index');
 };
 
-exports.partials = function (req, res) {
+exports.partials = function (req, res){
   var name = req.params.name;
   res.render('partials/' + name);
 };

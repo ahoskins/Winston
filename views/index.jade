@@ -18,6 +18,7 @@ block body
   include partials/course-tile.html
   include partials/my-courses.html
 
+
   script(src='js/lib/vendor/bower_components/underscore/underscore-min.js')
   script(src='js/lib/vendor/bower_components/jquery/dist/jquery.min.js')
   script(src='js/lib/vendor/bower_components/jquery-ui/ui/jquery-ui.js')
@@ -48,26 +49,8 @@ block body
   script(src='js/lib/filterStabilize.js')
   script(src='js/lib/fuse.min.js')
 
-  script(src='js/app.js')
+  if #{production}
+    include build/includes.html
+  else
+    include includes.html
 
-  // script(src='js/app-min/app.min.js')
-
-  script(src='js/services/courseFactory.js')
-  script(src='js/services/detailFactory.js')
-  script(src='js/services/scheduleFactory.js')
-  script(src='js/services/courseDataMaker.js')
-  script(src='js/services/readyMadeSchedules.js')
-  script(src='js/services/currentTerm.js')  
-  script(src='js/services/addedCourses.js')
-  script(src='js/services/addedBusyTime.js')
-  script(src='js/services/preferencesValues.js')
-  script(src='js/services/noBubble.js')
-  script(src='js/services/staticInclude.js')
-
-  script(src='js/controllers/accordionCtrl.js')
-  script(src='js/controllers/termCtrl.js')
-  script(src='js/controllers/scheduleCtrl.js')
-  script(src='js/controllers/addedCtrl.js')
-  script(src='js/controllers/headerCtrl.js')
-  script(src='js/controllers/addedCoursesModalCtrl.js')
-  script(src='js/controllers/noSchedulesModalCtrl.js')

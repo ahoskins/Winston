@@ -39,9 +39,11 @@ if (env === 'development') {
   app.use(errorHandler());
 }
 
+var prod = false;
 // production only
 if (env === 'production') {
   // TODO
+  prod = true;
 }
 
 
@@ -55,7 +57,7 @@ if (env === 'production') {
 * Render the partials received from $routeProvider
 * Any other domain render 404.html
  */
-app.get('/', routes.index);
+app.get('/', routes.index(req, res, prod));
 app.get('/partials/:name', routes.partials);
 app.use(routes.error);
 
