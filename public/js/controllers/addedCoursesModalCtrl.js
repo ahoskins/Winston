@@ -1,4 +1,4 @@
-winstonControllers.controller('addedCoursesModalCtrl', ['$scope', '$modalInstance', 'addedCourses', '$window', '$location', 'ngProgressLite', 'currentTerm', function($scope, $modalInstance, addedCourses, $window, $location, ngProgressLite, currentTerm) {
+winstonApp.controller('addedCoursesModalCtrl', ['$scope', '$modalInstance', 'addedCourses', '$window', '$location', 'ngProgressLite', 'currentTerm', function($scope, $modalInstance, addedCourses, $window, $location, ngProgressLite, currentTerm) {
 	
 	$scope.added = addedCourses.data;
 	$scope.currentTerm = currentTerm;

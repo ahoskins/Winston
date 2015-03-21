@@ -1,5 +1,5 @@
 
-winstonControllers.controller('termCtrl', ['$scope', '$window', 'currentTerm', 'localStorageService', function($scope, $window, currentTerm, localStorageService) {
+winstonApp.controller('termCtrl', ['$scope', '$window', 'currentTerm', 'localStorageService', function($scope, $window, currentTerm, localStorageService) {
 
 	$scope.availableTerms = [
 		{ 

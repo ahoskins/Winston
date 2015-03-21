@@ -1,4 +1,4 @@
-winstonApp.factory('currentTerm', function(localStorageService) {
+winstonApp.factory('currentTerm', ['localStorageService', function(localStorageService) {
 	var currentTerm = {};
 
 	currentTerm = localStorageService.get('currentTerm') || { 
@@ -7,4 +7,4 @@ winstonApp.factory('currentTerm', function(localStorageService) {
     };
 
 	return currentTerm;
-});
+}]);

@@ -3,7 +3,7 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'readyMadeSchedules', 'addedBusyTime', '$modal', 'preferencesValues', 'localStorageService', '$document', function($scope, $window, $location, uiCalendarConfig, $timeout, readyMadeSchedules, addedBusyTime, $modal, preferencesValues, localStorageService, $document) {
+winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'readyMadeSchedules', 'addedBusyTime', '$modal', 'preferencesValues', 'localStorageService', '$document', function($scope, $window, $location, uiCalendarConfig, $timeout, readyMadeSchedules, addedBusyTime, $modal, preferencesValues, localStorageService, $document) {
 
     /*
     angular-local-storage

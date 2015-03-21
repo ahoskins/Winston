@@ -1,7 +1,7 @@
 /**
 Call the API /generate-schedules
  */
-winstonApp.factory('scheduleFactory', function ($window, $http, $q, currentTerm) {
+winstonApp.factory('scheduleFactory', ['$window', '$http', '$q', 'currentTerm', function ($window, $http, $q, currentTerm) {
     var factory = {};
 
     factory.getSchedules = function (addedCourses, busyTimes, preferencesArray) {
@@ -40,4 +40,4 @@ winstonApp.factory('scheduleFactory', function ($window, $http, $q, currentTerm)
 
     return factory;
 
-});
+}]);

@@ -30,18 +30,11 @@ html(ng-app="winstonApp")
 
     include fb-meta.html
 
-    link(rel='stylesheet', href='/js/lib/vendor/bower_components/normalize.css/normalize.css')
-
-    link(rel='stylesheet', href='/js/lib/vendor/bower_components/bootstrap/dist/css/bootstrap.css')
-    link(rel='stylesheet', href='/js/lib/vendor/bower_components/angular-material/angular-material.css')
-
-    link(rel='stylesheet', href='/js/lib/vendor/bower_components/fullcalendar/dist/fullcalendar.css')
-    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css')
-
-    link(rel='stylesheet', href='/js/lib/vendor/bower_components/ngprogress-lite/ngprogress-lite.css')
-    link(rel='stylesheet', href='/js/lib/vendor/bower_components/angular-socialshare/angular-socialshare.css')
-    
-    link(rel='stylesheet', href='/css/style.css')
+    #production
+      if production
+        include build/styles.html
+      else
+        include styles.html
 
   body
     block body

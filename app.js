@@ -39,11 +39,15 @@ if (env === 'development') {
   app.use(errorHandler());
 }
 
-// production only
+var prod = false;
 if (env === 'production') {
-  // TODO
+  prod = true;
 }
 
+app.use(function(req, res, next) {
+  req.in_production = prod;
+  next();
+});
 
 /**
 * Routes
