@@ -49,8 +49,8 @@ block body
   script(src='js/lib/filterStabilize.js')
   script(src='js/lib/fuse.min.js')
 
-  if #{production}
-    include build/includes.html
-  else
-    include includes.html
-
+  #production
+    if production
+      include build/includes.html
+    else
+      include includes.html

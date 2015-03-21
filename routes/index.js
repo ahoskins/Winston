@@ -9,8 +9,8 @@ like the crawler is not using this route.  But since this is the root route, I'm
 what else the crawler could be triggering...maybe I'll get Ross to look into this one.
  */
 
-exports.index = function(req, res, prod){
-    res.render('index');
+exports.index = function(req, res){
+    res.render('index', { production: req.in_production });
 };
 
 exports.partials = function (req, res){

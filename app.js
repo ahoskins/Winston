@@ -40,12 +40,14 @@ if (env === 'development') {
 }
 
 var prod = false;
-// production only
 if (env === 'production') {
-  // TODO
   prod = true;
 }
 
+app.use(function(req, res, next) {
+  req.in_production = prod;
+  next();
+});
 
 /**
 * Routes
@@ -57,7 +59,7 @@ if (env === 'production') {
 * Render the partials received from $routeProvider
 * Any other domain render 404.html
  */
-app.get('/', routes.index(req, res, prod));
+app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 app.use(routes.error);
 
