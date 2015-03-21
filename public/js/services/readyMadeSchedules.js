@@ -1,4 +1,4 @@
-winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', '$location', 'addedBusyTime', '$modal', '$timeout', '$route', 'ngProgressLite', 'preferencesValues', 'currentTerm', function(scheduleFactory, addedCourses, $window, $location, addedBusyTime, $modal, $timeout, $route, ngProgressLite, preferencesValues, currentTerm) {
+winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$window', '$location', 'addedBusyTime', '$modal', '$timeout', '$route', '$q', 'ngProgressLite', 'preferencesValues', 'currentTerm', function(scheduleFactory, addedCourses, $window, $location, addedBusyTime, $modal, $timeout, $route, $q, ngProgressLite, preferencesValues, currentTerm) {
 
 	/*
 	Worked function the created readyMadeSchedules
@@ -181,7 +181,9 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
     	if (!addedCourses.data[currentTerm.termId] || addedCourses.data[currentTerm.termId].length === 0) {
     		factory.readyMadeSchedules = null;
 			ngProgressLite.done();
-			return;
+			return $q(function(resolve, reject) {
+				resolve();
+			});
     	}
 
     	addedBusyTime.generateApiFormattedBusyTimes();
