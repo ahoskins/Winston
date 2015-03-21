@@ -30,7 +30,11 @@ html(ng-app="winstonApp")
 
     include fb-meta.html
 
-    include styles.html
+    #production
+      if production
+        include build/styles.html
+      else
+        include styles.html
 
   body
     block body
