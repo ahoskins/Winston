@@ -20,6 +20,7 @@ winstonApp.factory('addedBusyTime', ['localStorageService', function(localStorag
         // localStorage stringifies the moment() objects as UTC datetime strings
         event.start = moment.utc(event.start);
         event.end = moment.utc(event.end);
+        event.end.subtract(1, 'minutes') // 00:30->00:29, 01:00->00:59, see rosshamish/classtime/issues/96
 
         switch(event.start.day()) {
             case 1:
