@@ -209,8 +209,8 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
         }
         var index = addedCourses.data[currentTerm.termId].indexOf(courseObject);
         if (index !== -1) {
-            addedCourses.data.splice(index, 1);
-            addedCourses.courseAdded[courseObject.asString] = 0;
+            addedCourses.data[currentTerm.termId].splice(index, 1);
+            addedCourses.courseAdded[currentTerm.termId][courseObject.asString] = 0;
         }
     }
 
