@@ -11,3 +11,5 @@ gulp.task('default', function() {
   	.pipe(gulp.dest('public/js/app-min'))
   	.pipe(notify({ message: 'Finished minifying app (excluding bower)'}));
 });
+
+// Gulp html replace maybe idk...i'm still not really sure how to use this in production 
