@@ -246,9 +246,13 @@ div.fc-view, .fc-today {
 }
 
 .toggle-caret {
-	color: #ffffff;
+	color: #12AEF4;
 	font-size: 50px;
 	cursor: pointer;
+}
+
+.toggle-caret.disabled {
+	color: #ffffff;
 }
 
 .add-courses-button {
@@ -428,7 +432,7 @@ div.panel-collapse {
 }
 
 .pref-button {
-	width: 110px;
+	padding: 10px 15px;
 }
 
 .pref-flex-item {
