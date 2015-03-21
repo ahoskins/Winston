@@ -14,6 +14,7 @@ ignore
 
 build
 /public/css/css-min
+/public/js/app-min
 
 
 newrelic_agent.log
