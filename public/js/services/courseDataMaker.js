@@ -26,10 +26,26 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm'
         var inserted = false;
 
         // Case 1: Insert into already existing faculty
-        factory.treeCourses.forEach(function(subjectBinObject) {
-            if (subjectBinObject.faculty === facultyObject.faculty) {
+        factory.treeCourses.forEach(function(faculty) {
+            if (faculty.faculty === facultyObject.faculty) {
                 facultyObject.subjects.forEach(function(Ssubject) {
-                    subjectBinObject.subjects.push(Ssubject);
+                    foundSubject = false;
+                    faculty.subjects.forEach(function(subject) {
+                        if (subject.subject === Ssubject.subject) {
+                            foundSubject = true;
+                            var courseLevelNumber = new RegExp('[0-9]+').exec(Ssubject.courses[0].asString).join();
+                            if (courseLevelNumber < subject.courses[0].number) {
+                                // concat at front
+                                subject.courses = Ssubject.courses.concat(subject.courses);
+                            } else {
+                                // concat at end
+                                subject.courses = subject.courses.concat(Ssubject.courses);
+                            }
+                        }
+                    })
+                    if (!foundSubject) {
+                        faculty.subjects.push(Ssubject);
+                    }
                 });
                 inserted = true;
             }
@@ -49,6 +65,7 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm'
         pageListing.objects.forEach(function(facultyObject) {
             saveFacultyObjectToTree(facultyObject);
         });
+
         factory.flatCourses.length = 0; // clear, keep reference
         Array.prototype.push.apply(factory.flatCourses, flattenCourses(factory.treeCourses));
         factory.flatSubjects.length = 0; // clear, keep reference
