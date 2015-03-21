@@ -256,6 +256,12 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         })
     }
 
+    function normalizeDownBusyTimes() {
+        addedBusyTime.data.forEach(function(busyTime) {
+            busyTime.end.subtract(1, 'minutes');
+        });
+    }
+
     function startViewMode() {
 
         removeEditModeColors();
@@ -263,6 +269,8 @@ winstonControllers.controller('scheduleCtrl', ['$scope', '$window', '$location',
         var eventsCopy = $scope.events.slice(0);
         addedBusyTime.data.length = 0;
         Array.prototype.push.apply(addedBusyTime.data, eventsCopy);
+
+        normalizeDownBusyTimes();
 
         prefs = [$scope.morningPref, $scope.marathonPref, $scope.nightPref];
         preferencesValues.data.length = 0;
