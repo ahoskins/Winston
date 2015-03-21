@@ -4,7 +4,7 @@
 
 	<div class="floating-container flex-container no-side-margin">
 		<div class="desktop-only">
-			<button class="btn btn-success section-text bold-text inline-display" ng-click="backToBrowse()">Browse Courses</button>
+			<button class="btn btn-success pref-button section-text bold-text inline-display" ng-click="backToBrowse()">Browse Courses</button>
 		</div>
 
 		<div class="two-thirds">
@@ -53,13 +53,13 @@
 				<div class="pref-flex-item-mobile">
 					<div class="pref-header">{{ currentPrefName }}</div>
 					<div class="flex-container">
-						<i class="fa fa-caret-left toggle-caret horiz-padding" ng-click="prevPref()"></i>
+						<i class="fa fa-caret-left toggle-caret horiz-padding" ng-class="{ disabled: !editableMode }" ng-click="prevPref()"></i>
 				    	<div class="pref-label">Hate</div>
 				    	<div class="slider-container">
 					      	<md-slider flex min="-100" max="100" ng-model="currentPref" ng-disabled="!editableMode" aria-label="red" class></md-slider>
 						</div>
 						<div class="pref-label">Love</div>
-						<i class="fa fa-caret-right toggle-caret horiz-padding" ng-click="nextPref()"></i>
+						<i class="fa fa-caret-right toggle-caret horiz-padding" ng-class="{ disabled: !editableMode }" ng-click="nextPref()"></i>
 					</div>
 				</div>
 
@@ -67,8 +67,6 @@
 
 			</div>
 		</div>
-
-		<a id="help-button" class="fa fa-question big-size"></a>
 
 		<button class="btn btn-default section-text bold-text pref-button inline-display" ng-click="open()" ng-disabled="fetchingSchedules">{{ busyTimeButtonText }}</button>
 
@@ -89,15 +87,15 @@
 					</div>
 				</div>
 
-				<i class="fa fa-caret-right toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(1)"></i>
+				<i class="fa fa-caret-right toggle-caret small-padding go-right" ng-class="{ disabled: editableMode }" ng-click="displayDifferentSchedule(1)"></i>
 				<span class="go-right schedule-number">
 					<span ng-if="scheduleLength > 0" class="no-padding">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
 					<span ng-if="scheduleLength === 0" class="no-padding">None</span>
 				</span>
-				<i class="fa fa-caret-left toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(0)"></i>
+				<i class="fa fa-caret-left toggle-caret small-padding go-right" ng-class="{ disabled: editableMode }" ng-click="displayDifferentSchedule(0)"></i>
 		    </div>
 
-		   	<div class="alert alert-info alert-dismissible instructions" ng-show="editableMode" role="alert">
+		   	<div class="alert alert-dismissible instructions" ng-show="editableMode" role="alert">
 		   		<div class="top-right">
 	  				<button type="button" class="close top-right" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	  			</div>

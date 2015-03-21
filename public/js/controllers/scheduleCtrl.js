@@ -311,15 +311,6 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
 
     /*
     **********************************
-    Help Button
-    **********************************
-    */
-
-    $('#help-button').attr("data-title", "Adjust the sliders and draw busy time on the schedule. When you're done, the schedules will be regenerated to meet your preferences.");
-    $('#help-button').tooltip({ item: "help-button[data-title]"});
-
-    /*
-    **********************************
     Preferences
     **********************************
     */
