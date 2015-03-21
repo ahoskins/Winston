@@ -22,7 +22,6 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
      //
      // When open -> logical true, when closed -> logical false
      $scope.subjects = [];
-     // $window.alert(opened);
      $scope.renderSubjects = function (faculty, $event) {
         // Make sure accordion will either open or close as a result of this click
         // To the ensure the $scope.subjects[faculty] MATCHES open state of accordion
@@ -79,13 +78,7 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
     **************************
      */
 
-    // To accordion load, wait 500 ms before displaying any courses
-    $timeout(function() {
-        $scope.searchText = '';
-        
-    }, 500);
-
-    // Watch the searchBox every 200ms
+    // Watch the searchBox every 500ms
     var searchTextTimeout;
     $scope.$watch('model.searchBox', function(val) {
         // Suppress type warnings
@@ -93,24 +86,12 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
             return;
         }
 
-        // $scope.searchText = val.toUpperCase();
-
-        // // Start a press 200ms timeout
         if (searchTextTimeout) {
             $timeout.cancel(searchTextTimeout);
         }
         searchTextTimeout = $timeout(function() {
             $scope.searchText = val;
         }, 500);
-
-        // Make all ng-if's false
-        for (index in $scope.subjects) {
-            $scope.subjects[index] = 0;
-        }
-        for (index in $scope.courses) {
-            $scope.courses[index] = 0;
-        }
-
     });
 
     function breakAtIndex(index, string) {
