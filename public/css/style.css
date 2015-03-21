@@ -322,10 +322,18 @@ h4.panel-title {
 
 .add-button {
 	position: absolute;
-	top: 3px;
-	right: 5px;
+	top: 0px;
+	right: 0px;
 	padding: 10px;
 	font-size: 22px;
+}
+
+.add-button:focus {
+	outline: none;
+}
+
+.label {
+	padding: 10px;
 }
 
 .add-button > .add {
