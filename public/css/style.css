@@ -272,6 +272,41 @@ div.fc-view, .fc-today {
 	position: relative !important;
 }
 
+/* Editable borders and hover */
+
+.fc-unthemed th.editableMode,
+.fc-unthemed td.editableMode,
+.fc-unthemed thead.editableMode,
+.fc-unthemed tbody.editableMode,
+.fc-unthemed .fc-divider.editableMode,
+.fc-unthemed .fc-row.editableMode,
+.fc-unthemed .fc-popover.editableMode {
+	border-color: #12AEF4;
+}
+
+.fc-flex-container {
+	display: flex;
+	display: -webekit-flex;
+	align-items: center;
+	-webkit-align-items: center;
+	width: 100%;
+	height: 100%;
+}
+
+.fc-flex-container div {
+	width: 100%;
+	height: 100%;
+}
+
+.fc-flex-container div:not(:last-child) {
+	margin-right: 1px;
+	margin-left: -1px;
+}
+
+.editableMode .fc-flex-container div:hover {
+	background-color: #12AEF4;
+}
+
 /************************
         Accordion
 *************************/

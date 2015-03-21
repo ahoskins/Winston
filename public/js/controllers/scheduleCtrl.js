@@ -45,12 +45,6 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
     $timeout(function() {
         refreshCalendar();
         captureCalendarCanvas();
-
-        $('div.fc-time-grid-container').each(function() {
-            this.style.setProperty('background-color', viewColor, 'important'); 
-            $('.fc-today').removeClass('fc-today');
-        });
-
     }, 0);
 
 
@@ -234,26 +228,35 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
 
     }
 
-    var baseEditColor = '#90CAF9';
-    var hoverEditColor = '#64B5F6';
-    var viewColor = '#EFEFEF';
-
     function enableEditModeColors() {
-        $('div.fc-time-grid-container').each(function() {
-            this.style.setProperty('background-color', baseEditColor, 'important');
-            $(this).hover(function() {
-                this.style.setProperty('background-color', hoverEditColor, 'important');
-             }, function() {
-                this.style.setProperty('background-color', baseEditColor, 'important');
-             });
-        });
+        _.each(['.fc-unthemed th',
+                '.fc-unthemed td',
+                '.fc-unthemed thead',
+                '.fc-unthemed tbody',
+                '.fc-unthemed .fc-divider',
+                '.fc-unthemed .fc-row'], function(selector) {
+                    $(selector).addClass('editableMode');
+                });
+        if ($('.fc-flex-container').length == 0) {
+            $('.fc-slats td.fc-widget-content:not(.fc-time)').append('<div class="fc-flex-container">' +
+                '<div></div>' +
+                '<div></div>' +
+                '<div></div>' +
+                '<div></div>' +
+                '<div></div>' +
+            '</div>')
+        }
     }
 
     function removeEditModeColors() {
-        $('div.fc-time-grid-container').each(function() {
-            this.style.setProperty('background-color', viewColor, 'important');
-            $(this).unbind('mouseenter mouseleave');
-        })
+        _.each(['.fc-unthemed th',
+                '.fc-unthemed td',
+                '.fc-unthemed thead',
+                '.fc-unthemed tbody',
+                '.fc-unthemed .fc-divider',
+                '.fc-unthemed .fc-row'], function(selector) {
+                    $(selector).removeClass('editableMode');
+                });
     }
 
     function startViewMode() {
