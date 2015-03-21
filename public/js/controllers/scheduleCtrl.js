@@ -257,6 +257,7 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
     }
 
     function startViewMode() {
+        $scope.fetchingSchedules = true;
 
         removeEditModeColors();
 
@@ -290,6 +291,8 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
             }
 
             refreshCalendar();
+
+            $scope.fetchingSchedules = false;
         });
     }
 
