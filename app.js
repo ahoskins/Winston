@@ -1,4 +1,7 @@
 
+/* Enable New Relic APM monitoring */
+require('newrelic')
+
 /**
  * Module dependencies
  */
