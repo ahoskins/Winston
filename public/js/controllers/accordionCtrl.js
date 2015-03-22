@@ -213,10 +213,10 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
     }
 
     $scope.addOrRemove = function(courseObject) {
-        if ($scope.added[currentTerm.termId][courseObject.asString]) {
-            $scope.removeFromSchedule(courseObject);
-        } else {
+        if ($scope.added[currentTerm.termId] === undefined || ! $scope.added[currentTerm.termId][courseObject.asString]) {
             $scope.addToSchedule(courseObject);
+        } else {
+            $scope.removeFromSchedule(courseObject);
         }
     }
 
