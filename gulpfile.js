@@ -34,7 +34,7 @@ gulp.task('minify-css', function() {
   .pipe(notify({ message: 'Finished minifying css'}));
 });
 
-gulp.task('replace-js', function() {
+gulp.task('replace-js', ['minify-js'], function() {
 	gulp.src('views/includes.html')
 	.pipe(htmlreplace({
   		'js': 'js/app-min/app.min.js'
@@ -43,7 +43,7 @@ gulp.task('replace-js', function() {
   	.pipe(gulp.dest('views/build'));
 });
 
-gulp.task('replace-css', function() {
+gulp.task('replace-css', ['minify-css'], function() {
   gulp.src('views/styles.html')
   .pipe(htmlreplace({
     'css': 'css/css-min/css.min.css'
