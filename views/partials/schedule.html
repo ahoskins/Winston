@@ -68,7 +68,8 @@
 			</div>
 		</div>
 
-		<button class="btn btn-default section-text bold-text pref-button inline-display" ng-click="open()" ng-disabled="fetchingSchedules">{{ busyTimeButtonText }}</button>
+		<button class="btn section-text bold-text pref-button inline-display" 
+		ng-class="{ 'btn-default': editableMode, 'btn-primary': !editableMode }" ng-click="open()" ng-disabled="fetchingSchedules">{{ busyTimeButtonText }}</button>
 
 	</div>
 
@@ -80,19 +81,21 @@
 		    	<div class="social-icons go-left">
 		    		<a facebook class="facebookShare" data-url="https://heywinston.com"></a>
 		    		<div class="twitter-share small-side-padding">
-						<a twitter data-lang="en" data-count='none' data-url='https://thewinston.herokuapp.com' data-size="medium" data-text='Winston | A Schedule Builder for UAlberta Students' ></a>
+						<a twitter data-lang="en" data-count='none' data-url='https://heywinston.com' data-size="medium" data-text='Winston | A Schedule Builder for UAlberta Students' ></a>
 					</div>
 					<div>
 						<a ng-click="image()" class="save-image"><i class="fa fa-picture-o fa-lg"></i><span class="small-side-padding">Image</span></a>
 					</div>
 				</div>
 
-				<i class="fa fa-caret-right toggle-caret small-padding go-right" ng-class="{ disabled: editableMode }" ng-click="displayDifferentSchedule(1)"></i>
-				<span class="go-right schedule-number">
-					<span ng-if="scheduleLength > 0" class="no-padding">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
-					<span ng-if="scheduleLength === 0" class="no-padding">None</span>
-				</span>
-				<i class="fa fa-caret-left toggle-caret small-padding go-right" ng-class="{ disabled: editableMode }" ng-click="displayDifferentSchedule(0)"></i>
+				<div ng-hide="editableMode">
+					<i class="fa fa-caret-right toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(1)"></i>
+					<span class="go-right schedule-number">
+						<span ng-if="scheduleLength > 0" class="no-padding">{{ scheduleIndex + 1 }} of {{ scheduleLength }}</span>
+						<span ng-if="scheduleLength === 0" class="no-padding">None</span>
+					</span>
+					<i class="fa fa-caret-left toggle-caret small-padding go-right" ng-click="displayDifferentSchedule(0)"></i>
+				</div>
 		    </div>
 
 		   	<!-- <div class="alert alert-dismissible instructions" ng-show="editableMode" role="alert">
