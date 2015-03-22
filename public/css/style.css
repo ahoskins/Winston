@@ -428,18 +428,6 @@ div.panel-collapse {
     Preferences
 ******************/
 
-.flex-container {
-	display:-webkit-inline-flex;
-	display: inline-flex;
-	flex-direction: row;
-	-webkit-align-items: center;
-	align-items: center;
-	justify-content: center;
-	-webbit-justify-content: center;
-	width: 100%;
-	float: left;
-}
-
 .two-thirds {
 	-webkit-flex: 2;
 	flex: 2;
@@ -447,7 +435,15 @@ div.panel-collapse {
 
 .flex-container {
  	display: flex;
+ 	display: -webkit-flex;
  	align-items: center;
+ 	-webkit-align-items: center;
+ 	flex-direction: row;
+ 	-webkit-flex-direction: row;
+ 	justify-content: center;
+	-webbit-justify-content: center;
+	width: 100%;
+	float: left;
 }
 
 .pref-button {
