@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="https://cloud.githubusercontent.com/assets/1527504/6770564/2997abf8-d089-11e4-86cc-ad0fcada6a4e.png" />
+</p>
+Winston:
+-----------------------------
+
 Winston is a schedule-building web app for University of Alberta students.
  - Curious about a course? Browse the catalog with realtime search
  - Got a busy semester? Block off your commitments and Winston will work around them
@@ -6,7 +12,7 @@ Winston is a schedule-building web app for University of Alberta students.
 It lives at http://heywinston.com. 
 
 Winston is **not** official University of Alberta software - it is built by students for students.
- 
+
 ![find a schedule](https://cloud.githubusercontent.com/assets/1527504/6770386/2556e57c-d084-11e4-8c4a-76d79ef0b90c.png)
 
 Winston uses [classtime](https://github.com/rosshamish/classtime), a student-made UAlberta course data and schedule generation REST API.  This project was made in parallel with Winston, and is open for extensibility to other platforms.
