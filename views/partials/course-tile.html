@@ -4,12 +4,10 @@
         {{ courseResult.asString }} - {{ courseResult.courseTitle }}
         <a class="add-button" no-bubble ng-click="addOrRemove(courseResult)">
             <i class="fa fa-plus add" 
-            ng-show="!added[currentTerm.termId][courseResult.asString]" 
-            ng-click="addToSchedule(courseResult)"></i>
+            ng-show="!added[currentTerm.termId][courseResult.asString]"></i>
         
             <i class="fa fa-check added" 
-            ng-show="added[currentTerm.termId][courseResult.asString]" 
-            ng-click="removeFromSchedule(courseResult)"></i>
+            ng-show="added[currentTerm.termId][courseResult.asString]"></i>
         </a>
     </accordion-heading>
     <div class="course-description">

@@ -188,8 +188,6 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
         localStorageService.set('addedCourses.data', $scope.addedCoursesData);
     });
 
-    // @callee: "Add" button under 3rd layer of accordion
-    // Only add if the course isn't already in addedCourses
     $scope.addToSchedule = function (courseObject) {
         if (!addedCourses.data[currentTerm.termId]) {
             addedCourses.data[currentTerm.termId] = [];
