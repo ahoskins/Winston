@@ -205,7 +205,15 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
         if (!addedCourses.data[currentTerm.termId]) {
             return;
         }
-        var index = addedCourses.data[currentTerm.termId].indexOf(courseObject);
+        console.log(courseObject);
+        console.log(addedCourses.data[currentTerm.termId]);
+
+        var index = -1;
+        addedCourses.data[currentTerm.termId].forEach(function(course){
+            if (course.asString === courseObject.asString) {
+                index = addedCourses.data[currentTerm.termId].indexOf(course);
+            }
+        })
         if (index !== -1) {
             addedCourses.data[currentTerm.termId].splice(index, 1);
             addedCourses.courseAdded[currentTerm.termId][courseObject.asString] = 0;
