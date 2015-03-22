@@ -18,39 +18,13 @@ block body
   include partials/course-tile.html
   include partials/my-courses.html
 
-
-  script(src='js/lib/vendor/bower_components/underscore/underscore-min.js')
-  script(src='js/lib/vendor/bower_components/jquery/dist/jquery.min.js')
-  script(src='js/lib/vendor/bower_components/jquery-ui/ui/jquery-ui.js')
-  script(src='js/lib/vendor/bower_components/angular/angular.js')
-  script(src='js/lib/vendor/bower_components/bootstrap/dist/js/bootstrap.js') 
-  script(src='js/lib/vendor/bower_components/angular-bootstrap/ui-bootstrap-tpls.js') 
-
-  script(src='js/lib/vendor/bower_components/hammerjs/hammer.js')
-  script(src='js/lib/vendor/bower_components/angular-aria/angular-aria.js')
-  script(src='js/lib/vendor/bower_components/angular-animate/angular-animate.js')
-  script(src='js/lib/vendor/bower_components/angular-material/angular-material.js')
-
-  script(src='js/lib/vendor/bower_components/angular-route/angular-route.js')
-  script(src='js/lib/vendor/bower_components/bootstrap/js/alert.js')
-  script(src='js/lib/vendor/bower_components/moment/moment.js')
-  script(src='js/lib/vendor/bower_components/fullcalendar/dist/fullcalendar.js')
-  script(src='js/lib/calendar.js')
-
-  script(src='js/lib/vendor/bower_components/html2canvas/dist/html2canvas.js')
-  script(src='js/lib/vendor/bower_components/angular-socialshare/angular-socialshare.js')
-  script(src='https://platform.twitter.com/widgets.js')
-
-  script(src='js/lib/vendor/bower_components/angular-local-storage/dist/angular-local-storage.min.js')
-
-  script(src='js/lib/vendor/bower_components/ngprogress-lite/ngprogress-lite.js')
-
-  script(src='js/lib/memoize.js')
-  script(src='js/lib/filterStabilize.js')
-  script(src='js/lib/fuse.min.js')
-
   #production
     if production
+      include build/bower.html
+      include build/libs.html
       include build/includes.html
     else
+      include bower.html
+      include libs.html
       include includes.html
+
