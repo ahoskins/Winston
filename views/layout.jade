@@ -7,7 +7,8 @@ html(ng-app="winstonApp")
     base(href='/')
     title Winston | A Schedule Builder for UAlberta Students
 
-    // Favicon, touch icons
+    include fb-meta.html
+
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
@@ -23,13 +24,10 @@ html(ng-app="winstonApp")
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="icon shortcut" type="image/png" href="/favicon-32x32.png">
     <link rel="manifest" href="/manifest.json">
-    //
-      <meta name="msapplication-TileColor" content="#ffffff">
-      <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-      <meta name="theme-color" content="#ffffff">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
 
-
-    include fb-meta.html
 
     #production
       if production
