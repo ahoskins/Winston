@@ -467,7 +467,7 @@ div.panel-collapse {
 }
 
 .pref-button {
-	width: 102px;
+	min-width: 104px;
 	padding: 10px 15px;
 }
 

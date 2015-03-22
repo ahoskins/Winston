@@ -18,11 +18,11 @@ winstonApp.factory('addedBusyTime', ['localStorageService', function(localStorag
         var busyObject = {};
 
         // localStorage stringifies the moment() objects as UTC datetime strings
-        event.start = moment.utc(event.start);
-        event.end = moment.utc(event.end);
-        event.end.subtract(1, 'minutes') // 00:30->00:29, 01:00->00:59, see rosshamish/classtime/issues/96
+        var start = moment.utc(event.start);
+        var end = moment.utc(event.end);
+        end.subtract(1, 'minutes') // 00:30->00:29, 01:00->00:59, see rosshamish/classtime/issues/96
 
-        switch(event.start.day()) {
+        switch(start.day()) {
             case 1:
                 busyObject.day = 'M';
                 break;
@@ -41,7 +41,7 @@ winstonApp.factory('addedBusyTime', ['localStorageService', function(localStorag
         }
 
         // Start
-        var hour = event.start.hour();
+        var hour = start.hour();
         var side = 'AM';
         if (hour > 12) {
             hour = hour - 12;
@@ -49,13 +49,13 @@ winstonApp.factory('addedBusyTime', ['localStorageService', function(localStorag
         } 
         hour = ("0" + hour).slice(-2); 
 
-        var minute = event.start.minute();
+        var minute = start.minute();
         minute = ("0" + minute).slice(-2);
 
         busyObject.startTime = hour + ':' + minute + ' ' + side;
 
         // End
-        var hour = event.end.hour();
+        var hour = end.hour();
         var side = 'AM';
         if (hour > 12) {
             hour = hour - 12;
@@ -63,7 +63,7 @@ winstonApp.factory('addedBusyTime', ['localStorageService', function(localStorag
         }  
         hour = ("0" + hour).slice(-2);
 
-        var minute = event.end.minute();
+        var minute = end.minute();
         minute = ("0" + minute).slice(-2);
 
         busyObject.endTime = hour + ':' + minute + ' ' + side;
