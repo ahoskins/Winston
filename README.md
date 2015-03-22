@@ -1,48 +1,29 @@
-Find a university schedule that fits your life in less than 5 minutes
+<p align="center">
+  <img src="https://cloud.githubusercontent.com/assets/1527504/6770564/2997abf8-d089-11e4-86cc-ad0fcada6a4e.png" />
+</p>
+Winston:
+-----------------------------
 
-![pick some courses](https://cloud.githubusercontent.com/assets/1522678/5492679/bbaec766-86a0-11e4-85ad-ef605e7fed47.png)
+Winston is a schedule-building web app for University of Alberta students.
+ - Curious about a course? Browse the catalog with realtime search
+ - Got a busy semester? Block off your commitments and Winston will work around them
+ - Like to sleep in? Block off your mornings
 
-![find a schedule](https://cloud.githubusercontent.com/assets/1522678/5492696/e549fca8-86a0-11e4-8069-d4c7785cf950.png)
+It lives at http://heywinston.com. 
 
-Developer Documentation
--------------
+Winston is **not** official University of Alberta software - it is built by students for students.
 
-Documentation follows [reStructuredText] syntax, looks great when built with [sphinx], and is best viewed in a browser like [firefox] or [chrome].
+![find a schedule](https://cloud.githubusercontent.com/assets/1527504/6770386/2556e57c-d084-11e4-8c4a-76d79ef0b90c.png)
 
-Clone the project with [git]
-> $ git clone https://github.com/rosshamish/classtime  
-> $ cd classtime  
+Winston uses [classtime](https://github.com/rosshamish/classtime), a student-made UAlberta course data and schedule generation REST API.  This project was made in parallel with Winston, and is open for extensibility to other platforms.
 
-Install requirements with [pip]
-> $ pip install -r requirements.txt  
+Winston itself is a Node/Angular project built with gulp.js and served from Heroku.  It uses a heavily customized version of [FullCalendar](http://fullcalendar.io/) to show possible schedules and allow users to paint on busytimes.
 
-Build with [sphinx]
-> $ cd docs  
-> $ make html  
+The goals of Winston and classtime together is to help students quickly make schedules tailored around their lives and preferences.
 
-View with [firefox], [chrome], or any other browser
-> $ firefox _build/html/index.html &
-
-When documentation is unclear, missing, or incorrect, [add an issue][issue-new] to the [docs work queue][milestones].
-
-[git]: http://git-scm.com/book/en/v2/Getting-Started-Installing-Git
-[pip]: http://stackoverflow.com/questions/17271319/installing-pip-on-mac-os-x
-[firefox]: https://www.mozilla.org/en-US/firefox/new/
-[chrome]: http://www.google.com/chrome/
-[reStructuredText]: http://docutils.sourceforge.net/docs/user/rst/quickref.html
-[sphinx]: http://sphinx-doc.org/
-[issue-new]: https://github.com/RossHamish/classtime/issues/new
-[milestones]: https://github.com/RossHamish/classtime/milestones
-
-Thanks
-------
-
-[Mason Strong](https://github.com/hadacigar) ([contact](mailto:mstrong@ualberta.ca)) and [Peter Crinklaw](http://blackacrebrewing.com/hey.swf) for ideas, advice, and for sharing the code from their Cmput 275 schedule-builder project as a point of reference.
-
-[Ryan Shea](http://ryaneshea.com) for his [angular-flask app boilerplate](https://github.com/rxl/angular-flask)
-
-With inspiration from
+With inspiration from:
 ---------------------
+- [John Resig, Ben Russell, and Ben Grawi's schedule maker for the Rochester Institute of Technology](http://schedule.csh.rit.edu/)
 - [morinted, t0xicCode, and DanielMurdoch's 'schedule-generator' for the University of Ottawa](https://github.com/morinted/schedule-generator)
 - [cosbynator's 'course qualifier' for the University of Waterloo](https://github.com/cosbynator/Course-Qualifier), demo: http://www.coursequalifier.com/
 - [Uberi's 'COURSERATOR3000' for the University of Waterloo](https://github.com/Uberi/COURSERATOR3000)
@@ -50,4 +31,3 @@ With inspiration from
 - [adicu's 'Courses' for Columbia University](https://github.com/adi-archive/Schedule-Builder), demo: http://courses.adicu.com
 - [adiciu's course data API for Columbia University](https://github.com/adicu/data.adicu.com)
 - [arxanas's 'schedumich' for the University of Michigan](https://github.com/arxanas/schedumich)
-- [and others](https://github.com/search?o=desc&q=university+scheduling&ref=searchresults&s=stars&type=Repositories&utf8=%E2%9C%93)
