@@ -39,7 +39,7 @@ gulp.task('minify-css', function() {
     bower_dir + '/bootstrap/dist/css/bootstrap.css', 
     bower_dir + '/angular-material/angular-material.css', 
     bower_dir + '/fullcalendar/dist/fullcalendar.css', 
-    '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', 
+    bower_dir + '/font-awesome/css/font-awesome.css', 
     bower_dir + '/ngprogress-lite/ngprogress-lite.css', 
     bower_dir + '/angular-socialshare/angular-socialshare.css', 
     'public/css/style.css'])
