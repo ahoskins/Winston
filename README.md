@@ -15,11 +15,29 @@ Winston is **not** official University of Alberta software - it is built by stud
 
 ![find a schedule](https://cloud.githubusercontent.com/assets/1527504/6770386/2556e57c-d084-11e4-8c4a-76d79ef0b90c.png)
 
-Winston uses [classtime](https://github.com/rosshamish/classtime), a student-made UAlberta course data and schedule generation REST API.  This project was made in parallel with Winston, and is open for extensibility to other platforms.
+Tech Stack
+------------------------
+Winston relies on [classtime](https://github.com/rosshamish/classtime) for course data and schedule generation.  classtime has extensive documentation linked on its own project README.  classtime was developed in parallel with Winston, but is very extensible to other platforms.
 
-Winston itself is a Node/Angular project built with gulp.js and served from Heroku.  It uses a heavily customized version of [FullCalendar](http://fullcalendar.io/) to show possible schedules and allow users to paint on busytimes.
+Winston itself is an AngularJS web app.  It does not directly talk to the University of Alberta LDAP server, it requests API endpoints from classtime.  Neither does it do schedule generation - this is also done on classtime.  Winston consists of two main UI pieces: an accordion to show couse data, and a schedule view for showing schedules and adding busy time.
 
-The goals of Winston and classtime together is to help students quickly make schedules tailored around their lives and preferences.
+The course data is displayed in an triply nested accordion which lazily renders each panel as its opened.  Lazily rendering the accordion has huge performance benefits that allow it to be smooth on both web and mobile.
+
+For the schedule view, it uses a heavily customized version of [FullCalendar](http://fullcalendar.io/).  The calendar allows resizeable busy times to be drawn on it with a click of the mouse or tap of the finger.
+
+Usability is a huge focus.  We aim to not need instructions or help buttons - the UI should be intuitive enough.  Mobile friendliness is also a huge focus.  Each feature works the same on mobile as web, and we try to minimize performance loss.
+
+Winston uses a Node server and Jade templates, so it's pretty easy on the eyes.  It's built in production with gulp.js, and hosted in Heroku.
+
+Contributing
+---------------------------
+At the moment Winston does not have test coverage, but this is high on the list of priorities.  Once test coverage is in place, contributions will be very welcome.
+
+For now, feel free to submit an issue with any suggestions or bugs!
+
+Goal
+----------------------------
+The goals of Winston and classtime together are to help students quickly make schedules tailored around their lives. 
 
 With inspiration from:
 ---------------------
