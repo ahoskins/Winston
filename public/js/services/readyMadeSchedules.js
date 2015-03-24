@@ -144,6 +144,7 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	            function addEvent() {
 	                singleReadyMade.push({
 	                    title: classtime.asString,
+	                    titleVerbose: classtime.courseTitle,
 	                    start: new Date(y, m, d + offset, startHour, startMinute),
 	                    end: new Date(y, m, d + offset, endHour, endMinute),
 	                    color: currentColor,

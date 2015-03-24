@@ -86,8 +86,10 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
             Tooltip with the desciption on all courses
             */
             eventRender: function(event, element) {
-                $(element).attr("title", event.description);
-                $(element).tooltip({ container: "body"});
+                $(element).attr("title", event.titleVerbose + ": " + event.description.substring(0, 200) +  "...");
+                $(element).tooltip({ 
+                    container: "body",
+                });
             },
 
             /*
