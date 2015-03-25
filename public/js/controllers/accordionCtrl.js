@@ -9,8 +9,8 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
     ********************************************************************
      */
     $scope.courseData = courseDataMaker.treeCourses;
-    $scope.courseDataFlatCourses = courseDataMaker.flatCourses;
-    $scope.courseDataFlatSubjects = courseDataMaker.flatSubjects;
+    $scope.courseDataFlatCourses = courseDataMaker.getFlattenedCourses();
+    $scope.courseDataFlatSubjects = courseDataMaker.getFlattenedSubjects();
 
     /*
     ******************************

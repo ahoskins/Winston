@@ -15,7 +15,7 @@ Structure of courseData object:
      }];
 */
 
-winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm', function(courseFactory, $window, currentTerm){
+winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm', 'localStorageService', 'courseCache', '$q', function(courseFactory, $window, currentTerm, localStorageService, courseCache, $q){
 
     function FacultyObject(faculty, subjects) {
         this.faculty = faculty;
@@ -65,15 +65,12 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm'
         pageListing.objects.forEach(function(facultyObject) {
             saveFacultyObjectToTree(facultyObject);
         });
-
-        factory.flatCourses.length = 0; // clear, keep reference
-        Array.prototype.push.apply(factory.flatCourses, flattenCourses(factory.treeCourses));
-        factory.flatSubjects.length = 0; // clear, keep reference
-        Array.prototype.push.apply(factory.flatSubjects, flattenSubjects(factory.treeCourses));
     }
 
-    function flattenCourses(facultyArr) {
-        return _.chain(facultyArr)
+    var factory = {};
+
+    factory.getFlattenedCourses = function() {
+        return _.chain(factory.treeCourses)
             .map(function(faculty) {
                 return _.map(faculty.subjects, function(subject) {
                     return _.map(subject.courses, function(course) {
@@ -89,8 +86,8 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm'
             .value();
     }
 
-    function flattenSubjects(facultyArr) {
-        return _.chain(facultyArr)
+    factory.getFlattenedSubjects = function() {
+        return _.chain(factory.treeCourses)
             .map(function(faculty) {
                 return _.map(faculty.subjects, function(subject) {
                     return _.values(_.extend(
@@ -101,35 +98,60 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm'
             .value();
     }
 
-    var factory = {};
-
     factory.treeCourses = [];
-    factory.flatCourses = [];
-    factory.flatSubjects = [];
 
-    factory.coursesDataPromise = courseFactory.getCoursesPage(1, currentTerm.termId).
-                        success(function(data) {
-                            pageListing = angular.fromJson(data);
-                            var total_pages = pageListing.total_pages;
+    var total_pages = null;
 
-                            savePage(pageListing);
+    function getFirstPage() {
+        return courseFactory.getCoursesPage(1, currentTerm.termId)
+                    .success(function(data) {
+                        var pageListing = angular.fromJson(data);
+                        total_pages = pageListing.total_pages;
+                        savePage(pageListing);
+                    })
+                    .error(function() {
+                        $window.alert("Server not responding.  All we can say is, try again later.");
+                    })
+    }
 
-                            var page = 2;
-                            while (page <= total_pages) {
-                                courseFactory.getCoursesPage(page, currentTerm.termId).
-                                    success(function(data) {
-                                        savePage(angular.fromJson(data));
-                                    }).
-                                    error(function(data) {
-                                        $window.alert("Server not responding.  All we can say is, try again later.");
-                                    })
-                                page = page + 1;
-                            }
-                        }).
-                        error(function() {
-                            $window.alert("Server not responding.  All we can say is, try again later.");
-                        })
+    var total_pages = null;
+
+    factory.coursesDataPromise = function() {
+        return courseFactory.getCoursesPage(1, currentTerm.termId)
+            .success(function(data) {
+                var pageListing = angular.fromJson(data);
+                total_pages = pageListing.total_pages;
+                savePage(pageListing);
+            })
+            .error(function() {
+
+            });
+    }
+
+    factory.getRemainingPromises = function() {
+        page = 2;
+        var promises = [];
+        while (page <= total_pages) {
+            var promise = courseFactory.getCoursesPage(page, currentTerm.termId)
+                .success(function(data) {
+                    savePage(angular.fromJson(data));
+                })
+                .error(function(data) {
+                    $window.alert("Server not responding.  All we can say is, try again later.");
+                })
+            promises.push(promise);
+            page = page + 1;
+        }
+
+        return $q.all(promises).then(function() {
+            $window.alert('assigning');
+            courseCache.data[currentTerm.termId] = factory.treeCourses;
+            localStorageService.set('courseCache.data', courseCache.data);
+            console.dir(courseCache.data);
+        });
+    }
 
 	return factory;	
+
 }]);
 

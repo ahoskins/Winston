@@ -8,8 +8,15 @@ winstonApp.config(['$routeProvider', function($routeProvider) {
 	  when('/browse', {
 	  	templateUrl: 'partials/browse.jade',
 	  	resolve: {
-	  		courseData: ['courseDataMaker', function(courseDataMaker) {
-	  			return courseDataMaker.coursesDataPromise;
+	  		courseData: ['courseDataMaker', 'courseCache', 'currentTerm', function(courseDataMaker, courseCache, currentTerm) {
+	  			if (courseCache.data[currentTerm.termId] != undefined) {
+	  				courseDataMaker.treeCourses = courseCache.data[currentTerm.termId];
+	  				return null;
+	  			} else {
+					return courseDataMaker.coursesDataPromise().then(function() {
+						return courseDataMaker.getRemainingPromises();
+					});
+	  			}
 	  		}]
 	  	}
 	  }).
