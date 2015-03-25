@@ -104,14 +104,14 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm'
 
     function getFirstPage() {
         return courseFactory.getCoursesPage(1, currentTerm.termId)
-                    .success(function(data) {
-                        var pageListing = angular.fromJson(data);
-                        total_pages = pageListing.total_pages;
-                        savePage(pageListing);
-                    })
-                    .error(function() {
-                        $window.alert("Server not responding.  All we can say is, try again later.");
-                    })
+            .success(function(data) {
+                var pageListing = angular.fromJson(data);
+                total_pages = pageListing.total_pages;
+                savePage(pageListing);
+            })
+            .error(function() {
+                $window.alert("Server not responding.  All we can say is, try again later.");
+            })
     }
 
     var total_pages = null;
@@ -144,10 +144,8 @@ winstonApp.factory('courseDataMaker', ['courseFactory', '$window', 'currentTerm'
         }
 
         return $q.all(promises).then(function() {
-            $window.alert('assigning');
             courseCache.data[currentTerm.termId] = factory.treeCourses;
             localStorageService.set('courseCache.data', courseCache.data);
-            console.dir(courseCache.data);
         });
     }
 
