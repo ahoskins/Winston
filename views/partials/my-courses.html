@@ -5,10 +5,13 @@
 	</div>
 	<div class="added-list">
 	    <span class="list-group-item" ng-repeat="course in added[currentTerm.termId]">
-	    	<span class="course-asString">{{ course.asString }}</span>
-	        <a class="go-right" ng-click="emptyCourse(course)">
-	        <i class="fa fa-trash-o fa-lg"></i>
-	        </a>
+	    	<div class="flex-right-container go-right">
+	    		<span class="course-asString">{{ course.asString }}</span>
+					<md-switch ng-model="data.cb1"></md-switch>
+		        <a ng-click="emptyCourse(course)">
+		        	<i class="fa fa-trash-o fa-lg"></i>
+		        </a>
+	    	</div>
 	    </span>
 	    <span class="list-group-item small-padding" ng-show="!added[currentTerm.termId] || added[currentTerm.termId].length === 0">
 	    	<span class="course-asString">Add some courses</span>

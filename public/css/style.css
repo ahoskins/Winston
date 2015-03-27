@@ -590,8 +590,27 @@ div.panel-collapse {
 
 .added-container {
 	position: fixed;
-	/*top: 70px;*/
 	width: 36%;
+}
+
+.flex-right-container {
+ 	display: flex;
+ 	display: -webkit-flex;
+ 	align-items: center;
+ 	-webkit-align-items: center;
+ 	flex-direction: row;
+ 	-webkit-flex-direction: row;
+ 	justify-content: flex-end;
+	-webbit-justify-content: center;
+	width: 100%;
+}
+
+md-switch.md-default-theme.md-checked .md-thumb {
+	background-color: blue !important;
+}
+
+md-switch.md-default-theme.md-checked .md-bar {
+	background-color: blue !important;
 }
 
 @media (max-width: 768px) {
