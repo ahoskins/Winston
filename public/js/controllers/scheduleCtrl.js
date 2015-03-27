@@ -48,6 +48,12 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
     }, 0);
 
 
+    $('.fa-caret-right').attr("title", "Left and right arrow keys!");
+    $('.fa-caret-right').tooltip({ 
+        container: "body",
+    });
+
+
     /* 
     ***********************************************
     Full Calendar Config
@@ -170,6 +176,7 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
         
         if (event.keyCode === 39) {
             $scope.displayDifferentSchedule(1);
+            $('.fa-caret-right').tooltip('disable');
         }
         else if (event.keyCode === 37) {
             $scope.displayDifferentSchedule(0);
@@ -192,15 +199,17 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
         // Adjust schedule index
         if (forward) {
             if ($scope.scheduleIndex == $scope.scheduleLength - 1) {
-                return;
+                $scope.scheduleIndex = 0;
+            } else {
+                $scope.scheduleIndex ++;
             }
-            $scope.scheduleIndex ++;
         }
         else {
             if ($scope.scheduleIndex == 0) {
-                return;
+                $scope.scheduleIndex = $scope.scheduleLength - 1;
+            } else {
+                $scope.scheduleIndex --;
             }
-            $scope.scheduleIndex --;
         }
 
         $scope.events = arrayOfSchedules[$scope.scheduleIndex].concat(addedBusyTime.data);
