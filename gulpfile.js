@@ -66,12 +66,7 @@ gulp.task('minify-bower', function() {
 Make sure to manually add new libs into this!
 */
 gulp.task('minify-libs', function() {
-  return gulp.src(['public/js/lib/calendar.js',
-    'public/js/lib/filterStabilize.js',
-    'public/js/lib/fuse.min.js',
-    'public/js/lib/memoize.js',
-    'public/js/lib/twitter.min.js'
-    ])
+  return gulp.src('public/js/lib')
   .pipe(concat('libs.min.js'))
   .pipe(uglify())
   .pipe(gulp.dest('public/js/libs/libs-min'))
