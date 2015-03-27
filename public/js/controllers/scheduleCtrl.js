@@ -48,7 +48,7 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
     }, 0);
 
 
-    $('.fa-caret-right').attr("title", "Left and right arrow keys!");
+    $('.fa-caret-right').attr("data-title", "Tip: use the left and right arrow keys");
     $('.fa-caret-right').tooltip({ 
         container: "body",
     });
