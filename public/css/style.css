@@ -132,6 +132,10 @@ html, body {
 	}
 }
 
+.body-size-text {
+	font-size: 14px;
+}
+
 
 
 /************************
@@ -528,7 +532,6 @@ div.panel-collapse {
 	display: flex;
 	-webkit-flex-direction: column;
 	flex-direction: column;
-	min-height: 73px;
 	background-color: white;
 	left: 0px;
 	padding-left: 0px;
@@ -561,13 +564,6 @@ div.panel-collapse {
 		color: #8c001a;
 	}
 
-.added-footer {
-	margin-top: auto;
-	padding: 15px;
-	border: 1px solid white;
-	border-radius: 0px 0px 15px 15px;
-}
-
 .remove-icon {
 	border-radius: 3px;
 	padding: 5px 5px;
@@ -591,18 +587,6 @@ div.panel-collapse {
 .added-container {
 	position: fixed;
 	width: 36%;
-}
-
-.flex-right-container {
- 	display: flex;
- 	display: -webkit-flex;
- 	align-items: center;
- 	-webkit-align-items: center;
- 	flex-direction: row;
- 	-webkit-flex-direction: row;
- 	justify-content: flex-end;
-	-webbit-justify-content: center;
-	width: 100%;
 }
 
 md-switch.md-default-theme.md-checked .md-thumb {

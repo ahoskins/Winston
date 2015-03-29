@@ -1,13 +1,17 @@
 <script type="text/ng-template" id="partials/my-courses.html">
 	<div class="section-header">
-	    <div class="section-text big-size">My Courses</div>
-	    <button class="btn btn-success section-text bold-text go-right view-schedules" ng-click="viewSchedules()">View Schedules</button>
+		<div class="flex-container">
+		    <div class="section-text big-size">My Courses</div>
+		    <button class="btn btn-success section-text bold-text go-right view-schedules" ng-click="viewSchedules()">View Schedules</button>
+		</div>
 	</div>
 	<div class="added-list">
+		<div class="horiz-padding bold-text">
+			All of...
+		</div>
 	    <span class="list-group-item" ng-repeat="course in added[currentTerm.termId]">
-	    	<div class="flex-right-container go-right">
+	    	<div class="flex-container">
 	    		<span class="course-asString">{{ course.asString }}</span>
-					<md-switch ng-model="data.cb1"></md-switch>
 		        <a ng-click="emptyCourse(course)">
 		        	<i class="fa fa-trash-o fa-lg"></i>
 		        </a>
@@ -15,6 +19,22 @@
 	    </span>
 	    <span class="list-group-item small-padding" ng-show="!added[currentTerm.termId] || added[currentTerm.termId].length === 0">
 	    	<span class="course-asString">Add some courses</span>
-	    <div class="added-footer"><!--For spacing purposes--></div>
+		</span>
+
+		<span ng-repeat="group in electiveGroups">
+			<div class="horiz-padding bold-text body-size-text">
+				One of...
+			</div>
+			<span class="list-group-item small-padding" ng-repeat="course in group">
+				course.asString here
+			</span>
+			<span class="list-group-item small-padding" ng-show="group.length === 0">
+	    		<span class="course-asString">Drag to add</span>
+			</span>
+
+		</span>
+	</div>
+	<div class="section-footer">
+		<button class="btn btn-default section-text bold-text go-right view-schedules" ng-click="newElectiveGroup()">New Group</button>
 	</div>
 </script>

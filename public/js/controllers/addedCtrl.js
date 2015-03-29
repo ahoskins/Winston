@@ -18,4 +18,11 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         addedCourses.courseAdded[currentTerm.termId][course.asString] = 0;
     }
 
+    $scope.electiveGroups = [];
+
+    $scope.newElectiveGroup = function() {
+        $scope.electiveGroups.push([]);
+        // $scope.electiveGroup[currentTerm.termId].push('hey');
+    }
+
 }]);
