@@ -9,14 +9,18 @@
 		<div class="horiz-padding bold-text">
 			All of...
 		</div>
-	    <span class="list-group-item" ng-repeat="course in added[currentTerm.termId]">
-	    	<div class="flex-container" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{animate:true,  onStart:'onDrag(course)' }">
-	    		<span class="course-asString">{{ course.asString }}</span>
-		        <a ng-click="emptyCourse(course)">
-		        	<i class="fa fa-trash-o fa-lg"></i>
-		        </a>
-	    	</div>
-	    </span>
+
+    	<div class="flex-container list-group-item"
+    	ng-repeat="course in added[currentTerm.termId]"
+    	data-drag="true"
+    	data-jqyoui-options="{revert: 'invalid'}"
+    	jqyoui-draggable="{animate:true,  onStart:'onDrag(course)'}">
+    		<span class="course-asString">{{ course.asString }}</span>
+	        <a ng-click="emptyCourse(course)">
+	        	<i class="fa fa-trash-o fa-lg"></i>
+	        </a>
+    	</div>
+
 	    <span class="list-group-item small-padding" ng-show="!added[currentTerm.termId] || added[currentTerm.termId].length === 0">
 	    	<span class="course-asString">Add some courses</span>
 		</span>
@@ -26,7 +30,7 @@
 				One of...
 			</div>
 
-			<div class="list-group-item small-padding"
+			<div class="flex-container list-group-item small-padding"
 			ng-show="group.courses.length === 0"
 			data-drop="true"
 			jqyoui-droppable="{onDrop: 'onDrop(group)'}"
@@ -34,7 +38,7 @@
 				<span class="course-asString">Drag to add</span>
 			</div>
 
-			<div class="list-group-item small-padding"
+			<div class="flex-container list-group-item small-padding"
 			ng-repeat="course in group.courses"
 			data-drag="true"
 			data-jqyoui-options="{revert: 'invalid'}"
@@ -42,7 +46,10 @@
 			data-drop="true"
 			jqyoui-droppable="{onDrop: 'onDrop(group)'}"
 			data-jqyoui-options>
-				{{ course.asString }}
+	    		<span class="course-asString">{{ course.asString }}</span>
+		        <a ng-click="emptyCourse(course)">
+		        	<i class="fa fa-trash-o fa-lg"></i>
+		        </a>
 			</div>
 
 		</span>
