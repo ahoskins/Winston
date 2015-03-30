@@ -1,6 +1,6 @@
 // Module
 //
-var winstonApp = angular.module('winstonApp', ['LocalStorageModule', 'ui.calendar', 'pmkr.filterStabilize', 'ui.bootstrap', 'ngRoute', 'ngProgressLite', 'ngAnimate', 'ngMaterial', 'djds4rce.angular-socialshare', 'angulartics', 'angulartics.google.analytics']);
+var winstonApp = angular.module('winstonApp', ['LocalStorageModule', 'ui.calendar', 'pmkr.filterStabilize', 'ui.bootstrap', 'ngRoute', 'ngProgressLite', 'ngAnimate', 'ngMaterial', 'djds4rce.angular-socialshare', 'angulartics', 'angulartics.google.analytics', 'ngDragDrop']);
 
 winstonApp.config(['$routeProvider', function($routeProvider) {
 
