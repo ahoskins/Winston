@@ -11,7 +11,8 @@
 		</div>
 
     	<div class="flex-container list-group-item"
-    	ng-repeat="course in added[currentTerm.termId]"
+    	ng-if="added[0].courses.length !== 0"
+    	ng-repeat="course in added[0].courses"
     	data-drag="true"
     	data-jqyoui-options="{revert: 'invalid'}"
     	jqyoui-draggable="{animate:true,  onStart:'onDrag(course)'}">
@@ -21,11 +22,11 @@
 	        </a>
     	</div>
 
-	    <span class="list-group-item small-padding" ng-show="!added[currentTerm.termId] || added[currentTerm.termId].length === 0">
+	    <span class="list-group-item small-padding" ng-if="added[0].courses.length === 0">
 	    	<span class="course-asString">Add some courses</span>
 		</span>
 
-		<span ng-repeat="group in electiveGroups">
+		<span ng-repeat="group in added.slice(1)">
 			<div class="horiz-padding bold-text body-size-text">
 				One of...
 			</div>

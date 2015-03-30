@@ -188,19 +188,27 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
         localStorageService.set('addedCourses.data', $scope.addedCoursesData);
     });
 
+    // For now, always add to the **CORE** courses
+    // This should always be index 0 in the courses array
     $scope.addToSchedule = function (courseObject) {
-        if (!addedCourses.data[currentTerm.termId]) {
+        if (addedCourses.data[currentTerm.termId] == null || addedCourses.data[currentTerm.termId].length === 0) {
             addedCourses.data[currentTerm.termId] = [];
+            addedCourses.data[currentTerm.termId].push({
+                id: 'core',
+                courses: []
+            });
         }
+        console.dir(addedCourses.data[currentTerm.termId]);
         if (!addedCourses.courseAdded[currentTerm.termId]) {
             addedCourses.courseAdded[currentTerm.termId] = {};
         }
-        if (addedCourses.data[currentTerm.termId].indexOf(courseObject) === -1) {
-            addedCourses.data[currentTerm.termId].push(courseObject);
+        if (addedCourses.data[currentTerm.termId][0].courses.indexOf(courseObject) === -1) {
+            addedCourses.data[currentTerm.termId][0].courses.push(courseObject);
             addedCourses.courseAdded[currentTerm.termId][courseObject.asString] = 1;
         }
     };
 
+    // This will have to search for this courses in this compound data-structure
     $scope.removeFromSchedule = function(courseObject) {
         if (!addedCourses.data[currentTerm.termId]) {
             return;

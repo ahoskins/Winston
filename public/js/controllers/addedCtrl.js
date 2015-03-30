@@ -1,8 +1,17 @@
-winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', 'currentTerm', function($scope, $location, $interval, ngProgressLite, addedCourses, $window, currentTerm) {
+winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', 'currentTerm', '$timeout', function($scope, $location, $interval, ngProgressLite, addedCourses, $window, currentTerm, $timeout) {
 
-    // Merge added with electiveGroups to form one big glob of added...and hold these in localStorage
+    // This isn't defined because its null at the time of this code running
+    // With empty preferences, addedCourses.data doesn't get a term ID set until the accordion
 
-    $scope.added = addedCourses.data;
+    /*
+    All this addedCourses stuff is in a really weird broken state right now lol
+    Either I implement it right now completely disregarding localstorage
+    OR fix localstorage first, then do this start to finish
+    */
+    $timeout(function() {
+        $scope.added = addedCourses.data[currentTerm.termId];
+    }, 1000);
+
     $scope.currentTerm = currentTerm;
 
     $scope.viewSchedules = function() {
@@ -27,34 +36,40 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
     $scope.electiveGroups = [];
 
     function ElectiveGroup(name) {
-        this.name = name;
+        this.id = name;
         this.courses = [];
     }
 
+    // Make sure I use the next count out of localstorage just like the busytime id's
     var count = 0;
+
     $scope.newElectiveGroup = function() {
-        $scope.electiveGroups.push(new ElectiveGroup(count ++));
+        console.dir($scope.added);
+        addedCourses.data[currentTerm.termId].push(new ElectiveGroup(count ++));
     }
 
     var draggedCourse = null;
     $scope.onDrag = function(e, ui, course) {
-        console.dir(course);
         draggedCourse = course;
     }
 
-    $scope.onDrop = function(e, ui, group) {
-        // find the elective group and push on the draggedCourse
-        $scope.electiveGroups.forEach(function(electiveGroup) {
-            if (electiveGroup.name === group.name) {
-                electiveGroup.courses.push(draggedCourse);
+    // param: the group array from the main data-structure
+    $scope.onDrop = function(e, ui, droppedGroup) {
+
+        // Add to the dropped group
+        addedCourses.data[currentTerm.termId].forEach(function(group) {
+            if (group.id == droppedGroup.id) {
+                group.courses.push(draggedCourse);
             }
         });
 
-        // remove from where it came from
-        $scope.added[currentTerm.termId].forEach(function(course) {
-            if (course === draggedCourse) {
-                delete $scope.added[currentTerm.termId][$scope.added[currentTerm.termId].indexOf(course)];
-            }
+        // Remove from its previous home
+        addedCourses.data[currentTerm.termId].forEach(function(group) {
+            group.courses.forEach(function(course) {
+                if (course === draggedCourse) {
+                    delete draggedCourse;
+                }
+            });
         });
     }
 
