@@ -556,6 +556,13 @@ div.panel-collapse {
 	padding: 10px 15px;
 }
 
+.empty-group-text {
+	margin-right: auto;
+	padding: 10px 15px;
+	font-size: 0.50em;
+	font-weight: bold;
+}
+
 .added-list .list-group-item i.fa {
 	margin-right: 20px;
 	color: black;

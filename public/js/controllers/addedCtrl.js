@@ -8,6 +8,9 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
 
     $scope.currentTerm = currentTerm;
 
+    var colorIndex = 0;
+    var groupColors = ['#CE93D8', '#90CAF9', '#FFCC80'];
+
     $scope.viewSchedules = function() {
         $location.path('/schedule');
         ngProgressLite.start();
@@ -34,6 +37,10 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
     }
 
     var count = addedCourses.data[currentTerm.termId].length - 1 || 0;
+
+    $scope.setStyle = function(id) {
+        return { 'background-color': groupColors[id] }
+    }
 
     $scope.groupFreeze = false;
     $scope.newElectiveGroup = function() {
