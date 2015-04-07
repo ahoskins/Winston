@@ -2,12 +2,6 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
 
     // This isn't defined because its null at the time of this code running
     // With empty preferences, addedCourses.data doesn't get a term ID set until the accordion
-
-    /*
-    All this addedCourses stuff is in a really weird broken state right now lol
-    Either I implement it right now completely disregarding localstorage
-    OR fix localstorage first, then do this start to finish
-    */
     $timeout(function() {
         $scope.added = addedCourses.data[currentTerm.termId];
     }, 1000);
@@ -24,8 +18,6 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
     }
 
     $scope.emptyCourse = function(course) {
-        // var index = addedCourses.data[currentTerm.termId].indexOf(course);
-        // addedCourses.data[currentTerm.termId].splice(index, 1);
         removeCourse(course);
         addedCourses.courseAdded[currentTerm.termId][course.asString] = 0;
     }
@@ -43,8 +35,10 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
 
     var count = addedCourses.data[currentTerm.termId].length - 1 || 0;
 
+    $scope.groupFreeze = false;
     $scope.newElectiveGroup = function() {
         addedCourses.data[currentTerm.termId].push(new ElectiveGroup(count ++));
+        $scope.groupFreeze = true;
     }
 
     var draggedCourse = null;
@@ -53,22 +47,33 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
     }
 
     function removeCourse(targetCourse) {
+        var groupIndex = 0;
         addedCourses.data[currentTerm.termId].forEach(function(group) {
             var courseIndex = 0;
             group.courses.forEach(function(course) {
                 if (course === targetCourse) {
                     group.courses.splice(courseIndex, 1);
+                    // Empty elective groups go away
+                    if (group.courses.length === 0 && groupIndex > 0) {
+                        addedCourses.data[currentTerm.termId].splice(groupIndex, 1);
+                    }
                 }
                 courseIndex ++;
             });
+            groupIndex ++;
         });
     }
 
     function addCourse(droppedGroup, newCourse) {
+        var groupIndex = 0;
         addedCourses.data[currentTerm.termId].forEach(function(group) {
             if (group.id == droppedGroup.id) {
                 group.courses.push(newCourse);
+                if (groupIndex === addedCourses.data[currentTerm.termId].length - 1) {
+                    $scope.groupFreeze = false;
+                }
             }
+            groupIndex ++;
         });
     }
 
