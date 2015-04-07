@@ -13,13 +13,6 @@ winstonApp.factory('addedCourses', ['localStorageService', function(localStorage
 }]);
 
 /**
-addedCourses = {
-	core:  [<courses>],
-	electives: [{
-		id: 1,
-		courses: []
-	}]
-}
 
 addedCourses = [{
 	id: core,

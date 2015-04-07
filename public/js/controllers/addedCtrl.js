@@ -24,8 +24,9 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
     }
 
     $scope.emptyCourse = function(course) {
-        var index = addedCourses.data[currentTerm.termId].indexOf(course);
-        addedCourses.data[currentTerm.termId].splice(index, 1);
+        // var index = addedCourses.data[currentTerm.termId].indexOf(course);
+        // addedCourses.data[currentTerm.termId].splice(index, 1);
+        removeCourse(course);
         addedCourses.courseAdded[currentTerm.termId][course.asString] = 0;
     }
 
@@ -40,11 +41,9 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         this.courses = [];
     }
 
-    // Make sure I use the next count out of localstorage just like the busytime id's
-    var count = 0;
+    var count = addedCourses.data[currentTerm.termId].length - 1 || 0;
 
     $scope.newElectiveGroup = function() {
-        console.dir($scope.added);
         addedCourses.data[currentTerm.termId].push(new ElectiveGroup(count ++));
     }
 
@@ -53,24 +52,29 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         draggedCourse = course;
     }
 
-    // param: the group array from the main data-structure
-    $scope.onDrop = function(e, ui, droppedGroup) {
-
-        // Add to the dropped group
+    function removeCourse(targetCourse) {
         addedCourses.data[currentTerm.termId].forEach(function(group) {
-            if (group.id == droppedGroup.id) {
-                group.courses.push(draggedCourse);
-            }
-        });
-
-        // Remove from its previous home
-        addedCourses.data[currentTerm.termId].forEach(function(group) {
+            var courseIndex = 0;
             group.courses.forEach(function(course) {
-                if (course === draggedCourse) {
-                    delete draggedCourse;
+                if (course === targetCourse) {
+                    group.courses.splice(courseIndex, 1);
                 }
+                courseIndex ++;
             });
         });
+    }
+
+    function addCourse(droppedGroup, newCourse) {
+        addedCourses.data[currentTerm.termId].forEach(function(group) {
+            if (group.id == droppedGroup.id) {
+                group.courses.push(newCourse);
+            }
+        });
+    }
+
+    $scope.onDrop = function(e, ui, droppedGroup) {
+        removeCourse(draggedCourse);
+        addCourse(droppedGroup, draggedCourse);
     }
 
 }]);

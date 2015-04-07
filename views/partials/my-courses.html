@@ -11,18 +11,24 @@
 		</div>
 
     	<div class="flex-container list-group-item"
-    	ng-if="added[0].courses.length !== 0"
     	ng-repeat="course in added[0].courses"
     	data-drag="true"
     	data-jqyoui-options="{revert: 'invalid'}"
-    	jqyoui-draggable="{animate:true,  onStart:'onDrag(course)'}">
+    	jqyoui-draggable="{animate:true,  onStart:'onDrag(course)'}"
+    	data-drop="true"
+		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}"
+		data-jqyoui-options>
     		<span class="course-asString">{{ course.asString }}</span>
 	        <a ng-click="emptyCourse(course)">
 	        	<i class="fa fa-trash-o fa-lg"></i>
 	        </a>
     	</div>
 
-	    <span class="list-group-item small-padding" ng-if="added[0].courses.length === 0">
+	    <span class="list-group-item small-padding"
+	    ng-if="added[0].courses.length === 0"
+	    data-drop="true"
+		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}"
+		data-jqyoui-options>
 	    	<span class="course-asString">Add some courses</span>
 		</span>
 
@@ -32,7 +38,7 @@
 			</div>
 
 			<div class="flex-container list-group-item small-padding"
-			ng-show="group.courses.length === 0"
+			ng-if="group.courses.length === 0"
 			data-drop="true"
 			jqyoui-droppable="{onDrop: 'onDrop(group)'}"
 			data-jqyoui-options>
@@ -40,6 +46,7 @@
 			</div>
 
 			<div class="flex-container list-group-item small-padding"
+			ng-if="group.courses.length !== 0"
 			ng-repeat="course in group.courses"
 			data-drag="true"
 			data-jqyoui-options="{revert: 'invalid'}"
