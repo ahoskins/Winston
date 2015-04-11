@@ -8,9 +8,6 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
 
     $scope.currentTerm = currentTerm;
 
-    var colorIndex = 0;
-    var groupColors = ['#CE93D8', '#90CAF9', '#FFCC80'];
-
     $scope.viewSchedules = function() {
         $location.path('/schedule');
         ngProgressLite.start();
@@ -31,12 +28,31 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
 
     $scope.electiveGroups = [];
 
+    var groupColors = ['#CE93D8', '#90CAF9', '#FFCC80'];
+
+    // Find the lowest available id
+    function pickElectiveIndex() {
+        var used = [];
+        addedCourses.data[currentTerm.termId].slice(1).forEach(function(group) {
+            used.push(group.id);
+        });
+
+        var choice = null;
+        for (var i = 0; i < 3; i ++) {
+            if (used.indexOf(i) > -1) {
+                continue;
+            } else {
+                choice = i;
+                break;
+            }
+        }
+        return choice;
+    }
+
     function ElectiveGroup(name) {
         this.id = name;
         this.courses = [];
     }
-
-    var count = addedCourses.data[currentTerm.termId].length - 1 || 0;
 
     $scope.setStyle = function(id) {
         return { 'background-color': groupColors[id] }
@@ -44,7 +60,10 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
 
     $scope.groupFreeze = false;
     $scope.newElectiveGroup = function() {
-        addedCourses.data[currentTerm.termId].push(new ElectiveGroup(count ++));
+        if (addedCourses.data[currentTerm.termId].length > 4) {
+            return;
+        }
+        addedCourses.data[currentTerm.termId].push(new ElectiveGroup(pickElectiveIndex()));
         $scope.groupFreeze = true;
     }
 
@@ -63,6 +82,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
                     // Empty elective groups go away
                     if (group.courses.length === 0 && groupIndex > 0) {
                         addedCourses.data[currentTerm.termId].splice(groupIndex, 1);
+                        nextElectiveId = group.id;
                     }
                 }
                 courseIndex ++;
