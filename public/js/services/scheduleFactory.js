@@ -6,15 +6,28 @@ winstonApp.factory('scheduleFactory', ['$window', '$http', '$q', 'currentTerm', 
 
     factory.getSchedules = function (addedCourses, busyTimes, preferencesArray) {
 
-        var courseIds = [];
-        addedCourses.forEach(function (courseObject) {
-            courseIds.push(courseObject.course);
+        var mandatoryCourses = [];
+        addedCourses[0].courses.forEach(function (courseObject) {
+            mandatoryCourses.push(courseObject.course);
+        });
+
+        var electives = [];
+        addedCourses.slice(1).forEach(function(electiveGroup) {
+            var courseIds = [];
+            electiveGroup.courses.forEach(function(courseObject) {
+                courseIds.push(courseObject.course);
+            });
+
+            electives.push({
+                courses: courseIds
+            });
         });
 
         var requestParams = {};
         requestParams["institution"] = "ualberta";
         requestParams["term"] = currentTerm.termId;
-        requestParams["courses"] = courseIds;
+        requestParams["courses"] = mandatoryCourses;
+        requestParams["electives"] = electives;
 
         if (typeof busyTimes !== 'undefined') {
             requestParams["busy-times"] = busyTimes;
@@ -31,6 +44,8 @@ winstonApp.factory('scheduleFactory', ['$window', '$http', '$q', 'currentTerm', 
 
             requestParams["preferences"] = obj;
         }
+
+        console.dir(requestParams);
 
         // return( $http({method: 'GET', url: 'https://classtime-alpha-000.herokuapp.com/api/generate-schedules?q=' + angular.toJson(requestParams) }) );
         // return ( $http.jsonp('https://classtime.herokuapp.com/api/generate-schedules?q=' + angular.toJson(requestParams)), method: 'GET' );

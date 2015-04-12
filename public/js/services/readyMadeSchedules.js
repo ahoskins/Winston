@@ -174,24 +174,32 @@ winstonApp.factory('readyMadeSchedules', ['scheduleFactory', 'addedCourses', '$w
 	factory.readyMadeSchedules = null;
 
     factory.getSchedulesPromise = function() {
-    	if (!addedCourses.data[currentTerm.termId]) {
-    		addedCourses.data[currentTerm.termId] = [];
+    	// if (!addedCourses.data[currentTerm.termId]) {
+    	// 	addedCourses.data[currentTerm.termId] = [];
+    	// }
+
+    	if (addedCourses.data[0].length === 0) {
+    		factory.readyMadeSchedules = null;
+    		ngProgressLite.done();
+    		return $q(function(resolve, reject) {
+    			resolve();
+    		});
     	}
 
-    	// No courses added? Don't bother generating schedules, but stay on the schedule view
-    	if (!addedCourses.data[currentTerm.termId] || addedCourses.data[currentTerm.termId].length === 0) {
-    		factory.readyMadeSchedules = null;
-			ngProgressLite.done();
-			return $q(function(resolve, reject) {
-				resolve();
-			});
-    	}
+   //  	// No courses added? Don't bother generating schedules, but stay on the schedule view
+   //  	if (!addedCourses.data[currentTerm.termId] || addedCourses.data[currentTerm.termId].length === 0) {
+   //  		factory.readyMadeSchedules = null;
+			// ngProgressLite.done();
+			// return $q(function(resolve, reject) {
+			// 	resolve();
+			// });
+   //  	}
 
     	addedBusyTime.generateApiFormattedBusyTimes();
 
     	ngProgressLite.set(0.6);
 
-		return (scheduleFactory.getSchedules(addedCourses.data[currentTerm.termId], addedBusyTime.apiFormattedData, preferencesValues.data).
+		return (scheduleFactory.getSchedules(addedCourses.data, addedBusyTime.apiFormattedData, preferencesValues.data).
 
 			success(function (data) {
 	    		// Assign schedule response to member
