@@ -173,66 +173,19 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
 
     /*
     **********************************************************************
-    Add to schedule
-    This is the bridge between this controller and the schedule controller
+                               Add/remove course
     **********************************************************************
      */
-    $scope.added = addedCourses.courseAdded;
+    $scope.contains = addedCourses.contains;
     $scope.addedCoursesData = addedCourses.data;
-    $scope.currentTerm = currentTerm;
-
-    $scope.$watchCollection('added', function() {
-        localStorageService.set('addedCourses.courseAdded', $scope.added);
-    });
-    $scope.$watchCollection('addedCoursesData', function() {
-        localStorageService.set('addedCourses.data', $scope.addedCoursesData);
-    });
-
-    // For now, always add to the **CORE** courses
-    // This should always be index 0 in the courses array
-    $scope.addToSchedule = function (courseObject) {
-        if (addedCourses.data[currentTerm.termId] == null || addedCourses.data[currentTerm.termId].length === 0) {
-            addedCourses.data[currentTerm.termId] = [];
-            addedCourses.data[currentTerm.termId].push({
-                id: 'core',
-                courses: []
-            });
-        }
-        console.dir(addedCourses.data[currentTerm.termId]);
-        if (!addedCourses.courseAdded[currentTerm.termId]) {
-            addedCourses.courseAdded[currentTerm.termId] = {};
-        }
-        if (addedCourses.data[currentTerm.termId][0].courses.indexOf(courseObject) === -1) {
-            addedCourses.data[currentTerm.termId][0].courses.push(courseObject);
-            addedCourses.courseAdded[currentTerm.termId][courseObject.asString] = 1;
-        }
-    };
-
-    // This will have to search for this courses in this compound data-structure
-    $scope.removeFromSchedule = function(courseObject) {
-        if (!addedCourses.data[currentTerm.termId]) {
-            return;
-        }
-        console.log(courseObject);
-        console.log(addedCourses.data[currentTerm.termId]);
-
-        var index = -1;
-        addedCourses.data[currentTerm.termId].forEach(function(course){
-            if (course.asString === courseObject.asString) {
-                index = addedCourses.data[currentTerm.termId].indexOf(course);
-            }
-        })
-        if (index !== -1) {
-            addedCourses.data[currentTerm.termId].splice(index, 1);
-            addedCourses.courseAdded[currentTerm.termId][courseObject.asString] = 0;
-        }
-    }
 
     $scope.addOrRemove = function(courseObject) {
-        if ($scope.added[currentTerm.termId] === undefined || ! $scope.added[currentTerm.termId][courseObject.asString]) {
-            $scope.addToSchedule(courseObject);
+        if (addedCourses.contains(courseObject)) {
+            addedCourses.remove(courseObject);
+            addedCourses.updateLocalStorage();
         } else {
-            $scope.removeFromSchedule(courseObject);
+            addedCourses.data[0].courses.push(courseObject);
+            addedCourses.updateLocalStorage();
         }
     }
 

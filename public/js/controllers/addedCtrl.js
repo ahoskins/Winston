@@ -1,12 +1,6 @@
 winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', 'currentTerm', '$timeout', function($scope, $location, $interval, ngProgressLite, addedCourses, $window, currentTerm, $timeout) {
 
-    // This isn't defined because its null at the time of this code running
-    // With empty preferences, addedCourses.data doesn't get a term ID set until the accordion
-    $timeout(function() {
-        $scope.added = addedCourses.data[currentTerm.termId];
-    }, 1000);
-
-    $scope.currentTerm = currentTerm;
+    $scope.added = addedCourses.data;
 
     $scope.viewSchedules = function() {
         $location.path('/schedule');
@@ -14,12 +8,13 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
     }
 
     $scope.emptyAll = function() {
-        addedCourses.data[currentTerm.termId].length = 0;
+        addedCourses.empty();
+        addedCourses.updateLocalStorage();
     }
 
     $scope.emptyCourse = function(course) {
-        removeCourse(course);
-        addedCourses.courseAdded[currentTerm.termId][course.asString] = 0;
+        addedCourses.remove(course);
+        addedCourses.updateLocalStorage();
     }
 
     /************************
@@ -33,15 +28,13 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
     // Find the lowest available id
     function pickElectiveIndex() {
         var used = [];
-        addedCourses.data[currentTerm.termId].slice(1).forEach(function(group) {
+        addedCourses.data.slice(1).forEach(function(group) {
             used.push(group.id);
         });
 
         var choice = null;
         for (var i = 0; i < 3; i ++) {
-            if (used.indexOf(i) > -1) {
-                continue;
-            } else {
+            if (used.indexOf(i) === -1) {
                 choice = i;
                 break;
             }
@@ -60,10 +53,10 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
 
     $scope.groupFreeze = false;
     $scope.newElectiveGroup = function() {
-        if (addedCourses.data[currentTerm.termId].length > 4) {
+        if (addedCourses.data.length > 4) {
             return;
         }
-        addedCourses.data[currentTerm.termId].push(new ElectiveGroup(pickElectiveIndex()));
+        addedCourses.data.push(new ElectiveGroup(pickElectiveIndex()));
         $scope.groupFreeze = true;
     }
 
@@ -72,41 +65,12 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         draggedCourse = course;
     }
 
-    function removeCourse(targetCourse) {
-        var groupIndex = 0;
-        addedCourses.data[currentTerm.termId].forEach(function(group) {
-            var courseIndex = 0;
-            group.courses.forEach(function(course) {
-                if (course === targetCourse) {
-                    group.courses.splice(courseIndex, 1);
-                    // Empty elective groups go away
-                    if (group.courses.length === 0 && groupIndex > 0) {
-                        addedCourses.data[currentTerm.termId].splice(groupIndex, 1);
-                        nextElectiveId = group.id;
-                    }
-                }
-                courseIndex ++;
-            });
-            groupIndex ++;
-        });
-    }
-
-    function addCourse(droppedGroup, newCourse) {
-        var groupIndex = 0;
-        addedCourses.data[currentTerm.termId].forEach(function(group) {
-            if (group.id == droppedGroup.id) {
-                group.courses.push(newCourse);
-                if (groupIndex === addedCourses.data[currentTerm.termId].length - 1) {
-                    $scope.groupFreeze = false;
-                }
-            }
-            groupIndex ++;
-        });
-    }
-
     $scope.onDrop = function(e, ui, droppedGroup) {
-        removeCourse(draggedCourse);
-        addCourse(droppedGroup, draggedCourse);
+        addedCourses.remove(draggedCourse);
+        if (!addedCourses.addToGroup(droppedGroup, draggedCourse)) {
+            $scope.groupFreeze = false;
+        }
+        addedCourses.updateLocalStorage();
     }
 
 }]);
