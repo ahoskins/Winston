@@ -10,7 +10,7 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
     */
     $scope.addedBusyTime = addedBusyTime.data;
     $scope.$watchCollection('addedBusyTime', function() {
-        localStorageService.set('addedBusyTime.data', $scope.addedBusyTime);
+        addedBusyTime.updateLocalStorage();
     });
 
     $scope.preferencesValues = preferencesValues.data;

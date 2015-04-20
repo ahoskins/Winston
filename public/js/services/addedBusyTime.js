@@ -1,10 +1,16 @@
-winstonApp.factory('addedBusyTime', ['localStorageService', function(localStorageService) {
+winstonApp.factory('addedBusyTime', ['localStorageService', 'currentTerm', function(localStorageService, currentTerm) {
 	var factory = {};
 
     // Uhhhhhh is busy time only cached one term??
-	factory.data = localStorageService.get('addedBusyTime.data') || [];
+	factory.data = localStorageService.get('addedBusyTime.data') && localStorageService.get('addedBusyTime.data')[currentTerm.termId] || [];
 
-	factory.apiFormattedData = [];
+	factory.updateLocalStorage = function() {
+        var all = localStorageService.get('addedBusyTime.data') || {};
+        all[currentTerm.termId] = factory.data;
+        localStorageService.set('addedBusyTime.data', all);
+    }
+
+    factory.apiFormattedData = [];
 
 	factory.generateApiFormattedBusyTimes = function() {
 		factory.apiFormattedData = [];
