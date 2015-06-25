@@ -1,7 +1,7 @@
 // Accordion Controller
 //
 
-winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'courseDataMaker', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', 'localStorageService', 'currentTerm', function($scope, $window, detailFactory, courseDataMaker, $timeout, $location, stabilize, addedCourses, localStorageService, currentTerm) {
+winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'courseDataMaker', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', 'localStorageService', function($scope, $window, detailFactory, courseDataMaker, $timeout, $location, stabilize, addedCourses, localStorageService) {
 
     /*
     ********************************************************************
@@ -133,8 +133,9 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
             keys: ['subjectTitle'],
             includeScore: true
         });
+        // asString is another option here 'MATH 100'
         var fuseClassCode = new Fuse($scope.courseDataFlatCourses, {
-            keys: ['asString'],
+            keys: ['subject'],
             includeScore: true
         });
         var fuseClassNumber = new Fuse($scope.courseDataFlatCourses, {
@@ -142,28 +143,90 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
             includeScore: true
         });
 
+        /*
+        Match based on each key
+        Note that if there is no match at all, the iterm is NOT added to results array
+
+        A perfect match is a score of 0.  1 is the maximum, before it won't be added to results.
+        */
+        var text = searchText.replace(/[0-9]/g, '');
         var results = [];
-        Array.prototype.push.apply(results, _.map(fuseSubjectTitle.search(searchText), function(res) {
-            return _.extend(res, { 'weight': 1});
+        Array.prototype.push.apply(results, _.map(fuseSubjectTitle.search(text), function(res) {
+            return _.extend(res, { 'weight': 100});
         }));
-        Array.prototype.push.apply(results, _.map(fuseCourseTitle.search(searchText), function(res) {
-            return _.extend(res, { 'weight': 3});
+        Array.prototype.push.apply(results, _.map(fuseCourseTitle.search(text), function(res) {
+            return _.extend(res, { 'weight': 100});
         }));
-        Array.prototype.push.apply(results, _.map(fuseClassCode.search(searchText), function(res) { 
-            return _.extend(res, { 'weight': 5})
+        Array.prototype.push.apply(results, _.map(fuseClassCode.search(text.toUpperCase()), function(res) { 
+            return _.extend(res, { 'weight': 1})
         }));
-        Array.prototype.push.apply(results, _.map(fuseClassNumber.search(searchText), function(res) {
-            return _.extend(res, { 'weight': 0.1})
-        }));
-        results = _.chain(results)
-                   .sortBy(function(result) {
-                        return result.score * result.weight;
+        if (searchText.match(/\d+/) !== null) {
+            var number = searchText.match(/\d+/)[0];
+            Array.prototype.push.apply(results, _.map(fuseClassNumber.search(number), function(res) {
+                return _.extend(res, { 'weight': 20})
+            }));
+        }
+
+        /*
+        Find the top two closest matching keys
+
+        If there isn't two close matching keys, make sure its not shown as a result
+        */
+        results =  _.chain(results)
+                    .groupBy(function(result) {
+                        return result.item.course;
                     })
-                   .uniq(function(result) {
-                        return result.item
+                    .map(function(value, key) { // key: course ID, value: arrray of <result> matching that ID
+
+                        // Low score is high in the search results
+                        var compositeScore = 0;
+
+                        if (value.length < 2) {
+                            compositeScore += 100;
+                        } else {
+                            // Find two smallest scores
+                            //
+                            // first smallest
+                            var min = value[0];
+                            angular.forEach(value.slice(1), function(result) {
+                                if (result.score < min.score) {
+                                    min = result;
+                                }
+                            });
+                            // next smallest, remove the smallest first
+                            value.splice(value.indexOf(min), 1)
+                            var nextMin = value[0];
+                            angular.forEach(value.slice(1), function(result) {
+                                if (result.score < nextMin.score) {
+                                    nextMin = result;
+                                }
+                            });
+
+                            compositeScore = (min.score) + (nextMin.score);
+                        }
+
+                        return {
+                            item: value[0].item, // each item is the same because they are grouped according to this
+                            score: compositeScore
+                        }
                     })
-                   .value()
-                   .slice(0, 100);
+                    .sortBy(function(result) {
+                        // smallest to largest
+                        return result.score;
+                    })
+                    .value()
+                    .slice(0, 100);
+
+
+        // results = _.chain(results)
+        //            .sortBy(function(result) {
+        //                 return result.score * result.weight;
+        //             })
+        //            .uniq(function(result) {
+        //                 return result.item
+        //             })
+        //            .value()
+        //            .slice(0, 100);
 
         results = _.pluck(results, 'item');
 
