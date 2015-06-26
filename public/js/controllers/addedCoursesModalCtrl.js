@@ -1,5 +1,7 @@
 winstonApp.controller('addedCoursesModalCtrl', ['$scope', '$modalInstance', 'addedCourses', '$window', '$location', 'ngProgressLite', 'currentTerm', function($scope, $modalInstance, addedCourses, $window, $location, ngProgressLite, currentTerm) {
-	
+
+	// TODO: use the addedCtrl here instead
+
 	$scope.added = addedCourses.data;
 	$scope.currentTerm = currentTerm;
 

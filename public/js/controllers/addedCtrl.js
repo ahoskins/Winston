@@ -1,4 +1,4 @@
-winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', 'currentTerm', '$timeout', function($scope, $location, $interval, ngProgressLite, addedCourses, $window, currentTerm, $timeout) {
+winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', '$timeout', function($scope, $location, $interval, ngProgressLite, addedCourses, $window, $timeout) {
 
     $scope.added = addedCourses.data;
 

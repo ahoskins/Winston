@@ -1,3 +1,0 @@
-winstonApp.controller('noAddedCoursesModalCtrl', function(){
-	
-})
