@@ -10,11 +10,16 @@ winstonApp.factory('addedCourses', ['localStorageService', 'currentTerm', functi
 		courses: []
 	}];
 
+	factory.draggedCourse = null;
+
+	/*
+	check if a course object exists somewhere in the added courses
+	*/
 	factory.contains = function(courseObject) {
 		var found = false;
 		factory.data.forEach(function(group) {
 			group.courses.forEach(function(course) {
-				if (courseObject === course) {
+				if (courseObject.asString === course.asString) {
 					found = true;
 				}
 			});
@@ -22,12 +27,16 @@ winstonApp.factory('addedCourses', ['localStorageService', 'currentTerm', functi
 		return found;
 	}
 
+	/*
+	Remove a course from it's current group and remove the group if it's now empty
+	*/
 	factory.remove = function(courseObject) {
+		if (courseObject == null) return;
 		var i = 0;
 		factory.data.forEach(function(group) {
 			var j = 0;
 			group.courses.forEach(function(course) {
-				if (courseObject === course) {
+				if (courseObject.asString === course.asString) {
 					group.courses.splice(j, 1);
 					if (i > 0 && group.courses.length === 0) {
 						factory.data.splice(i, 1);
@@ -46,7 +55,23 @@ winstonApp.factory('addedCourses', ['localStorageService', 'currentTerm', functi
 		}];
 	}
 
+	/*
+	returns true if given course exists in given group
+	*/
+	factory.existsInGroup = function(newCourse, droppedGroup) {
+		var found = false;
+		droppedGroup.courses.forEach(function(course) {
+			if (course.asString === newCourse.asString) {
+				found = true;
+			}
+		});
+		return found;
+	}
+
 	factory.addToGroup = function(droppedGroup, newCourse) {
+		if (newCourse == null) return;
+		factory.remove(newCourse);
+		
 		var groupIndex = 0;
 		var freeze = true;
         factory.data.forEach(function(group) {
@@ -70,7 +95,7 @@ winstonApp.factory('addedCourses', ['localStorageService', 'currentTerm', functi
 	return factory;
 }]);
 
-/**
+/*
 
 addedCourses.data['1490'] = [{
 	id: core,
@@ -85,4 +110,5 @@ addedCourses.data['1490'] = [{
 	courses: []
 }]
 
-*/
+**/
+

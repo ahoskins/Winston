@@ -56,19 +56,43 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         if (addedCourses.data.length > 4) {
             return;
         }
-        addedCourses.data.push(new ElectiveGroup(pickElectiveIndex()));
+        var electiveGroup = new ElectiveGroup(pickElectiveIndex());
+        addedCourses.data.push(electiveGroup);
         $scope.groupFreeze = true;
     }
 
-    var draggedCourse = null;
     $scope.onDrag = function(e, ui, course) {
-        draggedCourse = course;
+        addedCourses.draggedCourse = course;
     }
 
     $scope.onDrop = function(e, ui, droppedGroup) {
-        addedCourses.remove(draggedCourse);
-        if (!addedCourses.addToGroup(droppedGroup, draggedCourse)) {
-            $scope.groupFreeze = false;
+        // if dragged course is in the group, destroy the DOM and re-build it!
+        if (addedCourses.existsInGroup(addedCourses.draggedCourse, droppedGroup)) {
+            // deep copy the objects and rebuild
+            // this will remove the DOM nodes, and put back
+            // fixing any weird spacing caused by dropping in its own group
+            // to essentially on any drop, the node is deleted and recreated
+            var save = [];
+            droppedGroup.courses.forEach(function(course) {
+                var c = angular.copy(course);
+                save.push(c); 
+            });
+            // empty the array
+            droppedGroup.courses.length = 0;
+
+            // restore
+            save.forEach(function(each) {
+                var n = {}
+                // no need to check hasOwnProperty because I don't set these prototypes or inherit
+                for (prop in each) {
+                    n[prop] = each[prop];
+                }
+                droppedGroup.courses.push(n);
+            });
+        } else {
+            if (!addedCourses.addToGroup(droppedGroup, addedCourses.draggedCourse)) {
+                $scope.groupFreeze = false;
+            }
         }
         addedCourses.updateLocalStorage();
     }

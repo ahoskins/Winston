@@ -7,56 +7,54 @@
 	</div>
 	<div class="added-list">
 		<div class="horiz-padding bold-text">
-			All of...
+			Core (all of):
 		</div>
 
-    	<div class="flex-container list-group-item"
-    	ng-repeat="course in added[0].courses"
-    	data-drag="true"
-    	data-jqyoui-options="{revert: 'invalid'}"
-    	jqyoui-draggable="{animate:true,  onStart:'onDrag(course)'}"
-    	data-drop="true"
-		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}"
-		data-jqyoui-options>
-    		<span class="course-asString">{{ course.asString }}</span>
-	        <a ng-click="emptyCourse(course)">
-	        	<i class="fa fa-trash-o fa-lg"></i>
-	        </a>
-    	</div>
+		<span
+		data-drop="true"
+		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}">
+	    	<div class="flex-container list-group-item"
+	    	ng-repeat="course in added[0].courses"
+	    	data-drag="true"
+	    	data-jqyoui-options="{revert: 'invalid'}"
+	    	jqyoui-draggable="{animate:true,  onStart:'onDrag(course)'}">
+	    		<span class="course-asString">{{ course.asString }}</span>
+		        <a ng-click="emptyCourse(course)">
+		        	<i class="fa fa-trash-o fa-lg"></i>
+		        </a>
+	    	</div>
 
-	    <span class="list-group-item small-padding"
-	    ng-if="added[0].courses.length === 0"
-	    data-drop="true"
-		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}"
-		data-jqyoui-options>
-	    	<span class="empty-group-text">DRAG TO ADD</span>
+		    <span class="list-group-item small-padding"
+		    ng-if="added[0].courses.length === 0">
+		    	<span class="course-asString">DRAG TO ADD</span>
+			</span>
+
 		</span>
 
-		<span ng-repeat="group in added.slice(1)"
-		ng-style="setStyle(group.id)">
-			<div class="horiz-padding bold-text body-size-text">
-				One of...
-			</div>
+		<div class="horiz-padding bold-text body-size-text" >
+			Group: (one of):
+		</div>
 
+		<span
+		ng-repeat="group in added.slice(1)"
+		ng-style="setStyle(group.id)"
+		data-drop="true"
+		jqyoui-droppable="{onDrop: 'onDrop(group)'}">
 			<div class="flex-container list-group-item small-padding"
+			style="border-top: 1px solid black"
 			ng-style="setStyle(group.id)"
-			ng-if="group.courses.length === 0"
-			data-drop="true"
-			jqyoui-droppable="{onDrop: 'onDrop(group)'}"
-			data-jqyoui-options>
-				<span class="empty-group-text">DRAG TO ADD</span>
+			ng-if="group.courses.length === 0">
+				<span class="course-asString">DRAG TO ADD</span>
 			</div>
 
 			<div class="flex-container list-group-item small-padding"
+			style="border-top: 1px solid black"
 			ng-style="setStyle(group.id)"
 			ng-if="group.courses.length !== 0"
 			ng-repeat="course in group.courses"
 			data-drag="true"
 			data-jqyoui-options="{revert: 'invalid'}"
-			jqyoui-draggable="{animate:true,  onStart:'onDrag(course)'}"
-			data-drop="true"
-			jqyoui-droppable="{onDrop: 'onDrop(group)'}"
-			data-jqyoui-options>
+			jqyoui-draggable="{animate:true,  onStart:'onDrag(course)'}">
 	    		<span class="course-asString">{{ course.asString }}</span>
 		        <a ng-click="emptyCourse(course)">
 		        	<i class="fa fa-trash-o fa-lg"></i>

@@ -38,11 +38,16 @@
             <div class="normal-padding">
                 <div class="accordion" ng-hide="searchText">
                     <accordion close-others="false">
-                        <accordion-group class="faculty-accordion" id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty, $event)" data-ng-repeat="facultyObject in courseData" no-bubble>
+                        <accordion-group id="{{ facultyObject.faculty }}" heading="{{ facultyObject.faculty }}" ng-click="renderSubjects(facultyObject.faculty, $event)" data-ng-repeat="facultyObject in courseData" no-bubble>
                             <accordion close-others="false">
-                                <accordion-group class="subject-accordion" id="{{ subjectObject.subject }}" heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject, $event)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" no-bubble>
+                                <accordion-group heading="{{ subjectObject.subject }}" ng-click="renderCourses(subjectObject.subject, $event)" ng-if="subjects[facultyObject.faculty]" data-ng-repeat="subjectObject in facultyObject.subjects" no-bubble>
                                     <accordion close-others="false">
-                                        <accordion-group class="course-accordion" data-drag="true" jqyoui-draggable="{animate:true}" data-jqyoui-options="{revert: 'invalid'}" id="{{ courseResult.course }}" ng-click="loadMore(courseResult.course)" ng-if="courses[subjectObject.subject]" data-ng-repeat="courseResult in subjectObject.courses" no-bubble>
+                                        <accordion-group 
+                                        id="{{ courseResult.course }}"
+                                        ng-click="loadMore(courseResult.course)"
+                                        ng-if="courses[subjectObject.subject]"
+                                        data-ng-repeat="courseResult in subjectObject.courses"
+                                        no-bubble>
                                             <div static-include="partials/course-tile.html"></div>
                                         </accordion-group>
                                     </accordion>
@@ -53,8 +58,11 @@
                 </div>
                 <div class="search-results" ng-show="searchText">
                     <accordion>
-                        <accordion-group class="course-accordion" id="{{ courseResult.course }}" ng-click="loadMore(courseResult.course)" 
-                        data-ng-repeat="courseResult in courseSearchResults(searchText) | limitTo:30" no-bubble>
+                        <accordion-group 
+                        id="{{ courseResult.course }}"
+                        ng-click="loadMore(courseResult.course)" 
+                        data-ng-repeat="courseResult in courseSearchResults(searchText) | limitTo:30"
+                        no-bubble>
                             <div static-include="partials/course-tile.html"></div>
                         </accordion-group>
                     </accordion>

@@ -23,7 +23,8 @@ html, body {
 .floating-container {
 	border-radius: 15px !important;
 	background-color: #f2f2f2;
-	overflow: hidden;
+	/* HA! this was the culprit for dragging boxes disappearing */
+/*	overflow: hidden;*/
 	margin: 5px;
 }
 
@@ -551,16 +552,13 @@ div.panel-collapse {
 	border-bottom: 1px solid #ddd;
 }
 
+.group-item {
+	border-bottom: 1px solid black;
+}
+
 .added-list .list-group-item .course-asString {
 	margin-right: auto;
 	padding: 10px 15px;
-}
-
-.empty-group-text {
-	margin-right: auto;
-	padding: 10px 15px;
-	font-size: 0.50em;
-	font-weight: bold;
 }
 
 .added-list .list-group-item i.fa {
@@ -608,6 +606,11 @@ md-switch.md-default-theme.md-checked .md-bar {
 	.added-container {
 		display: none !important;
 	}
+}
+
+.group-rename-button {
+	float: right;
+	margin: 2px;
 }
 
 /*************************
