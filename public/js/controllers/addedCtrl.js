@@ -47,8 +47,12 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         this.courses = [];
     }
 
+    // set the max-height to the current height of that span
+    // when a list item is dropped, set the max-height for that element to infinite
+    // then re-set the max-height to the current height of the span
+
     $scope.setStyle = function(id) {
-        return { 'background-color': groupColors[id] }
+        return {'background-color': groupColors[id]}
     }
 
     $scope.groupFreeze = false;
@@ -61,11 +65,39 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         $scope.groupFreeze = true;
     }
 
-    $scope.onDrag = function(e, ui, course) {
+    var $draggedGroup = null;
+    var draggedGroup = null;
+    var height = null;
+    $scope.onDrag = function(e, ui, course, group) {
         addedCourses.draggedCourse = course;
+        $draggedGroup = $(ui.helper.context.parentElement);
+        draggedGroup = group;
+        height = e.currentTarget.clientHeight;
     }
 
     $scope.onDrop = function(e, ui, droppedGroup) {
+        // everything in the `ui` object seems to refer to the dropped element, use the event instead
+        var $droppedGroup = $(e.target);
+        
+        if ($droppedGroup.context.innerText !== $draggedGroup.context.innerText) {
+            if (draggedGroup.courses.length === 1) {
+                // TODO: when the group below is emptied, its choppy
+                $draggedGroup.animate({
+                    height: '0px'
+                }, 500);
+            } else {
+                $draggedGroup.animate({
+                    height: '-=' + height + 'px'
+                }, 500);
+            }
+
+            if (droppedGroup.courses.length !== 0) {
+                $droppedGroup.animate({
+                    height: '+=' + height + 'px'
+                }, 500);
+            } 
+        }
+
         // if dragged course is in the group, destroy the DOM and re-build it!
         if (addedCourses.existsInGroup(addedCourses.draggedCourse, droppedGroup)) {
             // deep copy the objects and rebuild
@@ -95,6 +127,8 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
             }
         }
         addedCourses.updateLocalStorage();
+
+
     }
 
 }]);

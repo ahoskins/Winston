@@ -550,6 +550,15 @@ div.panel-collapse {
 	border: none;
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
+	cursor: move;
+}
+
+.added-group-container {
+  -webkit-transition: max-height 1s; 
+  -moz-transition: max-height 1s; 
+  -ms-transition: max-height 1s; 
+  -o-transition: max-height 1s; 
+  transition: max-height 1s;  
 }
 
 .group-item {
