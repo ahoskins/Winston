@@ -29,11 +29,17 @@ Usability is a huge focus.  We aim to not need instructions or help buttons - th
 
 Winston uses a Node server and Jade templates, so it's pretty easy on the eyes.  It's built in production with gulp.js, and hosted in Heroku.
 
+Building Locally:
+--------------------------
+1. $ npm install
+2. $ node app.js
+
+The `npm install` will install all npm and bower dependencies in their respective directories, and run the gulp.js build script.
+When running locally, it will default to serve unconcatenated/unminified dependencies.  To mimic running in production, hardcode the `prod` variable to true in `/app.js`.  This will serve the gulp.js built concatenated/minified dependencies exactly as-is on the production site.  To force the gulp.js build script to run again (if something is changed locally, for instance) run `$ gulp default`.
+
 Contributing
 ---------------------------
-At the moment Winston does not have test coverage, but this is high on the list of priorities.  Once test coverage is in place, contributions will be very welcome.
-
-For now, feel free to submit an issue with any suggestions or bugs!
+Feel free to submit an issue or contact me -- suggestions, bugs, ideas, or interest to help.
 
 Goal
 ----------------------------
