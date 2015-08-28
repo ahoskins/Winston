@@ -28,6 +28,11 @@ html, body {
 	color: black;
 }
 
+.undo-ng-binding {
+	display: inline !important;
+	padding: 0 !important;
+}
+
 .floating-container {
 	border-radius: 15px !important;
 	background-color: #f2f2f2;

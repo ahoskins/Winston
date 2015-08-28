@@ -108,10 +108,12 @@ addedCourses.data['1490'] = [{
 {
 	id: 1,
 	courses: []
+	[,name: <  >]
 },
 {
 	id: 2,
 	courses: []
+	[,name: <  >]
 }]
 
 **/

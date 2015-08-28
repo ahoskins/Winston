@@ -41,6 +41,7 @@ gulp.task('minify-css', function() {
     bower_dir + '/fullcalendar/dist/fullcalendar.css', 
     bower_dir + '/ngprogress-lite/ngprogress-lite.css', 
     bower_dir + '/angular-socialshare/angular-socialshare.css', 
+    bower_dir + '/ngDialog/css/ngDialog.css',
     'public/css/style.css'])
   .pipe(concat('css.min.css'))
   .pipe(minifiy_css())

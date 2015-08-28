@@ -1,4 +1,4 @@
-winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', '$timeout', function($scope, $location, $interval, ngProgressLite, addedCourses, $window, $timeout) {
+winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', '$timeout', '$modal', function($scope, $location, $interval, ngProgressLite, addedCourses, $window, $timeout, $modal) {
 
     $scope.added = addedCourses.data;
 
@@ -78,6 +78,19 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
             $scope.noMoreGroups = false;
         }
 
+        addedCourses.updateLocalStorage();
+    }
+
+    $scope.renameGroup = function(group) {
+        $modal.open({
+            templateUrl: 'renameGroupModal.html',
+            controller: 'renameGroupModalCtrl',
+            resolve: {
+                addedGroup: function() {
+                    return group;
+                }
+            }
+        });
         addedCourses.updateLocalStorage();
     }
 

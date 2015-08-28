@@ -16,3 +16,14 @@
     </div>
   </div>
 </script>
+
+<script type="text/ng-template" id="renameGroupModal.html">
+    <div class="modal-container floating-container">
+    <div class="sad-dialog">
+      <span class="section-text big-size" style="display: block; text-align: center">Group Name:</span>
+      <input type="text" style="display: block; margin: auto" ng-model="name" />
+      <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+      <button type="button" class="btn btn-default" style="float: right" ng-click="save()">Save</button>
+    </div>
+  </div>
+</script>
