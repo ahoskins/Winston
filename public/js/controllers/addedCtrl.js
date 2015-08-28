@@ -55,21 +55,25 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         return {'background-color': groupColors[id]}
     }
 
-    $scope.groupFreeze = false;
+    $scope.noMoreGroups = false;
     $scope.newElectiveGroup = function() {
-        if (addedCourses.data.length > 4) {
+        // max of three elective group
+        if (addedCourses.data.length > 3) {
             return;
         }
         var electiveGroup = new ElectiveGroup(pickElectiveIndex());
         addedCourses.data.push(electiveGroup);
-        $scope.groupFreeze = true;
+        if (addedCourses.data.length > 3) {
+            $scope.noMoreGroups = true;
+        }
     }
 
     var $draggedGroup = null;
+    var draggedCourse = null;
     var draggedGroup = null;
     var height = null;
     $scope.onDrag = function(e, ui, course, group) {
-        addedCourses.draggedCourse = course;
+        draggedCourse = course;
         $draggedGroup = $(ui.helper.context.parentElement);
         draggedGroup = group;
         height = e.currentTarget.clientHeight;
@@ -80,12 +84,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         var $droppedGroup = $(e.target);
         
         if ($droppedGroup.context.innerText !== $draggedGroup.context.innerText) {
-            if (draggedGroup.courses.length === 1) {
-                // TODO: when the group below is emptied, its choppy
-                $draggedGroup.animate({
-                    height: '0px'
-                }, 500);
-            } else {
+            if (draggedGroup.courses.length !== 1) {
                 $draggedGroup.animate({
                     height: '-=' + height + 'px'
                 }, 500);
@@ -98,37 +97,34 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
             } 
         }
 
-        // if dragged course is in the group, destroy the DOM and re-build it!
-        if (addedCourses.existsInGroup(addedCourses.draggedCourse, droppedGroup)) {
-            // deep copy the objects and rebuild
-            // this will remove the DOM nodes, and put back
-            // fixing any weird spacing caused by dropping in its own group
-            // to essentially on any drop, the node is deleted and recreated
+        // if dragged course is already part of this group, destroy DOM element and rebuild
+        // to fix the mismatched spacing that occurs with a moved list item
+        // this is done by cloning JS objects, emptying (destroys DOM els), 
+        // and re-inserting JS objects (creates DOM els)
+        if (addedCourses.existsInGroup(draggedCourse, droppedGroup)) {
+            // clone
             var save = [];
             droppedGroup.courses.forEach(function(course) {
                 var c = angular.copy(course);
                 save.push(c); 
             });
-            // empty the array
+            // empty
             droppedGroup.courses.length = 0;
 
             // restore
             save.forEach(function(each) {
                 var n = {}
-                // no need to check hasOwnProperty because I don't set these prototypes or inherit
                 for (prop in each) {
-                    n[prop] = each[prop];
+                    if (each.hasOwnProperty(prop)) {
+                        n[prop] = each[prop];
+                    }
                 }
                 droppedGroup.courses.push(n);
             });
         } else {
-            if (!addedCourses.addToGroup(droppedGroup, addedCourses.draggedCourse)) {
-                $scope.groupFreeze = false;
-            }
+            addedCourses.addToGroup(droppedGroup, draggedCourse);
         }
         addedCourses.updateLocalStorage();
-
-
     }
 
 }]);

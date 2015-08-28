@@ -10,8 +10,6 @@ winstonApp.factory('addedCourses', ['localStorageService', 'currentTerm', functi
 		courses: []
 	}];
 
-	factory.draggedCourse = null;
-
 	/*
 	check if a course object exists somewhere in the added courses
 	*/
@@ -28,7 +26,7 @@ winstonApp.factory('addedCourses', ['localStorageService', 'currentTerm', functi
 	}
 
 	/*
-	Remove a course from it's current group and remove the group if it's now empty
+	Remove a course from it's current group
 	*/
 	factory.remove = function(courseObject) {
 		if (courseObject == null) return;
@@ -38,9 +36,6 @@ winstonApp.factory('addedCourses', ['localStorageService', 'currentTerm', functi
 			group.courses.forEach(function(course) {
 				if (courseObject.asString === course.asString) {
 					group.courses.splice(j, 1);
-					if (i > 0 && group.courses.length === 0) {
-						factory.data.splice(i, 1);
-					}
 				}
 				j ++;
 			});
@@ -68,22 +63,21 @@ winstonApp.factory('addedCourses', ['localStorageService', 'currentTerm', functi
 		return found;
 	}
 
+	/*
+	remove a course from it's previous group, and add to droppedGroup
+	*/
 	factory.addToGroup = function(droppedGroup, newCourse) {
 		if (newCourse == null) return;
+
+		// remove from old group
 		factory.remove(newCourse);
 		
-		var groupIndex = 0;
-		var freeze = true;
+		// add to new group
         factory.data.forEach(function(group) {
             if (group.id == droppedGroup.id) {
                 group.courses.push(newCourse);
-                if (groupIndex === factory.data.length - 1) {
-                    freeze = false;
-                }
             }
-            groupIndex ++;
         });
-        return freeze;
 	}
 
 	factory.updateLocalStorage = function() {
