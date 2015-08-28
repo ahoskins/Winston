@@ -20,6 +20,14 @@ html, body {
 	float: right !important;
 }
 
+.pad-sides {
+	padding: 0px 5px;
+}
+
+.black {
+	color: black;
+}
+
 .floating-container {
 	border-radius: 15px !important;
 	background-color: #f2f2f2;
@@ -577,9 +585,14 @@ div.panel-collapse {
 	margin-right: 20px;
 	color: black;
 }
-	.added-list .list-group-item i.fa:hover {
-		color: #8c001a;
-	}
+
+.added-list .list-group-item i.fa:hover {
+	color: #8c001a;
+}
+
+.added-list .added-group-container .fa-trash-o:hover {
+	color: #8c001a;
+}
 
 .remove-icon {
 	border-radius: 3px;

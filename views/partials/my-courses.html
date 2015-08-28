@@ -41,6 +41,12 @@
 		jqyoui-droppable="{onDrop: 'onDrop(group)'}">
 			<div class="horiz-padding bold-text" >
 				Group: (one of):
+				<a class="go-right black" ng-click="deleteGroup($event, group)">
+		        	<i class="fa fa-trash-o fa-lg"></i>
+		        </a>
+		        <a class="go-right pad-sides black" ng-click="">
+		        	<i class="fa fa-cog fa-lg"></i>
+		        </a>
 			</div>
 
 			<div 

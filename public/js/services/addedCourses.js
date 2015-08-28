@@ -43,6 +43,16 @@ winstonApp.factory('addedCourses', ['localStorageService', 'currentTerm', functi
 		});
 	}
 
+	factory.deleteGroup = function(deletedGroup) {
+		var i = 0;
+		factory.data.forEach(function(group) {
+			if (group.id === deletedGroup.id) {
+				factory.data.splice(i, 1);
+			}
+			i ++;
+		});
+	}
+
 	factory.empty = function() {
 		factory.data = [{
 			id: 'core',

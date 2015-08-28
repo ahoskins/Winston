@@ -68,6 +68,19 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         }
     }
 
+    $scope.deleteGroup = function(e, group) {
+        var $group = $(e.target.parentElement.parentElement.parentElement);
+        $group.animate({
+            height: '0px'
+        }, 500);
+        addedCourses.deleteGroup(group);
+        if (addedCourses.data.length <= 3) {
+            $scope.noMoreGroups = false;
+        }
+
+        addedCourses.updateLocalStorage();
+    }
+
     var $draggedGroup = null;
     var draggedCourse = null;
     var draggedGroup = null;
