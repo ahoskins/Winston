@@ -6,15 +6,22 @@
 		</div>
 	</div>
 	<div class="added-list">
-		<div class="horiz-padding bold-text">
-			Core (all of):
-		</div>
-
 		<span
 		data-drop="true"
 		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}"
 		class="added-group-container">
-	    	<div class="flex-container list-group-item"
+			<div class="horiz-padding bold-text">
+				Core (all of):
+			</div>
+
+			<span 
+			class="list-group-item small-padding"
+		    ng-if="added[0].courses.length === 0">
+		    	<span class="course-asString">DRAG TO ADD</span>
+			</span>
+
+	    	<div 
+	    	class="flex-container list-group-item course"
 	    	ng-repeat="course in added[0].courses"
 	    	data-drag="true"
 	    	data-jqyoui-options="{revert: 'invalid'}"
@@ -24,12 +31,6 @@
 		        	<i class="fa fa-trash-o fa-lg"></i>
 		        </a>
 	    	</div>
-
-		    <span class="list-group-item small-padding"
-		    ng-if="added[0].courses.length === 0">
-		    	<span class="course-asString">DRAG TO ADD</span>
-			</span>
-
 		</span>
 
 		<span
@@ -38,17 +39,20 @@
 		class="added-group-container"
 		data-drop="true"
 		jqyoui-droppable="{onDrop: 'onDrop(group)'}">
-			<div class="horiz-padding bold-text body-size-text" >
+			<div class="horiz-padding bold-text" >
 				Group: (one of):
 			</div>
-			<div class="flex-container list-group-item small-padding"
+
+			<div 
+			class="flex-container list-group-item"
 			style="border-top: 1px solid black"
 			ng-style="setStyle(group.id)"
 			ng-if="group.courses.length === 0">
 				<span class="course-asString">DRAG TO ADD</span>
 			</div>
 
-			<div class="flex-container list-group-item small-padding"
+			<div 
+			class="flex-container list-group-item course"
 			style="border-top: 1px solid black"
 			ng-style="setStyle(group.id)"
 			ng-if="group.courses.length !== 0"
@@ -61,7 +65,6 @@
 		        	<i class="fa fa-trash-o fa-lg"></i>
 		        </a>
 			</div>
-
 		</span>
 	</div>
 	<div class="section-footer">

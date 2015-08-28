@@ -550,6 +550,9 @@ div.panel-collapse {
 	border: none;
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
+}
+
+.list-group-item.course {
 	cursor: move;
 }
 
