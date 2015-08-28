@@ -55,7 +55,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         return {'background-color': groupColors[id]}
     }
 
-    $scope.noMoreGroups = false;
+    $scope.noMoreGroups = addedCourses.data.length > 3 ? true : false;
     $scope.newElectiveGroup = function() {
         // max of three elective group
         if (addedCourses.data.length > 3) {
