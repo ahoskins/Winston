@@ -730,3 +730,11 @@ img.navbar-brand-image {
 .footer-bit i:hover {
 	color: #337ab7;
 }
+
+/************************
+       Info Bubble
+*************************/
+
+.feedback-submit {
+	cursor: pointer;
+}

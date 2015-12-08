@@ -229,6 +229,39 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
     }
 
     /*
+    **********************************************************************
+    Feedback from user
+    **********************************************************************
+     */
+    $scope.feedback = '';
+    $scope.submitFeedback = function() {
+        // send email with feedback as body
+        $.ajax({
+            'type': 'POST',
+            'url': 'https://mandrillapp.com/api/1.0/messages/send.json',
+            'data': {
+                'key': 'utwbngMF5Cj7INTzNoaiww',
+                'message': {
+                  'from_email': 'andrew@andrewhoskins.ca',
+                  'to': [
+                      {
+                        'email': 'arhoskin@ualberta.ca',
+                        'type': 'to'
+                      },
+                      {
+                        'email': 'ross.anderson@ualberta.ca',
+                        'type': 'to'
+                      },
+                    ],
+                  'autotext': 'true',
+                  'subject': 'Winston feedback',
+                  'html': $scope.feedback
+                }
+            }
+        });
+    }
+
+    /*
     ****************
     Validation Functions
     ****************
