@@ -738,3 +738,8 @@ img.navbar-brand-image {
 .feedback-submit {
 	cursor: pointer;
 }
+
+.thanks-for-feedback {
+	text-align: center;
+	font-weight: bold;
+}

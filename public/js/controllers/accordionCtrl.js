@@ -234,6 +234,7 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
     **********************************************************************
      */
     $scope.feedback = '';
+    $scope.givenFeedback = false;
     $scope.submitFeedback = function() {
         // send email with feedback as body
         $.ajax({
@@ -259,6 +260,10 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
                 }
             }
         });
+
+        // regardless of success, the user doesn't care, tell them thanks :)
+        // when this controller is reinitialized they can give feedback again
+        $scope.givenFeedback = true;
     }
 
     /*
