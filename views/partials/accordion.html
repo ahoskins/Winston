@@ -5,8 +5,8 @@
             <div class="top-right">
                 <button type="button" class="close top-right" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
-            
-            <div ng-hide="givenFeedback">
+
+            <!-- <div ng-hide="givenFeedback">
                 Let us know what you think (it's anonymous)!
                 <div class="input-group course-search">
                     <input type="text" class="form-control course-search" ng-model="feedback" placeholder="feedback for Winston...">
@@ -15,7 +15,8 @@
             </div>
             <div class="thanks-for-feedback" ng-show="givenFeedback">
                 Thanks for your feedback!
-            </div>
+            </div> -->
+            <b>Our apologies, Fall 2016/Winter 2017 course data will be available in approx one week.</b><br/>
 
             <br/>
             Welcome to Winston, a schedule-planning companion for University of Alberta students.
@@ -66,18 +67,16 @@
                 </div>
                 <div class="search-results" ng-show="searchText">
                     <accordion>
-                        <accordion-group class="course-accordion" id="{{ courseResult.course }}" ng-click="loadMore(courseResult.course)" 
+                        <accordion-group class="course-accordion" id="{{ courseResult.course }}" ng-click="loadMore(courseResult.course)"
                         data-ng-repeat="courseResult in courseSearchResults(searchText) | limitTo:30" no-bubble>
                             <div static-include="partials/course-tile.html"></div>
                         </accordion-group>
                     </accordion>
                 </div>
             </div>
-            
+
         </div>
 
     </div>
 
 </div>
-
-
