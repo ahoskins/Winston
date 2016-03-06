@@ -3,6 +3,9 @@
 
 winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'courseDataMaker', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', 'localStorageService', 'currentTerm', function($scope, $window, detailFactory, courseDataMaker, $timeout, $location, stabilize, addedCourses, localStorageService, currentTerm) {
 
+    var date = new Date();
+    $scope.currentDay = date.toDateString();
+
     /*
     ********************************************************************
     Get the courses data from the pre-resolved service
@@ -149,7 +152,7 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
         Array.prototype.push.apply(results, _.map(fuseCourseTitle.search(searchText), function(res) {
             return _.extend(res, { 'weight': 3});
         }));
-        Array.prototype.push.apply(results, _.map(fuseClassCode.search(searchText), function(res) { 
+        Array.prototype.push.apply(results, _.map(fuseClassCode.search(searchText), function(res) {
             return _.extend(res, { 'weight': 5})
         }));
         Array.prototype.push.apply(results, _.map(fuseClassNumber.search(searchText), function(res) {
@@ -169,7 +172,7 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
 
         return results;
     });
-    
+
 
     /*
     **********************************************************************
@@ -279,6 +282,3 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
     };
 
 }]);
-
-
-
