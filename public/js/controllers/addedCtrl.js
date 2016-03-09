@@ -4,8 +4,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
 
     $scope.$watch('added', function(newC, oldC) {
         // if added course in core...make it bigger
-        if (newC[0].courses.length > oldC[0].courses.length) {
-            console.log('added');
+        if (newC[0].courses.length > oldC[0].courses.length && newC[0].courses.length !== 1) {
             var $coreGroup = $('#core-group-container');
             $coreGroup.animate({
                 height: '+=' + height + 'px'
@@ -137,7 +136,9 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
                 }, 500);
             }
 
-            if (droppedGroup.courses.length !== 0) {
+            // core is handled by the watcher at the top 
+            // (because it also has to handle adds from the accordion)
+            if (droppedGroup.courses.length !== 0 && droppedGroup.id !== 'core') {
                 $droppedGroup.animate({
                     height: '+=' + height + 'px'
                 }, 500);
