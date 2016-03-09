@@ -12,13 +12,13 @@
 		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}"
 		class="added-group-container">
 			<div class="horiz-padding bold-text">
-				Core (all of):
+				ALL of these:
 			</div>
 
 			<span 
 			class="list-group-item small-padding"
 		    ng-if="added[0].courses.length === 0">
-		    	<span class="course-asString">DRAG TO ADD</span>
+		    	<span class="course-asString">Empty</span>
 			</span>
 
 	    	<div 
@@ -41,14 +41,13 @@
 		data-drop="true"
 		jqyoui-droppable="{onDrop: 'onDrop(group)'}">
 			<div class="horiz-padding bold-text" >
-				<span ng-if="group.name" class="undo-ng-binding">{{ group.name }}</span>
-				<span ng-if="!group.name">Group</span>
-				(one of):
+				ONE of these:
+				<span ng-if="group.name" class="undo-ng-binding">({{ group.name }})</span>
 				<a class="go-right black" ng-click="deleteGroup($event, group)">
 		        	<i class="fa fa-trash-o fa-lg"></i>
 		        </a>
 		        <a class="go-right pad-sides black" ng-click="renameGroup(group)">
-		        	<i class="fa fa-cog fa-lg"></i>
+		        	<i class="fa fa-pencil fa-lg"></i>
 		        </a>
 			</div>
 
@@ -57,7 +56,7 @@
 			style="border-top: 1px solid black"
 			ng-style="setStyle(group.id)"
 			ng-if="group.courses.length === 0">
-				<span class="course-asString">DRAG TO ADD</span>
+				<span class="course-asString">Empty</span>
 			</div>
 
 			<div 
