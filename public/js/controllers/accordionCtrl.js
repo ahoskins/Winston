@@ -244,8 +244,9 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
 
     $scope.addOrRemove = function(courseObject) {
         if (addedCourses.contains(courseObject)) {
-            addedCourses.remove(courseObject);
-            addedCourses.updateLocalStorage();
+            // remove functionality allowing you to remove!!!
+            // addedCourses.remove(courseObject);
+            // addedCourses.updateLocalStorage();
         } else {
             addedCourses.data[0].courses.push(courseObject);
             addedCourses.updateLocalStorage();

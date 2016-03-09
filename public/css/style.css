@@ -387,9 +387,9 @@ h4.panel-title {
 	color: green;
 }
 
-.add-button > .added:hover {
+/*.add-button > .added:hover {
 	color: #8c001a;
-}
+}*/
 
 .panel-default > .panel-heading {
 	background-color: #BBDEFB;

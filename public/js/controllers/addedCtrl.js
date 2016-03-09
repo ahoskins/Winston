@@ -2,6 +2,17 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
 
     $scope.added = addedCourses.data;
 
+    $scope.$watch('added', function(newC, oldC) {
+        // if added course in core...make it bigger
+        if (newC[0].courses.length > oldC[0].courses.length) {
+            console.log('added');
+            var $coreGroup = $('#core-group-container');
+            $coreGroup.animate({
+                height: '+=' + height + 'px'
+            }, 500);
+        }
+    }, true);
+
     $scope.viewSchedules = function() {
         $location.path('/schedule');
         ngProgressLite.start();
@@ -12,7 +23,17 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         addedCourses.updateLocalStorage();
     }
 
-    $scope.emptyCourse = function(course) {
+    // every click of trash can this gets triggered
+    $scope.emptyCourse = function(course, group, e) {
+        // can't animate smaller if only one course
+        if (group.courses.length !== 1) {
+            var $parentGroup = $(e.target.parentElement.parentElement.parentElement);
+            console.dir($parentGroup);
+            $parentGroup.animate({
+                height: '-=' + height + 'px'
+            }, 500);
+        }
+
         addedCourses.remove(course);
         addedCourses.updateLocalStorage();
     }

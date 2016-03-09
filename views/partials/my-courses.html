@@ -7,6 +7,7 @@
 	</div>
 	<div class="added-list">
 		<span
+		id="core-group-container"
 		data-drop="true"
 		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}"
 		class="added-group-container">
@@ -27,7 +28,7 @@
 	    	data-jqyoui-options="{revert: 'invalid'}"
 	    	jqyoui-draggable="{animate:true,  onStart:'onDrag(course, added[0])'}">
 	    		<span class="course-asString">{{ course.asString }}</span>
-		        <a ng-click="emptyCourse(course)">
+		        <a ng-click="emptyCourse(course, added[0], $event)">
 		        	<i class="fa fa-trash-o fa-lg"></i>
 		        </a>
 	    	</div>
@@ -69,7 +70,7 @@
 			data-jqyoui-options="{revert: 'invalid'}"
 			jqyoui-draggable="{animate:true,  onStart:'onDrag(course, group)'}">
 	    		<span class="course-asString">{{ course.asString }}</span>
-		        <a ng-click="emptyCourse(course)">
+		        <a ng-click="emptyCourse(course, group, $event)">
 		        	<i class="fa fa-trash-o fa-lg"></i>
 		        </a>
 			</div>
