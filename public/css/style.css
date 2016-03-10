@@ -636,6 +636,10 @@ md-switch.md-default-theme.md-checked .md-bar {
 	.added-container {
 		display: none !important;
 	}
+	.section-footer {
+		/* this is a seriously bad magic number...it's the height of the button plus 8*2 for the margin */
+		height: 57px;
+	}
 }
 
 .group-rename-button {

@@ -1,4 +1,4 @@
-winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', '$timeout', '$modal', function($scope, $location, $interval, ngProgressLite, addedCourses, $window, $timeout, $modal) {
+winstonApp.controller('addedCtrl', ['$scope', '$modalStack', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', '$timeout', '$modal', function($scope, $modalStack, $location, $interval, ngProgressLite, addedCourses, $window, $timeout, $modal) {
 
     $scope.added = addedCourses.data;
 
@@ -12,9 +12,12 @@ winstonApp.controller('addedCtrl', ['$scope', '$location', '$interval', 'ngProgr
         }
     }, true);
 
+    // will have to dismiss modal
     $scope.viewSchedules = function() {
         $location.path('/schedule');
         ngProgressLite.start();
+        // thank the gods this exists
+        $modalStack.dismissAll();
     }
 
     $scope.emptyAll = function() {
