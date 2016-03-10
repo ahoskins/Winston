@@ -415,13 +415,10 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$q', '$window', '$location', '
         uiCalendarConfig.calendars.weekView.fullCalendar('addEventSource', $scope.events);
     }
 
-    var calendarCanvas;
-
     function captureCalendarCanvas() {
         return $q(function(res, rej) {
             html2canvas(document.getElementById('full-calendar-div'), {
                 onrendered: function(canvas) {
-                    calendarCanvas = canvas;
                     res(canvas);
                 }
             });
