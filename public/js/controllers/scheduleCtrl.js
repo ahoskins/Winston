@@ -3,7 +3,7 @@ Controller for schedule
 
 Includes Full Calendar config, prev/next buttons, and add more courses button
 */
-winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCalendarConfig', '$timeout', 'readyMadeSchedules', 'addedBusyTime', '$modal', 'preferencesValues', 'localStorageService', '$document', function($scope, $window, $location, uiCalendarConfig, $timeout, readyMadeSchedules, addedBusyTime, $modal, preferencesValues, localStorageService, $document) {
+winstonApp.controller('scheduleCtrl', ['$scope', '$q', '$window', '$location', 'uiCalendarConfig', '$timeout', 'readyMadeSchedules', 'addedBusyTime', '$modal', 'preferencesValues', 'localStorageService', '$document', function($scope, $q, $window, $location, uiCalendarConfig, $timeout, readyMadeSchedules, addedBusyTime, $modal, preferencesValues, localStorageService, $document) {
 
     /*
     angular-local-storage
@@ -44,7 +44,6 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
 
     $timeout(function() {
         refreshCalendar();
-        captureCalendarCanvas();
     }, 0);
 
 
@@ -216,7 +215,6 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
         $scope.events = arrayOfSchedules[$scope.scheduleIndex].concat(addedBusyTime.data);
 
         refreshCalendar();
-        captureCalendarCanvas();
     };
 
     $scope.backToBrowse = function() {
@@ -390,15 +388,9 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
     */
 
     $scope.image = function() {
-        $scope.events = arrayOfSchedules[$scope.scheduleIndex];
-        refreshCalendar();
-        captureCalendarCanvas();
-        $timeout(function() {
-            $window.open(calendarCanvas.toDataURL('image/png'));
-            $scope.events = arrayOfSchedules[$scope.scheduleIndex].concat(addedBusyTime.data);
-            refreshCalendar();
-            captureCalendarCanvas();
-        }, 500);
+        captureCalendarCanvas().then(function(canvas) {
+            $window.open(canvas.toDataURL('image/png'));
+        })
     }
 
     $scope.backToBrowse = function() {
@@ -426,11 +418,14 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$window', '$location', 'uiCale
     var calendarCanvas;
 
     function captureCalendarCanvas() {
-        html2canvas(document.getElementById('full-calendar-div'), {
-            onrendered: function(canvas) {
-                calendarCanvas = canvas;
-            }
-        });
+        return $q(function(res, rej) {
+            html2canvas(document.getElementById('full-calendar-div'), {
+                onrendered: function(canvas) {
+                    calendarCanvas = canvas;
+                    res(canvas);
+                }
+            });
+        })
     }
 
     function allowEditAllBusyTime() {
