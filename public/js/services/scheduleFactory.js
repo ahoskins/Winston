@@ -18,9 +18,11 @@ winstonApp.factory('scheduleFactory', ['$window', '$http', '$q', 'currentTerm', 
                 courseIds.push(courseObject.course);
             });
 
-            electives.push({
-                courses: courseIds
-            });
+            if (courseIds.length !== 0) {
+                electives.push({
+                    courses: courseIds
+                });
+            }
         });
 
         var requestParams = {};
