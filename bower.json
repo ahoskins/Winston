@@ -20,7 +20,8 @@
     "angular-socialshare": "~0.0.7",
     "font-awesome": "~4.3.0",
     "angulartics": "~0.17.2",
-    "angular-dragdrop": "~1.0.11"
+    "angular-dragdrop": "~1.0.11",
+    "jqueryui-touch-punch": "*"
   },
   "resolutions": {
     "angular": "~1.3.x",
