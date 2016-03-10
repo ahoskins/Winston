@@ -9,8 +9,7 @@
 		<span
 		id="core-group-container"
 		data-drop="true"
-		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}"
-		class="added-group-container">
+		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}" >
 			<div class="horiz-padding bold-text">
 				ALL of these:
 			</div>
@@ -36,8 +35,8 @@
 
 		<span
 		ng-repeat="group in added.slice(1)"
+		class="elective-group"
 		ng-style="setStyle(group.id)"
-		class="added-group-container"
 		data-drop="true"
 		jqyoui-droppable="{onDrop: 'onDrop(group)'}">
 			<div class="horiz-padding bold-text" >

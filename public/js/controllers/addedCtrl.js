@@ -1,9 +1,12 @@
-winstonApp.controller('addedCtrl', ['$scope', '$modalStack', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', '$timeout', '$modal', function($scope, $modalStack, $location, $interval, ngProgressLite, addedCourses, $window, $timeout, $modal) {
+winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', '$timeout', '$modal', function($scope, $document, $modalStack, $location, $interval, ngProgressLite, addedCourses, $window, $timeout, $modal) {
 
     $scope.added = addedCourses.data;
 
+    /*
+    handle adding courses to core group (either from drop of from accordion)
+    */
     $scope.$watch('added', function(newC, oldC) {
-        // if added course in core...make it bigger
+        height = $('.list-group-item').height();
         if (newC[0].courses.length > oldC[0].courses.length && newC[0].courses.length !== 1) {
             var $coreGroup = $('#core-group-container');
             $coreGroup.animate({
@@ -20,17 +23,13 @@ winstonApp.controller('addedCtrl', ['$scope', '$modalStack', '$location', '$inte
         $modalStack.dismissAll();
     }
 
-    $scope.emptyAll = function() {
-        addedCourses.empty();
-        addedCourses.updateLocalStorage();
-    }
-
-    // every click of trash can this gets triggered
+    /*
+    when delete course, animate down group size unless length 1 already
+    */
     $scope.emptyCourse = function(course, group, e) {
         // can't animate smaller if only one course
         if (group.courses.length !== 1) {
             var $parentGroup = $(e.target.parentElement.parentElement.parentElement);
-            console.dir($parentGroup);
             $parentGroup.animate({
                 height: '-=' + height + 'px'
             }, 500);
@@ -70,15 +69,22 @@ winstonApp.controller('addedCtrl', ['$scope', '$modalStack', '$location', '$inte
         this.courses = [];
     }
 
-    // set the max-height to the current height of that span
-    // when a list item is dropped, set the max-height for that element to infinite
-    // then re-set the max-height to the current height of the span
-
     $scope.setStyle = function(id) {
         return {'background-color': groupColors[id]}
     }
 
     $scope.noMoreGroups = addedCourses.data.length > 3 ? true : false;
+
+    // make existing elective groups visible, wait for dom elements to load
+    angular.element(document).ready(function() {
+        $timeout(function() {
+            $('.elective-group').each(function(index, element) {
+                console.log('elective grouo');
+                $(this).css('display', 'inline');
+            });
+        }, 100);
+    });
+
     $scope.newElectiveGroup = function() {
         // max of three elective group
         if (addedCourses.data.length > 3) {
@@ -89,19 +95,30 @@ winstonApp.controller('addedCtrl', ['$scope', '$modalStack', '$location', '$inte
         if (addedCourses.data.length > 3) {
             $scope.noMoreGroups = true;
         }
+
+        addedCourses.updateLocalStorage();
+
+        // fade it in after it appears in the dom
+        $timeout(function() {
+            $newGroup = $('.elective-group:last').fadeIn('slow');
+        }, 100);
     }
 
     $scope.deleteGroup = function(e, group) {
         var $group = $(e.target.parentElement.parentElement.parentElement);
+        console.log($group.height());
         $group.animate({
             height: '0px'
         }, 500);
-        addedCourses.deleteGroup(group);
-        if (addedCourses.data.length <= 3) {
-            $scope.noMoreGroups = false;
-        }
+        // don't delete until it's done animating to zero height
+        $timeout(function() {
+            addedCourses.deleteGroup(group);
+            if (addedCourses.data.length <= 3) {
+                $scope.noMoreGroups = false;
+            }
 
-        addedCourses.updateLocalStorage();
+            addedCourses.updateLocalStorage();
+        }, 500);
     }
 
     $scope.renameGroup = function(group) {
@@ -129,18 +146,18 @@ winstonApp.controller('addedCtrl', ['$scope', '$modalStack', '$location', '$inte
     }
 
     $scope.onDrop = function(e, ui, droppedGroup) {
-        // everything in the `ui` object seems to refer to the dropped element, use the event instead
         var $droppedGroup = $(e.target);
         
+        // only if dropped in different group
         if ($droppedGroup.context.innerText !== $draggedGroup.context.innerText) {
+            // shrink dragged group
             if (draggedGroup.courses.length !== 1) {
                 $draggedGroup.animate({
                     height: '-=' + height + 'px'
                 }, 500);
             }
 
-            // core is handled by the watcher at the top 
-            // (because it also has to handle adds from the accordion)
+            // expand dropped group (not core, handled from the watcher)
             if (droppedGroup.courses.length !== 0 && droppedGroup.id !== 'core') {
                 $droppedGroup.animate({
                     height: '+=' + height + 'px'

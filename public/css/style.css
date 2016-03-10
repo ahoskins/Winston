@@ -569,14 +569,6 @@ div.panel-collapse {
 	cursor: move;
 }
 
-.added-group-container {
-  -webkit-transition: max-height 1s; 
-  -moz-transition: max-height 1s; 
-  -ms-transition: max-height 1s; 
-  -o-transition: max-height 1s; 
-  transition: max-height 1s;  
-}
-
 .group-item {
 	border-bottom: 1px solid black;
 }
@@ -622,6 +614,10 @@ div.panel-collapse {
 .added-container {
 	position: fixed;
 	width: 36%;
+}
+
+.elective-group {
+	display: none;
 }
 
 md-switch.md-default-theme.md-checked .md-thumb {
