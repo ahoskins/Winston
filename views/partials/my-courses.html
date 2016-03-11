@@ -10,7 +10,7 @@
 		id="core-group-container"
 		data-drop="true"
 		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}" >
-			<div class="horiz-padding bold-text">
+			<div class="horiz-padding bold-text center-text-core">
 				ALL of these:
 			</div>
 
@@ -39,7 +39,7 @@
 		ng-style="setStyle(group.id)"
 		data-drop="true"
 		jqyoui-droppable="{onDrop: 'onDrop(group)'}">
-			<div class="horiz-padding bold-text" >
+			<div class="horiz-padding bold-text center-text">
 				ONE of these:
 				<span ng-if="group.name" class="undo-ng-binding">({{ group.name }})</span>
 				<a class="go-right black" ng-click="deleteGroup($event, group)">

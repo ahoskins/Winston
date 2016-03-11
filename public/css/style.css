@@ -109,6 +109,16 @@ html, body {
 	margin: 0 auto;
 }
 
+.center-text {
+	text-align: center;
+}
+
+.center-text-core {
+	text-align: center;
+	position: relative;
+	right: 20px;
+}
+
 .bold-text {
 	font-weight: bold;
 }
