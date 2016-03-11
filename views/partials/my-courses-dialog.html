@@ -1,0 +1,80 @@
+<script type="text/ng-template" id="partials/my-courses-dialog.html">
+	<div class="section-header">
+		<div class="flex-container">
+		    <div class="section-text big-size">My Courses</div>
+		    <button class="btn btn-success section-text bold-text go-right view-schedules" ng-click="viewSchedules()">View Schedules</button>
+		</div>
+	</div>
+	<div class="added-list2">
+		<span
+		id="core-group-container2"
+		data-drop="true"
+		jqyoui-droppable="{onDrop: 'onDrop(added[0])'}" >
+			<div class="horiz-padding bold-text center-text-core">
+				ALL of these:
+			</div>
+
+			<span 
+			class="list-group-item2 small-padding"
+		    ng-if="added[0].courses.length === 0">
+		    	<span class="course-asString">Empty</span>
+			</span>
+
+	    	<div 
+	    	class="flex-container list-group-item2 course2"
+	    	ng-repeat="course in added[0].courses"
+	    	data-drag="true"
+	    	data-jqyoui-options="{revert: 'invalid'}"
+	    	jqyoui-draggable="{animate:true,  onStart:'onDrag(course, added[0])'}">
+	    		<span class="course-asString">{{ course.asString }}</span>
+		        <a ng-click="emptyCourse(course, added[0], $event)">
+		        	<i class="fa fa-trash-o fa-lg"></i>
+		        </a>
+	    	</div>
+		</span>
+
+		<span
+		ng-repeat="group in added.slice(1)"
+		class="elective-group2"
+		ng-style="setStyle(group.id)"
+		data-drop="true"
+		jqyoui-droppable="{onDrop: 'onDrop(group)'}">
+			<div class="horiz-padding bold-text center-text">
+				ONE of these:
+				<span ng-if="group.name" class="undo-ng-binding">({{ group.name }})</span>
+				<a class="go-right black" ng-click="deleteGroup($event, group)">
+		        	<i class="fa fa-trash-o fa-lg"></i>
+		        </a>
+		        <a class="go-right pad-sides black" ng-click="renameGroup(group)">
+		        	<i class="fa fa-pencil fa-lg"></i>
+		        </a>
+			</div>
+
+			<div 
+			class="flex-container list-group-item2"
+			style="border-top: 1px dotted #4c4c4c"
+			ng-style="setStyle(group.id)"
+			ng-if="group.courses.length === 0">
+				<span class="course-asString">Empty</span>
+			</div>
+
+			<div 
+			class="flex-container list-group-item2 course2"
+			style="border-top: 1px dotted #4c4c4c"
+			ng-style="setStyle(group.id)"
+			ng-if="group.courses.length !== 0"
+			ng-repeat="course in group.courses"
+			data-drag="true"
+			data-jqyoui-options="{revert: 'invalid'}"
+			jqyoui-draggable="{animate:true,  onStart:'onDrag(course, group)'}">
+	    		<span class="course-asString">{{ course.asString }}</span>
+		        <a ng-click="emptyCourse(course, group, $event)">
+		        	<i class="fa fa-trash-o fa-lg"></i>
+		        </a>
+			</div>
+		</span>
+	</div>
+	<div class="section-footer">
+		<button class="btn btn-default section-text bold-text go-right view-schedules" ng-disabled="noMoreGroups" ng-click="newElectiveGroup()">New Group</button>
+	</div>
+</script>

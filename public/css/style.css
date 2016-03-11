@@ -551,7 +551,7 @@ div.panel-collapse {
 	height: 41px;
 }
 
-.added-list {
+.added-list, .added-list2 {
 	display: -webkit-flex;
 	display: flex;
 	-webkit-flex-direction: column;
@@ -575,8 +575,26 @@ div.panel-collapse {
 	border-bottom: 1px dotted #4c4c4c;
 }
 
+.added-list2 .list-group-item2 {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-align-items: center;
+	align-items: center;
+	font-size: 1.5em;
+	border-radius: 0px;
+	padding: 0;
+	border: none;
+	border-top: 1px dotted #4c4c4c;
+	border-bottom: 1px dotted #4c4c4c;
+	background-color: #ffffff;
+}
+
 .list-group-item.course {
-	cursor: move;
+	cursor: ns-resize;
+}
+
+.list-group-item2.course2 {
+	cursor: ns-resize;
 }
 
 .group-item {
@@ -588,7 +606,17 @@ div.panel-collapse {
 	padding: 10px 15px;
 }
 
+.added-list2 .list-group-item2 .course-asString {
+	margin-right: auto;
+	padding: 10px 15px;
+}
+
 .added-list .list-group-item i.fa {
+	margin-right: 20px;
+	color: black;
+}
+
+.added-list2 .list-group-item2 i.fa {
 	margin-right: 20px;
 	color: black;
 }
@@ -596,6 +624,11 @@ div.panel-collapse {
 .added-list .list-group-item i.fa:hover {
 	color: #8c001a;
 }
+
+.added-list2 .list-group-item2 i.fa:hover {
+	color: #8c001a;
+}
+
 
 .added-list .added-group-container .fa-trash-o:hover {
 	color: #8c001a;
@@ -626,7 +659,7 @@ div.panel-collapse {
 	width: 36%;
 }
 
-.elective-group {
+.elective-group, .elective-group2 {
 	display: none;
 }
 
@@ -642,10 +675,11 @@ md-switch.md-default-theme.md-checked .md-bar {
 	.added-container {
 		display: none !important;
 	}
-	.section-footer {
-		/* this is a seriously bad magic number...it's the height of the button plus 8*2 for the margin */
-		height: 57px;
-	}
+}
+
+.section-footer {
+	/* this is a seriously bad magic number...it's the height of the button plus 8*2 for the margin */
+	height: 57px;
 }
 
 .group-rename-button {

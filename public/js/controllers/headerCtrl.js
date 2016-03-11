@@ -7,7 +7,7 @@ winstonApp.controller('headerCtrl', ['$scope', '$location', '$modal', '$window',
 	$scope.open = function() {
 		var modalInstance = $modal.open({
 	  		templateUrl: 'addedCoursesModal.html',
-	  		controller: 'addedCtrl'
+	  		controller: 'addedDialogCtrl'
 		});
 	}
 

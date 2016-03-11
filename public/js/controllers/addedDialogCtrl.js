@@ -1,4 +1,4 @@
-winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', '$timeout', '$modal', function($scope, $document, $modalStack, $location, $interval, ngProgressLite, addedCourses, $window, $timeout, $modal) {
+winstonApp.controller('addedDialogCtrl', ['$scope', '$document', '$modalStack', '$location', '$interval', 'ngProgressLite', 'addedCourses', '$window', '$timeout', '$modal', function($scope, $document, $modalStack, $location, $interval, ngProgressLite, addedCourses, $window, $timeout, $modal) {
 
     $scope.added = addedCourses.data;
 
@@ -9,30 +9,22 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
         }, 500);
     }
 
+    console.log('new');
+
     /*
     handle adding courses to core group (either from drop of from accordion)
     only handle events from accordion
     ALL other events must set flag to true to denote they're handled
     */
     $scope.$watch('added', function(newC, oldC) {
-        /*
-        the other controller, addedDialogCtrl will still cause these watch events to run
-        - make sure new groups appear, and don't double handle drags
-        */
-        $timeout(function() {
-            $newGroup = $('.elective-group:last').fadeIn('slow');
-        }, 100);
-        if ($modalStack.getTop() !== null) return;
-
-        // denotes the event handled in drop handler or elsewhere
         if (handled) return;
 
         if (height === null || height < 0) {
-            height = $('.list-group-item.course:last').height();
+            height = $('.list-group-item2.course2:last').height();
         }
 
         if (newC[0].courses.length > oldC[0].courses.length && newC[0].courses.length !== 1) {
-            var $coreGroup = $('#core-group-container');
+            var $coreGroup = $('#core-group-container2');
             console.log($coreGroup);
             $coreGroup.animate({
                 height: '+=' + height + 'px'
@@ -56,7 +48,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
         if (group.courses.length !== 1) {
             var $parentGroup = $(e.target.parentElement.parentElement.parentElement);
             if (height === null || height < 0) {
-                height = $('.list-group-item.course:last').height();
+                height = $('.list-group-item2.course2:last').height();
             }
             console.log(height);
             $parentGroup.animate({
@@ -113,11 +105,11 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
     // make existing elective groups visible, wait for dom elements to load
     angular.element(document).ready(function() {
         $timeout(function() {
-            $('.elective-group').each(function(index, element) {
+            $('.elective-group2').each(function(index, element) {
                 console.log('elective grouo');
                 $(this).css('display', 'inline');
             });
-            height = $('.list-group-item.course:last').height();
+            height = $('.list-group-item2.course2:last').height();
         }, 100);
     });
 
@@ -136,7 +128,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
 
         // fade it in after it appears in the dom
         $timeout(function() {
-            $newGroup = $('.elective-group:last').fadeIn('slow');
+            $newGroup = $('.elective-group2:last').fadeIn('slow');
         }, 100);
 
         denoteHandled();
@@ -193,7 +185,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
         var $droppedGroup = $(e.target);
 
         if (height === null || height < 0) {
-            height = $('.list-group-item.course:last').height();
+            height = $('.list-group-item2.course2:last').height();
         }
 
         // only if dropped in different group
