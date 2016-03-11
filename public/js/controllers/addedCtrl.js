@@ -2,13 +2,28 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
 
     $scope.added = addedCourses.data;
 
+    var denoteHandled = function() {
+        handled = true;
+        $timeout(function() {
+            handled = false;
+        }, 500);
+    }
+
     /*
     handle adding courses to core group (either from drop of from accordion)
+    only handle events from accordion
+    ALL other events must set flag to true to denote they're handled
     */
     $scope.$watch('added', function(newC, oldC) {
-        height = $('.list-group-item').height();
+        if (handled) return;
+
+        if (height === null || height < 0) {
+            height = $('.list-group-item.course:last').height();
+        }
+
         if (newC[0].courses.length > oldC[0].courses.length && newC[0].courses.length !== 1) {
             var $coreGroup = $('#core-group-container');
+            console.log($coreGroup);
             $coreGroup.animate({
                 height: '+=' + height + 'px'
             }, 500);
@@ -30,13 +45,20 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
         // can't animate smaller if only one course
         if (group.courses.length !== 1) {
             var $parentGroup = $(e.target.parentElement.parentElement.parentElement);
+            if (height === null || height < 0) {
+                height = $('.list-group-item.course:last').height();
+            }
+            console.log(height);
             $parentGroup.animate({
                 height: '-=' + height + 'px'
             }, 500);
         }
+        $timeout(function() {
+            addedCourses.remove(course);
+            addedCourses.updateLocalStorage();
+        }, 500);
 
-        addedCourses.remove(course);
-        addedCourses.updateLocalStorage();
+        denoteHandled();
     }
 
     /************************
@@ -82,6 +104,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
                 console.log('elective grouo');
                 $(this).css('display', 'inline');
             });
+            height = $('.list-group-item.course:last').height();
         }, 100);
     });
 
@@ -102,11 +125,12 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
         $timeout(function() {
             $newGroup = $('.elective-group:last').fadeIn('slow');
         }, 100);
+
+        denoteHandled();
     }
 
     $scope.deleteGroup = function(e, group) {
         var $group = $(e.target.parentElement.parentElement.parentElement);
-        console.log($group.height());
         $group.animate({
             height: '0px'
         }, 500);
@@ -119,6 +143,8 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
 
             addedCourses.updateLocalStorage();
         }, 500);
+
+        denoteHandled();
     }
 
     $scope.renameGroup = function(group) {
@@ -138,16 +164,25 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
     var draggedCourse = null;
     var draggedGroup = null;
     var height = null;
+    var handled = false;
     $scope.onDrag = function(e, ui, course, group) {
         draggedCourse = course;
         $draggedGroup = $(ui.helper.context.parentElement);
         draggedGroup = group;
-        height = e.currentTarget.clientHeight;
+        if (height === null || height < 0) {
+            height = e.currentTarget.clientHeight;
+        }
     }
 
     $scope.onDrop = function(e, ui, droppedGroup) {
+        denoteHandled();
+
         var $droppedGroup = $(e.target);
-        
+
+        if (height === null || height < 0) {
+            height = $('.list-group-item.course:last').height();
+        }
+
         // only if dropped in different group
         if ($droppedGroup.context.innerText !== $draggedGroup.context.innerText) {
             // shrink dragged group
@@ -158,7 +193,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
             }
 
             // expand dropped group (not core, handled from the watcher)
-            if (droppedGroup.courses.length !== 0 && droppedGroup.id !== 'core') {
+            if (droppedGroup.courses.length !== 0) {
                 $droppedGroup.animate({
                     height: '+=' + height + 'px'
                 }, 500);
