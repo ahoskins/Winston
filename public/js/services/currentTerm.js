@@ -2,8 +2,8 @@ winstonApp.factory('currentTerm', ['localStorageService', function(localStorageS
 	var currentTerm = {};
 
 	currentTerm = localStorageService.get('currentTerm') || { 
-        'name': 'Fall 2015',
-        'termId': '1530'
+        'name': 'Fall 2016',
+        'termId': '1570'
     };
 
 	return currentTerm;
