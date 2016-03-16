@@ -6,7 +6,7 @@ winstonApp.controller('addedDialogCtrl', ['$scope', '$document', '$modalStack', 
         handled = true;
         $timeout(function() {
             handled = false;
-        }, 500);
+        }, 100);
     }
 
     console.log('new');
@@ -28,7 +28,7 @@ winstonApp.controller('addedDialogCtrl', ['$scope', '$document', '$modalStack', 
             console.log($coreGroup);
             $coreGroup.animate({
                 height: '+=' + height + 'px'
-            }, 500);
+            }, 100);
         }
     }, true);
 
@@ -53,11 +53,11 @@ winstonApp.controller('addedDialogCtrl', ['$scope', '$document', '$modalStack', 
             console.log(height);
             $parentGroup.animate({
                 height: '-=' + height + 'px'
-            }, 500);
+            }, 100);
             $timeout(function() {
                 addedCourses.remove(course);
                 addedCourses.updateLocalStorage();
-            }, 500);
+            }, 100);
         } else {
             addedCourses.remove(course);
             addedCourses.updateLocalStorage();
@@ -128,7 +128,7 @@ winstonApp.controller('addedDialogCtrl', ['$scope', '$document', '$modalStack', 
 
         // fade it in after it appears in the dom
         $timeout(function() {
-            $newGroup = $('.elective-group2:last').fadeIn('slow');
+            $newGroup = $('.elective-group2:last').fadeIn('fast');
         }, 100);
 
         denoteHandled();
@@ -138,7 +138,7 @@ winstonApp.controller('addedDialogCtrl', ['$scope', '$document', '$modalStack', 
         var $group = $(e.target.parentElement.parentElement.parentElement);
         $group.animate({
             height: '0px'
-        }, 500);
+        }, 100);
         // don't delete until it's done animating to zero height
         $timeout(function() {
             addedCourses.deleteGroup(group);
@@ -147,7 +147,7 @@ winstonApp.controller('addedDialogCtrl', ['$scope', '$document', '$modalStack', 
             }
 
             addedCourses.updateLocalStorage();
-        }, 500);
+        }, 100);
 
         denoteHandled();
     }
@@ -194,14 +194,14 @@ winstonApp.controller('addedDialogCtrl', ['$scope', '$document', '$modalStack', 
             if (draggedGroup.courses.length !== 1) {
                 $draggedGroup.animate({
                     height: '-=' + height + 'px'
-                }, 500);
+                }, 100);
             }
 
             // expand dropped group (not core, handled from the watcher)
             if (droppedGroup.courses.length !== 0) {
                 $droppedGroup.animate({
                     height: '+=' + height + 'px'
-                }, 500);
+                }, 100);
             } 
         }
 

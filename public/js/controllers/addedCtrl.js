@@ -6,7 +6,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
         handled = true;
         $timeout(function() {
             handled = false;
-        }, 500);
+        }, 100);
     }
 
     /*
@@ -20,7 +20,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
         - make sure new groups appear, and don't double handle drags
         */
         $timeout(function() {
-            $newGroup = $('.elective-group:last').fadeIn('slow');
+            $newGroup = $('.elective-group:last').fadeIn('fast');
         }, 100);
         // will get undefined if in wide view
         if ($modalStack.getTop() != null) return;
@@ -38,7 +38,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
             console.log($coreGroup);
             $coreGroup.animate({
                 height: '+=' + height + 'px'
-            }, 500);
+            }, 100);
         }
     }, true);
 
@@ -63,11 +63,11 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
             console.log(height);
             $parentGroup.animate({
                 height: '-=' + height + 'px'
-            }, 500);
+            }, 100);
             $timeout(function() {
                 addedCourses.remove(course);
                 addedCourses.updateLocalStorage();
-            }, 500);
+            }, 100);
         } else {
             addedCourses.remove(course);
             addedCourses.updateLocalStorage();
@@ -138,7 +138,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
 
         // fade it in after it appears in the dom
         $timeout(function() {
-            $newGroup = $('.elective-group:last').fadeIn('slow');
+            $newGroup = $('.elective-group:last').fadeIn('fast');
         }, 100);
 
         denoteHandled();
@@ -148,7 +148,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
         var $group = $(e.target.parentElement.parentElement.parentElement);
         $group.animate({
             height: '0px'
-        }, 500);
+        }, 100);
         // don't delete until it's done animating to zero height
         $timeout(function() {
             addedCourses.deleteGroup(group);
@@ -157,7 +157,7 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
             }
 
             addedCourses.updateLocalStorage();
-        }, 500);
+        }, 100);
 
         denoteHandled();
     }
@@ -204,14 +204,14 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
             if (draggedGroup.courses.length !== 1) {
                 $draggedGroup.animate({
                     height: '-=' + height + 'px'
-                }, 500);
+                }, 100);
             }
 
             // expand dropped group (not core, handled from the watcher)
             if (droppedGroup.courses.length !== 0) {
                 $droppedGroup.animate({
                     height: '+=' + height + 'px'
-                }, 500);
+                }, 100);
             } 
         }
 
