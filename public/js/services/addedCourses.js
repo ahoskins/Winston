@@ -5,7 +5,7 @@ Perfect for information sharing between controllers because it is a Singleton
 winstonApp.factory('addedCourses', ['localStorageService', 'currentTerm', function(localStorageService, currentTerm) {
 	var factory = {};
 
-	factory.data = localStorageService.get('addedCourses.data') && localStorageService.get('addedCourses.data')[currentTerm.termId] || [{
+	factory.data = localStorageService.get('addedCourses2.data') && localStorageService.get('addedCourses2.data')[currentTerm.termId] || [{
 		id: 'core',
 		courses: []
 	}];
@@ -91,9 +91,9 @@ winstonApp.factory('addedCourses', ['localStorageService', 'currentTerm', functi
 	}
 
 	factory.updateLocalStorage = function() {
-		var all = localStorageService.get('addedCourses.data') || {};
+		var all = localStorageService.get('addedCourses2.data') || {};
 		all[currentTerm.termId] = factory.data;
-		localStorageService.set('addedCourses.data', all);
+		localStorageService.set('addedCourses2.data', all);
 	}
 
 	return factory;
