@@ -36,6 +36,7 @@ html, body {
 .floating-container {
 	border-radius: 15px !important;
 	background-color: #f2f2f2;
+	border: 1px solid #B9B4B4;
 	/* HA! this was the culprit for dragging boxes disappearing */
 /*	overflow: hidden;*/
 	margin: 5px;
@@ -63,6 +64,7 @@ html, body {
 	font-weight: lighter;
 	display: inline;
 	text-align: center;
+	font-weight: 200;
 }
 
 .dropdown .section-text {
@@ -342,6 +344,7 @@ button.dropdown-toggle {
 	font-size: 18px;
 	display: inline-block;
 	margin-top: 0px;
+	border: 0.5px solid #b4b1b1;
 }
 
 div.dropdown {
@@ -500,6 +503,7 @@ div.panel-collapse {
 	height:15px;
 	text-align: center;
 	margin: 0 auto;
+	font-weight: 500;
 }
 
 .divider-full-height {
@@ -727,6 +731,7 @@ div.modal-content {
 	display: flex;
 	-webkit-align-items: center;
 	align-items: center;
+	font-size: 22px;
 }
 
 .nav-container > * {
