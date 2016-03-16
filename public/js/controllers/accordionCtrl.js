@@ -157,8 +157,8 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
         Array.prototype.push.apply(results, _.map(fuseSubjectTitle.search(text), function(res) {
             return _.extend(res, { 'weight': 100});
         }));
-        Array.prototype.push.apply(results, _.map(fuseClassCode.search(searchText), function(res) {
-            return _.extend(res, { 'weight': 5})
+        Array.prototype.push.apply(results, _.map(fuseCourseTitle.search(searchText), function(res) {
+            return _.extend(res, { 'weight': 100})
         }));
         Array.prototype.push.apply(results, _.map(fuseClassCode.search(text.toUpperCase()), function(res) { 
             return _.extend(res, { 'weight': 1})
