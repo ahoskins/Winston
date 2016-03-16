@@ -22,7 +22,9 @@ winstonApp.controller('addedCtrl', ['$scope', '$document', '$modalStack', '$loca
         $timeout(function() {
             $newGroup = $('.elective-group:last').fadeIn('slow');
         }, 100);
-        if ($modalStack.getTop() !== null) return;
+        // will get undefined if in wide view
+        if ($modalStack.getTop() != null) return;
+
 
         // denotes the event handled in drop handler or elsewhere
         if (handled) return;
