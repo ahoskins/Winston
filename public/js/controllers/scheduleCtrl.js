@@ -181,6 +181,9 @@ winstonApp.controller('scheduleCtrl', ['$scope', '$q', '$window', '$location', '
         else if (event.keyCode === 37) {
             $scope.displayDifferentSchedule(0);
         }
+
+        // remove lingering tooltips
+        $('.tooltip').remove();
     });
 
     /*
