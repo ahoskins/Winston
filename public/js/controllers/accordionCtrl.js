@@ -3,6 +3,9 @@
 
 winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'courseDataMaker', '$timeout', '$location', 'pmkr.filterStabilize', 'addedCourses', 'localStorageService', function($scope, $window, detailFactory, courseDataMaker, $timeout, $location, stabilize, addedCourses, localStorageService) {
 
+    var date = new Date();
+    $scope.currentDay = date.toDateString();
+
     /*
     ********************************************************************
     Get the courses data from the pre-resolved service
@@ -154,8 +157,8 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
         Array.prototype.push.apply(results, _.map(fuseSubjectTitle.search(text), function(res) {
             return _.extend(res, { 'weight': 100});
         }));
-        Array.prototype.push.apply(results, _.map(fuseCourseTitle.search(text), function(res) {
-            return _.extend(res, { 'weight': 100});
+        Array.prototype.push.apply(results, _.map(fuseClassCode.search(searchText), function(res) {
+            return _.extend(res, { 'weight': 5})
         }));
         Array.prototype.push.apply(results, _.map(fuseClassCode.search(text.toUpperCase()), function(res) { 
             return _.extend(res, { 'weight': 1})
@@ -232,7 +235,7 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
 
         return results;
     });
-    
+
 
     /*
     **********************************************************************
@@ -254,6 +257,44 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
     }
 
     /*
+    **********************************************************************
+    Feedback from user
+    **********************************************************************
+     */
+    $scope.feedback = '';
+    $scope.givenFeedback = false;
+    $scope.submitFeedback = function() {
+        // send email with feedback as body
+        $.ajax({
+            'type': 'POST',
+            'url': 'https://mandrillapp.com/api/1.0/messages/send.json',
+            'data': {
+                'key': 'utwbngMF5Cj7INTzNoaiww',
+                'message': {
+                  'from_email': 'andrew@andrewhoskins.ca',
+                  'to': [
+                      {
+                        'email': 'arhoskin@ualberta.ca',
+                        'type': 'to'
+                      },
+                      {
+                        'email': 'ross.anderson@ualberta.ca',
+                        'type': 'to'
+                      },
+                    ],
+                  'autotext': 'true',
+                  'subject': 'Winston feedback',
+                  'html': $scope.feedback
+                }
+            }
+        });
+
+        // regardless of success, the user doesn't care, tell them thanks :)
+        // when this controller is reinitialized they can give feedback again
+        $scope.givenFeedback = true;
+    }
+
+    /*
     ****************
     Validation Functions
     ****************
@@ -266,6 +307,3 @@ winstonApp.controller('accordionCtrl', ['$scope', '$window', 'detailFactory', 'c
     };
 
 }]);
-
-
-

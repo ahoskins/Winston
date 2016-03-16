@@ -817,3 +817,16 @@ img.navbar-brand-image {
 .footer-bit i:hover {
 	color: #337ab7;
 }
+
+/************************
+       Info Bubble
+*************************/
+
+.feedback-submit {
+	cursor: pointer;
+}
+
+.thanks-for-feedback {
+	text-align: center;
+	font-weight: bold;
+}
