@@ -58,6 +58,9 @@ app.use(function(req, res, next) {
 * Routes
 **/
 
+app.use(function(req, res) {
+  res.render('shutdown');
+});
 
 /**
 * Bare domain, render index.jada

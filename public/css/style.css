@@ -775,6 +775,12 @@ img.navbar-brand-image {
 	margin-right: 10px;
 }
 
+img.shutdown-image {
+	height: 100px;
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
 .navbar button.btn {
 	float: right;
 	margin: 8px;
@@ -834,4 +840,15 @@ img.navbar-brand-image {
 .thanks-for-feedback {
 	text-align: center;
 	font-weight: bold;
+}
+
+.shutdown-parent {
+	display: flex;
+	align-items: center;
+	height: 100vh;
+}
+
+.shutdown-child {
+	text-align: center;
+	width: 100vw;
 }
