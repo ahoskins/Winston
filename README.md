@@ -1,8 +1,11 @@
 <p align="center">
   <img src="https://cloud.githubusercontent.com/assets/1527504/6770564/2997abf8-d089-11e4-86cc-ad0fcada6a4e.png" />
 </p>
+
 Winston:
 -----------------------------
+
+> **Deprecation Notice**: Winston is no longer maintained as of April 11, 2017.
 
 Winston is a schedule-building web app for University of Alberta students.
  - Curious about a course? Browse the catalog with realtime search
